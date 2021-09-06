@@ -1,0 +1,52 @@
+﻿@page "/inspectors/create"
+@using Super.Paula.Web.Shared.Localization
+@using Super.Paula.Web.Shared.Handling.Requests
+
+@inject ITranslator Translator
+@inject NavigationManager NavigationManager
+@inject IInspectorHandler InspectorHandler
+
+@attribute [Authorize("ChiefInspector")]
+
+<div class="container mt-2 mt-md-3">
+    <h1>@Translator["Create inspector"]</h1>
+</div>
+
+<EditForm Model="@_request" OnValidSubmit="@OnValidSubmitAsync">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="container mt-2 mt-md-3">
+        <div class="form-group">
+            <label>@Translator["Unique name"]</label>
+            <InputText class="form-control" id="uniqueName" @bind-Value="_request.UniqueName" />
+        </div>
+        <div class="form-group">
+            <label>@Translator["Mail address"]</label>
+            <InputText class="form-control" id="mailAddress" @bind-Value="_request.MailAddress" />
+        </div>
+        <div class="form-group">
+            <label>@Translator["Secret"]</label>
+            <InputText class="form-control" id="secret" type="password" @bind-Value="_request.Secret" />
+        </div>
+        <div class="form-check">
+            <InputCheckbox class="form-check-input" id="activated" @bind-Value="_request.Activated"/>
+            <label class="form-check-label" for="activated">@Translator["Activated"]</label>     
+        </div>
+    </div>
+
+    <div class="container mt-2 mt-md-3">
+       <button type="submit" class="btn btn-primary">@Translator["Submit"]</button>
+    </div>
+
+</EditForm>
+
+@code {
+    private InspectorRequest _request = new InspectorRequest();
+
+    private async Task OnValidSubmitAsync()
+    {
+        await InspectorHandler.CreateAsync(_request);
+        NavigationManager.NavigateTo("/inspectors");
+    }
+}

@@ -1,0 +1,89 @@
+﻿<div class="top-row pl-4 navbar navbar-dark">
+    <a class="navbar-brand" href="">Paula</a>
+    <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+</div>
+
+<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+    <nav class="flex-column">
+        <AuthorizeView>
+            <NotAuthorized>
+                <div class="nav-item px-3">
+                            <NavLink class="nav-link" Match="NavLinkMatch.All" href="account/sign-in">
+                                <span class="oi oi-account-login" aria-hidden="true"></span> Sign in
+                            </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" Match="NavLinkMatch.All" href="account/register-organization">
+                        <span class="oi oi-people" aria-hidden="true"></span> Sign up (Organization)
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" Match="NavLinkMatch.All" href="account/register-inspector">
+                        <span class="oi oi-person" aria-hidden="true"></span> Sign up (Inspector)
+                    </NavLink>
+                </div>
+            </NotAuthorized>
+        </AuthorizeView>
+        <AuthorizeView Policy="Maintainer">
+            <Authorized>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" Match="NavLinkMatch.All" href="organizations">
+                        <span class="oi oi-people" aria-hidden="true"></span> Organizations
+                    </NavLink>
+                </div>
+                <hr/>
+            </Authorized>
+        </AuthorizeView>
+        <AuthorizeView Policy="ChiefInspector">
+            <Authorized>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" Match="NavLinkMatch.All" href="inspectors">
+                        <span class="oi oi-person" aria-hidden="true"></span> Inspectors
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" Match="NavLinkMatch.All" href="business-objects">
+                        <span class="oi oi-briefcase" aria-hidden="true"></span> Business Objects
+                    </NavLink>
+                </div>
+            </Authorized>
+        </AuthorizeView>
+        <AuthorizeView Policy="Inspector">
+            <Authorized>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" Match="NavLinkMatch.All" href="business-objects/auditing">
+                        <span class="oi oi-clipboard" aria-hidden="true"></span> Business Objects Auditing
+                    </NavLink>
+                </div>
+            </Authorized>
+        </AuthorizeView>
+        <AuthorizeView Policy="ChiefInspector">
+            <Authorized>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" Match="NavLinkMatch.All" href="inspections">
+                        <span class="oi oi-list" aria-hidden="true"></span> Inspections
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" Match="NavLinkMatch.All" href="audit-history">
+                        <span class="oi oi-clipboard" aria-hidden="true"></span> Audit History
+                    </NavLink>
+                </div>
+                <hr/>
+            </Authorized>
+        </AuthorizeView>
+    </nav>
+</div>
+
+@code {
+    private bool collapseNavMenu = true;
+
+    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+}

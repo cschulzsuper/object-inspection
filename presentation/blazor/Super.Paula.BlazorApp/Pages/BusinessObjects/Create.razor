@@ -1,0 +1,48 @@
+﻿@page "/business-objects/create"
+@using Super.Paula.Web.Shared.Localization
+@using Super.Paula.Web.Shared.Handling.Requests
+
+@inject ITranslator Translator
+@inject NavigationManager NavigationManager
+@inject IBusinessObjectHandler BusinessObjectHandler
+
+@attribute [Authorize("ChiefInspector")]
+
+<div class="container mt-2 mt-md-3">
+    <h1>@Translator["Create Organization"]</h1>
+</div>
+
+<EditForm Model="@_request" OnValidSubmit="@OnValidSubmitAsync">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="container mt-2 mt-md-3">
+        <div class="form-group">
+            <label>@Translator["Display name"]</label>
+            <InputText class="form-control" id="displayName" @bind-Value="_request.DisplayName" />
+        </div>
+        <div class="form-group">
+            <label>@Translator["Unique name"]</label>
+            <InputText class="form-control" id="uniqueName" @bind-Value="_request.UniqueName" />
+        </div>
+        <div class="form-group">
+            <label>@Translator["Inspector"]</label>
+            <InputText class="form-control" id="inspector" @bind-Value="_request.Inspector" />
+        </div>
+    </div>
+
+    <div class="container mt-2 mt-md-3">
+        <button type="submit" class="btn btn-primary">@Translator["Submit"]</button>
+    </div>
+
+</EditForm>
+
+@code {
+    private BusinessObjectRequest _request = new BusinessObjectRequest();
+
+    private async Task OnValidSubmitAsync()
+    {
+        await BusinessObjectHandler.CreateAsync(_request);
+        NavigationManager.NavigateTo("/business-objects");
+    }
+}

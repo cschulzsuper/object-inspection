@@ -1,0 +1,53 @@
+﻿@page "/account/register-organization"
+
+@inject ITranslator Translator
+@inject IAccountHandler AccountHandler
+@inject NavigationManager NavigationManager
+
+<div class="container mt-2 mt-md-3">
+    <h1>@Translator["Organization sign up"]</h1>
+</div>
+
+<EditForm Model="@model" OnValidSubmit="@OnValidSubmitAsync">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="container mt-2 mt-md-3">
+        <div class="form-group">
+            <label>@Translator["Unique name"]</label>
+            <InputText class="form-control" id="uniqueName" @bind-Value="model.UniqueName" />
+        </div>
+        <div class="form-group">
+            <label>@Translator["Display name"]</label>
+            <InputText class="form-control" id="uniqueName" @bind-Value="model.DisplayName" />
+        </div>
+        <hr />
+        <h4>Chief inspector details</h4>
+        <div class="form-group">
+            <label>@Translator["Username"]</label>
+            <InputText class="form-control" id="uniqueName" @bind-Value="model.ChiefInspectorName" />
+        </div>
+        <div class="form-group">
+            <label>@Translator["Mail address"]</label>
+            <InputText class="form-control" id="uniqueName" @bind-Value="model.ChiefInspectorMail" />
+        </div>
+        <div class="form-group">
+            <label>@Translator["Password"]</label>
+            <InputText class="form-control" id="secret" @bind-Value="model.ChiefInspectorSecret" type="password"/>
+        </div>
+    </div>
+
+    <div class="container mt-2 mt-md-3">
+        <button type="submit" class="btn btn-primary">@Translator["Submit"]</button>
+    </div>
+</EditForm>
+
+@code {
+    private RegisterOrganizationRequest model = new RegisterOrganizationRequest();
+
+    private async Task OnValidSubmitAsync()
+    {
+        await AccountHandler.RegisterOrganizationAsync(model);
+        NavigationManager.NavigateTo("/");
+    }
+}
