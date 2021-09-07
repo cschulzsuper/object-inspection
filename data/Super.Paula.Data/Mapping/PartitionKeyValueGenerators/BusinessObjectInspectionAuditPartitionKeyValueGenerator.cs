@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.ValueGeneration;
-using Super.Paula.Aggregates.BusinessObjectInspectionAudits;
+using Super.Paula.Aggregates.Auditing;
 using Super.Paula.Environment;
 
 namespace Super.Paula.Data.Mapping.PartitionKeyValueGenerators

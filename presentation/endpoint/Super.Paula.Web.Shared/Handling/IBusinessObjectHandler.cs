@@ -21,5 +21,6 @@ namespace Super.Paula.Web.Shared.Handling
 
         ValueTask CreateInspectionAuditAsync(string businessObject, CreateInspectionAuditRequest request);
         ValueTask ChangeInspectionAuditAsync(string businessObject, string inspection, ChangeInspectionAuditRequest request);
+        ValueTask AnnotateInspectionAuditAsync(string businessObject, string inspection, AnnotateInspectionAuditRequest request);
     }
 }

@@ -3,9 +3,11 @@ using System.Text;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Super.Paula.Environment.AspNetCore
 {
+    [SuppressMessage("Style", "IDE1006")]
     public static class _Pipeline
     {
         public static IApplicationBuilder UsePaulaAppAuthentication(this IApplicationBuilder app)

@@ -50,6 +50,12 @@ namespace Super.Paula.Web.Client.Handling
             responseMessage.EnsureSuccessStatusCode();
         }
 
+        public async ValueTask AnnotateInspectionAuditAsync(string businessObject, string inspection, AnnotateInspectionAuditRequest request)
+        {
+            var responseMessage = await _httpClient.PostAsJsonAsync($"business-objects/{businessObject}/annotate-inspection-audit/{inspection}", request);
+            responseMessage.EnsureSuccessStatusCode();
+        }
+
         public async ValueTask<BusinessObjectResponse> CreateAsync(BusinessObjectRequest request)
         {
             var responseMessage = await _httpClient.PostAsJsonAsync("business-objects", request);

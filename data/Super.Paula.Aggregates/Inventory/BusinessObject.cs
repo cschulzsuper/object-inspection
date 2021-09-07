@@ -1,4 +1,4 @@
-﻿namespace Super.Paula.Aggregates.BusinessObjects
+﻿namespace Super.Paula.Aggregates.Inventory
 {
     public partial class BusinessObject
     {
@@ -6,6 +6,6 @@
         public string DisplayName { get; set; } = string.Empty;
         public string Inspector { get; set; } = string.Empty;
 
-        public ISet<BusinessObjectInspection> Inspections { get; set; } = new HashSet<BusinessObjectInspection>();
+        public ISet<EmbeddedInspection> Inspections { get; set; } = new HashSet<EmbeddedInspection>();
     }
 }

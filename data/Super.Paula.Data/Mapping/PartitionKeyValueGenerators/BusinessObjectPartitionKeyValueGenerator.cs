@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.ValueGeneration;
-using Super.Paula.Aggregates.BusinessObjects;
+using Super.Paula.Aggregates.Inventory;
 using Super.Paula.Environment;
 
 namespace Super.Paula.Data.Mapping.PartitionKeyValueGenerators

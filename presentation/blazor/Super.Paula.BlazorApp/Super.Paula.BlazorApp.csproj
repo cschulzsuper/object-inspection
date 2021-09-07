@@ -17,4 +17,10 @@
     <ProjectReference Include="..\..\endpoint\Super.Paula.Web.Client\Super.Paula.Web.Client.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="Pages\BusinessObjects\Edit.razor">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+  </ItemGroup>
+
 </Project>

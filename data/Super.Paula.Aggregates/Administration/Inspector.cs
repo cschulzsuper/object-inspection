@@ -1,4 +1,4 @@
-﻿namespace Super.Paula.Aggregates.Inspectors
+﻿namespace Super.Paula.Aggregates.Administration
 {
     public class Inspector
     {

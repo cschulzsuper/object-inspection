@@ -1,19 +1,16 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.ValueGeneration;
 using Microsoft.Extensions.DependencyInjection;
-using Super.Paula.Aggregates.BusinessObjectInspectionAudits;
-using Super.Paula.Aggregates.BusinessObjects;
-using Super.Paula.Aggregates.InspectionBusinessObjects;
-using Super.Paula.Aggregates.Inspections;
-using Super.Paula.Aggregates.Inspectors;
-using Super.Paula.Aggregates.Organizations;
-using Super.Paula.Data.Mapping;
 using Super.Paula.Data.Mapping.PartitionKeyValueGenerators;
 using Super.Paula.Environment;
+using System.Diagnostics.CodeAnalysis;
+using Super.Paula.Aggregates.Administration;
+using Super.Paula.Aggregates.Auditing;
+using Super.Paula.Aggregates.Guidlines;
+using Super.Paula.Aggregates.Inventory;
 
 namespace Super.Paula.Data
 {
+    [SuppressMessage("Style", "IDE1006")]
     public static class _Services
     {
         public static IServiceCollection AddPaulaData(this IServiceCollection services)
@@ -35,7 +32,6 @@ namespace Super.Paula.Data
             services.AddScoped<IPartitionKeyValueGenerator<BusinessObject>, BusinessObjectPartitionKeyValueGenerator>();
             services.AddScoped<IPartitionKeyValueGenerator<BusinessObjectInspectionAudit>, BusinessObjectInspectionAuditPartitionKeyValueGenerator>();
             services.AddScoped<IPartitionKeyValueGenerator<Inspection>, InspectionPartitionKeyValueGenerator>();
-            services.AddScoped<IPartitionKeyValueGenerator<InspectionBusinessObject>, InspectionBusinessObjectPartitionKeyValueGenerator>();
             services.AddScoped<IPartitionKeyValueGenerator<Inspector>, InspectorPartitionKeyValueGenerator>();
             services.AddScoped<IPartitionKeyValueGenerator<Organization>, OrganizationPartitionKeyValueGenerator>();
 

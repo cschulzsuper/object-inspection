@@ -1,5 +1,5 @@
-﻿using Super.Paula.Data;
-using Super.Paula.Aggregates.Inspectors;
+﻿using Super.Paula.Aggregates.Administration;
+using Super.Paula.Data;
 using Super.Paula.Management.Contract;
 
 namespace Super.Paula.Management

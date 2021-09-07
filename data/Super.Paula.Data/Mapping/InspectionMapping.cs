@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Super.Paula.Aggregates.Inspections;
+using Super.Paula.Aggregates.Guidlines;
 using Super.Paula.Data.Mapping.PartitionKeyValueGenerators;
 
 namespace Super.Paula.Data.Mapping

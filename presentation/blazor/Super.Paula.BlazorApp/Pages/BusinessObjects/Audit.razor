@@ -37,12 +37,12 @@ else
                 <tr>
                     <td class="col-8">
                         <button class="btn btn-outline-secondary btn-block text-left" 
-                                @onclick="() => ToggleTextVisibility(inspection.Inspection)">@inspection.InspectionDisplayName</button>
+                                @onclick="() => ToggleTextVisibility(inspection.UniqueName)">@inspection.DisplayName</button>
 
-                        @if (_inspectionsTextVisibile?[inspection.Inspection] == true && !string.IsNullOrWhiteSpace(inspection.InspectionText))
+                        @if (_inspectionsTextVisibile?[inspection.UniqueName] == true && !string.IsNullOrWhiteSpace(inspection.Text))
                         {
                             <div class="card card-body text-wrap">
-                                @inspection.InspectionText
+                                @inspection.Text
                             </div>
                         }
                     </td>
@@ -51,25 +51,25 @@ else
                     {
                         case "satisfying":
                             <button class="btn btn-success btn-block" 
-                                @onclick="() => ToggleAsync(inspection.Inspection)">@Translator["Satisfying"]</button>
+                                @onclick="() => ToggleAsync(inspection)">@Translator["Satisfying"]</button>
                              break;
                         case "insufficient": 
                             <button class="btn btn-warning btn-block" 
-                                @onclick="() => ToggleAsync(inspection.Inspection)">@Translator["Insufficient"]</button>
+                                @onclick="() => ToggleAsync(inspection)">@Translator["Insufficient"]</button>
                             break;
                         case "failed": 
                             <button class="btn btn-danger btn-block" 
-                                @onclick="() => ToggleAsync(inspection.Inspection)">@Translator["Failed"]</button>
+                                @onclick="() => ToggleAsync(inspection)">@Translator["Failed"]</button>
                             break;
                         default: 
                             <button class="btn btn-secondary btn-block" 
-                                @onclick="() => ToggleAsync(inspection.Inspection)">@Translator["Unset"]</button>
+                                @onclick="() => ToggleAsync(inspection)">@Translator["Unset"]</button>
                             break;
                     } 
                     </td>                   
                     <td class="col-2">
                         <button class="btn btn-outline-primary btn-block" 
-                            @onclick="() => NavigateToAnnotationAsync(inspection.Inspection)">@Translator["Annotation"]</button>
+                            @onclick="() => NavigateToAnnotationAsync(inspection)">@Translator["Annotation"]</button>
                     </td>
                 </tr>
             }
@@ -98,7 +98,7 @@ else
         _businessObject = await BusinessObjectHandler.GetAsync(BusinessObject);
 
         _inspectionsTextVisibile = _businessObject.Inspections
-            .ToDictionary(x => x.Inspection, _ => false);
+            .ToDictionary(x => x.UniqueName, _ => false);
     }
 
     private void ToggleTextVisibility(string inspection)
@@ -109,11 +109,10 @@ else
         }
     }
 
-    private async Task ToggleAsync(string inspection)
+    private async Task ToggleAsync(BusinessObjectResponse.EmbeddedInspection inspection)
     {
         var utcNow = DateTime.UtcNow;
-        var inspectionItem = _businessObject!.Inspections.Single(x => x.Inspection == inspection);
-        var inspectionToOld = inspectionItem.AuditDate < (DateOnly.FromDateTime(utcNow).DayNumber - 1);
+        var inspectionToOld = inspection.AuditDate < (DateOnly.FromDateTime(utcNow).DayNumber - 1);
 
         if (!inspectionToOld)
         {
@@ -126,36 +125,33 @@ else
 
             var request = new ChangeInspectionAuditRequest
             {
-                Result = nextResult[inspectionItem.AuditResult]
+                Result = nextResult[inspection.AuditResult]
             };
 
             await BusinessObjectHandler.ChangeInspectionAuditAsync(
-                _businessObject.UniqueName, inspection, request);
+                _businessObject!.UniqueName, inspection.UniqueName, request);
 
-            inspectionItem.AuditResult = request.Result;
+            inspection.AuditResult = request.Result;
         }
         else
         {
             var request = new CreateInspectionAuditRequest
             {
-                Inspection = inspection,
+                Inspection = inspection.UniqueName,
                 AuditDate = DateOnly.FromDateTime(utcNow).DayNumber,
                 AuditTime = (int)utcNow.TimeOfDay.TotalMilliseconds,
                 Result = "satisfying"
             };
 
              await BusinessObjectHandler.CreateInspectionAuditAsync(
-                _businessObject.UniqueName, request);
+                _businessObject!.UniqueName, request);
 
-            inspectionItem.AuditDate = request.AuditDate;
-            inspectionItem.AuditTime = request.AuditTime;
-            inspectionItem.AuditResult = request.Result;
+            inspection.AuditDate = request.AuditDate;
+            inspection.AuditTime = request.AuditTime;
+            inspection.AuditResult = request.Result;
         }
     }
 
-    private void NavigateToAnnotationAsync(string inspection)
-    {
-        var inspectionItem = _businessObject!.Inspections.Single(x => x.Inspection == inspection);
-        NavigationManager.NavigateTo($"/perform-inspection-audits/{_businessObject.UniqueName}/{inspectionItem.Inspection}/{inspectionItem.AuditDate}/{inspectionItem.AuditTime}/annotation");
-    }
+    private void NavigateToAnnotationAsync(BusinessObjectResponse.EmbeddedInspection inspection)
+        => NavigationManager.NavigateTo($"/business-objects/{_businessObject!.UniqueName}/audit/{inspection.UniqueName}/{inspection.AuditDate}/{inspection.AuditTime}/annotation");
 }

@@ -1,4 +1,4 @@
-﻿using Super.Paula.Aggregates.Organizations;
+﻿using Super.Paula.Aggregates.Administration;
 using Super.Paula.Management;
 using Super.Paula.Management.Contract;
 using Super.Paula.Web.Shared.Handling;

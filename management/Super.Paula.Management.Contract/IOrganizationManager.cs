@@ -1,4 +1,4 @@
-﻿using Super.Paula.Aggregates.Organizations;
+﻿using Super.Paula.Aggregates.Administration;
 
 namespace Super.Paula.Management.Contract
 {

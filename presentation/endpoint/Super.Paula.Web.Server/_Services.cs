@@ -9,9 +9,12 @@ using Super.Paula.Web.Server.Handling;
 using Super.Paula.Web.Shared.Authentication;
 using Super.Paula.Web.Shared.Authorization;
 using Super.Paula.Web.Shared.Handling;
+using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Super.Paula.Web.Server
 {
+    [SuppressMessage("Style", "IDE1006")]
     public static class _Services
     {
         public static IServiceCollection AddPaulaWebServer(this IServiceCollection services, bool isDevlopment)
@@ -29,15 +32,11 @@ namespace Super.Paula.Web.Server
                 .AddScoped<IBusinessObjectHandler, BusinessObjectHandler>()
                 .AddScoped<IBusinessObjectInspectionAuditHandler, BusinessObjectInspectionAuditHandler>()
                 .AddScoped<IInspectionHandler, InspectionHandler>()
-                .AddScoped<IInspectionBusinessObjectHandler, InspectionBusinessObjectHandler>()
                 .AddScoped<IInspectorHandler, InspectorHandler>()
                 .AddScoped<IOrganizationHandler, OrganizationHandler>()
 
-                .AddTransient(provider => new Lazy<IInspectionHandler>(() => 
-                    provider.GetRequiredService<IInspectionHandler>()))
-
-                .AddTransient(provider => new Lazy<IBusinessObjectHandler>(() => 
-                    provider.GetRequiredService<IBusinessObjectHandler>()));
+                .AddTransient(provider => new Lazy<IInspectionHandler>(() => provider.GetRequiredService<IInspectionHandler>()))
+                .AddTransient(provider => new Lazy<IBusinessObjectHandler>(() => provider.GetRequiredService<IBusinessObjectHandler>()));
 
 
             return services;

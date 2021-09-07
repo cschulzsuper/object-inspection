@@ -1,5 +1,4 @@
-﻿using Super.Paula.Aggregates.BusinessObjects;
-using Super.Paula.Shared.ErrorHandling;
+﻿using Super.Paula.Shared.ErrorHandling;
 
 namespace Super.Paula.Data
 {

@@ -1,4 +1,4 @@
-﻿using Super.Paula.Aggregates.BusinessObjects;
+﻿using Super.Paula.Aggregates.Inventory;
 
 namespace Super.Paula.Management.Contract
 {

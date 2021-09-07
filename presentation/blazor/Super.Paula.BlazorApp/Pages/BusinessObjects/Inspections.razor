@@ -119,12 +119,12 @@ else
 
         foreach (var inspection in response.Inspections)
         {
-            _inspectionBusinessObjects!.Add(inspection.Inspection, new InspectionResponse
+            _inspectionBusinessObjects!.Add(inspection.UniqueName, new InspectionResponse
             {
-                Activated = inspection.InspectionActivated,
-                DisplayName = inspection.InspectionDisplayName,
-                Text = inspection.InspectionText,
-                UniqueName = inspection.Inspection
+                Activated = false,
+                DisplayName = inspection.DisplayName,
+                Text = inspection.Text,
+                UniqueName = inspection.UniqueName
             });
 
             this.StateHasChanged();

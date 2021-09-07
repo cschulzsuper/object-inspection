@@ -1,5 +1,5 @@
-﻿using Super.Paula.Data;
-using Super.Paula.Aggregates.BusinessObjects;
+﻿using Super.Paula.Aggregates.Inventory;
+using Super.Paula.Data;
 using Super.Paula.Management.Contract;
 
 namespace Super.Paula.Management

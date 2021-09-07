@@ -1,4 +1,4 @@
-﻿namespace Super.Paula.Aggregates.Organizations
+﻿namespace Super.Paula.Aggregates.Administration
 {
     public class Organization
     {

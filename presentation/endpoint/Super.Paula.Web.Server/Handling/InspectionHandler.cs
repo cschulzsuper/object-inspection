@@ -1,5 +1,5 @@
-﻿using Super.Paula.Data;
-using Super.Paula.Aggregates.Inspections;
+﻿using Super.Paula.Aggregates.Guidlines;
+using Super.Paula.Data;
 using Super.Paula.Web.Shared.Handling;
 using Super.Paula.Web.Shared.Handling.Requests;
 using Super.Paula.Web.Shared.Handling.Responses;
@@ -10,16 +10,13 @@ namespace Super.Paula.Web.Server.Handling
     {
         private readonly IRepository<Inspection> _inspectionRepository;
         private readonly Lazy<IBusinessObjectHandler> _businessObjectHandler;
-        private readonly IInspectionBusinessObjectHandler _inspectionBusinessObjectHandler;
 
         public InspectionHandler(
             IRepository<Inspection> inspectionRpository,
-            Lazy<IBusinessObjectHandler> businessObjectHandler,
-            IInspectionBusinessObjectHandler inspectionBusinessObjectHandler)
+            Lazy<IBusinessObjectHandler> businessObjectHandler)
         {
             _inspectionRepository = inspectionRpository;
             _businessObjectHandler = businessObjectHandler;
-            _inspectionBusinessObjectHandler = inspectionBusinessObjectHandler;
         }
 
         public async ValueTask ActivateAsync(string inspection)
@@ -138,7 +135,6 @@ namespace Super.Paula.Web.Server.Handling
             };
 
             await _businessObjectHandler.Value.RefreshInspectionAsync(inspection.UniqueName, request);
-            await _inspectionBusinessObjectHandler.RefreshInspectionAsync(inspection.UniqueName, request);
         }
     }
 }

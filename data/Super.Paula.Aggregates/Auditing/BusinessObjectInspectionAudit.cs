@@ -1,4 +1,4 @@
-﻿namespace Super.Paula.Aggregates.BusinessObjectInspectionAudits
+﻿namespace Super.Paula.Aggregates.Auditing
 {
     public class BusinessObjectInspectionAudit
     {

@@ -25,7 +25,8 @@ namespace Super.Paula.Web.Server.Endpoints
                 ("/assign-inspection", AssignInspection),
                 ("/cancel-inspection", CancelInspection),
                 ("/create-inspection-audit", CreateInspectionAudit),
-                ("/change-inspection-audit/{inspection}", ChangeInspectionAudit));
+                ("/change-inspection-audit/{inspection}", ChangeInspectionAudit),
+                ("/annotate-inspection-audit/{inspection}", AnnotateInspectionAudit));
 
             endpoints.MapQueries(
                 "/business-objects",
@@ -84,6 +85,11 @@ namespace Super.Paula.Web.Server.Endpoints
             [Authorize("Inspector")]
             (IBusinessObjectHandler handler, string businessObject, string inspection, ChangeInspectionAuditRequest request)
                 => handler.ChangeInspectionAuditAsync(businessObject, inspection, request);
+
+        private static Delegate AnnotateInspectionAudit =>
+            [Authorize("Inspector")]
+            (IBusinessObjectHandler handler, string businessObject, string inspection, AnnotateInspectionAuditRequest request)
+                => handler.AnnotateInspectionAuditAsync(businessObject, inspection, request);
 
         private static Delegate CreateInspectionAudit =>
             [Authorize("Inspector")]

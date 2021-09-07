@@ -1,0 +1,83 @@
+﻿@page "/business-objects/{businessObject}/audit/{inspection}/{auditDate:int}/{auditTime:int}/annotation"
+@using Super.Paula.Web.Shared.Localization
+@using Super.Paula.Web.Shared.Handling.Requests
+
+@inject ITranslator Translator
+@inject NavigationManager NavigationManager
+@inject IBusinessObjectHandler BusinessObjectHandler
+
+@attribute [Authorize("Inspector")]
+
+<div class="container mt-2 mt-md-3">
+    <h1>@Translator["Annotate audit"]</h1>
+</div>
+
+@if (_inspection == null)
+{
+    <p><em>Loading...</em></p>
+}
+else 
+{
+    <EditForm Model="@_inspection" OnValidSubmit="@OnValidSubmitAsync">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="container mt-2 mt-md-3">
+            <div class="form-group">
+                <label>@Translator["Display name"]</label>
+                <InputText class="form-control" id="uniqueName" @bind-Value="_inspection.DisplayName" readonly/>
+            </div>
+            <div class="form-group">
+                <label>@Translator["Audit result"]</label>
+                <InputText class="form-control" id="uniqueName" @bind-Value="_inspection.AuditResult" readonly/>
+            </div>
+            <div class="form-group">
+                <label>@Translator["Annotation"]</label>
+                <InputTextArea class="form-control" id="text" rows="6" @bind-Value="_inspection.AuditAnnotation" />
+            </div>
+        </div>
+
+        <div class="container mt-2 mt-md-3">
+            <button type="submit" class="btn btn-primary">@Translator["Submit"]</button>
+        </div>
+
+    </EditForm>
+}
+
+@code {
+
+    [Parameter]
+    public string BusinessObject { get; set; } = string.Empty;
+
+    [Parameter]
+    public string Inspection { get; set; } = string.Empty;
+
+    [Parameter]
+    public int AuditDate { get; set; }
+
+    [Parameter]
+    public int AuditTime { get; set; }
+
+    private BusinessObjectResponse.EmbeddedInspection? _inspection = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var response = await BusinessObjectHandler.GetAsync(BusinessObject);
+
+        _inspection = response.Inspections
+            .Single(inspection =>
+                inspection.UniqueName == Inspection &&
+                inspection.AuditDate == AuditDate &&
+                inspection.AuditTime == AuditTime);
+    }
+
+    private async Task OnValidSubmitAsync()
+    {
+        await BusinessObjectHandler.AnnotateInspectionAuditAsync(BusinessObject, Inspection,
+            new AnnotateInspectionAuditRequest
+            {
+               Annotation = _inspection!.AuditAnnotation 
+            });
+        NavigationManager.NavigateTo($"/business-objects/{BusinessObject}/audit");
+    }
+}

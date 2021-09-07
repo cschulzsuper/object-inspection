@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Super.Paula.Aggregates.BusinessObjects;
+using Super.Paula.Aggregates.Inventory;
 using Super.Paula.Data.Mapping.PartitionKeyValueGenerators;
 
 namespace Super.Paula.Data.Mapping
@@ -69,20 +69,20 @@ namespace Super.Paula.Data.Mapping
                 .IsRequired();
 
             inspectionsBuilder
-                .Property(x => x.Inspection)
+                .Property(x => x.UniqueName)
                 .HasMaxLength(140)
                 .IsRequired();
 
             inspectionsBuilder
-                .Property(x => x.InspectionActivated)
+                .Property(x => x.ActivatedGlobally)
                 .IsRequired();
 
             inspectionsBuilder
-                .Property(x => x.InspectionDisplayName)
+                .Property(x => x.DisplayName)
                 .IsRequired();
 
             inspectionsBuilder
-                .Property(x => x.InspectionText)
+                .Property(x => x.Text)
                 .HasMaxLength(4000)
                 .IsRequired();
         }
