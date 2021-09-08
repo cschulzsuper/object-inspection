@@ -1,6 +1,7 @@
 ﻿using Super.Paula.Aggregates.Administration;
 using Super.Paula.Data;
 using Super.Paula.Management.Contract;
+using Super.Paula.Shared.Validation;
 
 namespace Super.Paula.Management
 {
@@ -14,19 +15,28 @@ namespace Super.Paula.Management
         }
 
         public ValueTask<Organization> GetAsync(string organization)
-            => _organizationRepository.GetByIdAsync(organization);
-
-        public IQueryable<Organization> GetAll()
-            => _organizationRepository.GetQueryable();
+        {
+            EnsureGetable(organization);
+            return _organizationRepository.GetByIdAsync(organization);
+        }
 
         public ValueTask InsertAsync(Organization organization)
-            => _organizationRepository.InsertAsync(organization);
+        {
+            EnsureInsertable(organization);
+            return _organizationRepository.InsertAsync(organization);
+        }
 
         public ValueTask UpdateAsync(Organization organization)
-            => _organizationRepository.UpdateAsync(organization);
+        {
+            EnsureUpdateable(organization);
+            return _organizationRepository.UpdateAsync(organization);
+        }
 
         public ValueTask DeleteAsync(Organization organization)
-            => _organizationRepository.DeleteAsync(organization);
+        {
+            EnsureDeleteable(organization);
+            return _organizationRepository.DeleteAsync(organization);
+        }
 
         public IQueryable<Organization> GetQueryable()
             => _organizationRepository.GetQueryable();
@@ -36,5 +46,33 @@ namespace Super.Paula.Management
 
         public IAsyncEnumerable<TResult> GetAsyncEnumerable<TResult>(Func<IQueryable<Organization>, IQueryable<TResult>> query)
             => _organizationRepository.GetAsyncEnumerable(query);
+
+        private void EnsureGetable(string organization)
+            => Validator.Ensure(
+                OrganizationValidator.OrganizationHasValue(organization),
+                OrganizationValidator.OrganizationHasKebabCase(organization),
+                OrganizationValidator.OrganizationExists(organization, GetQueryable()));
+
+        private void EnsureInsertable(Organization organization)
+            => Validator.Ensure(
+                OrganizationValidator.UniqueNameHasValue(organization),
+                OrganizationValidator.UniqueNameHasKebabCase(organization),
+                OrganizationValidator.UniqueNameIsUnqiue(organization,GetQueryable()),
+                OrganizationValidator.ChiefInspectorIsNotNull(organization),
+                OrganizationValidator.ChiefInspectorHasKebabCase(organization));
+
+        private void EnsureUpdateable(Organization organization)
+            => Validator.Ensure(
+                OrganizationValidator.UniqueNameHasValue(organization),
+                OrganizationValidator.UniqueNameHasKebabCase(organization),
+                OrganizationValidator.UniqueNameExists(organization, GetQueryable()),
+                OrganizationValidator.ChiefInspectorIsNotNull(organization),
+                OrganizationValidator.ChiefInspectorHasKebabCase(organization));
+
+        private void EnsureDeleteable(Organization organization)
+            => Validator.Ensure(
+                OrganizationValidator.UniqueNameHasValue(organization),
+                OrganizationValidator.UniqueNameHasKebabCase(organization),
+                OrganizationValidator.UniqueNameExists(organization, GetQueryable()));
     }
 }

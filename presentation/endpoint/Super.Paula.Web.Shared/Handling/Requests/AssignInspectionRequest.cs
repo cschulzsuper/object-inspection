@@ -1,8 +1,15 @@
-﻿namespace Super.Paula.Web.Shared.Handling.Requests
+﻿using Super.Paula.Shared.Validation;
+using System.ComponentModel.DataAnnotations;
+
+namespace Super.Paula.Web.Shared.Handling.Requests
 {
     public class AssignInspectionRequest
     {
-        public bool Activated { get; set; } = false;
+        [Required]
+        [KebabCase]
+        [StringLength(140)]
         public string UniqueName { get; set; } = string.Empty;
+
+        public bool Activated { get; set; } = false;
     }
 }

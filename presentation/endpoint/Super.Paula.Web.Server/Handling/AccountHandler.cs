@@ -120,6 +120,14 @@ namespace Super.Paula.Web.Server.Handling
         {
             var activateOrganisation = _organizationManager.GetQueryable().FirstOrDefault() == null;
 
+            await _organizationManager.InsertAsync(new Organization
+            {
+                ChiefInspector = request.ChiefInspector,
+                UniqueName = request.UniqueName,
+                DisplayName = request.DisplayName,
+                Activated = activateOrganisation,
+            });
+
             await _inspectorManager.InsertAsync(new Inspector
             {
                 MailAddress = request.ChiefInspectorMail,
@@ -127,16 +135,8 @@ namespace Super.Paula.Web.Server.Handling
                 OrganizationActivated = activateOrganisation,
                 OrganizationDisplayName = request.DisplayName,
                 Secret = request.ChiefInspectorSecret,
-                UniqueName = request.ChiefInspectorName,
+                UniqueName = request.ChiefInspector,
                 Activated = true
-            });
-                        
-            await _organizationManager.InsertAsync(new Organization
-            {
-                ChiefInspector = request.ChiefInspectorName,
-                UniqueName = request.UniqueName,
-                DisplayName = request.DisplayName,
-                Activated = activateOrganisation,
             });
         }
 

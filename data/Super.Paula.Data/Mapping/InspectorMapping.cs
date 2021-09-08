@@ -50,6 +50,7 @@ namespace Super.Paula.Data.Mapping
 
             builder
                 .Property(x => x.Proof)
+                .ValueGeneratedOnAdd()
                 .HasMaxLength(140)
                 .IsRequired();
 

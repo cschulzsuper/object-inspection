@@ -10,7 +10,6 @@
 
 <EditForm Model="@request" OnValidSubmit="@OnValidSubmitAsync">
     <DataAnnotationsValidator />
-    <ValidationSummary />
 
     <div class="container mt-2 mt-md-3">
         <div class="form-group">
@@ -27,14 +26,26 @@
         </div>
     </div>
 
-    <div class="container mt-2 mt-md-3">
-        <button type="submit" class="btn btn-primary">@Translator["Submit"]</button>
-    </div>
+    @if(context.GetValidationMessages().Any())
+    {
+        <div class="container mt-2 mt-md-3">
+            <div class="card card-body">
+                <ValidationSummary />    
+            </div>
+        </div>
+    } 
+    else 
+    {
+        <div class="container mt-2 mt-md-3">
+            <button type="submit" class="btn btn-primary">@Translator["Submit"]</button>
+        </div>
+    }
 
 </EditForm>
 
 @code {
     private SignInInspectorRequest request = new SignInInspectorRequest();
+
 
     private async Task OnValidSubmitAsync()
     {

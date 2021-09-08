@@ -2,6 +2,7 @@
 using Super.Paula.Data;
 using Super.Paula.Environment;
 using Super.Paula.Management;
+using Super.Paula.Management.Contract;
 using Super.Paula.Web.Shared.Handling;
 using Super.Paula.Web.Shared.Handling.Requests;
 using Super.Paula.Web.Shared.Handling.Responses;
@@ -10,20 +11,20 @@ namespace Super.Paula.Web.Server.Handling
 {
     public class BusinessObjectInspectionAuditHandler : IBusinessObjectInspectionAuditHandler
     {
-        private readonly IRepository<BusinessObjectInspectionAudit> _inspectionAuditRepository;
+        private readonly IBusinessObjectInspectionAuditManager _businessObjectInspectionAuditManager;
         private readonly AppState _appState;
 
         public BusinessObjectInspectionAuditHandler(
-            IRepository<BusinessObjectInspectionAudit> inspectionAuditRepository,
+            IBusinessObjectInspectionAuditManager businessObjectInspectionAuditManager,
             AppState appState)
         {
-            _inspectionAuditRepository = inspectionAuditRepository;
+            _businessObjectInspectionAuditManager = businessObjectInspectionAuditManager;
             _appState = appState;
         }
 
         public async ValueTask<InspectionAuditResponse> GetAsync(string businessObject, string inspection, int date, int time)
         {
-            var entity = await _inspectionAuditRepository.GetByIdsAsync(date, businessObject, inspection, time);
+            var entity = await _businessObjectInspectionAuditManager.GetAsync(businessObject, inspection, date, time);
 
             return new InspectionAuditResponse
             {
@@ -40,7 +41,7 @@ namespace Super.Paula.Web.Server.Handling
         }
 
         public IAsyncEnumerable<InspectionAuditResponse> GetAll()
-            => _inspectionAuditRepository
+            => _businessObjectInspectionAuditManager
                 .GetAsyncEnumerable(query => query
                     .Select(entity => new InspectionAuditResponse
                     {
@@ -70,7 +71,7 @@ namespace Super.Paula.Web.Server.Handling
                 Result = request.Result
             };
 
-            await _inspectionAuditRepository.InsertAsync(entity);
+            await _businessObjectInspectionAuditManager.InsertAsync(entity);
 
             return new InspectionAuditResponse
             {
@@ -88,7 +89,7 @@ namespace Super.Paula.Web.Server.Handling
 
         public async ValueTask ReplaceAsync(string businessObject, string inspection, int date, int time, InspectionAuditRequest request)
         {
-            var entity = await _inspectionAuditRepository.GetByIdsAsync(date, businessObject, inspection, time);
+            var entity = await _businessObjectInspectionAuditManager.GetAsync(businessObject, inspection, date, time);
 
             entity.Annotation = request.Annotation;
             entity.AuditDate = request.AuditDate;
@@ -100,14 +101,14 @@ namespace Super.Paula.Web.Server.Handling
             entity.Inspector = request.Inspector;
             entity.Result = request.Result;
 
-            await _inspectionAuditRepository.UpdateAsync(entity);
+            await _businessObjectInspectionAuditManager.UpdateAsync(entity);
         }
 
         public async ValueTask DeleteAsync(string businessObject, string inspection, int date, int time)
         {
-            var entity = await _inspectionAuditRepository.GetByIdsAsync(date, businessObject, inspection, time);
+            var entity = await _businessObjectInspectionAuditManager.GetAsync(businessObject, inspection, date, time);
 
-            await _inspectionAuditRepository.DeleteAsync(entity);
+            await _businessObjectInspectionAuditManager.DeleteAsync(entity);
         }
 
         public IAsyncEnumerable<InspectionAuditResponse> Search(string? businessObject, string? inspector, string? inspection)
@@ -116,7 +117,7 @@ namespace Super.Paula.Web.Server.Handling
             var doInspectorSearch = inspector?.Length > 3;
             var doInspectionSearch = inspection?.Length > 3;
 
-            return _inspectionAuditRepository
+            return _businessObjectInspectionAuditManager
                 .GetAsyncEnumerable(query => query
                     .Where(x => !doBusinessObjectSearch ||
                         (x.BusinessObject.Contains(businessObject!) || x.BusinessObjectDisplayName.Contains(businessObject!)))
@@ -144,7 +145,7 @@ namespace Super.Paula.Web.Server.Handling
             var doInspectorSearch = inspector?.Length > 3;
             var doInspectionSearch = inspection?.Length > 3;
 
-            return _inspectionAuditRepository
+            return _businessObjectInspectionAuditManager
                   .GetAsyncEnumerable(query => query
                       .Where(entity =>
                           entity.BusinessObject == businessObject)

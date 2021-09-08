@@ -1,5 +1,6 @@
 ﻿using Super.Paula.Aggregates.Guidlines;
 using Super.Paula.Data;
+using Super.Paula.Management.Contract;
 using Super.Paula.Web.Shared.Handling;
 using Super.Paula.Web.Shared.Handling.Requests;
 using Super.Paula.Web.Shared.Handling.Responses;
@@ -8,26 +9,26 @@ namespace Super.Paula.Web.Server.Handling
 {
     public class InspectionHandler : IInspectionHandler
     {
-        private readonly IRepository<Inspection> _inspectionRepository;
+        private readonly IInspectionManager _inspectionManager;
         private readonly Lazy<IBusinessObjectHandler> _businessObjectHandler;
 
         public InspectionHandler(
-            IRepository<Inspection> inspectionRpository,
+            IInspectionManager inspectionManager,
             Lazy<IBusinessObjectHandler> businessObjectHandler)
         {
-            _inspectionRepository = inspectionRpository;
+            _inspectionManager = inspectionManager;
             _businessObjectHandler = businessObjectHandler;
         }
 
         public async ValueTask ActivateAsync(string inspection)
         {
-            var entity = await _inspectionRepository.GetByIdAsync(inspection);
+            var entity = await _inspectionManager.GetAsync(inspection);
 
             var refresh = entity.Activated != true;
 
             entity.Activated = true;
 
-            await _inspectionRepository.UpdateAsync(entity);
+            await _inspectionManager.UpdateAsync(entity);
 
             if (refresh)
             {
@@ -37,13 +38,13 @@ namespace Super.Paula.Web.Server.Handling
 
         public async ValueTask DeactivateAsync(string inspection)
         {
-            var entity = await _inspectionRepository.GetByIdAsync(inspection);
+            var entity = await _inspectionManager.GetAsync(inspection);
 
             var refresh = entity.Activated != false;
 
             entity.Activated = false;
 
-            await _inspectionRepository.UpdateAsync(entity);
+            await _inspectionManager.UpdateAsync(entity);
 
             if (refresh)
             {
@@ -61,7 +62,7 @@ namespace Super.Paula.Web.Server.Handling
                 UniqueName = request.UniqueName
             };
 
-            await _inspectionRepository.InsertAsync(entity);
+            await _inspectionManager.InsertAsync(entity);
 
             return new InspectionResponse
             {
@@ -74,13 +75,13 @@ namespace Super.Paula.Web.Server.Handling
 
         public async ValueTask DeleteAsync(string inspection)
         {
-            var entity = await _inspectionRepository.GetByIdAsync(inspection);
+            var entity = await _inspectionManager.GetAsync(inspection);
 
-            await _inspectionRepository.DeleteAsync(entity);
+            await _inspectionManager.DeleteAsync(entity);
         }
 
         public IAsyncEnumerable<InspectionResponse> GetAll()
-            => _inspectionRepository
+            => _inspectionManager
                 .GetAsyncEnumerable(query => query
                 .Select(entity => new InspectionResponse
                 {
@@ -92,7 +93,7 @@ namespace Super.Paula.Web.Server.Handling
 
         public async ValueTask<InspectionResponse> GetAsync(string inspection)
         {
-            var entity = await _inspectionRepository.GetByIdAsync(inspection);
+            var entity = await _inspectionManager.GetAsync(inspection);
 
             return new InspectionResponse
             {
@@ -105,7 +106,7 @@ namespace Super.Paula.Web.Server.Handling
 
         public async ValueTask ReplaceAsync(string inspection, InspectionRequest request)
         {
-            var entity = await _inspectionRepository.GetByIdAsync(inspection);
+            var entity = await _inspectionManager.GetAsync(inspection);
 
             var refresh =
                 entity.Activated != request.Activated ||
@@ -117,7 +118,7 @@ namespace Super.Paula.Web.Server.Handling
             entity.Text = request.Text;
             entity.UniqueName = request.UniqueName;
 
-            await _inspectionRepository.UpdateAsync(entity);
+            await _inspectionManager.UpdateAsync(entity);
 
             if (refresh)
             {

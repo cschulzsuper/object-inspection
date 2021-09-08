@@ -89,10 +89,11 @@ namespace Super.Paula.Data
         {
             var partitionKeyComponents = new Queue<object>(ids);
 
-            var partitionKey = _partitionKeyValueGenerator.Value(_appState, partitionKeyComponents);
+            var partitionKey = _partitionKeyValueGenerator
+                .Value(_appState, partitionKeyComponents);
 
             return partitionKeyComponents
-                .Prepend(_appState.CurrentOrganization)
+                .Prepend(partitionKey)
                 .ToArray();
         }
     }

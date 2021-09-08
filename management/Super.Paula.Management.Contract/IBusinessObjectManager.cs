@@ -9,8 +9,8 @@ namespace Super.Paula.Management.Contract
         IAsyncEnumerable<BusinessObject> GetAsyncEnumerable();
         IAsyncEnumerable<TResult> GetAsyncEnumerable<TResult>(Func<IQueryable<BusinessObject>, IQueryable<TResult>> query);
 
-        ValueTask InsertAsync(BusinessObject request);
-        ValueTask UpdateAsync(BusinessObject request);
-        ValueTask DeleteAsync(BusinessObject request);
+        ValueTask InsertAsync(BusinessObject businessObject);
+        ValueTask UpdateAsync(BusinessObject businessObject);
+        ValueTask DeleteAsync(BusinessObject businessObject);
     }
 }

@@ -52,7 +52,17 @@ else
             {
                 <tr>
                     <td class="col-2">@inspection.UniqueName</td>
-                    <td class="col-8">@inspection.DisplayName</td>
+                    <td class="col-8">
+                        <button class="btn btn-outline-secondary btn-block text-left" 
+                                @onclick="() => ToggleTextVisibility(inspection.UniqueName)">@inspection.DisplayName</button>
+
+                        @if (_inspectionsTextVisibile?[inspection.UniqueName] == true && !string.IsNullOrWhiteSpace(inspection.Text))
+                        {
+                            <div class="card card-body text-wrap">
+                                @inspection.Text
+                            </div>
+                        }
+                    </td>
                     <AuthorizeView Policy="ChiefInspector">
                         <Authorized>
                             @if(_inspectionBusinessObjects!.ContainsKey(inspection.UniqueName)) {
@@ -84,6 +94,8 @@ else
     private IDictionary<string,InspectionResponse>? _inspectionBusinessObjects;
 
     private IDictionary<string,InspectionResponse>? _inspections;
+
+    private IDictionary<string,bool>? _inspectionsTextVisibile;
 
     private bool _onlyAssigned = true;
 
@@ -129,6 +141,10 @@ else
 
             this.StateHasChanged();
         }
+
+        _inspectionsTextVisibile = authorizations.Contains("ChiefInspector")
+            ? _inspections.Keys.ToDictionary(key => key, _ => false)
+            : _inspectionBusinessObjects.Keys.ToDictionary(key => key, _ => false);
     }
 
     public Task OnlyAssignedChangedAsync(ChangeEventArgs e)
@@ -160,5 +176,13 @@ else
             });
 
         _inspectionBusinessObjects!.Remove(inspection);
+    }
+
+    private void ToggleTextVisibility(string inspection)
+    {
+        if (_inspectionsTextVisibile != null)
+        {
+            _inspectionsTextVisibile[inspection] = !_inspectionsTextVisibile[inspection];
+        }
     }
 }

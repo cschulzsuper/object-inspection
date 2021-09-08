@@ -7,7 +7,9 @@ namespace Super.Paula.Management
     {
         public static IServiceCollection AddPaulaManagement(this IServiceCollection services)
             => services
+                .AddScoped<IBusinessObjectInspectionAuditManager, BusinessObjectInspectionAuditManager>()
                 .AddScoped<IBusinessObjectManager, BusinessObjectManager>()
+                .AddScoped<IInspectionManager, InspectionManager>()
                 .AddScoped<IInspectorManager, InspectorManager>()
                 .AddScoped<IOrganizationManager, OrganizationManager>();
     }

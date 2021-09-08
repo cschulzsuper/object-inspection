@@ -13,7 +13,7 @@ namespace Super.Paula.Data.Mapping
         {
             builder
                 .Property<string>(PartitionKey)
-                .HasValueGenerator<InspectionPartitionKeyValueGenerator>();
+                .HasValueGenerator<BusinessObjectInspectionAuditPartitionKeyValueGenerator>();
 
             builder
                 .HasKey(PartitionKey, 
