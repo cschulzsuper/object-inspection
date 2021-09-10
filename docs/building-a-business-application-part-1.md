@@ -28,7 +28,7 @@ The backend is an ASP.NET Core API with a repository pattern implementation and 
 I’m not yet a fan of the new top level statements, which are coming as part of .NET 6, so I ignored them completely.
 I also kept using the layout of the old startup class pattern. 
 
-But I use some capabilities of new Minimal API to avoid ASP.NET Core API Controllers. 
+But I use some capabilities of the new Minimal API to avoid ASP.NET Core API Controllers. 
 Instead I have written something I call handler classes. The methods of those handlers are mapped to endpoints.
 This approach gives me freedom and much less dependencies to ASP.NET Core itself. The functionality behind Minimal API was something I was looking for in previous version of ASP.NET Core, but only with .NET 6 it is comfortable thing to use.
 
