@@ -17,6 +17,7 @@ namespace Super.Paula.Web.Shared.Handling.Responses
                 Activated = inspection.Activated,
                 AuditAnnotation = inspection.AuditAnnotation,
                 AuditDate = inspection.AuditDate,
+                AuditTime = inspection.AuditTime,
                 AuditInspector = inspection.AuditInspector,
                 AuditResult = inspection.AuditResult,
                 ActivatedGlobally = inspection.ActivatedGlobally,

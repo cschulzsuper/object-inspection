@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Super.Paula.Environment;
-using Super.Paula.Management.Contract;
+using Super.Paula.Management.Administration;
 
 namespace Super.Paula.Web.Server.Authentication
 {

@@ -1,7 +1,6 @@
-﻿using Super.Paula.Aggregates.Administration;
-using Super.Paula.Aggregates.Guidlines;
+﻿using Super.Paula.Aggregates.Guidlines;
 
-namespace Super.Paula.Management.Contract
+namespace Super.Paula.Management.Guidlines
 {
     public interface IInspectionManager
     {

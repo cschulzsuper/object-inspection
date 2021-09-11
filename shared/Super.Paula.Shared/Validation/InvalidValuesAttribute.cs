@@ -8,11 +8,11 @@ using System.Text.RegularExpressions;
 
 namespace Super.Paula.Shared.Validation
 {
-    public class StringRangeAttribute : ValidationAttribute
+    public class InvalidValuesAttribute : ValidationAttribute
     {
-        private readonly string[] _range;
+        private readonly object[] _range;
 
-        public StringRangeAttribute(params string[] range)
+        public InvalidValuesAttribute(params object[] range)
         {
             _range = range;
         }
@@ -24,12 +24,7 @@ namespace Super.Paula.Shared.Validation
                 return true;
             }
 
-            if (value is not string)
-            {
-                return false;
-            }
-
-            return StringRangeValidator.IsValid((string)value, _range);
+            return InvalidValuesValidator.IsValid(value, _range);
         }
     }
 }

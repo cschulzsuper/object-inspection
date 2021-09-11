@@ -1,7 +1,7 @@
 ﻿using Super.Paula.Aggregates.Administration;
 using Super.Paula.Shared.Validation;
 
-namespace Super.Paula.Management
+namespace Super.Paula.Management.Administration
 {
     public static class OrganizationValidator
     {
@@ -30,7 +30,7 @@ namespace Super.Paula.Management
                     $"Unique name '{organization.UniqueName}' of organization already exists");
 
         public static (Func<bool, bool>, FormattableString) UniqueNameExists(Organization organization, IQueryable<Organization> organizations)
-            => (x => x && organizations.FirstOrDefault(x => x.UniqueName == organization.UniqueName) == null,
+            => (x => x && organizations.FirstOrDefault(x => x.UniqueName == organization.UniqueName) != null,
                     $"Unique name '{organization.UniqueName}' of organization does not exist");
 
         public static (Func<bool, bool>, FormattableString) ChiefInspectorIsNotNull(Organization organization)

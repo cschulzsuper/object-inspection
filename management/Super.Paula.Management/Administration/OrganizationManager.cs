@@ -1,9 +1,8 @@
 ﻿using Super.Paula.Aggregates.Administration;
 using Super.Paula.Data;
-using Super.Paula.Management.Contract;
 using Super.Paula.Shared.Validation;
 
-namespace Super.Paula.Management
+namespace Super.Paula.Management.Administration
 {
     public class  OrganizationManager : IOrganizationManager
     {

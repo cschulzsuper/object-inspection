@@ -30,8 +30,11 @@ namespace Super.Paula.Web.Server.Endpoints
 
             endpoints.MapQueries(
                 "/business-objects",
-                ("/search", Search),
-                ("/for-inspector/{inspector}", GetAllForInspector));
+                ("/search", Search));
+
+            endpoints.MapQueries(
+                "/inspectors",
+                ("/{inspector}/business-objects", GetAllForInspector));
 
             return endpoints;
         }

@@ -1,6 +1,6 @@
 ﻿using Super.Paula.Aggregates.Administration;
 
-namespace Super.Paula.Management.Contract
+namespace Super.Paula.Management.Administration
 {
     public interface IInspectorManager
     {

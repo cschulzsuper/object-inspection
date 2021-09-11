@@ -1,5 +1,5 @@
 ﻿using Super.Paula.Aggregates.Administration;
-using Super.Paula.Management.Contract;
+using Super.Paula.Management.Administration;
 using Super.Paula.Web.Shared.Handling;
 using Super.Paula.Web.Shared.Handling.Requests;
 using Super.Paula.Web.Shared.Handling.Responses;

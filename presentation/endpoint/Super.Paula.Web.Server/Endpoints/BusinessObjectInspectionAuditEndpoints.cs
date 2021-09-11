@@ -12,18 +12,22 @@ namespace Super.Paula.Web.Server.Endpoints
         public static IEndpointRouteBuilder MapBusinessObjectInspectionAudit(this IEndpointRouteBuilder endpoints)
         {
             endpoints.MapCollection(
-                "/inspection-audits",
-                "/inspection-audits/{businessObject}/{inspection}/{date:int}/{time:int}",
+                "/business-objects/{businessObject}/inspection-audits",
+                "/business-objects/{businessObject}/inspection-audits/{inspection}/{date:int}/{time:int}",
                 Get,
-                GetAll,
+                GetAllForBusinessObject,
                 Create,
                 Replace,
                 Delete);
 
             endpoints.MapQueries(
                 "/inspection-audits",
-                ("/search", Search),
-                ("/search-for-business-object/{businessObject}", SearchForBusinessObject));
+                ("", GetAll),
+                ("/search", Search));
+
+            endpoints.MapQueries(
+                "/business-objects",
+                ("/{businessObject}/inspection-audits/search", SearchForBusinessObject));
 
             return endpoints;
         }
@@ -38,10 +42,15 @@ namespace Super.Paula.Web.Server.Endpoints
             (IBusinessObjectInspectionAuditHandler handler)
                 => handler.GetAll();
 
+        private static Delegate GetAllForBusinessObject =>
+            [Authorize("Inspector")]
+            (IBusinessObjectInspectionAuditHandler handler, string businessObject)
+                => handler.GetAllForBusinessObject(businessObject);
+
         private static Delegate Create =>
             [Authorize("Inspector")]
-            (IBusinessObjectInspectionAuditHandler handler, InspectionAuditRequest request)
-                => handler.CreateAsync(request);
+            (IBusinessObjectInspectionAuditHandler handler, string businessObject, InspectionAuditRequest request)
+                => handler.CreateAsync(businessObject, request);
 
         private static Delegate Replace =>
             [Authorize("Inspector")]

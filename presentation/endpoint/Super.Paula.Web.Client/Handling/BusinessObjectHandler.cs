@@ -97,7 +97,7 @@ namespace Super.Paula.Web.Client.Handling
 
         public async IAsyncEnumerable<BusinessObjectResponse> GetAllForInspector(string inspector)
         {
-            var responseMessage = await _httpClient.GetAsync($"business-objects/for-inspector/{inspector}");
+            var responseMessage = await _httpClient.GetAsync($"inspectors/{inspector}/business-objects");
             responseMessage.EnsureSuccessStatusCode();
 
             var responseStream = await responseMessage.Content.ReadAsStreamAsync();

@@ -9,8 +9,9 @@ namespace Super.Paula.Web.Shared.Handling
     {
         ValueTask<InspectionAuditResponse> GetAsync(string businessObject, string inspection, int date, int time);
         IAsyncEnumerable<InspectionAuditResponse> GetAll();
+        IAsyncEnumerable<InspectionAuditResponse> GetAllForBusinessObject(string businessObject);
 
-        ValueTask<InspectionAuditResponse> CreateAsync(InspectionAuditRequest request);
+        ValueTask<InspectionAuditResponse> CreateAsync(string businessObject, InspectionAuditRequest request);
         ValueTask ReplaceAsync(string businessObject, string inspection, int date, int time, InspectionAuditRequest request);
         ValueTask DeleteAsync(string businessObject, string inspection, int date, int time);
 

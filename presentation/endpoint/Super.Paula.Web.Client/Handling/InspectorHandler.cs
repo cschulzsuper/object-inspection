@@ -79,7 +79,7 @@ namespace Super.Paula.Web.Client.Handling
 
         public async IAsyncEnumerable<InspectorResponse> GetAllForOrganization(string organization)
         {
-            var responseMessage = await _httpClient.GetAsync($"inspectors/for-organization/{organization}");
+            var responseMessage = await _httpClient.GetAsync($"organizations/{organization}/inspectors");
             responseMessage.EnsureSuccessStatusCode();
 
             var responseStream = await responseMessage.Content.ReadAsStreamAsync();

@@ -1,5 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Super.Paula.Management.Contract;
+using Super.Paula.Management.Administration;
+using Super.Paula.Management.Auditing;
+using Super.Paula.Management.Guidlines;
+using Super.Paula.Management.Inventory;
 
 namespace Super.Paula.Management
 {

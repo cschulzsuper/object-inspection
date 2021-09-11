@@ -1,6 +1,7 @@
 ﻿using Super.Paula.Aggregates.Administration;
+using Super.Paula.Environment;
 using Super.Paula.Management;
-using Super.Paula.Management.Contract;
+using Super.Paula.Management.Administration;
 using Super.Paula.Web.Shared.Handling;
 using Super.Paula.Web.Shared.Handling.Requests;
 using Super.Paula.Web.Shared.Handling.Responses;
@@ -10,21 +11,33 @@ namespace Super.Paula.Web.Server.Handling
     public class InspectorHandler : IInspectorHandler
     {
         private readonly IInspectorManager _inspectorManager;
+        private readonly Lazy<IOrganizationHandler> _organizationHandler;
+        private readonly AppState _appState;
 
         public InspectorHandler(
-            IInspectorManager inspectorManager) 
+            IInspectorManager inspectorManager,
+            Lazy<IOrganizationHandler> organizationHandler,
+            AppState appState) 
         {
             _inspectorManager = inspectorManager;
+            _organizationHandler = organizationHandler;
+            _appState = appState;
         }
 
         public async ValueTask<InspectorResponse> CreateAsync(InspectorRequest request)
         {
+            var organization = await _organizationHandler.Value.GetAsync(_appState.CurrentOrganization);
+
             var entity = new Inspector
             {
                 MailAddress = request.MailAddress,
                 Secret = request.Secret,
                 UniqueName = request.UniqueName,
-                Activated = request.Activated
+                Activated = request.Activated,
+                Organization = organization.UniqueName,
+                OrganizationActivated = organization.Activated,
+                OrganizationDisplayName = organization.DisplayName,
+                Proof = $"{Guid.NewGuid()}"
             };
 
             await _inspectorManager.InsertAsync(entity);

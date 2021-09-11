@@ -46,7 +46,15 @@ namespace Super.Paula.Data
         {
             var partitionKeyCompoenentsQueue = new Queue<object>(partitionKeyComponents);
             var partitionKey = _partitionKeyValueGenerator.Value(_appState, partitionKeyCompoenentsQueue);
-            return _repositoryContext.Set<TEntity>().WithPartitionKey(partitionKey).AsNoTracking();
+
+            var query = _repositoryContext.Set<TEntity>().AsQueryable();
+            
+            if (!string.IsNullOrWhiteSpace(partitionKey))
+            {
+                query = query.WithPartitionKey(partitionKey);
+            }
+
+            return query.AsNoTracking();
         }
 
         public IAsyncEnumerable<TEntity> GetPartitionAsyncEnumerable(params object[] partitionKeyComponents)

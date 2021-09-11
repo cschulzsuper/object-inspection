@@ -1,6 +1,6 @@
 ﻿using Super.Paula.Aggregates.Inventory;
 
-namespace Super.Paula.Management.Contract
+namespace Super.Paula.Management.Inventory
 {
     public interface IBusinessObjectManager
     {

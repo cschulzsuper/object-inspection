@@ -15,17 +15,15 @@ namespace Super.Paula.Data.Mapping.PartitionKeyValueGenerators
                 (entry.Entity as BusinessObject)!);
 
         public string Value(AppState appState, BusinessObject entity)
-        {
-            var organization = appState.CurrentOrganization;
+            => appState.IgnoreCurrentOrganization
+                ? string.Empty
+                : appState.CurrentOrganization;
 
-            return $"{organization}";
-        }
 
         public string Value(AppState appState, Queue<object> partitionKeyComponents)
-        {
-            var organization = appState.CurrentOrganization;
+            => appState.IgnoreCurrentOrganization
+                ? string.Empty
+                : appState.CurrentOrganization;
 
-            return $"{organization}";
-        }
     }
 }

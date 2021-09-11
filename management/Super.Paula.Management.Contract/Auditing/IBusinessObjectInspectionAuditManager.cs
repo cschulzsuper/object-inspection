@@ -1,12 +1,10 @@
-﻿using Super.Paula.Aggregates.Auditing;
-using Super.Paula.Aggregates.Inventory;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using Super.Paula.Aggregates.Auditing;
 
-namespace Super.Paula.Management.Contract
+namespace Super.Paula.Management.Auditing
 {
     public interface IBusinessObjectInspectionAuditManager
     {

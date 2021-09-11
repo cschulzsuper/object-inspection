@@ -32,9 +32,9 @@ namespace Super.Paula.Web.Client.Handling
                 "Bearer", _paulaAuthenticationStateManager.GetAuthenticationBearer());
         }
 
-        public async ValueTask<InspectionAuditResponse> CreateAsync(InspectionAuditRequest request)
+        public async ValueTask<InspectionAuditResponse> CreateAsync(string businessObject, InspectionAuditRequest request)
         {
-            var responseMessage = await _httpClient.PostAsJsonAsync("inspection-audits", request);
+            var responseMessage = await _httpClient.PostAsJsonAsync($"business-objects/{businessObject}/inspection-audits", request);
             responseMessage.EnsureSuccessStatusCode();
 
             return (await responseMessage.Content.ReadFromJsonAsync<InspectionAuditResponse>())!;
@@ -42,13 +42,32 @@ namespace Super.Paula.Web.Client.Handling
 
         public async ValueTask DeleteAsync(string businessObject, string inspection, int date, int time)
         {
-            var responseMessage = await _httpClient.DeleteAsync($"inspection-audits/{businessObject}/{inspection}/{date}/{time}");
+            var responseMessage = await _httpClient.DeleteAsync($"business-objects/{businessObject}/inspection-audits/{inspection}/{date}/{time}");
             responseMessage.EnsureSuccessStatusCode();
         }
 
         public async IAsyncEnumerable<InspectionAuditResponse> GetAll()
         {
             var responseMessage = await _httpClient.GetAsync("inspection-audits");
+            responseMessage.EnsureSuccessStatusCode();
+
+            var responseStream = await responseMessage.Content.ReadAsStreamAsync();
+            var response = JsonSerializer.DeserializeAsyncEnumerable<InspectionAuditResponse>(
+                responseStream,
+                new JsonSerializerOptions(JsonSerializerDefaults.Web)
+                {
+                    DefaultBufferSize = 128
+                });
+
+            await foreach (var reponseItem in response)
+            {
+                yield return reponseItem!;
+            }
+        }
+
+        public async IAsyncEnumerable<InspectionAuditResponse> GetAllForBusinessObject(string businessObject)
+        {
+            var responseMessage = await _httpClient.GetAsync($"business-objects/{businessObject}/inspection-audits");
             responseMessage.EnsureSuccessStatusCode();
 
             var responseStream = await responseMessage.Content.ReadAsStreamAsync();
@@ -103,7 +122,7 @@ namespace Super.Paula.Web.Client.Handling
 
             var query = $"?{string.Join('&', queryValues.Where(x => x != null))}";
 
-            var responseMessage = await _httpClient.GetAsync($"inspection-audits/search-for-business-object/{businessObject}{query}");
+            var responseMessage = await _httpClient.GetAsync($"business-objects/{businessObject}/inspection-audits/search{query}");
             responseMessage.EnsureSuccessStatusCode();
 
             var responseStream = await responseMessage.Content.ReadAsStreamAsync();
@@ -122,7 +141,7 @@ namespace Super.Paula.Web.Client.Handling
 
         public async ValueTask<InspectionAuditResponse> GetAsync(string businessObject, string inspection, int date, int time)
         {
-            var responseMessage = await _httpClient.GetAsync($"inspection-audits/{businessObject}/{inspection}/{date}/{time}");
+            var responseMessage = await _httpClient.GetAsync($"business-objects/{businessObject}/inspection-audits/{inspection}/{date}/{time}");
             responseMessage.EnsureSuccessStatusCode();
 
             return (await responseMessage.Content.ReadFromJsonAsync<InspectionAuditResponse>())!;
@@ -130,7 +149,7 @@ namespace Super.Paula.Web.Client.Handling
 
         public async ValueTask ReplaceAsync(string businessObject, string inspection, int date, int time, InspectionAuditRequest request)
         {
-            var responseMessage = await _httpClient.PostAsJsonAsync($"inspection-audits/{businessObject}/{inspection}/{date}/{time}", request);
+            var responseMessage = await _httpClient.PostAsJsonAsync($"business-objects/{businessObject}/inspection-audits/{inspection}/{date}/{time}", request);
             responseMessage.EnsureSuccessStatusCode();
         }
     }

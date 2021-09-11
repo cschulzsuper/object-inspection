@@ -2,7 +2,7 @@
 using Super.Paula.Data;
 using Super.Paula.Environment;
 using Super.Paula.Management;
-using Super.Paula.Management.Contract;
+using Super.Paula.Management.Auditing;
 using Super.Paula.Web.Shared.Handling;
 using Super.Paula.Web.Shared.Handling.Requests;
 using Super.Paula.Web.Shared.Handling.Responses;
@@ -56,14 +56,32 @@ namespace Super.Paula.Web.Server.Handling
                         Result = entity.Result
                     }));
 
-        public async ValueTask<InspectionAuditResponse> CreateAsync(InspectionAuditRequest request)
+        public IAsyncEnumerable<InspectionAuditResponse> GetAllForBusinessObject(string businessObject)
+            => _businessObjectInspectionAuditManager
+                .GetAsyncEnumerable(query => query
+                    .Where(entity => 
+                        entity.BusinessObject == businessObject)
+                    .Select(entity => new InspectionAuditResponse
+                    {
+                        Annotation = entity.Annotation,
+                        AuditDate = entity.AuditDate,
+                        AuditTime = entity.AuditTime,
+                        BusinessObject = entity.BusinessObject,
+                        BusinessObjectDisplayName = entity.BusinessObjectDisplayName,
+                        Inspection = entity.Inspection,
+                        InspectionDisplayName = entity.InspectionDisplayName,
+                        Inspector = entity.Inspector ?? string.Empty,
+                        Result = entity.Result
+                    }));
+
+        public async ValueTask<InspectionAuditResponse> CreateAsync(string businessObject, InspectionAuditRequest request)
         {
             var entity = new BusinessObjectInspectionAudit
             {
                 Annotation = request.Annotation,
                 AuditDate = request.AuditDate,
                 AuditTime = request.AuditTime,
-                BusinessObject = request.BusinessObject,
+                BusinessObject = businessObject,
                 BusinessObjectDisplayName = request.BusinessObjectDisplayName,
                 Inspection = request.Inspection,
                 InspectionDisplayName = request.InspectionDisplayName,
@@ -94,7 +112,7 @@ namespace Super.Paula.Web.Server.Handling
             entity.Annotation = request.Annotation;
             entity.AuditDate = request.AuditDate;
             entity.AuditTime = request.AuditTime;
-            entity.BusinessObject = request.BusinessObject;
+            entity.BusinessObject = businessObject;
             entity.BusinessObjectDisplayName = request.BusinessObjectDisplayName;
             entity.Inspection = request.Inspection;
             entity.InspectionDisplayName = request.InspectionDisplayName;

@@ -1,6 +1,6 @@
 ﻿using Super.Paula.Aggregates.Inventory;
 using Super.Paula.Environment;
-using Super.Paula.Management.Contract;
+using Super.Paula.Management.Inventory;
 using Super.Paula.Web.Shared.Handling;
 using Super.Paula.Web.Shared.Handling.Requests;
 using Super.Paula.Web.Shared.Handling.Responses;
@@ -109,7 +109,6 @@ namespace Super.Paula.Web.Server.Handling
                             Annotation = bussinesObjectInspection.AuditAnnotation,
                             AuditDate = bussinesObjectInspection.AuditDate,
                             AuditTime = bussinesObjectInspection.AuditTime,
-                            BusinessObject = entity.UniqueName,
                             BusinessObjectDisplayName = entity.DisplayName,
                             Inspection = bussinesObjectInspection.UniqueName,
                             InspectionDisplayName = bussinesObjectInspection.DisplayName,
@@ -168,12 +167,12 @@ namespace Super.Paula.Web.Server.Handling
             await _businessObjectManager.UpdateAsync(entity);
 
             await _businessObjectInspectionAuditHandler.CreateAsync(
+                entity.UniqueName,
                 new InspectionAuditRequest
                 {
                     Annotation = inspection.AuditAnnotation,
                     AuditDate = inspection.AuditDate,
                     AuditTime = inspection.AuditTime,
-                    BusinessObject = entity.UniqueName,
                     BusinessObjectDisplayName = entity.DisplayName,
                     Inspection = inspection.UniqueName,
                     InspectionDisplayName = inspection.DisplayName,
@@ -207,7 +206,6 @@ namespace Super.Paula.Web.Server.Handling
                     Annotation = bussinesObjectInspection.AuditAnnotation,
                     AuditDate = bussinesObjectInspection.AuditDate,
                     AuditTime = bussinesObjectInspection.AuditTime,
-                    BusinessObject = entity.UniqueName,
                     BusinessObjectDisplayName = entity.DisplayName,
                     Inspection = bussinesObjectInspection.UniqueName,
                     InspectionDisplayName = bussinesObjectInspection.DisplayName,
@@ -242,7 +240,6 @@ namespace Super.Paula.Web.Server.Handling
                     Annotation = bussinesObjectInspection.AuditAnnotation,
                     AuditDate = bussinesObjectInspection.AuditDate,
                     AuditTime = bussinesObjectInspection.AuditTime,
-                    BusinessObject = entity.UniqueName,
                     BusinessObjectDisplayName = entity.DisplayName,
                     Inspection = bussinesObjectInspection.UniqueName,
                     InspectionDisplayName = bussinesObjectInspection.DisplayName,
@@ -318,7 +315,6 @@ namespace Super.Paula.Web.Server.Handling
                                     Annotation = bussinesObjectInspection.AuditAnnotation,
                                     AuditDate = bussinesObjectInspection.AuditDate,
                                     AuditTime = bussinesObjectInspection.AuditTime,
-                                    BusinessObject = bussinesObject.UniqueName,
                                     BusinessObjectDisplayName = bussinesObject.DisplayName,
                                     Inspection = bussinesObjectInspection.UniqueName,
                                     InspectionDisplayName = bussinesObjectInspection.DisplayName,

@@ -25,8 +25,8 @@ namespace Super.Paula.Web.Server.Endpoints
                 ("/deactivate", Deactivate));
 
             endpoints.MapQueries(
-                "/inspectors",
-                ("/for-organization/{organization}", GetAllForOrganization));
+                "/organizations",
+                ("/{organization}/inspectors", GetAllForOrganization));
 
             return endpoints;
         }

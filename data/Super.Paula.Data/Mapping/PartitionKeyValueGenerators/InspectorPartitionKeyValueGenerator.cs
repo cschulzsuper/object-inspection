@@ -15,17 +15,13 @@ namespace Super.Paula.Data.Mapping.PartitionKeyValueGenerators
                 (entry.Entity as Inspector)!);
 
         public string Value(AppState appState, Inspector entity)
-        {
-            var organization = appState.CurrentOrganization;
-
-            return $"{organization}";
-        }
+            => appState.IgnoreCurrentOrganization
+                ? string.Empty
+                : appState.CurrentOrganization;
 
         public string Value(AppState appState, Queue<object> partitionKeyComponents)
-        {
-            var organization = appState.CurrentOrganization;
-
-            return $"{organization}";
-        }
+            => appState.IgnoreCurrentOrganization
+                ? string.Empty
+                : appState.CurrentOrganization;
     }
 }

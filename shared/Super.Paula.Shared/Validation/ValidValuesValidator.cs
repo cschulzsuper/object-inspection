@@ -8,9 +8,9 @@ using System.Text.RegularExpressions;
 
 namespace Super.Paula.Shared.Validation
 {
-    public static class StringRangeValidator
+    public static class ValidValuesValidator
     {
-        public static bool IsValid(string value, params string[] range)
+        public static bool IsValid(object value, params object[] range)
             => range.Contains(value);
     }
 }

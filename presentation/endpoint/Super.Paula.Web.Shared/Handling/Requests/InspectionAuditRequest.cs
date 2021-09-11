@@ -15,11 +15,7 @@ namespace Super.Paula.Web.Shared.Handling.Requests
         [Required]
         [KebabCase]
         [StringLength(140)]
-        public string BusinessObject { get; set; } = string.Empty;
-
-        [Required]
-        [KebabCase]
-        [StringLength(140)]
+        [InvalidValues("search")]
         public string Inspection { get; set; } = string.Empty;
 
         [Required]
@@ -28,7 +24,7 @@ namespace Super.Paula.Web.Shared.Handling.Requests
         public string Inspector { get; set; } = string.Empty;
 
         [Required]
-        [StringRange("satisfying", "insufficient", "failed")]
+        [ValidValues("satisfying", "insufficient", "failed")]
         public string Result { get; set; } = string.Empty;
 
         [StringLength(140)]

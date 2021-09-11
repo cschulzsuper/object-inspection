@@ -9,6 +9,7 @@ namespace Super.Paula.Web.Shared.Handling.Requests
         [Required]
         [KebabCase]
         [StringLength(140)]
+        [InvalidValues("search")]
         public string UniqueName { get; set; } = string.Empty;
 
         [KebabCase]

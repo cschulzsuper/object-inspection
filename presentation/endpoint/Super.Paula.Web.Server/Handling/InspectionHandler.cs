@@ -1,6 +1,6 @@
 ﻿using Super.Paula.Aggregates.Guidlines;
 using Super.Paula.Data;
-using Super.Paula.Management.Contract;
+using Super.Paula.Management.Guidlines;
 using Super.Paula.Web.Shared.Handling;
 using Super.Paula.Web.Shared.Handling.Requests;
 using Super.Paula.Web.Shared.Handling.Responses;
