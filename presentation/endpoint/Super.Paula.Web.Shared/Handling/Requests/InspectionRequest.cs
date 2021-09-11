@@ -12,6 +12,7 @@ namespace Super.Paula.Web.Shared.Handling.Requests
 
         public bool Activated { get; set; }
 
+        [Required]
         [StringLength(140)]
         public string DisplayName { get; set; } = string.Empty;
 

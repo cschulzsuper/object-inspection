@@ -74,7 +74,7 @@ namespace Super.Paula.Web.Server.Handling
                         Result = entity.Result
                     }));
 
-        public async ValueTask<InspectionAuditResponse> CreateAsync(string businessObject, InspectionAuditRequest request)
+        public async ValueTask<InspectionAuditResponse> CreateAsync(string businessObject, BusinessObjectInspectionAuditRequest request)
         {
             var entity = new BusinessObjectInspectionAudit
             {
@@ -105,7 +105,7 @@ namespace Super.Paula.Web.Server.Handling
             };
         }
 
-        public async ValueTask ReplaceAsync(string businessObject, string inspection, int date, int time, InspectionAuditRequest request)
+        public async ValueTask ReplaceAsync(string businessObject, string inspection, int date, int time, BusinessObjectInspectionAuditRequest request)
         {
             var entity = await _businessObjectInspectionAuditManager.GetAsync(businessObject, inspection, date, time);
 

@@ -15,6 +15,7 @@ namespace Super.Paula.Web.Shared.Handling.Requests
         [StringLength(140)]
         public string UniqueName { get; set; } = string.Empty;
 
+        [Required]
         [StringLength(140)]
         public string Secret { get; set; } = string.Empty;
     }

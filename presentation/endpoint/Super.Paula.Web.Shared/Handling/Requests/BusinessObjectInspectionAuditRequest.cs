@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Super.Paula.Web.Shared.Handling.Requests
 {
-    public class InspectionAuditRequest
+    public class BusinessObjectInspectionAuditRequest
     {
         [StringLength(4000)]
         public string Annotation { get; set; } = string.Empty;
@@ -27,9 +27,11 @@ namespace Super.Paula.Web.Shared.Handling.Requests
         [ValidValues("satisfying", "insufficient", "failed")]
         public string Result { get; set; } = string.Empty;
 
+        [Required]
         [StringLength(140)]
         public string BusinessObjectDisplayName { get; set; } = string.Empty;
 
+        [Required]
         [StringLength(140)]
         public string InspectionDisplayName { get; set; } = string.Empty;
     }

@@ -10,6 +10,7 @@ namespace Super.Paula.Web.Shared.Handling.Requests
         [StringLength(140)]
         public string UniqueName { get; set; } = string.Empty;
 
+        [Required]
         [StringLength(140)]
         public string DisplayName { get; set; } = string.Empty;
 
@@ -22,6 +23,7 @@ namespace Super.Paula.Web.Shared.Handling.Requests
         [StringLength(140)]
         public string ChiefInspector { get; set; } = string.Empty;
 
+        [Required]
         [StringLength(140)]
         public string ChiefInspectorSecret { get; set; } = string.Empty;
     }

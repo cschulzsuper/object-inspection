@@ -1,5 +1,6 @@
 ﻿using Super.Paula.Aggregates.Guidlines;
 using Super.Paula.Data;
+using Super.Paula.Shared.Validation;
 
 namespace Super.Paula.Management.Guidlines
 {
@@ -13,28 +14,63 @@ namespace Super.Paula.Management.Guidlines
         }
 
         public ValueTask<Inspection> GetAsync(string inspection)
-            => _inspectionRepository.GetByIdAsync(inspection);
+        {
+            EnsureGetable(inspection);
+            return _inspectionRepository.GetByIdAsync(inspection);
+        }
 
         public IQueryable<Inspection> GetQueryable()
-            => _inspectionRepository.GetQueryable();
+            => _inspectionRepository.GetPartitionQueryable();
 
         public IAsyncEnumerable<Inspection> GetAsyncEnumerable()
-            => _inspectionRepository.GetAsyncEnumerable();
+            => _inspectionRepository.GetPartitionAsyncEnumerable();
 
         public IAsyncEnumerable<TResult> GetAsyncEnumerable<TResult>(Func<IQueryable<Inspection>, IQueryable<TResult>> query)
-            => _inspectionRepository.GetAsyncEnumerable(query);
+            => _inspectionRepository.GetPartitionAsyncEnumerable(query);
 
         public ValueTask InsertAsync(Inspection inspection)
         {
+            EnsureInsertable(inspection);
             return _inspectionRepository.InsertAsync(inspection);
         }
 
-        public async ValueTask UpdateAsync(Inspection inspection)
+        public ValueTask UpdateAsync(Inspection inspection)
         {
-            await _inspectionRepository.UpdateAsync(inspection);
+            EnsureUpdateable(inspection);
+            return _inspectionRepository.UpdateAsync(inspection);
         }
 
         public ValueTask DeleteAsync(Inspection inspection)
-            => _inspectionRepository.DeleteAsync(inspection);
+        {
+            EnsureDeleteable(inspection);
+            return _inspectionRepository.DeleteAsync(inspection);
+        }
+
+        private void EnsureGetable(string inspection)
+            => Validator.Ensure(
+                InspectionValidator.InspectionHasValue(inspection),
+                InspectionValidator.InspectionHasKebabCase(inspection),
+                InspectionValidator.InspectionExists(inspection, GetQueryable()));
+
+        private void EnsureInsertable(Inspection inspection)
+            => Validator.Ensure(
+                InspectionValidator.UniqueNameHasValue(inspection),
+                InspectionValidator.UniqueNameHasKebabCase(inspection),
+                InspectionValidator.UniqueNameIsUnqiue(inspection, GetQueryable()),
+                InspectionValidator.DisplayNameHasValue(inspection));
+
+        private void EnsureUpdateable(Inspection inspection)
+            => Validator.Ensure(
+                InspectionValidator.UniqueNameHasValue(inspection),
+                InspectionValidator.UniqueNameHasKebabCase(inspection),
+                InspectionValidator.UniqueNameExists(inspection, GetQueryable()),
+                InspectionValidator.DisplayNameHasValue(inspection));
+
+        private void EnsureDeleteable(Inspection inspection)
+            => Validator.Ensure(
+                InspectionValidator.UniqueNameHasValue(inspection),
+                InspectionValidator.UniqueNameHasKebabCase(inspection),
+                InspectionValidator.UniqueNameExists(inspection, GetQueryable()));
+
     }
 }

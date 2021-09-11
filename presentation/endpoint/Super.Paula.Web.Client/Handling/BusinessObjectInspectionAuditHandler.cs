@@ -32,7 +32,7 @@ namespace Super.Paula.Web.Client.Handling
                 "Bearer", _paulaAuthenticationStateManager.GetAuthenticationBearer());
         }
 
-        public async ValueTask<InspectionAuditResponse> CreateAsync(string businessObject, InspectionAuditRequest request)
+        public async ValueTask<InspectionAuditResponse> CreateAsync(string businessObject, BusinessObjectInspectionAuditRequest request)
         {
             var responseMessage = await _httpClient.PostAsJsonAsync($"business-objects/{businessObject}/inspection-audits", request);
             responseMessage.EnsureSuccessStatusCode();
@@ -147,7 +147,7 @@ namespace Super.Paula.Web.Client.Handling
             return (await responseMessage.Content.ReadFromJsonAsync<InspectionAuditResponse>())!;
         }
 
-        public async ValueTask ReplaceAsync(string businessObject, string inspection, int date, int time, InspectionAuditRequest request)
+        public async ValueTask ReplaceAsync(string businessObject, string inspection, int date, int time, BusinessObjectInspectionAuditRequest request)
         {
             var responseMessage = await _httpClient.PostAsJsonAsync($"business-objects/{businessObject}/inspection-audits/{inspection}/{date}/{time}", request);
             responseMessage.EnsureSuccessStatusCode();

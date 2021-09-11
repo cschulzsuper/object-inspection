@@ -49,12 +49,12 @@ namespace Super.Paula.Web.Server.Endpoints
 
         private static Delegate Create =>
             [Authorize("Inspector")]
-            (IBusinessObjectInspectionAuditHandler handler, string businessObject, InspectionAuditRequest request)
+            (IBusinessObjectInspectionAuditHandler handler, string businessObject, BusinessObjectInspectionAuditRequest request)
                 => handler.CreateAsync(businessObject, request);
 
         private static Delegate Replace =>
             [Authorize("Inspector")]
-            (IBusinessObjectInspectionAuditHandler handler, string businessObject, string inspection, int date, int time, InspectionAuditRequest request)
+            (IBusinessObjectInspectionAuditHandler handler, string businessObject, string inspection, int date, int time, BusinessObjectInspectionAuditRequest request)
                 => handler.ReplaceAsync(businessObject, inspection, date, time, request);
 
         private static Delegate Delete =>

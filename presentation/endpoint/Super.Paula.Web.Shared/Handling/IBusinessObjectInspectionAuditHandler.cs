@@ -11,8 +11,8 @@ namespace Super.Paula.Web.Shared.Handling
         IAsyncEnumerable<InspectionAuditResponse> GetAll();
         IAsyncEnumerable<InspectionAuditResponse> GetAllForBusinessObject(string businessObject);
 
-        ValueTask<InspectionAuditResponse> CreateAsync(string businessObject, InspectionAuditRequest request);
-        ValueTask ReplaceAsync(string businessObject, string inspection, int date, int time, InspectionAuditRequest request);
+        ValueTask<InspectionAuditResponse> CreateAsync(string businessObject, BusinessObjectInspectionAuditRequest request);
+        ValueTask ReplaceAsync(string businessObject, string inspection, int date, int time, BusinessObjectInspectionAuditRequest request);
         ValueTask DeleteAsync(string businessObject, string inspection, int date, int time);
 
         IAsyncEnumerable<InspectionAuditResponse> Search(string? businessObject, string? inspector, string? inspection);

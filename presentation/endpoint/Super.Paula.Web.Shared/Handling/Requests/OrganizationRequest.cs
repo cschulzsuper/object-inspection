@@ -9,6 +9,7 @@ namespace Super.Paula.Web.Shared.Handling.Requests
         [StringLength(140)]
         public string ChiefInspector { get; set; } = string.Empty;
 
+        [Required]
         [StringLength(140)]
         public string DisplayName { get; set; } = string.Empty;
 

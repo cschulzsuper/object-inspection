@@ -104,7 +104,7 @@ namespace Super.Paula.Web.Server.Handling
                         bussinesObjectInspection.UniqueName,
                         bussinesObjectInspection.AuditDate,
                         bussinesObjectInspection.AuditTime,
-                        new InspectionAuditRequest
+                        new BusinessObjectInspectionAuditRequest
                         {
                             Annotation = bussinesObjectInspection.AuditAnnotation,
                             AuditDate = bussinesObjectInspection.AuditDate,
@@ -168,7 +168,7 @@ namespace Super.Paula.Web.Server.Handling
 
             await _businessObjectInspectionAuditHandler.CreateAsync(
                 entity.UniqueName,
-                new InspectionAuditRequest
+                new BusinessObjectInspectionAuditRequest
                 {
                     Annotation = inspection.AuditAnnotation,
                     AuditDate = inspection.AuditDate,
@@ -201,7 +201,7 @@ namespace Super.Paula.Web.Server.Handling
                 bussinesObjectInspection.UniqueName,
                 bussinesObjectInspection.AuditDate,
                 bussinesObjectInspection.AuditTime,
-                new InspectionAuditRequest
+                new BusinessObjectInspectionAuditRequest
                 {
                     Annotation = bussinesObjectInspection.AuditAnnotation,
                     AuditDate = bussinesObjectInspection.AuditDate,
@@ -235,7 +235,7 @@ namespace Super.Paula.Web.Server.Handling
                 bussinesObjectInspection.UniqueName,
                 bussinesObjectInspection.AuditDate,
                 bussinesObjectInspection.AuditTime,
-                new InspectionAuditRequest
+                new BusinessObjectInspectionAuditRequest
                 {
                     Annotation = bussinesObjectInspection.AuditAnnotation,
                     AuditDate = bussinesObjectInspection.AuditDate,
@@ -310,7 +310,7 @@ namespace Super.Paula.Web.Server.Handling
                                 bussinesObjectInspection.UniqueName,
                                 bussinesObjectInspection.AuditDate,
                                 bussinesObjectInspection.AuditTime,
-                                new InspectionAuditRequest
+                                new BusinessObjectInspectionAuditRequest
                                 {
                                     Annotation = bussinesObjectInspection.AuditAnnotation,
                                     AuditDate = bussinesObjectInspection.AuditDate,
