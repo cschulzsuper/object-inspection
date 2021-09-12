@@ -36,6 +36,8 @@ namespace Super.Paula.Web.Client.Handling
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", bearer);
 
             var responseMessage = await _httpClient.PostAsJsonAsync("account/account/change-secret", request);
+            
+            responseMessage.RuleOutClientError(_ClientErrors.ProblemDetailsTitle);
             responseMessage.EnsureSuccessStatusCode();
         }
 
@@ -51,6 +53,8 @@ namespace Super.Paula.Web.Client.Handling
                 var query = async () =>
                 {
                     var responseMessage = await _httpClient.GetAsync("account/query-authorizations");
+                    
+                    responseMessage.RuleOutClientError(_ClientErrors.ProblemDetailsTitle);
                     responseMessage.EnsureSuccessStatusCode();
 
                     return (await responseMessage.Content.ReadFromJsonAsync<QueryAuthorizationsResponse>())!;
@@ -80,18 +84,24 @@ namespace Super.Paula.Web.Client.Handling
             }
 
             var responseMessage = await _httpClient.PostAsJsonAsync("account/repair-chief-inspector", request);
+            
+            responseMessage.RuleOutClientError(_ClientErrors.ProblemDetailsTitle);
             responseMessage.EnsureSuccessStatusCode();
         }
 
         public async ValueTask RegisterInspectorAsync(RegisterInspectorRequest request)
         {
             var responseMessage = await _httpClient.PostAsJsonAsync("account/register-inspector", request);
+            
+            responseMessage.RuleOutClientError(_ClientErrors.ProblemDetailsTitle);
             responseMessage.EnsureSuccessStatusCode();
         }
 
         public async ValueTask RegisterOrganizationAsync(RegisterOrganizationRequest request)
         {
             var responseMessage = await _httpClient.PostAsJsonAsync("account/register-organization", request);
+            
+            responseMessage.RuleOutClientError(_ClientErrors.ProblemDetailsTitle);
             responseMessage.EnsureSuccessStatusCode();
         }
 
@@ -104,6 +114,8 @@ namespace Super.Paula.Web.Client.Handling
             }
 
             var responseMessage = await _httpClient.PostAsJsonAsync("account/assess-chief-inspector-defectiveness", request);
+            
+            responseMessage.RuleOutClientError(_ClientErrors.ProblemDetailsTitle);
             responseMessage.EnsureSuccessStatusCode();
 
             return (await responseMessage.Content.ReadFromJsonAsync<AssessChiefInspectorDefectivenessResponse>())!;
@@ -112,6 +124,8 @@ namespace Super.Paula.Web.Client.Handling
         public async ValueTask<SignInInspectorResponse> SignInInspectorAsync(SignInInspectorRequest request)
         {
             var responseMessage = await _httpClient.PostAsJsonAsync("account/sign-in-inspector", request);
+            
+            responseMessage.RuleOutClientError(_ClientErrors.ProblemDetailsTitle);
             responseMessage.EnsureSuccessStatusCode();
 
             var response = (await responseMessage.Content.ReadFromJsonAsync<SignInInspectorResponse>())!;
@@ -149,6 +163,8 @@ namespace Super.Paula.Web.Client.Handling
             _paulaAuthenticationStateManager.SetAuthenticationBearer(string.Empty);
 
             var responseMessage = await _httpClient.PostAsync("account/sign-out-inspector", null);
+            
+            responseMessage.RuleOutClientError(_ClientErrors.ProblemDetailsTitle);
             responseMessage.EnsureSuccessStatusCode();
         }
 
@@ -161,6 +177,8 @@ namespace Super.Paula.Web.Client.Handling
             }
 
             var responseMessage = await _httpClient.PostAsJsonAsync("account/start-impersonation", request);
+            
+            responseMessage.RuleOutClientError(_ClientErrors.ProblemDetailsTitle);
             responseMessage.EnsureSuccessStatusCode();
 
             var response = (await responseMessage.Content.ReadFromJsonAsync<StartImpersonationResponse>())!;

@@ -30,12 +30,16 @@ namespace Super.Paula.Web.Client.Handling
         public async ValueTask ActivateAsync(string organization)
         {
             var responseMessage = await _httpClient.PostAsync($"organizations/{organization}/activate", null);
+            
+            responseMessage.RuleOutClientError(_ClientErrors.ProblemDetailsTitle);
             responseMessage.EnsureSuccessStatusCode();
         }
 
         public async ValueTask<OrganizationResponse> CreateAsync(OrganizationRequest request)
         {
             var responseMessage = await _httpClient.PostAsJsonAsync("organizations", request);
+            
+            responseMessage.RuleOutClientError(_ClientErrors.ProblemDetailsTitle);
             responseMessage.EnsureSuccessStatusCode();
 
             return (await responseMessage.Content.ReadFromJsonAsync<OrganizationResponse>())!;
@@ -44,18 +48,24 @@ namespace Super.Paula.Web.Client.Handling
         public async ValueTask DeactivateAsync(string organization)
         {
             var responseMessage = await _httpClient.PostAsync($"organizations/{organization}/deactivate", null);
+            
+            responseMessage.RuleOutClientError(_ClientErrors.ProblemDetailsTitle);
             responseMessage.EnsureSuccessStatusCode();
         }
 
         public async ValueTask DeleteAsync(string organization)
         {
             var responseMessage = await _httpClient.DeleteAsync($"organizations/{organization}");
+            
+            responseMessage.RuleOutClientError(_ClientErrors.ProblemDetailsTitle);
             responseMessage.EnsureSuccessStatusCode();
         }
 
         public async IAsyncEnumerable<OrganizationResponse> GetAll()
         {
             var responseMessage = await _httpClient.GetAsync("organizations");
+            
+            responseMessage.RuleOutClientError(_ClientErrors.ProblemDetailsTitle);
             responseMessage.EnsureSuccessStatusCode();
 
             var responseStream = await responseMessage.Content.ReadAsStreamAsync();
@@ -75,6 +85,8 @@ namespace Super.Paula.Web.Client.Handling
         public async ValueTask<OrganizationResponse> GetAsync(string organization)
         {
             var responseMessage = await _httpClient.GetAsync($"organizations/{organization}");
+            
+            responseMessage.RuleOutClientError(_ClientErrors.ProblemDetailsTitle);
             responseMessage.EnsureSuccessStatusCode();
 
             return (await responseMessage.Content.ReadFromJsonAsync<OrganizationResponse>())!;
@@ -83,6 +95,8 @@ namespace Super.Paula.Web.Client.Handling
         public async ValueTask ReplaceAsync(string organization, OrganizationRequest request)
         {
             var responseMessage = await _httpClient.PutAsJsonAsync($"organizations/{organization}", request);
+            
+            responseMessage.RuleOutClientError(_ClientErrors.ProblemDetailsTitle);
             responseMessage.EnsureSuccessStatusCode();
         }
     }

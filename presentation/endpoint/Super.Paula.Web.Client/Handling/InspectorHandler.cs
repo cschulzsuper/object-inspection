@@ -35,12 +35,16 @@ namespace Super.Paula.Web.Client.Handling
         public async ValueTask ActivateAsync(string inspector)
         {
             var responseMessage = await _httpClient.PostAsync($"inspectors/{inspector}/activate", null);
+            
+            responseMessage.RuleOutClientError(_ClientErrors.ProblemDetailsTitle);
             responseMessage.EnsureSuccessStatusCode();
         }
 
         public async ValueTask<InspectorResponse> CreateAsync(InspectorRequest request)
         {
             var responseMessage = await _httpClient.PostAsJsonAsync("inspectors", request);
+            
+            responseMessage.RuleOutClientError(_ClientErrors.ProblemDetailsTitle);
             responseMessage.EnsureSuccessStatusCode();
 
             return (await responseMessage.Content.ReadFromJsonAsync<InspectorResponse>())!;
@@ -49,18 +53,24 @@ namespace Super.Paula.Web.Client.Handling
         public async ValueTask DeactivateAsync(string inspector)
         {
             var responseMessage = await _httpClient.PostAsync($"inspectors/{inspector}/deactivate", null);
+            
+            responseMessage.RuleOutClientError(_ClientErrors.ProblemDetailsTitle);
             responseMessage.EnsureSuccessStatusCode();
         }
 
         public async ValueTask DeleteAsync(string inspector)
         {
             var responseMessage = await _httpClient.DeleteAsync($"inspectors/{inspector}");
+            
+            responseMessage.RuleOutClientError(_ClientErrors.ProblemDetailsTitle);
             responseMessage.EnsureSuccessStatusCode();
         }
 
         public async IAsyncEnumerable<InspectorResponse> GetAll()
         {
             var responseMessage = await _httpClient.GetAsync("inspectors");
+            
+            responseMessage.RuleOutClientError(_ClientErrors.ProblemDetailsTitle);
             responseMessage.EnsureSuccessStatusCode();
 
             var responseStream = await responseMessage.Content.ReadAsStreamAsync();
@@ -80,6 +90,8 @@ namespace Super.Paula.Web.Client.Handling
         public async IAsyncEnumerable<InspectorResponse> GetAllForOrganization(string organization)
         {
             var responseMessage = await _httpClient.GetAsync($"organizations/{organization}/inspectors");
+            
+            responseMessage.RuleOutClientError(_ClientErrors.ProblemDetailsTitle);
             responseMessage.EnsureSuccessStatusCode();
 
             var responseStream = await responseMessage.Content.ReadAsStreamAsync();
@@ -99,6 +111,8 @@ namespace Super.Paula.Web.Client.Handling
         public async ValueTask<InspectorResponse> GetAsync(string inspector)
         {
             var responseMessage = await _httpClient.GetAsync($"inspectors/{inspector}");
+            
+            responseMessage.RuleOutClientError(_ClientErrors.ProblemDetailsTitle);
             responseMessage.EnsureSuccessStatusCode();
 
             return (await responseMessage.Content.ReadFromJsonAsync<InspectorResponse>())!;
@@ -110,6 +124,8 @@ namespace Super.Paula.Web.Client.Handling
         public async ValueTask ReplaceAsync(string inspector, InspectorRequest request)
         {
             var responseMessage = await _httpClient.PutAsJsonAsync($"inspectors/{inspector}", request);
+
+            responseMessage.RuleOutClientError(_ClientErrors.ProblemDetailsTitle);
             responseMessage.EnsureSuccessStatusCode();
         }
     }

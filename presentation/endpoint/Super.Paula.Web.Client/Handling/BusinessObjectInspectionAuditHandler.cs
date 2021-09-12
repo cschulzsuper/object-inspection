@@ -35,6 +35,8 @@ namespace Super.Paula.Web.Client.Handling
         public async ValueTask<InspectionAuditResponse> CreateAsync(string businessObject, BusinessObjectInspectionAuditRequest request)
         {
             var responseMessage = await _httpClient.PostAsJsonAsync($"business-objects/{businessObject}/inspection-audits", request);
+            
+            responseMessage.RuleOutClientError(_ClientErrors.ProblemDetailsTitle);
             responseMessage.EnsureSuccessStatusCode();
 
             return (await responseMessage.Content.ReadFromJsonAsync<InspectionAuditResponse>())!;
@@ -43,12 +45,16 @@ namespace Super.Paula.Web.Client.Handling
         public async ValueTask DeleteAsync(string businessObject, string inspection, int date, int time)
         {
             var responseMessage = await _httpClient.DeleteAsync($"business-objects/{businessObject}/inspection-audits/{inspection}/{date}/{time}");
+            
+            responseMessage.RuleOutClientError(_ClientErrors.ProblemDetailsTitle);
             responseMessage.EnsureSuccessStatusCode();
         }
 
         public async IAsyncEnumerable<InspectionAuditResponse> GetAll()
         {
             var responseMessage = await _httpClient.GetAsync("inspection-audits");
+            
+            responseMessage.RuleOutClientError(_ClientErrors.ProblemDetailsTitle);
             responseMessage.EnsureSuccessStatusCode();
 
             var responseStream = await responseMessage.Content.ReadAsStreamAsync();
@@ -68,6 +74,8 @@ namespace Super.Paula.Web.Client.Handling
         public async IAsyncEnumerable<InspectionAuditResponse> GetAllForBusinessObject(string businessObject)
         {
             var responseMessage = await _httpClient.GetAsync($"business-objects/{businessObject}/inspection-audits");
+            
+            responseMessage.RuleOutClientError(_ClientErrors.ProblemDetailsTitle);
             responseMessage.EnsureSuccessStatusCode();
 
             var responseStream = await responseMessage.Content.ReadAsStreamAsync();
@@ -96,6 +104,8 @@ namespace Super.Paula.Web.Client.Handling
             var query = $"?{string.Join('&', queryValues.Where(x => x != null))}";
 
             var responseMessage = await _httpClient.GetAsync($"inspection-audits/search{query}");
+            
+            responseMessage.RuleOutClientError(_ClientErrors.ProblemDetailsTitle);
             responseMessage.EnsureSuccessStatusCode();
 
             var responseStream = await responseMessage.Content.ReadAsStreamAsync();
@@ -123,6 +133,8 @@ namespace Super.Paula.Web.Client.Handling
             var query = $"?{string.Join('&', queryValues.Where(x => x != null))}";
 
             var responseMessage = await _httpClient.GetAsync($"business-objects/{businessObject}/inspection-audits/search{query}");
+            
+            responseMessage.RuleOutClientError(_ClientErrors.ProblemDetailsTitle);
             responseMessage.EnsureSuccessStatusCode();
 
             var responseStream = await responseMessage.Content.ReadAsStreamAsync();
@@ -142,6 +154,8 @@ namespace Super.Paula.Web.Client.Handling
         public async ValueTask<InspectionAuditResponse> GetAsync(string businessObject, string inspection, int date, int time)
         {
             var responseMessage = await _httpClient.GetAsync($"business-objects/{businessObject}/inspection-audits/{inspection}/{date}/{time}");
+            
+            responseMessage.RuleOutClientError(_ClientErrors.ProblemDetailsTitle);
             responseMessage.EnsureSuccessStatusCode();
 
             return (await responseMessage.Content.ReadFromJsonAsync<InspectionAuditResponse>())!;
@@ -150,6 +164,8 @@ namespace Super.Paula.Web.Client.Handling
         public async ValueTask ReplaceAsync(string businessObject, string inspection, int date, int time, BusinessObjectInspectionAuditRequest request)
         {
             var responseMessage = await _httpClient.PostAsJsonAsync($"business-objects/{businessObject}/inspection-audits/{inspection}/{date}/{time}", request);
+            
+            responseMessage.RuleOutClientError(_ClientErrors.ProblemDetailsTitle);
             responseMessage.EnsureSuccessStatusCode();
         }
     }

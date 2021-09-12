@@ -46,7 +46,14 @@
 
         <article class="content px-4 text-nowrap">
             <ErrorBoundary @ref="errorBoundary">
-                @Body
+                <ChildContent>
+                    @Body             
+                </ChildContent>
+                <ErrorContent >
+                    <div class="blazor-error-boundary">
+                        @context.Message
+                    </div>
+                </ErrorContent>
             </ErrorBoundary>
         </article>
     </main>

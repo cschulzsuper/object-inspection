@@ -35,12 +35,16 @@ namespace Super.Paula.Web.Client.Handling
         public async ValueTask ActivateAsync(string inspection)
         {
             var responseMessage = await _httpClient.PostAsync($"inspections/{inspection}/activate", null);
+            
+            responseMessage.RuleOutClientError(_ClientErrors.ProblemDetailsTitle);
             responseMessage.EnsureSuccessStatusCode();
         }
 
         public async ValueTask<InspectionResponse> CreateAsync(InspectionRequest request)
         {
             var responseMessage = await _httpClient.PostAsJsonAsync("inspections", request);
+            
+            responseMessage.RuleOutClientError(_ClientErrors.ProblemDetailsTitle);
             responseMessage.EnsureSuccessStatusCode();
 
             return (await responseMessage.Content.ReadFromJsonAsync<InspectionResponse>())!;
@@ -49,18 +53,24 @@ namespace Super.Paula.Web.Client.Handling
         public async ValueTask DeactivateAsync(string inspection)
         {
             var responseMessage = await _httpClient.PostAsync($"inspections/{inspection}/deactivate", null);
+            
+            responseMessage.RuleOutClientError(_ClientErrors.ProblemDetailsTitle);
             responseMessage.EnsureSuccessStatusCode();
         }
 
         public async ValueTask DeleteAsync(string inspection)
         {
             var responseMessage = await _httpClient.DeleteAsync($"inspections/{inspection}");
+            
+            responseMessage.RuleOutClientError(_ClientErrors.ProblemDetailsTitle);
             responseMessage.EnsureSuccessStatusCode();
         }
 
         public async IAsyncEnumerable<InspectionResponse> GetAll()
         {
             var responseMessage = await _httpClient.GetAsync("inspections");
+            
+            responseMessage.RuleOutClientError(_ClientErrors.ProblemDetailsTitle);
             responseMessage.EnsureSuccessStatusCode();
 
             var responseStream = await responseMessage.Content.ReadAsStreamAsync();
@@ -80,6 +90,8 @@ namespace Super.Paula.Web.Client.Handling
         public async ValueTask<InspectionResponse> GetAsync(string inspection)
         {
             var responseMessage = await _httpClient.GetAsync($"inspections/{inspection}");
+            
+            responseMessage.RuleOutClientError(_ClientErrors.ProblemDetailsTitle);
             responseMessage.EnsureSuccessStatusCode();
 
             return (await responseMessage.Content.ReadFromJsonAsync<InspectionResponse>())!;
@@ -88,6 +100,8 @@ namespace Super.Paula.Web.Client.Handling
         public async ValueTask ReplaceAsync(string inspection, InspectionRequest request)
         {
             var responseMessage = await _httpClient.PutAsJsonAsync($"inspections/{inspection}", request);
+            
+            responseMessage.RuleOutClientError(_ClientErrors.ProblemDetailsTitle);
             responseMessage.EnsureSuccessStatusCode();
         }
     }

@@ -13,6 +13,9 @@ using Super.Paula.Web.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.ComponentModel;
 using Super.Paula.Data.AspNetCore;
+using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Mvc;
+using Super.Paula.Web.Shared.Handling.Responses;
 
 namespace Super.Paula.Web
 {
@@ -38,11 +41,12 @@ namespace Super.Paula.Web
 
         public void Configure(IApplicationBuilder app)
         {
-            app.EnsurePaulaData();                
+            app.EnsurePaulaData();
+
+            app.UseExceptionHandler(appBuilder => appBuilder.Run(HandleError));
 
             if (_environment.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Super.Paula.Endpoints v1"));
             }
@@ -59,8 +63,45 @@ namespace Super.Paula.Web
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapPaulaWebServer();
-                endpoints.MapGet("/hello-world", () => "hello world").RequireAuthorization().WithMetadata(new DisplayNameAttribute());
             });
-        }     
+        }
+
+        public async Task HandleError(HttpContext context)
+        {
+            var exceptionHandlerPathFeature = context.Features.Get<IExceptionHandlerPathFeature>();
+            if (exceptionHandlerPathFeature == null)
+            {
+                context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+                await context.Response.WriteAsJsonAsync(new ProblemDetails
+                {
+                    Status = StatusCodes.Status500InternalServerError,
+                    Instance = context.Request.Path
+                });
+                return;
+            }
+
+            var exception = exceptionHandlerPathFeature.Error;
+
+            var httpMethod = context.Request.Method;
+            var statusCode = httpMethod switch
+            {
+                _ when HttpMethods.IsGet(httpMethod) => StatusCodes.Status404NotFound,
+                _ when HttpMethods.IsHead(httpMethod) => StatusCodes.Status404NotFound,
+                _ when HttpMethods.IsPost(httpMethod) => StatusCodes.Status400BadRequest,
+                _ when HttpMethods.IsPut(httpMethod) => StatusCodes.Status400BadRequest,
+                _ when HttpMethods.IsPatch(httpMethod) => StatusCodes.Status400BadRequest,
+                _ when HttpMethods.IsDelete(httpMethod) => StatusCodes.Status400BadRequest,
+                _ => throw exception
+            };
+
+            context.Response.StatusCode = statusCode;
+
+            await context.Response.WriteAsJsonAsync( 
+                new _ProblemDetails {
+                    Detail = exception.StackTrace ?? string.Empty,
+                    Title = exception.Message,
+                    Status = statusCode,
+                    Instance = context.Request.Path});
+        }
     }
 }

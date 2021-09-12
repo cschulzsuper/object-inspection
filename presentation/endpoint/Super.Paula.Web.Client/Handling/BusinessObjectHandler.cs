@@ -35,30 +35,40 @@ namespace Super.Paula.Web.Client.Handling
         public async ValueTask AssignInspectionAsync(string businessObject, AssignInspectionRequest request)
         {
             var responseMessage = await _httpClient.PostAsJsonAsync($"business-objects/{businessObject}/assign-inspection", request);
+            
+            responseMessage.RuleOutClientError(_ClientErrors.ProblemDetailsTitle);
             responseMessage.EnsureSuccessStatusCode();
         }
 
         public async ValueTask CancelInspectionAsync(string businessObject, CancelInspectionRequest request)
         {
             var responseMessage = await _httpClient.PostAsJsonAsync($"business-objects/{businessObject}/cancel-inspection", request);
+            
+            responseMessage.RuleOutClientError(_ClientErrors.ProblemDetailsTitle);
             responseMessage.EnsureSuccessStatusCode();
         }
 
         public async ValueTask ChangeInspectionAuditAsync(string businessObject, string inspection, ChangeInspectionAuditRequest request)
         {
             var responseMessage = await _httpClient.PostAsJsonAsync($"business-objects/{businessObject}/change-inspection-audit/{inspection}", request);
+            
+            responseMessage.RuleOutClientError(_ClientErrors.ProblemDetailsTitle);
             responseMessage.EnsureSuccessStatusCode();
         }
 
         public async ValueTask AnnotateInspectionAuditAsync(string businessObject, string inspection, AnnotateInspectionAuditRequest request)
         {
             var responseMessage = await _httpClient.PostAsJsonAsync($"business-objects/{businessObject}/annotate-inspection-audit/{inspection}", request);
+            
+            responseMessage.RuleOutClientError(_ClientErrors.ProblemDetailsTitle);
             responseMessage.EnsureSuccessStatusCode();
         }
 
         public async ValueTask<BusinessObjectResponse> CreateAsync(BusinessObjectRequest request)
         {
             var responseMessage = await _httpClient.PostAsJsonAsync("business-objects", request);
+            
+            responseMessage.RuleOutClientError(_ClientErrors.ProblemDetailsTitle);
             responseMessage.EnsureSuccessStatusCode();
 
             return (await responseMessage.Content.ReadFromJsonAsync<BusinessObjectResponse>())!;
@@ -67,18 +77,24 @@ namespace Super.Paula.Web.Client.Handling
         public async ValueTask CreateInspectionAuditAsync(string businessObject, CreateInspectionAuditRequest request)
         {
             var responseMessage = await _httpClient.PostAsJsonAsync($"business-objects/{businessObject}/create-inspection-audit", request);
+            
+            responseMessage.RuleOutClientError(_ClientErrors.ProblemDetailsTitle);
             responseMessage.EnsureSuccessStatusCode();
         }
 
         public async ValueTask DeleteAsync(string businessObject)
         {
             var responseMessage = await _httpClient.DeleteAsync($"business-objects/{businessObject}");
+            
+            responseMessage.RuleOutClientError(_ClientErrors.ProblemDetailsTitle);
             responseMessage.EnsureSuccessStatusCode();
         }
 
         public async IAsyncEnumerable<BusinessObjectResponse> GetAll()
         {
             var responseMessage = await _httpClient.GetAsync("business-objects");
+            
+            responseMessage.RuleOutClientError(_ClientErrors.ProblemDetailsTitle);
             responseMessage.EnsureSuccessStatusCode();
 
             var responseStream = await responseMessage.Content.ReadAsStreamAsync();
@@ -98,6 +114,8 @@ namespace Super.Paula.Web.Client.Handling
         public async IAsyncEnumerable<BusinessObjectResponse> GetAllForInspector(string inspector)
         {
             var responseMessage = await _httpClient.GetAsync($"inspectors/{inspector}/business-objects");
+            
+            responseMessage.RuleOutClientError(_ClientErrors.ProblemDetailsTitle);
             responseMessage.EnsureSuccessStatusCode();
 
             var responseStream = await responseMessage.Content.ReadAsStreamAsync();
@@ -117,6 +135,8 @@ namespace Super.Paula.Web.Client.Handling
         public async ValueTask<BusinessObjectResponse> GetAsync(string businessObject)
         {
             var responseMessage = await _httpClient.GetAsync($"business-objects/{businessObject}");
+            
+            responseMessage.RuleOutClientError(_ClientErrors.ProblemDetailsTitle);
             responseMessage.EnsureSuccessStatusCode();
 
             return (await responseMessage.Content.ReadFromJsonAsync<BusinessObjectResponse>())!;
@@ -128,6 +148,8 @@ namespace Super.Paula.Web.Client.Handling
         public async ValueTask ReplaceAsync(string businessObject, BusinessObjectRequest request)
         {
             var responseMessage = await _httpClient.PutAsJsonAsync($"business-objects/{businessObject}", request);
+            
+            responseMessage.RuleOutClientError(_ClientErrors.ProblemDetailsTitle);
             responseMessage.EnsureSuccessStatusCode();
         }
 
@@ -142,6 +164,8 @@ namespace Super.Paula.Web.Client.Handling
             var query = $"?{string.Join('&', queryValues.Where(x => x != null))}";
 
             var responseMessage = await _httpClient.GetAsync($"business-objects/search{query}");
+            
+            responseMessage.RuleOutClientError(_ClientErrors.ProblemDetailsTitle);
             responseMessage.EnsureSuccessStatusCode();
 
             var responseStream = await responseMessage.Content.ReadAsStreamAsync();
