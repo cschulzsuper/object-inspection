@@ -11,41 +11,41 @@ namespace Super.Paula.Management.Administration
 {
     public static class InspectorValidator
     {
-        public static (Func<bool, bool>, FormattableString) InspectorHasValue(string inspector)
+        public static (Func<bool, bool>, Func<FormattableString>) InspectorHasValue(string inspector)
             => (_ => !string.IsNullOrWhiteSpace(inspector),
-                    $"Inspector must have a value");
+                    () => $"Inspector must have a value");
 
-        public static (Func<bool, bool>, FormattableString) InspectorHasKebabCase(string inspector)
+        public static (Func<bool, bool>, Func<FormattableString>) InspectorHasKebabCase(string inspector)
             => (x => x && KebabCaseValidator.IsValid(inspector),
-                    $"Inspector '{inspector}' must be in kebab case");
+                    () => $"Inspector '{inspector}' must be in kebab case");
 
-        public static (Func<bool, bool>, FormattableString) InspectorExists(string inspector, IQueryable<Inspector> inspectors)
+        public static (Func<bool, bool>, Func<FormattableString>) InspectorExists(string inspector, IQueryable<Inspector> inspectors)
             => (x => x && inspectors.FirstOrDefault(x => x.UniqueName == inspector) != null,
-                    $"Inspector '{inspector}' does not exist");
+                    () => $"Inspector '{inspector}' does not exist");
 
-        public static (Func<bool, bool>, FormattableString) UniqueNameHasValue(Inspector inspector)
+        public static (Func<bool, bool>, Func<FormattableString>) UniqueNameHasValue(Inspector inspector)
             => (_ => !string.IsNullOrWhiteSpace(inspector.UniqueName),
-                    $"Unique name of inspector must have a value");
+                    () => $"Unique name of inspector must have a value");
 
-        public static (Func<bool, bool>, FormattableString) UniqueNameHasKebabCase(Inspector inspector)
+        public static (Func<bool, bool>, Func<FormattableString>) UniqueNameHasKebabCase(Inspector inspector)
             => (x => x && KebabCaseValidator.IsValid(inspector.UniqueName),
-                    $"Unique name '{inspector.UniqueName}' of inspector must be in kebab case");
+                    () => $"Unique name '{inspector.UniqueName}' of inspector must be in kebab case");
 
-        public static (Func<bool, bool>, FormattableString) UniqueNameIsUnqiue(Inspector inspector, IQueryable<Inspector> inspectors)
+        public static (Func<bool, bool>, Func<FormattableString>) UniqueNameIsUnqiue(Inspector inspector, IQueryable<Inspector> inspectors)
             => (x => x && (inspectors.FirstOrDefault(x => x.UniqueName == inspector.UniqueName) == null),
-                    $"Unique name '{inspector.UniqueName}' of inspector already exists");
+                    () => $"Unique name '{inspector.UniqueName}' of inspector already exists");
 
-        public static (Func<bool, bool>, FormattableString) UniqueNameExists(Inspector inspector, IQueryable<Inspector> inspectors)
+        public static (Func<bool, bool>, Func<FormattableString>) UniqueNameExists(Inspector inspector, IQueryable<Inspector> inspectors)
             => (x => x && (inspectors.FirstOrDefault(x => x.UniqueName == inspector.UniqueName) != null),
-                    $"Unique name '{inspector.UniqueName}' of inspector does not exist");
+                    () => $"Unique name '{inspector.UniqueName}' of inspector does not exist");
 
-        public static (Func<bool, bool>, FormattableString) MailAddressIsNotNull(Inspector inspector)
+        public static (Func<bool, bool>, Func<FormattableString>) MailAddressIsNotNull(Inspector inspector)
             => (_ => inspector.MailAddress != null,
-                    $"Mail address of inspector '{inspector.UniqueName}' can not be null");
+                    () => $"Mail address of inspector '{inspector.UniqueName}' can not be null");
 
-        public static (Func<bool, bool>, FormattableString) MailAddressIsMailAddress(Inspector inspector)
+        public static (Func<bool, bool>, Func<FormattableString>) MailAddressIsMailAddress(Inspector inspector)
             => (_ => MailAddress.TryCreate(inspector.MailAddress, out var _),
-                    $"Mail address of inspector '{inspector.UniqueName}' is not a mail address");
+                    () => $"Mail address of inspector '{inspector.UniqueName}' is not a mail address");
 
     }
 }

@@ -8,7 +8,7 @@ namespace Super.Paula.Shared.Validation
 {
     public static class Validator
     {
-        public static void Ensure(params (Func<bool,bool> assertion, FormattableString messsage)[] ensureances)
+        public static void Ensure(IEnumerable<(Func<bool, bool> assertion, Func<FormattableString> messsage)> ensureances)
         {
             var valid = true;
             foreach (var (assertion, message) in ensureances)
@@ -17,10 +17,13 @@ namespace Super.Paula.Shared.Validation
 
                 if (!valid)
                 {
-                    throw new ValidationException(message);
+                    throw new ValidationException(message());
                 }
             }
 
         }
+
+        public static void Ensure(params (Func<bool, bool> assertion, Func<FormattableString> messsage)[] ensureances)
+            => Ensure(ensureances.AsEnumerable());
     }
 }

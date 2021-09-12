@@ -4,7 +4,7 @@ using Super.Paula.Shared.Validation;
 
 namespace Super.Paula.Management.Inventory
 {
-    public class  BusinessObjectManager : IBusinessObjectManager
+    public class BusinessObjectManager : IBusinessObjectManager
     {
         private readonly IRepository<BusinessObject> _businessObjectRepository;
 
@@ -53,22 +53,44 @@ namespace Super.Paula.Management.Inventory
                 BusinessObjectValidator.BusinessObjectExists(businessObject, GetQueryable()));
 
         private void EnsureInsertable(BusinessObject businessObject)
-            => Validator.Ensure(
-                BusinessObjectValidator.UniqueNameHasValue(businessObject),
-                BusinessObjectValidator.UniqueNameHasKebabCase(businessObject),
-                BusinessObjectValidator.UniqueNameIsUnqiue(businessObject, GetQueryable()),
-                BusinessObjectValidator.DisplayNameHasValue(businessObject),
-                BusinessObjectValidator.InspectorIsNotNull(businessObject),
-                BusinessObjectValidator.InspectorHasKebabCase(businessObject));
+        {
+            IEnumerable<(Func<bool, bool> assertion, Func<FormattableString> messsage)> Ensurences()
+            {
+                yield return BusinessObjectValidator.UniqueNameHasValue(businessObject);
+                yield return BusinessObjectValidator.UniqueNameHasKebabCase(businessObject);
+                yield return BusinessObjectValidator.UniqueNameIsUnqiue(businessObject, GetQueryable());
+                yield return BusinessObjectValidator.DisplayNameHasValue(businessObject);
+                yield return BusinessObjectValidator.InspectorIsNotNull(businessObject);
+                yield return BusinessObjectValidator.InspectorHasKebabCase(businessObject);
+
+                foreach(var inspection in businessObject.Inspections )
+                {
+                    // TODO more yielding
+                }
+            };
+
+            Validator.Ensure(Ensurences());
+        }
 
         private void EnsureUpdateable(BusinessObject businessObject)
-            => Validator.Ensure(
-                BusinessObjectValidator.UniqueNameHasValue(businessObject),
-                BusinessObjectValidator.UniqueNameHasKebabCase(businessObject),
-                BusinessObjectValidator.UniqueNameExists(businessObject, GetQueryable()),
-                BusinessObjectValidator.DisplayNameHasValue(businessObject),
-                BusinessObjectValidator.InspectorIsNotNull(businessObject),
-                BusinessObjectValidator.InspectorHasKebabCase(businessObject));
+        {
+            IEnumerable<(Func<bool, bool> assertion, Func<FormattableString> messsage)> Ensurences()
+            {
+                yield return BusinessObjectValidator.UniqueNameHasValue(businessObject);
+                yield return BusinessObjectValidator.UniqueNameHasKebabCase(businessObject);
+                yield return BusinessObjectValidator.UniqueNameExists(businessObject, GetQueryable());
+                yield return BusinessObjectValidator.DisplayNameHasValue(businessObject);
+                yield return BusinessObjectValidator.InspectorIsNotNull(businessObject);
+                yield return BusinessObjectValidator.InspectorHasKebabCase(businessObject);
+
+                foreach (var inspection in businessObject.Inspections)
+                {
+                    // TODO more yielding
+                }
+            };
+
+            Validator.Ensure(Ensurences());
+        }
 
         private void EnsureDeleteable(BusinessObject businessObject)
             => Validator.Ensure(
