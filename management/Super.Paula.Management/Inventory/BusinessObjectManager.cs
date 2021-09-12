@@ -65,7 +65,17 @@ namespace Super.Paula.Management.Inventory
 
                 foreach(var inspection in businessObject.Inspections )
                 {
-                    // TODO more yielding
+                    yield return BusinessObjectValidator.InspectionUniqueNameHasValue(inspection);
+                    yield return BusinessObjectValidator.InspectionUniqueNameHasKebabCase(inspection);
+                    yield return BusinessObjectValidator.InspectionUniqueNameIsUnqiue(inspection, businessObject);
+                    yield return BusinessObjectValidator.InspectionDisplayNameHasValue(inspection);
+                    yield return BusinessObjectValidator.InspectionTextIsNotNull(inspection);
+                    yield return BusinessObjectValidator.InspectionAuditInspectorIsNotNull(inspection);
+                    yield return BusinessObjectValidator.InspectionAuditInspectorHasKebabCase(inspection);
+                    yield return BusinessObjectValidator.InspectionAuditAnnotationIsNotNull(inspection);
+                    yield return BusinessObjectValidator.InspectionAuditResultHasValidValue(inspection);
+                    yield return BusinessObjectValidator.InspectionAuditDateIsPositive(inspection);
+                    yield return BusinessObjectValidator.InspectionAuditTimeIsInDayTimeRange(inspection);
                 }
             };
 
@@ -85,7 +95,17 @@ namespace Super.Paula.Management.Inventory
 
                 foreach (var inspection in businessObject.Inspections)
                 {
-                    // TODO more yielding
+                    yield return BusinessObjectValidator.InspectionUniqueNameHasValue(inspection);
+                    yield return BusinessObjectValidator.InspectionUniqueNameHasKebabCase(inspection);
+                    yield return BusinessObjectValidator.InspectionUniqueNameIsUnqiue(inspection, businessObject);
+                    yield return BusinessObjectValidator.InspectionDisplayNameHasValue(inspection);
+                    yield return BusinessObjectValidator.InspectionTextIsNotNull(inspection);
+                    yield return BusinessObjectValidator.InspectionAuditInspectorIsNotNull(inspection);
+                    yield return BusinessObjectValidator.InspectionAuditInspectorHasKebabCase(inspection);
+                    yield return BusinessObjectValidator.InspectionAuditAnnotationIsNotNull(inspection);
+                    yield return BusinessObjectValidator.InspectionAuditResultHasValidValue(inspection);
+                    yield return BusinessObjectValidator.InspectionAuditDateIsPositive(inspection);
+                    yield return BusinessObjectValidator.InspectionAuditTimeIsInDayTimeRange(inspection);
                 }
             };
 

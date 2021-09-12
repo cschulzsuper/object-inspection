@@ -114,15 +114,15 @@ else
         var utcNow = DateTime.UtcNow;
         var inspectionToOld = inspection.AuditDate < (DateOnly.FromDateTime(utcNow).DayNumber - 1);
 
+        var nextResult = new Dictionary<string,string>
+        {
+            ["satisfying"] = "insufficient",
+            ["insufficient"] = "failed",
+            ["failed"] = "satisfying"
+        };
+
         if (!inspectionToOld)
         {
-            var nextResult = new Dictionary<string,string>
-            {
-                ["satisfying"] = "insufficient",
-                ["insufficient"] = "failed",
-                ["failed"] = "satisfying"
-            };
-
             var request = new ChangeInspectionAuditRequest
             {
                 Result = nextResult[inspection.AuditResult]
@@ -140,7 +140,7 @@ else
                 Inspection = inspection.UniqueName,
                 AuditDate = DateOnly.FromDateTime(utcNow).DayNumber,
                 AuditTime = (int)utcNow.TimeOfDay.TotalMilliseconds,
-                Result = "satisfying"
+                Result = nextResult[inspection.AuditResult]
             };
 
              await BusinessObjectHandler.CreateInspectionAuditAsync(
