@@ -91,7 +91,7 @@ else
 
 @code {
 
-    private ICollection<BusinessObjectResponse>? _businessObjects = null;
+    private IDictionary<string,BusinessObjectResponse>? _businessObjects = null;
 
     private bool _onlyUnassigned = false;
 
@@ -101,8 +101,8 @@ else
 
     public IEnumerable<BusinessObjectResponse>? RelevantBusinessObjects
         => _onlyUnassigned
-            ? _businessObjects?.Where(x => x.Inspector == string.Empty)
-            : _businessObjects;
+            ? _businessObjects?.Values.Where(x => x.Inspector == string.Empty)
+            : _businessObjects?.Values;
 
 
     protected override Task OnInitializedAsync()
@@ -110,7 +110,7 @@ else
 
     public async Task QueryAsync()
     {
-        _businessObjects = new List<BusinessObjectResponse>();
+        _businessObjects = new Dictionary<string, BusinessObjectResponse>();
 
         if (_searchTerm.Length <= 3 && _searchScope != string.Empty)
         {
@@ -126,14 +126,7 @@ else
 
         await foreach (var businessObject in response)
         {
-            _businessObjects.Add(businessObject);
-
-            if(_onlyUnassigned && businessObject.Inspector == string.Empty)
-            {
-                StateHasChanged();
-                continue;
-            }
-
+            _businessObjects.Add(businessObject.UniqueName, businessObject);
             StateHasChanged();
         }
     }
@@ -183,10 +176,13 @@ else
         => NavigationManager.NavigateTo("/business-objects/create");
 
     public void Edit(string businessObject)
-        => NavigationManager.NavigateTo($"/business-object/{businessObject}/edit");
+        => NavigationManager.NavigateTo($"/business-objects/{businessObject}/edit");
 
-    public async Task DeleteAsync(string businessObject)
-        => await BusinessObjectHandler.DeleteAsync(businessObject);
+    public async Task DeleteAsync(string businessObject) 
+    {
+        await BusinessObjectHandler.DeleteAsync(businessObject);
+        _businessObjects!.Remove(businessObject);
+    }
 
     public void NavigateToInspections(string businessObject)
         => NavigationManager.NavigateTo($"/business-objects/{businessObject}/inspections");
