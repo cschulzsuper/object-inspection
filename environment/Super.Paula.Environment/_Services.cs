@@ -1,8 +1,11 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Super.Paula.Environment;
 
-namespace Super.Paula.Environment
+namespace Super.Paula
 {
+    [SuppressMessage("Style", "IDE1006")]
     public static class _Services
     {
         public static IServiceCollection AddPaulaAppState(this IServiceCollection services)

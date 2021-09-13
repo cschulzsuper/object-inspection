@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Super.Paula.Data.AspNetCore
+namespace Super.Paula
 {
+    [SuppressMessage("Style", "IDE1006")]
     public static class _Startup
     {
         public static IApplicationBuilder EnsurePaulaData(this IApplicationBuilder app)
@@ -10,7 +12,7 @@ namespace Super.Paula.Data.AspNetCore
             using (var scope = app.ApplicationServices.CreateScope())
             {
                 scope
-                    .ServiceProvider.GetRequiredService<Data.PaulaContext>()
+                    .ServiceProvider.GetRequiredService<PaulaContext>()
                     .Database.EnsureCreated();
             }
 

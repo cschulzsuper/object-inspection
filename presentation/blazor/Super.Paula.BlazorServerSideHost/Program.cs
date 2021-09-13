@@ -1,4 +1,4 @@
-namespace Super.Paula.BlazorServerSideHost
+namespace Super.Paula
 {
     public class Program
     {

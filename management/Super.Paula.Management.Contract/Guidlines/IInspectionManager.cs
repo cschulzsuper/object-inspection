@@ -1,6 +1,4 @@
-﻿using Super.Paula.Aggregates.Guidlines;
-
-namespace Super.Paula.Management.Guidlines
+﻿namespace Super.Paula.Guidlines
 {
     public interface IInspectionManager
     {

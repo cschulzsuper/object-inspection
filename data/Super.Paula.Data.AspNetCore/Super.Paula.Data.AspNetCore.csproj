@@ -1,8 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
+    <LangVersion>Preview</LangVersion>
+    <RootNamespace>Super.Paula</RootNamespace>
   </PropertyGroup>
   
   <ItemGroup>
@@ -12,5 +14,5 @@
   <ItemGroup>
     <ProjectReference Include="..\Super.Paula.Data\Super.Paula.Data.csproj" />
   </ItemGroup>
-   
+  
 </Project>

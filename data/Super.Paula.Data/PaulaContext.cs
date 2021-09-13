@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Super.Paula.Data.Mapping;
 using Super.Paula.Environment;
+using Super.Paula.Mapping;
 
-namespace Super.Paula.Data
+namespace Super.Paula
 {
     public class PaulaContext : DbContext
     {

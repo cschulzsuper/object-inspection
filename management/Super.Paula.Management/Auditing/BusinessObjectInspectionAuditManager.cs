@@ -1,7 +1,4 @@
-﻿using Super.Paula.Aggregates.Auditing;
-using Super.Paula.Data;
-
-namespace Super.Paula.Management.Auditing
+﻿namespace Super.Paula.Auditing
 {
     public class BusinessObjectInspectionAuditManager : IBusinessObjectInspectionAuditManager
     {

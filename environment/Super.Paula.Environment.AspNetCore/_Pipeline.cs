@@ -1,11 +1,12 @@
-﻿using System.Security.Claims;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
-using System.Diagnostics.CodeAnalysis;
+using Super.Paula.Environment;
 
-namespace Super.Paula.Environment.AspNetCore
+namespace Super.Paula
 {
     [SuppressMessage("Style", "IDE1006")]
     public static class _Pipeline

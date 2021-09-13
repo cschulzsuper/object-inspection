@@ -1,6 +1,4 @@
-﻿using Super.Paula.Aggregates.Administration;
-
-namespace Super.Paula.Management.Administration
+﻿namespace Super.Paula.Administration
 {
     public interface IOrganizationManager
     {

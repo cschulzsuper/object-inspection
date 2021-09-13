@@ -1,13 +1,9 @@
-﻿using Super.Paula.Aggregates.Administration;
-using Super.Paula.Shared.Validation;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Net.Mail;
+using Super.Paula.Validation;
 
-namespace Super.Paula.Management.Administration
+namespace Super.Paula.Administration
 {
     public static class InspectorValidator
     {

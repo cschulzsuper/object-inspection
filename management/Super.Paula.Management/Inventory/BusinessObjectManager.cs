@@ -1,8 +1,6 @@
-﻿using Super.Paula.Aggregates.Inventory;
-using Super.Paula.Data;
-using Super.Paula.Shared.Validation;
+﻿using Super.Paula.Validation;
 
-namespace Super.Paula.Management.Inventory
+namespace Super.Paula.Inventory
 {
     public class BusinessObjectManager : IBusinessObjectManager
     {

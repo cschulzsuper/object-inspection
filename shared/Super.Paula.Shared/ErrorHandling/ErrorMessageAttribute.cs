@@ -1,5 +1,5 @@
 ﻿
-namespace Super.Paula.Shared.ErrorHandling
+namespace Super.Paula.ErrorHandling
 {
     [AttributeUsage(AttributeTargets.Method)]
     public class ErrorMessageAttribute : Attribute

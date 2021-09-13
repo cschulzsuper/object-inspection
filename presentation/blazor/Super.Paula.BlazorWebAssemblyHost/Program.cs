@@ -1,4 +1,4 @@
-﻿namespace Super.Paula.BlazorWebAssemblyHost
+﻿namespace Super.Paula
 {
     public class Program
     {

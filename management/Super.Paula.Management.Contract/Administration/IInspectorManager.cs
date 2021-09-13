@@ -1,6 +1,9 @@
-﻿using Super.Paula.Aggregates.Administration;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace Super.Paula.Management.Administration
+namespace Super.Paula.Administration
 {
     public interface IInspectorManager
     {

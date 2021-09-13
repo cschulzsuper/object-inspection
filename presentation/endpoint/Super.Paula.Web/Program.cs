@@ -1,4 +1,4 @@
-﻿namespace Super.Paula.Web
+﻿namespace Super.Paula
 {
     public class Program
     {

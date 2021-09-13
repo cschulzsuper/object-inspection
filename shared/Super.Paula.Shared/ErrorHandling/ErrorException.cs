@@ -1,4 +1,4 @@
-﻿namespace Super.Paula.Shared.ErrorHandling
+﻿namespace Super.Paula.ErrorHandling
 {
     public class ErrorException : Exception
     {

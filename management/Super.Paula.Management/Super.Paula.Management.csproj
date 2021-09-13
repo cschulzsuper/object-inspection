@@ -1,14 +1,15 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <LangVersion>Preview</LangVersion>
-    <RootNamespace>Super.Paula.Management</RootNamespace>
+    <RootNamespace>Super.Paula</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\data\Super.Paula.Data\Super.Paula.Data.csproj" />
+    <ProjectReference Include="..\..\environment\Super.Paula.Environment\Super.Paula.Environment.csproj" />
     <ProjectReference Include="..\Super.Paula.Management.Contract\Super.Paula.Management.Contract.csproj" />
   </ItemGroup>
 

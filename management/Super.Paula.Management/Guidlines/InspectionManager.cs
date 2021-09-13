@@ -1,8 +1,6 @@
-﻿using Super.Paula.Aggregates.Guidlines;
-using Super.Paula.Data;
-using Super.Paula.Shared.Validation;
+﻿using Super.Paula.Validation;
 
-namespace Super.Paula.Management.Guidlines
+namespace Super.Paula.Guidlines
 {
     public class  InspectionManager : IInspectionManager
     {

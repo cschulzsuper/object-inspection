@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Super.Paula.Aggregates.Auditing;
-using Super.Paula.Data.Mapping.PartitionKeyValueGenerators;
+using Super.Paula.Auditing;
+using Super.Paula.Mapping.PartitionKeyValueGenerators;
 
-namespace Super.Paula.Data.Mapping
+namespace Super.Paula.Mapping
 {
     public class BusinessObjectInspectionAuditMapping : IEntityTypeConfiguration<BusinessObjectInspectionAudit>
     {

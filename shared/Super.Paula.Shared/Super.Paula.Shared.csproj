@@ -4,6 +4,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <LangVersion>Preview</LangVersion>
+    <RootNamespace>Super.Paula</RootNamespace>
   </PropertyGroup>
 
 </Project>

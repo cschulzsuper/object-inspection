@@ -1,14 +1,15 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Super.Paula.Data.Mapping.PartitionKeyValueGenerators;
-using Super.Paula.Environment;
+﻿using System;
 using System.Diagnostics.CodeAnalysis;
-using Super.Paula.Aggregates.Administration;
-using Super.Paula.Aggregates.Auditing;
-using Super.Paula.Aggregates.Guidlines;
-using Super.Paula.Aggregates.Inventory;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.EntityFrameworkCore;
+using Super.Paula.Administration;
+using Super.Paula.Auditing;
+using Super.Paula.Environment;
+using Super.Paula.Guidlines;
+using Super.Paula.Inventory;
+using Super.Paula.Mapping.PartitionKeyValueGenerators;
 
-namespace Super.Paula.Data
+namespace Super.Paula
 {
     [SuppressMessage("Style", "IDE1006")]
     public static class _Services

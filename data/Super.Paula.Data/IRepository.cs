@@ -1,6 +1,10 @@
-﻿using Super.Paula.Shared.ErrorHandling;
+﻿using Super.Paula.ErrorHandling;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace Super.Paula.Data
+namespace Super.Paula
 {
     public interface IRepository<TEntity> 
         where TEntity : class

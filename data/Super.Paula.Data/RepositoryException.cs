@@ -1,6 +1,6 @@
-﻿using Super.Paula.Shared.ErrorHandling;
+﻿using Super.Paula.ErrorHandling;
 
-namespace Super.Paula.Data
+namespace Super.Paula
 {
     public class RepositoryException : ErrorException
     {

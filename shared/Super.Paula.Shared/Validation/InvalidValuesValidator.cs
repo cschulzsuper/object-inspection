@@ -1,12 +1,6 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Text.RegularExpressions;
+﻿using System.Linq;
 
-namespace Super.Paula.Shared.Validation
+namespace Super.Paula.Validation
 {
     public static class InvalidValuesValidator
     {

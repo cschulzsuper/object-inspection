@@ -1,9 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
-using Super.Paula.Environment;
-using Super.Paula.Web.Client;
-using Super.Paula.Web.Shared.Authorization;
-
-namespace Super.Paula.BlazorServerSideHost
+namespace Super.Paula
 {
     public class Startup
     {
@@ -19,8 +14,7 @@ namespace Super.Paula.BlazorServerSideHost
             services.AddRazorPages();
             services.AddServerSideBlazor();
 
-            services.AddPaulaWebClient(_environment.IsDevelopment());
-            services.AddPaulaWebClientAuthorization();
+            services.AddPaulaClient(_environment.IsDevelopment());
         }
 
         public void Configure(IApplicationBuilder app)

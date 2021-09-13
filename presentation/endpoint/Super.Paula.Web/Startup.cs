@@ -1,23 +1,14 @@
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
-using Microsoft.OpenApi.Models;
-using Super.Paula.Environment.AspNetCore;
-using Super.Paula.Web.Server;
-using Super.Paula.Web.Server.Authentication;
-using Super.Paula.Web.Shared.Authorization;
-using Super.Paula.Web.Swagger;
+using Super.Paula.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
-using System.ComponentModel;
-using Super.Paula.Data.AspNetCore;
-using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
-using Super.Paula.Web.Shared.Handling.Responses;
+using ProblemDetails = Super.Paula.ErrorHandling.ProblemDetails;
 
-namespace Super.Paula.Web
+namespace Super.Paula
 {
     public class Startup
     {
@@ -34,9 +25,7 @@ namespace Super.Paula.Web
             services.AddSingleton<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerGenOptions>();
             services.AddSwaggerGen();
 
-            services.AddPaulaWebServer(_environment.IsDevelopment());
-            services.AddPaulaWebServerAuthentication();
-            services.AddPaulaWebServerAuthorization();
+            services.AddPaulaServer(_environment.IsDevelopment());
         }
 
         public void Configure(IApplicationBuilder app)
@@ -62,7 +51,7 @@ namespace Super.Paula.Web
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapPaulaWebServer();
+                endpoints.MapPaulaServer();
             });
         }
 
@@ -97,7 +86,7 @@ namespace Super.Paula.Web
             context.Response.StatusCode = statusCode;
 
             await context.Response.WriteAsJsonAsync( 
-                new _ProblemDetails {
+                new ProblemDetails {
                     Detail = exception.StackTrace ?? string.Empty,
                     Title = exception.Message,
                     Status = statusCode,

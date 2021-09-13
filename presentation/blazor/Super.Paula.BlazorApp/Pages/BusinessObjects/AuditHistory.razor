@@ -1,7 +1,7 @@
 ﻿@page "/business-objects/{businessObject}/audit-history"
-
-@using Super.Paula.Web.Shared.Localization
-@using Super.Paula.Web.Shared.Handling.Responses
+@using Super.Paula.Localization
+@using Super.Paula.Auditing
+@using Super.Paula.Auditing.Responses
 
 @inject ITranslator Translator
 @inject NavigationManager NavigationManager
@@ -94,9 +94,9 @@ else
 
 @code {
 
-    private ICollection<InspectionAuditResponse>? _inspectionAudits;
+    private ICollection<BusinessObjectInspectionAuditResponse>? _inspectionAudits;
 
-    private IEnumerable<InspectionAuditResponse>? InspectionAudits =>
+    private IEnumerable<BusinessObjectInspectionAuditResponse>? InspectionAudits =>
         _inspectionAudits?
             .Where(x => 
                 _showSatisfying && x.Result == "satisfying" ||
@@ -123,7 +123,7 @@ else
 
     private async Task QueryAsync()
     {
-        _inspectionAudits = new List<InspectionAuditResponse>();
+        _inspectionAudits = new List<BusinessObjectInspectionAuditResponse>();
 
         if (_searchTerm.Length <= 3 && _searchScope != string.Empty)
         {
@@ -191,7 +191,7 @@ else
         }
     }
 
-    private void NavigateToDetails(InspectionAuditResponse response)
+    private void NavigateToDetails(BusinessObjectInspectionAuditResponse response)
     {
         NavigationManager.NavigateTo($"/inspection-audits/{response.BusinessObject}/{response.Inspection}/{response.AuditDate}/{response.AuditTime}");
     }

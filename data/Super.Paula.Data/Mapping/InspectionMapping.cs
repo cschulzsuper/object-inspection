@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Super.Paula.Aggregates.Guidlines;
-using Super.Paula.Data.Mapping.PartitionKeyValueGenerators;
+using Super.Paula.Guidlines;
+using Super.Paula.Mapping.PartitionKeyValueGenerators;
 
-namespace Super.Paula.Data.Mapping
+namespace Super.Paula.Mapping
 {
     public class InspectionMapping : IEntityTypeConfiguration<Inspection>
     {

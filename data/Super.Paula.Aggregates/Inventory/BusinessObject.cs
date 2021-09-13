@@ -1,4 +1,4 @@
-﻿namespace Super.Paula.Aggregates.Inventory
+﻿namespace Super.Paula.Inventory
 {
     public partial class BusinessObject
     {

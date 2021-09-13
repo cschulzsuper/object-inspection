@@ -3,7 +3,8 @@
   <PropertyGroup>
 	  <TargetFramework>net6.0</TargetFramework>
 	  <Nullable>enable</Nullable>
-	  <LangVersion>Preview</LangVersion>
+    <LangVersion>Preview</LangVersion>
+    <RootNamespace>Super.Paula</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,13 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\endpoint\Super.Paula.Web.Client\Super.Paula.Web.Client.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Update="Pages\BusinessObjects\Edit.razor">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-    </Content>
+    <ProjectReference Include="..\..\endpoint\Super.Paula.Web.Client\Super.Paula.Client.csproj" />
   </ItemGroup>
 
 </Project>

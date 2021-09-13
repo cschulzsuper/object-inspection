@@ -1,9 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Super.Paula.Data.Mapping.PartitionKeyValueGenerators;
 using Super.Paula.Environment;
+using Super.Paula.Mapping.PartitionKeyValueGenerators;
 
-namespace Super.Paula.Data
+namespace Super.Paula
 {
     public class Repository<TEntity> : IRepository<TEntity>
         where TEntity : class

@@ -1,10 +1,8 @@
-using Microsoft.AspNetCore.Authorization;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using Super.Paula.Environment;
-using Super.Paula.Web.Client;
-using Super.Paula.Web.Shared.Authorization;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace Super.Paula.BlazorApp
+namespace Super.Paula
 {
     public static class Program
     {
@@ -21,8 +19,7 @@ namespace Super.Paula.BlazorApp
 
         public static void ConfigureServices(this IServiceCollection services, IWebAssemblyHostEnvironment environment)
         {
-            services.AddPaulaWebClient(environment.IsDevelopment());
-            services.AddPaulaWebClientAuthorization();
+            services.AddPaulaClient(environment.IsDevelopment());
         }
     }
 }

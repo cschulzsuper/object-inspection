@@ -1,15 +1,8 @@
-﻿using Super.Paula.Aggregates.Administration;
-using Super.Paula.Shared.Validation;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Net.Mail;
-using Super.Paula.Aggregates.Guidlines;
-using Super.Paula.Aggregates.Inventory;
+using Super.Paula.Validation;
 
-namespace Super.Paula.Management.Inventory
+namespace Super.Paula.Inventory
 {
     public static class BusinessObjectValidator
     {

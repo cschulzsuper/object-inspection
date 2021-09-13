@@ -1,10 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Super.Paula.Management.Administration;
-using Super.Paula.Management.Auditing;
-using Super.Paula.Management.Guidlines;
-using Super.Paula.Management.Inventory;
+using Super.Paula.Administration;
+using Super.Paula.Auditing;
+using Super.Paula.Guidlines;
+using Super.Paula.Inventory;
 
-namespace Super.Paula.Management
+namespace Super.Paula
 {
     public static class _Services
     {

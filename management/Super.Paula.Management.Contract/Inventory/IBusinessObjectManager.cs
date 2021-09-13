@@ -1,6 +1,4 @@
-﻿using Super.Paula.Aggregates.Inventory;
-
-namespace Super.Paula.Management.Inventory
+﻿namespace Super.Paula.Inventory
 {
     public interface IBusinessObjectManager
     {

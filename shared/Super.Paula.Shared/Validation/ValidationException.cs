@@ -1,11 +1,7 @@
-﻿using Super.Paula.Shared.ErrorHandling;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
+using Super.Paula.ErrorHandling;
 
-namespace Super.Paula.Shared.Validation
+namespace Super.Paula.Validation
 {
     public class ValidationException : ErrorException
     {

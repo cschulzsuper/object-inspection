@@ -37,15 +37,29 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Super.Paula.BlazorServerSid
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Super.Paula.BlazorWebAssemblyHost", "presentation\blazor\Super.Paula.BlazorWebAssemblyHost\Super.Paula.BlazorWebAssemblyHost.csproj", "{9FA65C37-7136-4354-A849-5C9969F36E39}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Super.Paula.Web", "presentation\endpoint\Super.Paula.Web\Super.Paula.Web.csproj", "{F7124D97-AB7C-4A73-B0F2-107C7CC25C05}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Super.Paula.ServerApp", "presentation\endpoint\Super.Paula.Web\Super.Paula.ServerApp.csproj", "{F7124D97-AB7C-4A73-B0F2-107C7CC25C05}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Super.Paula.Web.Client", "presentation\endpoint\Super.Paula.Web.Client\Super.Paula.Web.Client.csproj", "{0CEA5BED-1B2E-42BC-8730-97FA49DF3ED3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Super.Paula.Client", "presentation\endpoint\Super.Paula.Web.Client\Super.Paula.Client.csproj", "{0CEA5BED-1B2E-42BC-8730-97FA49DF3ED3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Super.Paula.Web.Server", "presentation\endpoint\Super.Paula.Web.Server\Super.Paula.Web.Server.csproj", "{173391A4-CBA8-450D-8FEF-A5DDF6FA1E15}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Super.Paula.Web.Shared", "presentation\endpoint\Super.Paula.Web.Shared\Super.Paula.Web.Shared.csproj", "{461D4BD4-3ED2-4645-BFA5-AE2BB6480A2E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Super.Paula.Server", "presentation\endpoint\Super.Paula.Web.Server\Super.Paula.Server.csproj", "{173391A4-CBA8-450D-8FEF-A5DDF6FA1E15}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Super.Paula.Shared", "shared\Super.Paula.Shared\Super.Paula.Shared.csproj", "{3D0286FE-FAE4-45E1-AC2D-3557844A51BD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "transport", "transport", "{140CA7C1-13C2-46AF-9A40-7B65C94FF5BC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Super.Paula.TransportContract", "transport\Super.Paula.TransportContract\Super.Paula.TransportContract.csproj", "{A0548A70-9892-44E9-A7F3-9379008AA949}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Super.Paula.ServerTransport", "transport\Super.Paula.ServerTransport\Super.Paula.ServerTransport.csproj", "{57AE7C40-4E69-425B-AF6C-A42BC0917FAB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Super.Paula.ClientTransport", "transport\Super.Paula.ClientTransport\Super.Paula.ClientTransport.csproj", "{D46168CB-5624-4855-AA1E-08CBBCECCC15}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "infrastructure", "infrastructure", "{D5E41B77-998E-48BA-89FF-995CDFA471E6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Super.Paula.ClientInfrastructure", "infrastructure\Super.Paula.ClientInfrastructure\Super.Paula.ClientInfrastructure.csproj", "{6D7622D8-B7CA-4AF1-8FB9-1B99331A16ED}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Super.Paula.ServerInfrastructure", "Super.Paula.ServerInfrastructure\Super.Paula.ServerInfrastructure.csproj", "{51FDA8E1-6697-48EE-853D-4A641FD3227D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Super.Paula.SharedInfrastructure", "Super.Paula.SharedInfrastructure\Super.Paula.SharedInfrastructure.csproj", "{D57B828C-737A-4F3D-8EA6-AA1555B4FEE9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -105,14 +119,34 @@ Global
 		{173391A4-CBA8-450D-8FEF-A5DDF6FA1E15}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{173391A4-CBA8-450D-8FEF-A5DDF6FA1E15}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{173391A4-CBA8-450D-8FEF-A5DDF6FA1E15}.Release|Any CPU.Build.0 = Release|Any CPU
-		{461D4BD4-3ED2-4645-BFA5-AE2BB6480A2E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{461D4BD4-3ED2-4645-BFA5-AE2BB6480A2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{461D4BD4-3ED2-4645-BFA5-AE2BB6480A2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{461D4BD4-3ED2-4645-BFA5-AE2BB6480A2E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3D0286FE-FAE4-45E1-AC2D-3557844A51BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3D0286FE-FAE4-45E1-AC2D-3557844A51BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3D0286FE-FAE4-45E1-AC2D-3557844A51BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3D0286FE-FAE4-45E1-AC2D-3557844A51BD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A0548A70-9892-44E9-A7F3-9379008AA949}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A0548A70-9892-44E9-A7F3-9379008AA949}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A0548A70-9892-44E9-A7F3-9379008AA949}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A0548A70-9892-44E9-A7F3-9379008AA949}.Release|Any CPU.Build.0 = Release|Any CPU
+		{57AE7C40-4E69-425B-AF6C-A42BC0917FAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57AE7C40-4E69-425B-AF6C-A42BC0917FAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57AE7C40-4E69-425B-AF6C-A42BC0917FAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57AE7C40-4E69-425B-AF6C-A42BC0917FAB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D46168CB-5624-4855-AA1E-08CBBCECCC15}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D46168CB-5624-4855-AA1E-08CBBCECCC15}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D46168CB-5624-4855-AA1E-08CBBCECCC15}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D46168CB-5624-4855-AA1E-08CBBCECCC15}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D7622D8-B7CA-4AF1-8FB9-1B99331A16ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D7622D8-B7CA-4AF1-8FB9-1B99331A16ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D7622D8-B7CA-4AF1-8FB9-1B99331A16ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D7622D8-B7CA-4AF1-8FB9-1B99331A16ED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{51FDA8E1-6697-48EE-853D-4A641FD3227D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51FDA8E1-6697-48EE-853D-4A641FD3227D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51FDA8E1-6697-48EE-853D-4A641FD3227D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51FDA8E1-6697-48EE-853D-4A641FD3227D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D57B828C-737A-4F3D-8EA6-AA1555B4FEE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D57B828C-737A-4F3D-8EA6-AA1555B4FEE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D57B828C-737A-4F3D-8EA6-AA1555B4FEE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D57B828C-737A-4F3D-8EA6-AA1555B4FEE9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -133,8 +167,13 @@ Global
 		{F7124D97-AB7C-4A73-B0F2-107C7CC25C05} = {9C3CA4DD-C643-48F2-8D8D-6024F09DD88D}
 		{0CEA5BED-1B2E-42BC-8730-97FA49DF3ED3} = {9C3CA4DD-C643-48F2-8D8D-6024F09DD88D}
 		{173391A4-CBA8-450D-8FEF-A5DDF6FA1E15} = {9C3CA4DD-C643-48F2-8D8D-6024F09DD88D}
-		{461D4BD4-3ED2-4645-BFA5-AE2BB6480A2E} = {9C3CA4DD-C643-48F2-8D8D-6024F09DD88D}
 		{3D0286FE-FAE4-45E1-AC2D-3557844A51BD} = {E52EC6D2-9D3C-493D-BD68-5FAFF5AD9F00}
+		{A0548A70-9892-44E9-A7F3-9379008AA949} = {140CA7C1-13C2-46AF-9A40-7B65C94FF5BC}
+		{57AE7C40-4E69-425B-AF6C-A42BC0917FAB} = {140CA7C1-13C2-46AF-9A40-7B65C94FF5BC}
+		{D46168CB-5624-4855-AA1E-08CBBCECCC15} = {140CA7C1-13C2-46AF-9A40-7B65C94FF5BC}
+		{6D7622D8-B7CA-4AF1-8FB9-1B99331A16ED} = {D5E41B77-998E-48BA-89FF-995CDFA471E6}
+		{51FDA8E1-6697-48EE-853D-4A641FD3227D} = {D5E41B77-998E-48BA-89FF-995CDFA471E6}
+		{D57B828C-737A-4F3D-8EA6-AA1555B4FEE9} = {D5E41B77-998E-48BA-89FF-995CDFA471E6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {167D4B81-B91A-4D40-AEEF-6CC3C49F9CD1}

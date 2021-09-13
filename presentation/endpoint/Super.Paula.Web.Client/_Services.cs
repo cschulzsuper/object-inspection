@@ -1,47 +1,21 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Components.Authorization;
+﻿using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.DependencyInjection;
-using Super.Paula.Environment;
-using Super.Paula.Web.Client.Handling;
-using Super.Paula.Web.Client.Localization;
-using Super.Paula.Web.Shared.Authentication;
-using Super.Paula.Web.Shared.Authorization;
-using Super.Paula.Web.Shared.Handling;
-using Super.Paula.Web.Shared.Localization;
+using Super.Paula.Localization;
 
-namespace Super.Paula.Web.Client
+namespace Super.Paula
 {
+    [SuppressMessage("Style", "IDE1006")]
     public static class _Services
     {
-        public static IServiceCollection AddPaulaWebClient(this IServiceCollection services, bool isDevelopment)
+        public static IServiceCollection AddPaulaClient(this IServiceCollection services, bool isDevelopment)
         {
             services.AddPaulaAppState();
             services.AddPaulaAppSettings();
             services.AddPaulaAppEnvironment(isDevelopment);
+            services.AddPaulaClientTransport();
+            services.AddPaulaClientAuthorization();
 
-            services.AddHttpClient<IAccountHandler, AccountHandler>();
-            services.AddScoped<AccountHandlerCache>();
-
-            services.AddHttpClient<IBusinessObjectHandler, BusinessObjectHandler>();
-            services.AddHttpClient<IOrganizationHandler, OrganizationHandler>();
-            services.AddHttpClient<IBusinessObjectInspectionAuditHandler, BusinessObjectInspectionAuditHandler>();
-            services.AddHttpClient<IInspectionHandler, InspectionHandler>();
-            services.AddHttpClient<IInspectorHandler, InspectorHandler>();
-
-            services.AddSingleton<ITranslator, Translator>();
-
-            return services;
-        }
-
-        public static IServiceCollection AddPaulaWebClientAuthorization(this IServiceCollection services)
-        {
-            services.AddAuthorizationCore();
-            services.AddSingleton<IAuthorizationPolicyProvider, PaulaAuthorizationPolicyProvider>();
-            services.AddScoped<IAuthorizationHandler, PaulaAuthorizationHandler>();
-
-            services.AddScoped<PaulaAuthenticationStateManager>();
-            services.AddScoped<AuthenticationStateProvider, PaulaAuthenticationStateManager>(provider
-                 => provider.GetRequiredService<PaulaAuthenticationStateManager>());
+            services.AddSingleton<ITranslator,Translator>();
 
             return services;
         }

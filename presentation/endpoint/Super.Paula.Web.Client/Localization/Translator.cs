@@ -1,6 +1,4 @@
-﻿using Super.Paula.Web.Shared.Localization;
-
-namespace Super.Paula.Web.Client.Localization
+﻿namespace Super.Paula.Localization
 {
     public class Translator : ITranslator
     {

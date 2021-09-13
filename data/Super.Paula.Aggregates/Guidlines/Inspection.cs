@@ -1,4 +1,4 @@
-﻿namespace Super.Paula.Aggregates.Guidlines
+﻿namespace Super.Paula.Guidlines
 {
     public class Inspection
     {

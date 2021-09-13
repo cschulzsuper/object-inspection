@@ -1,10 +1,7 @@
-﻿
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.OpenApi.Models;
+﻿using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
-using System.Reflection;
 
-namespace Super.Paula.Web.Swagger
+namespace Super.Paula.Swagger
 {
     public class AuthorizationOperationFilter : IOperationFilter
     {

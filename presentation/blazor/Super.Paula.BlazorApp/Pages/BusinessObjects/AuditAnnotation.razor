@@ -1,6 +1,8 @@
 ﻿@page "/business-objects/{businessObject}/audit/{inspection}/{auditDate:int}/{auditTime:int}/annotation"
-@using Super.Paula.Web.Shared.Localization
-@using Super.Paula.Web.Shared.Handling.Requests
+@using Super.Paula.Localization
+@using Super.Paula.Inventory
+@using Super.Paula.Inventory.Requests
+@using Super.Paula.Inventory.Responses
 
 @inject ITranslator Translator
 @inject NavigationManager NavigationManager
