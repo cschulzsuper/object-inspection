@@ -1,0 +1,194 @@
+﻿@page "/business-objects"
+
+@using Super.Paula.Environment
+@using Super.Paula.Client.Localization
+@using Super.Paula.Application.Inventory
+@using Super.Paula.Application.Inventory.Responses
+
+@inject ITranslator Translator
+@inject NavigationManager NavigationManager
+@inject IBusinessObjectHandler BusinessObjectHandler
+
+@attribute [Authorize("ChiefInspector")]
+
+<div class="container mt-2 mt-md-3">
+    <h1>@Translator["Business objects"]</h1>
+</div>
+
+<div class="container d-lg-flex mt-2 mt-md-3 align-items-center">
+    <button class="btn btn-primary mr-4"
+        @onclick="() => Create()">@Translator["Create"]</button>
+    <div class="custom-control custom-switch mr-4">
+        <input type="checkbox" class="custom-control-input" checked="@_onlyUnassigned" id="onlyUnassigned" @onchange="OnlyUnassignedChanged">
+        <label class="custom-control-label" for="onlyUnassigned">@Translator["Unassigned"]</label>
+    </div>
+    <div class="input-group">
+        <input type="text" class="form-control" placeholder="Search term" @bind="_searchTerm" @onkeyup="SearchKeyDownAsync" disabled="@_onlyUnassigned">
+        <div class="input-group-append">
+            <button type="button" id="businessObjectSearch" 
+                class="btn @(_searchScope == "business-object" ? "btn-primary" : "btn-outline-secondary")"
+                checked="@(_searchScope == "business-object")"
+                @onclick="@(() => ChangeSearchScopeAsync("business-object"))"
+                disabled="@_onlyUnassigned">@Translator["Business objects"]</button>
+            <button type="button" id="inspectorSearch" 
+                class="btn @(_searchScope == "inspector" ? "btn-primary" : "btn-outline-secondary")"
+                checked="@(_searchScope == "inspector")"
+                @onclick="@(() => ChangeSearchScopeAsync("inspector"))"
+                disabled="@_onlyUnassigned">@Translator["Inspectors"]</button>
+        </div>
+    </div>
+</div>  
+
+<div class="container mt-2 mt-md-3">
+
+@if (RelevantBusinessObjects == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>@Translator["Unique name"]</th>
+                <th>@Translator["Display name"]</th>
+                <th>@Translator["Inspector"]</th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var businessObject in RelevantBusinessObjects)
+            {
+                <tr>
+                    <td class="col-2">@businessObject.UniqueName</td>
+                    <td class="col-4">@businessObject.DisplayName</td>
+                    <td class="col-2">@businessObject.Inspector</td>
+                    <td class="col-1">
+                        <button class="btn btn-outline-info btn-block" 
+                            @onclick="() => Edit(businessObject.UniqueName)">@Translator["Edit"]</button>
+                    </td>
+                    <td class="col-1">
+                        <button class="btn btn-outline-danger btn-block" 
+                            @onclick="() => DeleteAsync(businessObject.UniqueName)">@Translator["Delete"]</button>
+                    </td>
+                    <td class="col-1">
+                        <button class="btn btn-outline-danger btn-block" 
+                            @onclick="() => NavigateToInspections(businessObject.UniqueName)">@Translator["Inspections"]</button>
+                    </td>
+                    <td class="col-1">
+                        <button class="btn btn-outline-danger btn-block" 
+                            @onclick="() => NavigateToInspectionAuditHistory(businessObject.UniqueName)">@Translator["Audit history"]</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+</div>
+
+@code {
+
+    private IDictionary<string,BusinessObjectResponse>? _businessObjects = null;
+
+    private bool _onlyUnassigned = false;
+
+    private string _searchTerm = string.Empty;
+
+    private string _searchScope = string.Empty;
+
+    public IEnumerable<BusinessObjectResponse>? RelevantBusinessObjects
+        => _onlyUnassigned
+            ? _businessObjects?.Values.Where(x => x.Inspector == string.Empty)
+            : _businessObjects?.Values;
+
+
+    protected override Task OnInitializedAsync()
+        => QueryAsync();
+
+    public async Task QueryAsync()
+    {
+        _businessObjects = new Dictionary<string, BusinessObjectResponse>();
+
+        if (_searchTerm.Length <= 3 && _searchScope != string.Empty)
+        {
+            return;
+        }
+
+        var searchTermInspectorSearch =
+            (_searchTerm.Length > 3 && _searchScope == "inspector")  ? _searchTerm : null;
+        var searchTermBusinessObject =
+            (_searchTerm.Length > 3 && _searchScope == "business-object")  ? _searchTerm : null;
+
+        var response = BusinessObjectHandler.Search(searchTermBusinessObject, searchTermInspectorSearch);
+
+        await foreach (var businessObject in response)
+        {
+            _businessObjects.Add(businessObject.UniqueName, businessObject);
+            StateHasChanged();
+        }
+    }
+
+    public Task SearchKeyDownAsync(KeyboardEventArgs e)
+    {
+        if (e.Code == "Enter" || e.Code == "NumpadEnter")
+        {
+            if (_searchTerm.Length > 3)
+            {
+                if (_searchScope == string.Empty)
+                {
+                    _searchScope = "business-object";
+                }
+            }
+            else
+            {
+                _searchTerm = string.Empty;
+                _searchScope = string.Empty;
+            }
+            return QueryAsync();
+        }
+
+        return Task.CompletedTask;
+    }
+
+    private void OnlyUnassignedChanged(ChangeEventArgs e)
+    {
+        _onlyUnassigned = (bool)e.Value!;
+    }
+
+    private Task ChangeSearchScopeAsync(string searchScope)
+    {
+        _searchScope = _searchScope == searchScope
+            ? string.Empty
+            : searchScope;
+
+        if (_searchScope == string.Empty)
+        {
+            _searchTerm = string.Empty;
+        }
+
+        return QueryAsync();
+    }
+
+    public void Create()
+        => NavigationManager.NavigateTo("/business-objects/create");
+
+    public void Edit(string businessObject)
+        => NavigationManager.NavigateTo($"/business-objects/{businessObject}/edit");
+
+    public async Task DeleteAsync(string businessObject) 
+    {
+        await BusinessObjectHandler.DeleteAsync(businessObject);
+        _businessObjects!.Remove(businessObject);
+    }
+
+    public void NavigateToInspections(string businessObject)
+        => NavigationManager.NavigateTo($"/business-objects/{businessObject}/inspections");
+    
+    public void NavigateToInspectionAuditHistory(string businessObject)
+        => NavigationManager.NavigateTo($"/business-objects/{businessObject}/audit-history");
+
+}

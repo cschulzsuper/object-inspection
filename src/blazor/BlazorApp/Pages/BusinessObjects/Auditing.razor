@@ -1,0 +1,73 @@
+﻿@page "/business-objects/auditing"
+
+@inject ITranslator Translator
+@inject NavigationManager NavigationManager
+@inject IBusinessObjectHandler BusinessObjectHandler
+@inject AppState AppState
+
+@attribute [Authorize("Inspector")]
+
+<div class="container mt-2 mt-md-3">
+    <h1>@Translator["Business objects"]</h1>
+</div>
+
+<div class="container mt-2 mt-md-3">
+
+@if (_businessObjects == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>@Translator["Unique name"]</th>
+                <th>@Translator["Display name"]</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var businessObject in _businessObjects)
+            {
+                <tr>
+                    <td class="col-4">@businessObject.UniqueName</td>
+                    <td class="col-6">@businessObject.DisplayName</td>
+                    <td class="col-2">
+                        <button class="btn btn-outline-danger btn-block" 
+                            @onclick="() => NavigateToInspectionAudit(businessObject.UniqueName)">@Translator["Audit"]</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+</div>
+
+@code {
+
+    private ICollection<BusinessObjectResponse>? _businessObjects = null;
+
+    protected override Task OnInitializedAsync()
+        => QueryAsync();
+
+    public async Task QueryAsync()
+    {
+        _businessObjects = new List<BusinessObjectResponse>();
+
+        var response = BusinessObjectHandler.GetAllForInspector(AppState.CurrentInspector);
+
+        await foreach (var businessObject in response)
+        {
+            _businessObjects.Add(businessObject);
+            StateHasChanged();
+        }
+    }
+
+    public void NavigateToInspections(string businessObject)
+        => NavigationManager.NavigateTo($"/business-objects/{businessObject}/inspections");
+    
+    public void NavigateToInspectionAudit(string businessObject)
+        => NavigationManager.NavigateTo($"/business-objects/{businessObject}/audit");
+}

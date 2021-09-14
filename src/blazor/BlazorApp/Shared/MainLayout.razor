@@ -1,0 +1,94 @@
+﻿
+@inherits LayoutComponentBase
+
+@inject IAccountHandler AccountHandler
+@inject NavigationManager NavigationManager   
+@inject AppEnvironment AppEnvironment
+@inject PaulaAuthenticationStateManager PaulaAuthenticationStateManager
+
+<div class="page">
+    <div class="sidebar text-nowrap">
+        <NavMenu />
+    </div>
+    <main>
+        <div class="top-row px-4">
+            <AuthorizeView Policy="Impersonator">
+                <Authorized>
+                    <button type="button" class="nav-link btn btn-secondary ml-3" @onclick="() => StopImpersonationAsync()">
+                        <span class="oi oi-power-standby" aria-hidden="true"></span>
+                    </button>
+                </Authorized>
+            </AuthorizeView>
+
+            <AuthorizeView>
+                <Authorized>
+                    @if(AppEnvironment.IsDevelopment)
+                    {
+                        <select class="btn btn-secondary ml-3" @onchange="e => AuthorizationFilterChanged(e.Value)" value="@_authorizationFilter">
+                            <option value="">---</option>
+                            <option value="Impersonator|Maintainer|Inspector|ChiefInspector">Maintainer</option>
+                            <option value="Impersonator|Inspector|ChiefInspector">ChiefInspector</option>
+                            <option value="Impersonator|Inspector">Inspector</option>
+                        </select>
+                    }
+
+                    <NavLink class="nav-link" Match="NavLinkMatch.All" href="change-secret">
+                        <span class="oi oi-person" aria-hidden="true"></span> Change Password
+                    </NavLink>
+                    <button type="button" class="nav-link btn" @onclick="() => SignOutAsync()">
+                        <span class="oi oi-account-logout" aria-hidden="true"></span>
+                    </button>
+                </Authorized>
+            </AuthorizeView>
+        </div>
+
+        <article class="content px-4 text-nowrap">
+            <ErrorBoundary @ref="errorBoundary">
+                <ChildContent>
+                    @Body             
+                </ChildContent>
+                <ErrorContent >
+                    <div class="blazor-error-boundary">
+                        @context.Message
+                    </div>
+                </ErrorContent>
+            </ErrorBoundary>
+        </article>
+    </main>
+</div>
+
+@code {
+
+    private string _authorizationFilter = string.Empty;
+
+    private ErrorBoundary? errorBoundary = null!;
+
+    protected override void OnParametersSet()
+    {
+        errorBoundary?.Recover();
+    }
+
+    public async Task SignOutAsync()
+    {
+        await AccountHandler.SignOutInspectorAsync();
+        NavigationManager.NavigateTo("/");
+    }
+
+    public async Task StopImpersonationAsync()
+    {
+        await AccountHandler.StopImpersonationAsync();
+        NavigationManager.NavigateTo("/");
+    }
+
+    public void AuthorizationFilterChanged(object? value)
+    {
+        _authorizationFilter = ((string)value!);
+
+        var authorizationFilter = _authorizationFilter
+            .Split('|')
+            .Where(x => !string.IsNullOrWhiteSpace(x))
+            .ToArray();
+
+        PaulaAuthenticationStateManager.SetAuthorizationsFilter(authorizationFilter);
+    }
+}
