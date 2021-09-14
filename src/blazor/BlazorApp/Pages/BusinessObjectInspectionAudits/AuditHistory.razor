@@ -56,7 +56,6 @@ else
     <table class="table">
         <thead>
             <tr>
-                <th>@Translator["Audit date"]</th>
                 <th>@Translator["Audit time"]</th>
                 <th>@Translator["Business object"]</th>
                 <th>@Translator["Inspection"]</th>
@@ -68,25 +67,21 @@ else
             @foreach (var inspectionAudit in InspectionAudits)
             {
                 <tr>
-                    <td class="col-1">@DateOnly.FromDayNumber(inspectionAudit.AuditDate).ToShortDateString()</td>
-                    <td class="col-1">@TimeOnly.FromTimeSpan(TimeSpan.FromMilliseconds(inspectionAudit.AuditTime)).ToShortTimeString()</td>
+                    <td class="col-1">@DateOnly.FromDayNumber(inspectionAudit.AuditDate).ToDateTime(TimeOnly.FromTimeSpan(TimeSpan.FromMilliseconds(inspectionAudit.AuditTime)),DateTimeKind.Utc).ToLocalTime().ToString()</td>
                     <td class="col-3">@inspectionAudit.BusinessObjectDisplayName</td>
-                    <td class="col-4">@inspectionAudit.InspectionDisplayName</td>
+                    <td class="col-5">@inspectionAudit.InspectionDisplayName</td>
                     <td class="col-2">@inspectionAudit.Inspector</td>
                     <td class="col-1">
                     @switch(inspectionAudit.Result) 
                     {
                         case "satisfying":
-                            <button class="btn btn-success btn-block" 
-                                @onclick="() => NavigateToDetails(inspectionAudit)">@Translator["Satisfying"]</button>
+                            <button class="btn btn-success btn-block" disabled>@Translator["Satisfying"]</button>
                              break;
                         case "insufficient": 
-                            <button class="btn btn-warning btn-block" 
-                                @onclick="() => NavigateToDetails(inspectionAudit)">@Translator["Insufficient"]</button>
+                            <button class="btn btn-warning btn-block" disabled>@Translator["Insufficient"]</button>
                             break;
                         case "failed": 
-                            <button class="btn btn-danger btn-block" 
-                                @onclick="() => NavigateToDetails(inspectionAudit)">@Translator["Failed"]</button>
+                            <button class="btn btn-danger btn-block" disabled>@Translator["Failed"]</button>
                             break;
                     } 
                     </td>                   
@@ -201,9 +196,4 @@ else
             await QueryAsync();
         }
     }
-
-    private void NavigateToDetails(BusinessObjectInspectionAuditResponse response)
-    {
-        NavigationManager.NavigateTo($"/inspection-audits/{response.BusinessObject}/{response.Inspection}/{response.AuditDate}/{response.AuditTime}");
-    } 
 }

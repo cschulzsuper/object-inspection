@@ -57,7 +57,6 @@ namespace Super.Paula.Application.Inventory
             {
                 yield return BusinessObjectValidator.UniqueNameHasValue(businessObject);
                 yield return BusinessObjectValidator.UniqueNameHasKebabCase(businessObject);
-                yield return BusinessObjectValidator.UniqueNameIsUnqiue(businessObject, GetQueryable());
                 yield return BusinessObjectValidator.DisplayNameHasValue(businessObject);
                 yield return BusinessObjectValidator.InspectorIsNotNull(businessObject);
                 yield return BusinessObjectValidator.InspectorHasKebabCase(businessObject);
@@ -76,6 +75,8 @@ namespace Super.Paula.Application.Inventory
                     yield return BusinessObjectValidator.InspectionAuditDateIsPositive(inspection);
                     yield return BusinessObjectValidator.InspectionAuditTimeIsInDayTimeRange(inspection);
                 }
+
+                yield return BusinessObjectValidator.UniqueNameIsUnqiue(businessObject, GetQueryable());
             };
 
             Validator.Ensure(Ensurences());
@@ -87,7 +88,6 @@ namespace Super.Paula.Application.Inventory
             {
                 yield return BusinessObjectValidator.UniqueNameHasValue(businessObject);
                 yield return BusinessObjectValidator.UniqueNameHasKebabCase(businessObject);
-                yield return BusinessObjectValidator.UniqueNameExists(businessObject, GetQueryable());
                 yield return BusinessObjectValidator.DisplayNameHasValue(businessObject);
                 yield return BusinessObjectValidator.InspectorIsNotNull(businessObject);
                 yield return BusinessObjectValidator.InspectorHasKebabCase(businessObject);
@@ -106,6 +106,8 @@ namespace Super.Paula.Application.Inventory
                     yield return BusinessObjectValidator.InspectionAuditDateIsPositive(inspection);
                     yield return BusinessObjectValidator.InspectionAuditTimeIsInDayTimeRange(inspection);
                 }
+
+                yield return BusinessObjectValidator.UniqueNameExists(businessObject, GetQueryable());
             };
 
             Validator.Ensure(Ensurences());

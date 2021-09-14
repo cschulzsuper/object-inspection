@@ -55,15 +55,15 @@ namespace Super.Paula.Application.Guidlines
             => Validator.Ensure(
                 InspectionValidator.UniqueNameHasValue(inspection),
                 InspectionValidator.UniqueNameHasKebabCase(inspection),
-                InspectionValidator.UniqueNameIsUnqiue(inspection, GetQueryable()),
-                InspectionValidator.DisplayNameHasValue(inspection));
+                InspectionValidator.DisplayNameHasValue(inspection),
+                InspectionValidator.UniqueNameIsUnqiue(inspection, GetQueryable()));
 
         private void EnsureUpdateable(Inspection inspection)
             => Validator.Ensure(
                 InspectionValidator.UniqueNameHasValue(inspection),
                 InspectionValidator.UniqueNameHasKebabCase(inspection),
-                InspectionValidator.UniqueNameExists(inspection, GetQueryable()),
-                InspectionValidator.DisplayNameHasValue(inspection));
+                InspectionValidator.DisplayNameHasValue(inspection),
+                InspectionValidator.UniqueNameExists(inspection, GetQueryable()));
 
         private void EnsureDeleteable(Inspection inspection)
             => Validator.Ensure(

@@ -24,7 +24,7 @@
                 <Authorized>
                     @if(AppEnvironment.IsDevelopment)
                     {
-                        <select class="btn btn-secondary ml-3" @onchange="e => AuthorizationFilterChanged(e.Value)" value="@_authorizationFilter">
+                        <select class="btn btn-secondary ml-3 text-left" @onchange="e => AuthorizationFilterChanged(e.Value)" value="@_authorizationFilter">
                             <option value="">---</option>
                             <option value="Impersonator|Maintainer|Inspector|ChiefInspector">Maintainer</option>
                             <option value="Impersonator|Inspector|ChiefInspector">ChiefInspector</option>

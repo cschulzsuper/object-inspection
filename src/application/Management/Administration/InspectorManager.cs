@@ -56,17 +56,17 @@ namespace Super.Paula.Application.Administration
             => Validator.Ensure(
                 InspectorValidator.UniqueNameHasValue(inspector),
                 InspectorValidator.UniqueNameHasKebabCase(inspector),
-                InspectorValidator.UniqueNameIsUnqiue(inspector, GetQueryable()),
                 InspectorValidator.MailAddressIsNotNull(inspector),
-                InspectorValidator.MailAddressIsMailAddress(inspector));
+                InspectorValidator.MailAddressIsMailAddress(inspector),
+                InspectorValidator.UniqueNameIsUnqiue(inspector, GetQueryable()));
 
         private void EnsureUpdateable(Inspector inspector)
             => Validator.Ensure(
                 InspectorValidator.UniqueNameHasValue(inspector),
                 InspectorValidator.UniqueNameHasKebabCase(inspector),
-                InspectorValidator.UniqueNameExists(inspector, GetQueryable()),
                 InspectorValidator.MailAddressIsNotNull(inspector),
-                InspectorValidator.MailAddressIsMailAddress(inspector));
+                InspectorValidator.MailAddressIsMailAddress(inspector),
+                InspectorValidator.UniqueNameExists(inspector, GetQueryable()));
 
         private void EnsureDeleteable(Inspector inspector)
             => Validator.Ensure(

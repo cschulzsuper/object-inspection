@@ -55,17 +55,17 @@ namespace Super.Paula.Application.Administration
             => Validator.Ensure(
                 OrganizationValidator.UniqueNameHasValue(organization),
                 OrganizationValidator.UniqueNameHasKebabCase(organization),
-                OrganizationValidator.UniqueNameIsUnqiue(organization,GetQueryable()),
                 OrganizationValidator.ChiefInspectorIsNotNull(organization),
-                OrganizationValidator.ChiefInspectorHasKebabCase(organization));
+                OrganizationValidator.ChiefInspectorHasKebabCase(organization),
+                OrganizationValidator.UniqueNameIsUnqiue(organization, GetQueryable()));
 
         private void EnsureUpdateable(Organization organization)
             => Validator.Ensure(
                 OrganizationValidator.UniqueNameHasValue(organization),
                 OrganizationValidator.UniqueNameHasKebabCase(organization),
-                OrganizationValidator.UniqueNameExists(organization, GetQueryable()),
                 OrganizationValidator.ChiefInspectorIsNotNull(organization),
-                OrganizationValidator.ChiefInspectorHasKebabCase(organization));
+                OrganizationValidator.ChiefInspectorHasKebabCase(organization),
+                OrganizationValidator.UniqueNameExists(organization, GetQueryable()));
 
         private void EnsureDeleteable(Organization organization)
             => Validator.Ensure(
