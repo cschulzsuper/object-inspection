@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Routing;
 using Super.Paula.Application.Administration;
 using Super.Paula.Application.Auditing;
+using Super.Paula.Application.Communication;
 using Super.Paula.Application.Guidlines;
 using Super.Paula.Application.Inventory;
 
@@ -17,6 +18,7 @@ namespace Super.Paula
                 .MapBusinessObjectInspectionAudit()
                 .MapInspection()
                 .MapInspector()
+                .MapNotification()
                 .MapOrganization();
     }
 }

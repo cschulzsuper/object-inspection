@@ -22,6 +22,7 @@ namespace Super.Paula.Data
             modelBuilder.ApplyConfiguration(new BusinessObjectInspectionAuditMapping());
             modelBuilder.ApplyConfiguration(new InspectionMapping());
             modelBuilder.ApplyConfiguration(new InspectorMapping());
+            modelBuilder.ApplyConfiguration(new NotificationMapping());
             modelBuilder.ApplyConfiguration(new OrganizationMapping());
         }
     }

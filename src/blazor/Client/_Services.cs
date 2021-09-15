@@ -2,10 +2,12 @@
 using Microsoft.Extensions.DependencyInjection;
 using Super.Paula.Application.Administration;
 using Super.Paula.Application.Auditing;
+using Super.Paula.Application.Communication;
 using Super.Paula.Application.Guidlines;
 using Super.Paula.Application.Inventory;
 using Super.Paula.Client.Administration;
 using Super.Paula.Client.Auditing;
+using Super.Paula.Client.Communication;
 using Super.Paula.Client.Guidlines;
 using Super.Paula.Client.Inventory;
 using Super.Paula.Client.Localization;
@@ -30,6 +32,7 @@ namespace Super.Paula.Client
             services.AddHttpClient<IBusinessObjectInspectionAuditHandler, BusinessObjectInspectionAuditHandler>();
             services.AddHttpClient<IInspectionHandler, InspectionHandler>();
             services.AddHttpClient<IInspectorHandler, InspectorHandler>();
+            services.AddHttpClient<INotificationHandler, NotificationHandler>();
 
             services.AddSingleton<ITranslator,Translator>();
 

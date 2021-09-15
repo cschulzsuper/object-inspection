@@ -14,6 +14,7 @@ namespace Super.Paula.Application
                 .AddScoped<IBusinessObjectManager, BusinessObjectManager>()
                 .AddScoped<IInspectionManager, InspectionManager>()
                 .AddScoped<IInspectorManager, InspectorManager>()
+                .AddScoped<INotificationManager, NotificationManager>()
                 .AddScoped<IOrganizationManager, OrganizationManager>();
     }
 }

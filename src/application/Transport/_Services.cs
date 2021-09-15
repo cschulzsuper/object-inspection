@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Super.Paula.Application.Administration;
 using Super.Paula.Application.Auditing;
+using Super.Paula.Application.Communication;
 using Super.Paula.Application.Guidlines;
 using Super.Paula.Application.Inventory;
 
@@ -18,6 +19,7 @@ namespace Super.Paula.Application
                 .AddScoped<IBusinessObjectInspectionAuditHandler, BusinessObjectInspectionAuditHandler>()
                 .AddScoped<IInspectionHandler, InspectionHandler>()
                 .AddScoped<IInspectorHandler, InspectorHandler>()
+                .AddScoped<INotificationHandler, NotificationHandler>()
                 .AddScoped<IOrganizationHandler, OrganizationHandler>()
 
                 .AddTransient(provider => new Lazy<IInspectionHandler>(() => provider.GetRequiredService<IInspectionHandler>()))

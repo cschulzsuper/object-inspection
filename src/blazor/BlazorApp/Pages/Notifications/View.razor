@@ -1,0 +1,54 @@
+﻿@page "/notifications"
+
+@inject ITranslator Translator
+@inject NavigationManager NavigationManager
+@inject INotificationHandler NotificationHandler
+@inject AppState AppState
+
+@attribute [Authorize("Inspector")]
+
+<div class="container mt-2 mt-md-3">
+    <h1>@Translator["Notification"]</h1>
+</div>
+
+<div class="container mt-2 mt-md-3">
+@if (_notifications == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    @foreach (var notification in _notifications)
+    {
+        <div class="card">
+            <div class="card-body">
+                <p class="card-text">@notification.Text</p>
+                <button class="btn btn-primary"
+                    @onclick="() => RemoveAsync(notification)">Remove</button>
+            </div>
+        </div>
+    }
+}
+</div>
+
+@code {
+
+    private ICollection<NotificationResponse>? _notifications;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _notifications = new List<NotificationResponse>(); 
+
+        await foreach(var notification in NotificationHandler.GetAllForInspector(AppState.CurrentInspector))
+        {
+            _notifications.Add(notification);
+            this.StateHasChanged();            
+        }
+    }
+
+    public async Task RemoveAsync(NotificationResponse notification)
+    {
+        await NotificationHandler.DeleteAsync(notification.Inspector, notification.Date, notification.Time);
+        _notifications!.Remove(notification);
+    }
+}
