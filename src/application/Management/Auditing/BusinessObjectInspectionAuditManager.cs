@@ -32,13 +32,22 @@ namespace Super.Paula.Application.Auditing
             => _businessObjectInspectionAuditRepository.GetAsyncEnumerable(query);
 
         public IQueryable<BusinessObjectInspectionAudit> GetDateBasedQueryable(int date)
-            => _businessObjectInspectionAuditRepository.GetPartitionQueryable(date);
+        {
+            EnsureGetableDateBased(date);
+            return _businessObjectInspectionAuditRepository.GetPartitionQueryable(date);
+        }
 
         public IAsyncEnumerable<BusinessObjectInspectionAudit> GetDateBasedAsyncEnumerable(int date)
-            => _businessObjectInspectionAuditRepository.GetPartitionAsyncEnumerable(date);
+        {
+            EnsureGetableDateBased(date);
+            return _businessObjectInspectionAuditRepository.GetPartitionAsyncEnumerable(date);
+        }
 
         public IAsyncEnumerable<TResult> GetDateBasedAsyncEnumerable<TResult>(int date, Func<IQueryable<BusinessObjectInspectionAudit>, IQueryable<TResult>> query)
-            => _businessObjectInspectionAuditRepository.GetPartitionAsyncEnumerable(query, date);
+        {
+            EnsureGetableDateBased(date);
+            return _businessObjectInspectionAuditRepository.GetPartitionAsyncEnumerable(query, date);
+        }
 
         public ValueTask InsertAsync(BusinessObjectInspectionAudit audit)
         {
@@ -57,6 +66,10 @@ namespace Super.Paula.Application.Auditing
             EnsureDeleteable(audit);
             return _businessObjectInspectionAuditRepository.DeleteAsync(audit);
         }
+
+        private void EnsureGetableDateBased(int date)
+            => Validator.Ensure(
+                BusinessObjectInspectionAuditValidator.AuditDateIsPositive(date));
 
         private void EnsureGetable(string businessObject, string inspection, int date, int time)
             => Validator.Ensure(

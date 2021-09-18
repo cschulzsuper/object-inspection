@@ -51,7 +51,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Authorization", "src\applic
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SignalR.Contract", "src\application\SignalR.Contract\SignalR.Contract.csproj", "{F175B091-3409-44E2-A4E0-390A2CE218B9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SignalR", "src\application\SignalR\SignalR.csproj", "{C4BD20B7-883E-4E5D-80AA-BA6B46E02B0C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SignalR", "src\application\SignalR\SignalR.csproj", "{C4BD20B7-883E-4E5D-80AA-BA6B46E02B0C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
