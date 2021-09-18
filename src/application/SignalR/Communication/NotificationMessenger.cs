@@ -25,8 +25,13 @@ namespace Super.Paula.Application.Communication
         public async Task OnCreatedAsync(NotificationResponse response)
         {
             var userId = $"{_appState.CurrentOrganization}:{response.Inspector}";
-
             await _hubContext.Clients.User(userId).SendAsync("OnCreated", response);
+        }
+
+        public async Task OnDeletedAsync(string inspector, int date, int time)
+        {
+            var userId = $"{_appState.CurrentOrganization}:{inspector}";
+            await _hubContext.Clients.User(userId).SendAsync("OnDeleted", inspector, date, time);
         }
     }
 }

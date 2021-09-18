@@ -27,12 +27,13 @@ namespace Super.Paula.Client
             services.AddHttpClient<IAccountHandler, AccountHandler>();
             services.AddScoped<AccountHandlerCache>();
 
+            services.AddHttpClient<INotificationHandler, NotificationHandler>();
             services.AddHttpClient<IBusinessObjectHandler, BusinessObjectHandler>();
             services.AddHttpClient<IOrganizationHandler, OrganizationHandler>();
             services.AddHttpClient<IBusinessObjectInspectionAuditHandler, BusinessObjectInspectionAuditHandler>();
             services.AddHttpClient<IInspectionHandler, InspectionHandler>();
             services.AddHttpClient<IInspectorHandler, InspectorHandler>();
-            services.AddHttpClient<INotificationHandler, NotificationHandler>();
+
 
             services.AddSingleton<ITranslator,Translator>();
 

@@ -108,6 +108,13 @@ namespace Super.Paula.Client.Communication
             return onCreated;
         }
 
+        public async Task<IDisposable> OnDeletedAsync(Func<string, int, int, Task> handler)
+        {
+            var onDeleted = _hubConnection.On("OnDeleted", handler);
+            await StartHubAsync();
+            return onDeleted;
+        }
+
         public async ValueTask DeleteAsync(string inspector, int date, int time)
         {
             var responseMessage = await _httpClient.DeleteAsync($"inspectors/{inspector}/notifications/{date}/{time}");

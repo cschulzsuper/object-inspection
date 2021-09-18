@@ -18,5 +18,6 @@ namespace Super.Paula.Application.Communication
 
 
         Task<IDisposable> OnCreatedAsync(Func<NotificationResponse, Task> handler);
+        Task<IDisposable> OnDeletedAsync(Func<string, int, int, Task> handler);
     }
 }

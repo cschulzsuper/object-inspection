@@ -1,4 +1,10 @@
-﻿<div class="top-row pl-4 navbar navbar-dark">
+﻿@inject INotificationHandler NotificationHandler
+@inject AppState AppState
+@inject IAccountHandler AccountHandler
+
+@implements IAsyncDisposable
+
+<div class="top-row pl-4 navbar navbar-dark">
     <a class="navbar-brand" href="">Paula</a>
     <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
         <span class="navbar-toggler-icon"></span>
@@ -10,9 +16,9 @@
         <AuthorizeView>
             <NotAuthorized>
                 <div class="nav-item px-3">
-                            <NavLink class="nav-link" Match="NavLinkMatch.All" href="account/sign-in">
-                                <span class="oi oi-account-login" aria-hidden="true"></span> Sign in
-                            </NavLink>
+                    <NavLink class="nav-link" Match="NavLinkMatch.All" href="account/sign-in">
+                        <span class="oi oi-account-login" aria-hidden="true"></span> Sign in
+                    </NavLink>
                 </div>
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" Match="NavLinkMatch.All" href="account/register-organization">
@@ -27,7 +33,7 @@
             </NotAuthorized>
         </AuthorizeView>
         <AuthorizeView Policy="Maintainer">
-            <Authorized>
+            <Authorized >
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" Match="NavLinkMatch.All" href="organizations">
                         <span class="oi oi-people" aria-hidden="true"></span> Organizations
@@ -59,7 +65,11 @@
                 </div>
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" Match="NavLinkMatch.All" href="notifications">
-                        <span class="oi oi-clipboard" aria-hidden="true"></span> Notifications
+                        <span class="oi oi-bell" aria-hidden="true"></span> Notifications
+                        @if (_notificationCount > 0)
+                        {
+                            <span class="badge badge-danger ml-2">@_notificationCount</span>
+                        }
                     </NavLink>
                 </div>
             </Authorized>
@@ -83,12 +93,64 @@
 </div>
 
 @code {
+
+    private IDisposable? _notificationHandlerOnCreated;
+    private IDisposable? _notificationHandlerOnDeleted;
+
+    private long _notificationCount;
+
     private bool collapseNavMenu = true;
 
     private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 
+    [CascadingParameter]
+    private Task<AuthenticationState>? authenticationStateTask { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        _notificationHandlerOnCreated = await NotificationHandler.OnCreatedAsync(OnCreatedAsync);
+        _notificationHandlerOnDeleted = await NotificationHandler.OnDeletedAsync(OnDeletedAsync);
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        _notificationCount = 0;
+
+        if((await AccountHandler.QueryAuthorizationsAsync()).Values.Any())
+        {
+            await foreach(var _ in NotificationHandler.GetAllForInspector(AppState.CurrentInspector))
+            {
+                _notificationCount++;
+            }
+        }
+    }
+
+    public Task OnCreatedAsync(NotificationResponse _)
+        => InvokeAsync(IncrementNotifications);
+
+    public Task OnDeletedAsync(string _, int __, int ___)
+        => InvokeAsync(DecrementNotifications);
+
+    private void IncrementNotifications()
+    {
+        _notificationCount++;
+        StateHasChanged();
+    }
+
+    private void DecrementNotifications()
+    {
+        _notificationCount--;
+        StateHasChanged();
+    }
+
     private void ToggleNavMenu()
     {
         collapseNavMenu = !collapseNavMenu;
+    }
+
+    public ValueTask DisposeAsync()
+    {
+        _notificationHandlerOnCreated?.Dispose();
+        return ValueTask.CompletedTask;
     }
 }

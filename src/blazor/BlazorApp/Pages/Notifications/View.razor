@@ -38,22 +38,22 @@ else
 
     private ICollection<NotificationResponse>? _notifications;
 
-    private IDisposable? liveNotifications;
+    private IDisposable? _notificationHandlerOnCreated;
 
     protected override async Task OnInitializedAsync()
     {
         _notifications = new List<NotificationResponse>();
 
-        liveNotifications = NotificationHandler.OnCreatedAsync(NotificationCreatedAsync);
-
         await foreach(var notification in NotificationHandler.GetAllForInspector(AppState.CurrentInspector))
         {
             _notifications.Add(notification);
-            this.StateHasChanged();            
+            StateHasChanged();            
         }
+
+        _notificationHandlerOnCreated = NotificationHandler.OnCreatedAsync(OnCreatedAsync);
     }
 
-    public Task NotificationCreatedAsync(NotificationResponse notification)
+    public Task OnCreatedAsync(NotificationResponse notification)
     {
         _notifications!.Add(notification);
         StateHasChanged();
@@ -62,7 +62,7 @@ else
 
     public ValueTask DisposeAsync()
     {
-        liveNotifications?.Dispose();
+        _notificationHandlerOnCreated?.Dispose();
         return ValueTask.CompletedTask;
     }
 

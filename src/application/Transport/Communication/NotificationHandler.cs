@@ -14,6 +14,7 @@ namespace Super.Paula.Application.Communication
         private readonly INotificationManager _notificationManager;
         
         private Func<NotificationResponse, Task>? _onCreatedHandler;
+        private Func<string, int, int, Task>? _onDeletedHandler;
 
         public NotificationHandler(INotificationManager notificationManager)
         {
@@ -51,6 +52,9 @@ namespace Super.Paula.Application.Communication
         public async ValueTask DeleteAsync(string inspector, int date, int time)
         {
             var entity = await _notificationManager.GetAsync(inspector, date, time);
+
+            var onDeletedTask = _onDeletedHandler?.Invoke(inspector, date, time);
+            if (onDeletedTask != null) await onDeletedTask;
 
             await _notificationManager.DeleteAsync(entity);
         }
@@ -98,6 +102,12 @@ namespace Super.Paula.Application.Communication
         public Task<IDisposable> OnCreatedAsync(Func<NotificationResponse, Task> handler)
         {
             _onCreatedHandler = handler;
+            return Task.FromResult<IDisposable>(null!);
+        }
+
+        public Task<IDisposable> OnDeletedAsync(Func<string, int, int, Task> handler)
+        {
+            _onDeletedHandler = handler;
             return Task.FromResult<IDisposable>(null!);
         }
 
