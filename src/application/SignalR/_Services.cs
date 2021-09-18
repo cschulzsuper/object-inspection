@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Super.Paula.Application.Communication;
 using Super.Paula.Environment;
+using Super.Paula.SignalR;
 
 namespace Super.Paula.Application
 {
@@ -10,7 +11,9 @@ namespace Super.Paula.Application
     public static class _Services
     {
         public static IServiceCollection AddPaulaSignalR(this IServiceCollection services)
-            => services.AddScoped<INotificationMessenger, NotificationMessenger>();
+            => services
+                .AddScoped<HubContextResolver>()
+                .AddScoped<INotificationMessenger, NotificationMessenger>();
 
     }
 }

@@ -2,6 +2,7 @@
 using Super.Paula.Application.Communication;
 using Super.Paula.Application.Communication.Responses;
 using Super.Paula.Environment;
+using Super.Paula.SignalR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,12 +13,13 @@ namespace Super.Paula.Application.Communication
 {
     public class NotificationMessenger : INotificationMessenger
     {
-        private readonly IHubContext<NotificationHub> _hubContext;
+        private readonly IHubContext _hubContext;
         private readonly AppState _appState;
 
-        public NotificationMessenger(IHubContext<NotificationHub> hubContext, AppState appState)
+        public NotificationMessenger(HubContextResolver hubContextResolver, AppState appState)
         {
-            _hubContext = hubContext;
+
+            _hubContext = hubContextResolver.GetHubContext(nameof(Notification));
             _appState = appState;
         }
 

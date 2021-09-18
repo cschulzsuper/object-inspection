@@ -18,7 +18,7 @@ namespace Super.Paula
                 .MapBusinessObjectInspectionAudit()
                 .MapInspection()
                 .MapInspector()
-                .MapNotification<NotificationHub>()
+                .MapNotification()
                 .MapOrganization();
     }
 }

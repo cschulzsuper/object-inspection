@@ -45,7 +45,7 @@ namespace Super.Paula.Client.Communication
 
             _hubConnection = new HubConnectionBuilder()
                 .WithUrl(
-                    new Uri(_httpClient.BaseAddress, "/notifications/live"),
+                    new Uri(_httpClient.BaseAddress, "/notifications/signalr"),
                     c => {
                         c.AccessTokenProvider = () => Task.FromResult(_paulaAuthenticationStateManager.GetAuthenticationBearer())!;
                     })
