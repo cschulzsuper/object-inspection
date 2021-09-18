@@ -20,16 +20,15 @@ namespace Super.Paula.Application
                 .AddScoped<IBusinessObjectInspectionAuditHandler, BusinessObjectInspectionAuditHandler>()
                 .AddScoped<IInspectorHandler, InspectorHandler>()
                 .AddScoped<IInspectionHandler, InspectionHandler>()
+                .AddScoped<INotificationHandler, NotificationHandler>(InspectionHandlerFactory)
                 .AddScoped<IOrganizationHandler, OrganizationHandler>();
 
             services
-                .AddScoped<INotificationHandler, NotificationHandler>(InspectionHandlerFactory);
-
-            services
-                .AddTransient(provider => new Lazy<IInspectionHandler>(() => provider.GetRequiredService<IInspectionHandler>()))
                 .AddTransient(provider => new Lazy<IBusinessObjectHandler>(() => provider.GetRequiredService<IBusinessObjectHandler>()))
+                .AddTransient(provider => new Lazy<IBusinessObjectInspectionAuditHandler>(() => provider.GetRequiredService<IBusinessObjectInspectionAuditHandler>()))
+                .AddTransient(provider => new Lazy<IInspectionHandler>(() => provider.GetRequiredService<IInspectionHandler>()))
+                .AddTransient(provider => new Lazy<INotificationHandler>(() => provider.GetRequiredService<INotificationHandler>()))
                 .AddTransient(provider => new Lazy<IOrganizationHandler>(() => provider.GetRequiredService<IOrganizationHandler>()));
-
 
             return services;
         }

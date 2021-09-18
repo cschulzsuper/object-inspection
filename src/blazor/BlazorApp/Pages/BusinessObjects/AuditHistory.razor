@@ -62,7 +62,7 @@ else
             @foreach (var inspectionAudit in InspectionAudits)
             {
                 <tr>
-                    <td class="col-2">@DateOnly.FromDayNumber(inspectionAudit.AuditDate).ToDateTime(TimeOnly.FromTimeSpan(TimeSpan.FromMilliseconds(inspectionAudit.AuditTime)),DateTimeKind.Utc).ToLocalTime().ToString()</td>
+                    <td class="col-2">@((inspectionAudit.AuditDate, inspectionAudit.AuditTime).ToLocalTimeString())</td>
                     <td class="col-7">@inspectionAudit.InspectionDisplayName</td>
                     <td class="col-2">@inspectionAudit.Inspector</td>
                     <td class="col-1">

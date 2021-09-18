@@ -22,9 +22,10 @@ else
 {
     @foreach (var notification in _notifications)
     {
-        <div class="card">
+        <div class="card mb-3">
             <div class="card-body">
-                <p class="card-text">@notification.Text</p>
+                <h6 class="card-subtitle text-muted mb-1">@((notification.Date, notification.Time).ToLocalTimeString())</h6>
+                <p class="card-text tex-wrap">@notification.Text</p>
                 <button class="btn btn-primary"
                     @onclick="() => RemoveAsync(notification)">Remove</button>
             </div>

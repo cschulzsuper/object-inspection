@@ -1,6 +1,8 @@
 ﻿using Super.Paula.Application.Administration.Requests;
 using Super.Paula.Application.Auditing;
 using Super.Paula.Application.Auditing.Requests;
+using Super.Paula.Application.Communication;
+using Super.Paula.Application.Communication.Requests;
 using Super.Paula.Application.Guidlines;
 using Super.Paula.Application.Inventory.Requests;
 using Super.Paula.Application.Inventory.Responses;
@@ -16,17 +18,20 @@ namespace Super.Paula.Application.Inventory
     {
         private readonly IBusinessObjectManager _businessObjectManager;
         private readonly Lazy<IInspectionHandler> _inspectionHandler;
-        private readonly IBusinessObjectInspectionAuditHandler _businessObjectInspectionAuditHandler;
+        private readonly Lazy<INotificationHandler> _notificationHandler;
+        private readonly Lazy<IBusinessObjectInspectionAuditHandler> _businessObjectInspectionAuditHandler;
         private readonly AppState _appState;
 
         public BusinessObjectHandler(
             IBusinessObjectManager businessObjectManager,
             Lazy<IInspectionHandler> inspectionHandler,
-            IBusinessObjectInspectionAuditHandler businessObjectInspectionAuditHandler,
+            Lazy<INotificationHandler> notificationHandler,
+            Lazy<IBusinessObjectInspectionAuditHandler> businessObjectInspectionAuditHandler,
             AppState appState)
         {
             _businessObjectManager = businessObjectManager;
             _inspectionHandler = inspectionHandler;
+            _notificationHandler = notificationHandler;
             _businessObjectInspectionAuditHandler = businessObjectInspectionAuditHandler;
             _appState = appState;
         }
@@ -87,9 +92,12 @@ namespace Super.Paula.Application.Inventory
         {
             var entity = await _businessObjectManager.GetAsync(businessObject);
 
-            var refresh =
+            var refresh = 
                 entity.DisplayName != request.DisplayName ||
                 entity.UniqueName != request.UniqueName;
+
+            var oldInspector = entity.Inspector != request.Inspector ? entity.Inspector : null;
+            var newInspector = entity.Inspector != request.Inspector ? request.Inspector : null;
 
             entity.Inspector = request.Inspector;
             entity.DisplayName = request.DisplayName;
@@ -104,7 +112,7 @@ namespace Super.Paula.Application.Inventory
                     if (bussinesObjectInspection.AuditDate != default &&
                         bussinesObjectInspection.AuditTime != default)
                     {
-                        await _businessObjectInspectionAuditHandler.ReplaceAsync(
+                        await _businessObjectInspectionAuditHandler.Value.ReplaceAsync(
                         entity.UniqueName,
                         bussinesObjectInspection.UniqueName,
                         bussinesObjectInspection.AuditDate,
@@ -124,6 +132,29 @@ namespace Super.Paula.Application.Inventory
                 }
             }
 
+            if (oldInspector != null)
+            {
+                var (date, time) = DateTime.UtcNow.ToNumbers();
+                await _notificationHandler.Value.CreateAsync(oldInspector, new NotificationRequest
+                {
+                    Date = date,
+                    Time = time,
+                    Target = $"business-objects/{businessObject}",
+                    Text = $"You are not longer the inspector for {request.DisplayName}!"
+                });
+            }
+
+            if (newInspector != null)
+            {
+                var (date, time) = DateTime.UtcNow.ToNumbers();
+                await _notificationHandler.Value.CreateAsync(newInspector, new NotificationRequest
+                {
+                    Date = date,
+                    Time = time,
+                    Target = $"business-objects/{businessObject}",
+                    Text = $"You are now the inspector for {request.DisplayName}!"
+                });
+            }
         }
 
         public async ValueTask AssignInspectionAsync(string businessObject, AssignInspectionRequest request)
@@ -171,7 +202,7 @@ namespace Super.Paula.Application.Inventory
 
             await _businessObjectManager.UpdateAsync(entity);
 
-            await _businessObjectInspectionAuditHandler.CreateAsync(
+            await _businessObjectInspectionAuditHandler.Value.CreateAsync(
                 entity.UniqueName,
                 new BusinessObjectInspectionAuditRequest
                 {
@@ -201,7 +232,7 @@ namespace Super.Paula.Application.Inventory
             if (bussinesObjectInspection.AuditDate != default &&
                 bussinesObjectInspection.AuditTime != default)
             {
-                await _businessObjectInspectionAuditHandler.ReplaceAsync(
+                await _businessObjectInspectionAuditHandler.Value.ReplaceAsync(
                 entity.UniqueName,
                 bussinesObjectInspection.UniqueName,
                 bussinesObjectInspection.AuditDate,
@@ -235,7 +266,7 @@ namespace Super.Paula.Application.Inventory
             if (bussinesObjectInspection.AuditDate != default &&
                 bussinesObjectInspection.AuditTime != default)
             {
-                await _businessObjectInspectionAuditHandler.ReplaceAsync(
+                await _businessObjectInspectionAuditHandler.Value.ReplaceAsync(
                 entity.UniqueName,
                 bussinesObjectInspection.UniqueName,
                 bussinesObjectInspection.AuditDate,
@@ -310,7 +341,7 @@ namespace Super.Paula.Application.Inventory
                         if (bussinesObjectInspection.AuditDate != default &&
                             bussinesObjectInspection.AuditTime != default)
                         {
-                            await _businessObjectInspectionAuditHandler.ReplaceAsync(
+                            await _businessObjectInspectionAuditHandler.Value.ReplaceAsync(
                                 bussinesObject.UniqueName,
                                 bussinesObjectInspection.UniqueName,
                                 bussinesObjectInspection.AuditDate,
