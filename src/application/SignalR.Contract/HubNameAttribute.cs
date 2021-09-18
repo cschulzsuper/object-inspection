@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Super.Paula.SignalR
+namespace Super.Paula.Application
 {
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
     public class HubNameAttribute : Attribute

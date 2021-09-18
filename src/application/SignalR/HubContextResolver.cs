@@ -3,7 +3,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 
-namespace Super.Paula.SignalR
+namespace Super.Paula.Application
 {
     public class HubContextResolver
     {

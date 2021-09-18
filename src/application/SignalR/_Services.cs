@@ -3,7 +3,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Super.Paula.Application.Communication;
 using Super.Paula.Environment;
-using Super.Paula.SignalR;
 
 namespace Super.Paula.Application
 {

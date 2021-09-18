@@ -2,7 +2,6 @@
 using Super.Paula.Application.Communication;
 using Super.Paula.Application.Communication.Responses;
 using Super.Paula.Environment;
-using Super.Paula.SignalR;
 using System;
 using System.Collections.Generic;
 using System.Linq;

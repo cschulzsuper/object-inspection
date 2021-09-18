@@ -36,6 +36,30 @@ namespace Super.Paula.Application.Inventory
             _appState = appState;
         }
 
+        public async ValueTask<BusinessObjectResponse> GetAsync(string businessObject)
+        {
+            var entity = await _businessObjectManager.GetAsync(businessObject);
+
+            return new BusinessObjectResponse
+            {
+                Inspections = entity.Inspections.ToEmbeddedResponses(),
+                Inspector = entity.Inspector,
+                DisplayName = entity.DisplayName,
+                UniqueName = entity.UniqueName
+            };
+        }
+
+        public IAsyncEnumerable<BusinessObjectResponse> GetAll()
+            => _businessObjectManager
+                .GetAsyncEnumerable(query => query
+                .Select(entity => new BusinessObjectResponse
+                {
+                    Inspections = entity.Inspections.ToEmbeddedResponses(),
+                    Inspector = entity.Inspector,
+                    DisplayName = entity.DisplayName,
+                    UniqueName = entity.UniqueName
+                }));
+
         public async ValueTask<BusinessObjectResponse> CreateAsync(BusinessObjectRequest request)
         {
             var entity = new BusinessObject
@@ -47,37 +71,15 @@ namespace Super.Paula.Application.Inventory
 
             await _businessObjectManager.InsertAsync(entity);
 
-            return new BusinessObjectResponse
+            var (date, time) = DateTime.UtcNow.ToNumbers();
+
+            await _notificationHandler.Value.CreateAsync(request.Inspector, new NotificationRequest
             {
-                Inspections = entity.Inspections.ToEmbeddedResponses(),
-                Inspector = entity.Inspector,
-                DisplayName = entity.DisplayName,
-                UniqueName = entity.UniqueName
-            };
-        }
-
-        public async ValueTask DeleteAsync(string businessObject)
-        {
-            var entity = await _businessObjectManager.GetAsync(businessObject);
-
-            await _businessObjectManager.DeleteAsync(entity);
-        }
-
-        public IAsyncEnumerable<BusinessObjectResponse> GetAll()
-            => _businessObjectManager
-            .GetAsyncEnumerable(query => query
-                .Select(entity => new BusinessObjectResponse
-                {
-                    Inspections = entity.Inspections.ToEmbeddedResponses(),
-                    Inspector = entity.Inspector,
-                    DisplayName = entity.DisplayName,
-                    UniqueName = entity.UniqueName
-                }));
-            
-
-        public async ValueTask<BusinessObjectResponse> GetAsync(string businessObject)
-        {
-            var entity = await _businessObjectManager.GetAsync(businessObject);
+                Date = date,
+                Time = time,
+                Target = $"business-objects/{request.UniqueName}",
+                Text = $"You are now the inspector for {request.DisplayName}!"
+            });
 
             return new BusinessObjectResponse
             {
@@ -92,12 +94,9 @@ namespace Super.Paula.Application.Inventory
         {
             var entity = await _businessObjectManager.GetAsync(businessObject);
 
-            var refresh = 
-                entity.DisplayName != request.DisplayName ||
-                entity.UniqueName != request.UniqueName;
-
-            var oldInspector = entity.Inspector != request.Inspector ? entity.Inspector : null;
-            var newInspector = entity.Inspector != request.Inspector ? request.Inspector : null;
+            var oldEntityDisplayName = entity.DisplayName;
+            var oldEntityUniqueName = entity.UniqueName;
+            var oldEntityInspector = entity.Inspector;
 
             entity.Inspector = request.Inspector;
             entity.DisplayName = request.DisplayName;
@@ -105,7 +104,8 @@ namespace Super.Paula.Application.Inventory
 
             await _businessObjectManager.UpdateAsync(entity);
 
-            if (refresh)
+            if (oldEntityDisplayName != request.DisplayName ||
+                oldEntityUniqueName != request.UniqueName)
             {
                 foreach (var bussinesObjectInspection in entity.Inspections)
                 {
@@ -132,30 +132,34 @@ namespace Super.Paula.Application.Inventory
                 }
             }
 
-            if (oldInspector != null)
+            if (oldEntityInspector != request.Inspector)
             {
                 var (date, time) = DateTime.UtcNow.ToNumbers();
-                await _notificationHandler.Value.CreateAsync(oldInspector, new NotificationRequest
+
+                await _notificationHandler.Value.CreateAsync(oldEntityInspector, new NotificationRequest
                 {
                     Date = date,
                     Time = time,
-                    Target = $"business-objects/{businessObject}",
+                    Target = $"business-objects/{request.UniqueName}",
                     Text = $"You are not longer the inspector for {request.DisplayName}!"
                 });
-            }
 
-            if (newInspector != null)
-            {
-                var (date, time) = DateTime.UtcNow.ToNumbers();
-                await _notificationHandler.Value.CreateAsync(newInspector, new NotificationRequest
+                await _notificationHandler.Value.CreateAsync(request.Inspector, new NotificationRequest
                 {
                     Date = date,
                     Time = time,
-                    Target = $"business-objects/{businessObject}",
+                    Target = $"business-objects/{request.UniqueName}",
                     Text = $"You are now the inspector for {request.DisplayName}!"
                 });
             }
         }
+
+        public async ValueTask DeleteAsync(string businessObject)
+        {
+            var entity = await _businessObjectManager.GetAsync(businessObject);
+
+            await _businessObjectManager.DeleteAsync(entity);
+        }           
 
         public async ValueTask AssignInspectionAsync(string businessObject, AssignInspectionRequest request)
         {
