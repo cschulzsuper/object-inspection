@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.SignalR;
-using Super.Paula.SignalR;
 
 namespace Super.Paula.Application.Communication
 {
