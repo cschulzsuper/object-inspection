@@ -1,4 +1,6 @@
-﻿namespace Super.Paula.Application.Inventory
+﻿using System.Collections.Generic;
+
+namespace Super.Paula.Application.Inventory
 {
     public partial class BusinessObject
     {

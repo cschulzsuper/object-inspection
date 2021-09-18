@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.ValueGeneration;
 using Super.Paula.Application.Auditing;
 using Super.Paula.Application.Communication;
 using Super.Paula.Environment;
+using System.Collections.Generic;
 
 namespace Super.Paula.Data.Mapping.PartitionKeyValueGenerators
 {

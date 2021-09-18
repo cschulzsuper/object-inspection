@@ -1,4 +1,9 @@
-﻿namespace Super.Paula.Application.Inventory
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace Super.Paula.Application.Inventory
 {
     public interface IBusinessObjectManager
     {

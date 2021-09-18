@@ -1,5 +1,7 @@
 ﻿using Super.Paula.Application.Guidlines.Requests;
 using Super.Paula.Application.Guidlines.Responses;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Super.Paula.Application.Guidlines
 {

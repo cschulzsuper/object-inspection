@@ -1,12 +1,14 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Super.Paula.Data;
 using Super.Paula.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using System.Threading.Tasks;
 using ProblemDetails = Super.Paula.ErrorHandling.ProblemDetails;
 
 namespace Super.Paula

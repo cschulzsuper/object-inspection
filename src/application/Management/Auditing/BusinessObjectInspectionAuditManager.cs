@@ -1,5 +1,9 @@
 ﻿using Super.Paula.Data;
 using Super.Paula.Validation;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Super.Paula.Application.Auditing
 {

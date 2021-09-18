@@ -1,4 +1,5 @@
-﻿
+﻿using System;
+
 namespace Super.Paula.ErrorHandling
 {
     [AttributeUsage(AttributeTargets.Method)]

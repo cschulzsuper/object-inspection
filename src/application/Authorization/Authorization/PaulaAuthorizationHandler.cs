@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Super.Paula.Application.Administration;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Super.Paula.Authorization
 {

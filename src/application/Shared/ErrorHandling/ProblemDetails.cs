@@ -1,4 +1,6 @@
-﻿namespace Super.Paula.ErrorHandling
+﻿using System.Collections.Generic;
+
+namespace Super.Paula.ErrorHandling
 {
     public class ProblemDetails
     {

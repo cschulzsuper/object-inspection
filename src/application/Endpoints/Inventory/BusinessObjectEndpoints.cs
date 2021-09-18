@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Super.Paula.Application.Inventory.Requests;
+using System;
 
 namespace Super.Paula.Application.Inventory
 {

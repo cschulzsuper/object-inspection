@@ -1,4 +1,9 @@
-﻿namespace Super.Paula.Application.Administration
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace Super.Paula.Application.Administration
 {
     public interface IOrganizationManager
     {

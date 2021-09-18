@@ -1,4 +1,7 @@
-﻿namespace Super.Paula.Client
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
+
+namespace Super.Paula.Client
 {
     public class Program
     {

@@ -2,6 +2,10 @@
 using Super.Paula.Application.Guidlines.Requests;
 using Super.Paula.Application.Guidlines.Responses;
 using Super.Paula.Application.Inventory;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Super.Paula.Application.Guidlines
 {

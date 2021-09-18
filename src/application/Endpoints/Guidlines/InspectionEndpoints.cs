@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Routing;
 using Super.Paula.Application.Guidlines.Requests;
+using System;
 
 namespace Super.Paula.Application.Guidlines
 {
