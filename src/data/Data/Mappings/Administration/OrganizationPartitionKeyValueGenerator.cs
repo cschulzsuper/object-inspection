@@ -4,11 +4,11 @@ using Super.Paula.Application.Administration;
 using Super.Paula.Environment;
 using System.Collections.Generic;
 
-namespace Super.Paula.Data.Mapping.PartitionKeyValueGenerators
+namespace Super.Paula.Data.Mappings.Administration
 {
     internal class OrganizationPartitionKeyValueGenerator : ValueGenerator<string>, IPartitionKeyValueGenerator<Organization>
     {
-         public override bool GeneratesTemporaryValues => false;
+        public override bool GeneratesTemporaryValues => false;
 
         public override string Next(EntityEntry entry)
             => Value(

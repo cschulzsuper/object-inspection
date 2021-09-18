@@ -1,25 +1,24 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Super.Paula.Application.Administration;
-using Super.Paula.Data.Mapping.PartitionKeyValueGenerators;
+using Super.Paula.Application.Guidlines;
 
-namespace Super.Paula.Data.Mapping
+namespace Super.Paula.Data.Mappings.Guidlines
 {
-    public class OrganizationMapping : IEntityTypeConfiguration<Organization>
+    public class InspectionMapping : IEntityTypeConfiguration<Inspection>
     {
-        public string PartitionKey = nameof(PartitionKey);
+        public string PartitionKey = $"Organization";
 
-        public void Configure(EntityTypeBuilder<Organization> builder)
+        public void Configure(EntityTypeBuilder<Inspection> builder)
         {
             builder
                 .Property<string>(PartitionKey)
-                .HasValueGenerator<OrganizationPartitionKeyValueGenerator>();
+                .HasValueGenerator<InspectionPartitionKeyValueGenerator>();
 
             builder
-                .HasKey(PartitionKey, nameof(Organization.UniqueName));
+                .HasKey(PartitionKey, nameof(Inspection.UniqueName));
 
             builder
-                .ToContainer(nameof(Organization))
+                .ToContainer(nameof(Inspection))
                 .HasPartitionKey(PartitionKey)
                 .HasNoDiscriminator();
 
@@ -34,8 +33,8 @@ namespace Super.Paula.Data.Mapping
                 .IsRequired();
 
             builder
-                .Property(x => x.ChiefInspector)
-                .HasMaxLength(140)
+                .Property(x => x.Text)
+                .HasMaxLength(4000)
                 .IsRequired();
 
             builder

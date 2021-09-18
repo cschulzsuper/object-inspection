@@ -1,11 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.ValueGeneration;
-using Super.Paula.Application.Auditing;
 using Super.Paula.Application.Communication;
 using Super.Paula.Environment;
 using System.Collections.Generic;
 
-namespace Super.Paula.Data.Mapping.PartitionKeyValueGenerators
+namespace Super.Paula.Data.Mappings.Communication
 {
     internal class NotificationPartitionKeyValueGenerator : ValueGenerator<string>, IPartitionKeyValueGenerator<Notification>
     {

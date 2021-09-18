@@ -7,7 +7,12 @@ using Super.Paula.Application.Auditing;
 using Super.Paula.Application.Communication;
 using Super.Paula.Application.Guidlines;
 using Super.Paula.Application.Inventory;
-using Super.Paula.Data.Mapping.PartitionKeyValueGenerators;
+using Super.Paula.Data.Mappings;
+using Super.Paula.Data.Mappings.Administration;
+using Super.Paula.Data.Mappings.Auditing;
+using Super.Paula.Data.Mappings.Communication;
+using Super.Paula.Data.Mappings.Guidlines;
+using Super.Paula.Data.Mappings.Inventory;
 using Super.Paula.Environment;
 
 namespace Super.Paula.Data

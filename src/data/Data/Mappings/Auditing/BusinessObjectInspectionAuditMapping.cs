@@ -1,9 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Super.Paula.Application.Auditing;
-using Super.Paula.Data.Mapping.PartitionKeyValueGenerators;
 
-namespace Super.Paula.Data.Mapping
+namespace Super.Paula.Data.Mappings.Auditing
 {
     public class BusinessObjectInspectionAuditMapping : IEntityTypeConfiguration<BusinessObjectInspectionAudit>
     {
@@ -16,7 +15,7 @@ namespace Super.Paula.Data.Mapping
                 .HasValueGenerator<BusinessObjectInspectionAuditPartitionKeyValueGenerator>();
 
             builder
-                .HasKey(PartitionKey, 
+                .HasKey(PartitionKey,
                     nameof(BusinessObjectInspectionAudit.BusinessObject),
                     nameof(BusinessObjectInspectionAudit.Inspection),
                     nameof(BusinessObjectInspectionAudit.AuditTime));
@@ -30,7 +29,7 @@ namespace Super.Paula.Data.Mapping
                 .Property(x => x.BusinessObject)
                 .HasMaxLength(140)
                 .IsRequired();
-            
+
             builder
                 .Property(x => x.BusinessObjectDisplayName)
                 .HasMaxLength(140)

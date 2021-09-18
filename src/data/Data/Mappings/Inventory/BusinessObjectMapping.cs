@@ -1,9 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Super.Paula.Application.Inventory;
-using Super.Paula.Data.Mapping.PartitionKeyValueGenerators;
 
-namespace Super.Paula.Data.Mapping
+namespace Super.Paula.Data.Mappings.Inventory
 {
     public class BusinessObjectMapping : IEntityTypeConfiguration<BusinessObject>
     {

@@ -4,7 +4,7 @@ using Super.Paula.Application.Inventory;
 using Super.Paula.Environment;
 using System.Collections.Generic;
 
-namespace Super.Paula.Data.Mapping.PartitionKeyValueGenerators
+namespace Super.Paula.Data.Mappings.Inventory
 {
     internal class BusinessObjectPartitionKeyValueGenerator : ValueGenerator<string>, IPartitionKeyValueGenerator<BusinessObject>
     {
@@ -12,7 +12,7 @@ namespace Super.Paula.Data.Mapping.PartitionKeyValueGenerators
 
         public override string Next(EntityEntry entry)
             => Value(
-                (entry.Context as PaulaContext)!.AppState, 
+                (entry.Context as PaulaContext)!.AppState,
                 (entry.Entity as BusinessObject)!);
 
         public string Value(AppState appState, BusinessObject entity)

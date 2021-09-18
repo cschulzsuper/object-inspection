@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Super.Paula.Data.Mapping.PartitionKeyValueGenerators;
+using Super.Paula.Data.Mappings;
 using Super.Paula.Environment;
 using System;
 using System.Collections.Generic;

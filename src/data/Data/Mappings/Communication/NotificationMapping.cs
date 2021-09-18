@@ -1,14 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Super.Paula.Application.Communication;
-using Super.Paula.Data.Mapping.PartitionKeyValueGenerators;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Super.Paula.Data.Mapping
+namespace Super.Paula.Data.Mappings.Communication
 {
     public class NotificationMapping : IEntityTypeConfiguration<Notification>
     {

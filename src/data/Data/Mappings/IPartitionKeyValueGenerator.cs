@@ -1,7 +1,7 @@
 ﻿using Super.Paula.Environment;
 using System.Collections.Generic;
 
-namespace Super.Paula.Data.Mapping.PartitionKeyValueGenerators
+namespace Super.Paula.Data.Mappings
 {
     public interface IPartitionKeyValueGenerator<TEntity>
     {

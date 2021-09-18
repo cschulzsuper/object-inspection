@@ -4,7 +4,7 @@ using Super.Paula.Application.Guidlines;
 using Super.Paula.Environment;
 using System.Collections.Generic;
 
-namespace Super.Paula.Data.Mapping.PartitionKeyValueGenerators
+namespace Super.Paula.Data.Mappings.Guidlines
 {
     internal class InspectionPartitionKeyValueGenerator : ValueGenerator<string>, IPartitionKeyValueGenerator<Inspection>
     {
