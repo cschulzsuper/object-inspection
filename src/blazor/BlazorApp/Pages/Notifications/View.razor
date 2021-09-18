@@ -5,6 +5,8 @@
 @inject INotificationHandler NotificationHandler
 @inject AppState AppState
 
+@implements IAsyncDisposable
+
 @attribute [Authorize("Inspector")]
 
 <div class="container mt-2 mt-md-3">
@@ -35,15 +37,32 @@ else
 
     private ICollection<NotificationResponse>? _notifications;
 
+    private IDisposable? liveNotifications;
+
     protected override async Task OnInitializedAsync()
     {
-        _notifications = new List<NotificationResponse>(); 
+        _notifications = new List<NotificationResponse>();
+
+        liveNotifications = NotificationHandler.OnCreatedAsync(NotificationCreatedAsync);
 
         await foreach(var notification in NotificationHandler.GetAllForInspector(AppState.CurrentInspector))
         {
             _notifications.Add(notification);
             this.StateHasChanged();            
         }
+    }
+
+    public Task NotificationCreatedAsync(NotificationResponse notification)
+    {
+        _notifications!.Add(notification);
+        StateHasChanged();
+        return Task.CompletedTask;
+    }
+
+    public ValueTask DisposeAsync()
+    {
+        liveNotifications?.Dispose();
+        return ValueTask.CompletedTask;
     }
 
     public async Task RemoveAsync(NotificationResponse notification)

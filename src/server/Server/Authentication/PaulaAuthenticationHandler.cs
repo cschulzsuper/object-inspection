@@ -73,10 +73,10 @@ namespace Super.Paula.Authentication
                     x.Organization == subjectValues[0] &&
                     x.UniqueName == subjectValues[1] &&
                     x.Proof == subjectValues[2]);
-            
+
             if (inspector != null)
             {
-                return subjectValue;
+                return $"{subjectValues[0]}:{subjectValues[1]}";
             }
 
             var fallbackSubject = Convert.FromBase64String(subjectValues[2]);
@@ -101,7 +101,7 @@ namespace Super.Paula.Authentication
                 return null;
             }
 
-            return subjectValue;
+            return $"{subjectValues[0]}:{subjectValues[1]}";
         }
 
         public Task ChallengeAsync(AuthenticationProperties? properties)

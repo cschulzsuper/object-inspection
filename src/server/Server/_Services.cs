@@ -19,8 +19,9 @@ namespace Super.Paula
                 .AddPaulaAppEnvironment(isDevlopment)
                 .AddPaulaAppSettings()
                 .AddPaulaAppState()
-                .AddPaulaData()
-                .AddPaulaManagement()
+                .AddPaulaServerData()
+                .AddPaulaServerManagement()
+                .AddPaulaSignalR()
                 .AddPaulaServerTransport()
                 .AddPaulaServerAuthentication()
                 .AddPaulaServerAuthorization();

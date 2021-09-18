@@ -56,7 +56,7 @@ namespace Super.Paula
                     {
                         var subjectValues = context.User
                             .FindFirst(ClaimTypes.NameIdentifier)?.Value
-                            .Split(':', 3); ;
+                            .Split(':', 2); ;
 
                         if (subjectValues != null)
                         {

@@ -16,6 +16,7 @@
     <ProjectReference Include="..\..\application\Endpoints\Endpoints.csproj" />
     <ProjectReference Include="..\..\application\Environment.AspNetCore\Environment.AspNetCore.csproj" />
     <ProjectReference Include="..\..\application\Management\Management.csproj" />
+    <ProjectReference Include="..\..\application\SignalR\SignalR.csproj" />
     <ProjectReference Include="..\..\application\Transport\Transport.csproj" />
     <ProjectReference Include="..\..\data\Data.AspNetCore\Data.AspNetCore.csproj" />
   </ItemGroup>

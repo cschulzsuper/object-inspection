@@ -1,6 +1,9 @@
 ﻿using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.SignalR.Client;
+using Super.Paula.Application.Administration;
 using Super.Paula.Application.Communication;
 using Super.Paula.Application.Communication.Requests;
 using Super.Paula.Application.Communication.Responses;
@@ -10,23 +13,42 @@ using Super.Paula.Environment;
 
 namespace Super.Paula.Client.Communication
 {
-    internal class NotificationHandler : INotificationHandler
+    internal class NotificationHandler : INotificationHandler, IAsyncDisposable
     {
         private readonly PaulaAuthenticationStateManager _paulaAuthenticationStateManager;
-        private readonly HttpClient _httpClient;
+        private readonly AppSettings _appSettings;
+        private readonly IAccountHandler _accountHandler;
+
+        private readonly HttpClient _httpClient;      
+        private readonly HubConnection _hubConnection;
 
         public NotificationHandler(
             HttpClient httpClient,
             PaulaAuthenticationStateManager paulaAuthenticationStateManager,
-            AppSettings appSettings)
+            AppSettings appSettings,
+            IAccountHandler accountHandler)
         {
+            _accountHandler = accountHandler;
+            _appSettings = appSettings;
+
             _paulaAuthenticationStateManager = paulaAuthenticationStateManager;
+            _paulaAuthenticationStateManager.AuthenticationStateChanged += AuthenticationStateChanged;
 
             _httpClient = httpClient;
-            _httpClient.BaseAddress = new Uri(appSettings.Server);
-            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
-                "Bearer", _paulaAuthenticationStateManager.GetAuthenticationBearer());
+            _httpClient.BaseAddress = new Uri(_appSettings.Server);
+            SetBearerOnHttpClient();
+
+            _hubConnection = new HubConnectionBuilder()
+                .WithUrl(
+                    new Uri(_httpClient.BaseAddress, "/notifications/live"),
+                    c => {
+                        c.AccessTokenProvider = () => Task.FromResult(_paulaAuthenticationStateManager.GetAuthenticationBearer())!;
+                    })
+                .Build();
         }
+
+        public ValueTask DisposeAsync()
+            => _hubConnection.DisposeAsync();
 
         public async ValueTask<NotificationResponse> CreateAsync(string inspector, NotificationRequest request)
         {
@@ -105,5 +127,50 @@ namespace Super.Paula.Client.Communication
             responseMessage.RuleOutProblems();
             responseMessage.EnsureSuccessStatusCode();
         }
+
+        private void AuthenticationStateChanged(Task<AuthenticationState> task)
+            => task.ContinueWith(
+                async _ =>
+                {
+                    SetBearerOnHttpClient();
+                    await StopHubAsync();
+                    await StartHubAsync();
+                });
+
+        public async Task<IDisposable> OnCreatedAsync(Func<NotificationResponse, Task> handler)
+        {
+            var onCreated = _hubConnection.On("OnCreated", handler);
+            await StartHubAsync();
+            return onCreated;
+        }
+
+        private void SetBearerOnHttpClient()
+        {
+            var bearer = _paulaAuthenticationStateManager.GetAuthenticationBearer();
+
+            _httpClient.DefaultRequestHeaders.Authorization = !string.IsNullOrWhiteSpace(bearer)
+                    ? new AuthenticationHeaderValue("Bearer", bearer)
+                    : null;
+        }
+
+        private async Task StartHubAsync()
+        {
+            if (_hubConnection.State == HubConnectionState.Disconnected)
+            {
+                if ((await _accountHandler.QueryAuthorizationsAsync()).Values.Any())
+                {
+                    await _hubConnection.StartAsync();
+                }
+            }
+        }
+
+        private async Task StopHubAsync()
+        {
+            if (_hubConnection.State != HubConnectionState.Disconnected)
+            {
+                await _hubConnection.StopAsync();
+            }
+        }
+
     }
 }

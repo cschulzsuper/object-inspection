@@ -15,7 +15,7 @@ namespace Super.Paula.Data
     [SuppressMessage("Style", "IDE1006")]
     public static class _Services
     {
-        public static IServiceCollection AddPaulaData(this IServiceCollection services)
+        public static IServiceCollection AddPaulaServerData(this IServiceCollection services)
         {
             services.AddDbContext<PaulaContext>((services, options) =>
             {

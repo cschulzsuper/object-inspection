@@ -16,7 +16,8 @@ namespace Super.Paula.Application.Communication
 {
     public static class NotificationEndpoints
     {
-        public static IEndpointRouteBuilder MapNotification(this IEndpointRouteBuilder endpoints)
+        public static IEndpointRouteBuilder MapNotification<THub>(this IEndpointRouteBuilder endpoints)
+            where THub : Hub
         {
             endpoints.MapCollection(
                 "/inspectors/{inspector}/notifications",
@@ -30,6 +31,9 @@ namespace Super.Paula.Application.Communication
             endpoints.MapQueries(
                 "/notifications",
                 ("", GetAll));
+
+            endpoints.MapHub<THub>(
+                "/notifications/live");
 
             return endpoints;
         }

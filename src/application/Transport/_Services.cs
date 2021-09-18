@@ -17,11 +17,14 @@ namespace Super.Paula.Application
                 .AddScoped<IAccountHandler, AccountHandler>()
                 .AddScoped<IBusinessObjectHandler, BusinessObjectHandler>()
                 .AddScoped<IBusinessObjectInspectionAuditHandler, BusinessObjectInspectionAuditHandler>()
-                .AddScoped<IInspectionHandler, InspectionHandler>()
                 .AddScoped<IInspectorHandler, InspectorHandler>()
-                .AddScoped<INotificationHandler, NotificationHandler>()
-                .AddScoped<IOrganizationHandler, OrganizationHandler>()
+                .AddScoped<IInspectionHandler, InspectionHandler>()
+                .AddScoped<IOrganizationHandler, OrganizationHandler>();
 
+            services
+                .AddScoped<INotificationHandler, NotificationHandler>(InspectionHandlerFactory);
+
+            services
                 .AddTransient(provider => new Lazy<IInspectionHandler>(() => provider.GetRequiredService<IInspectionHandler>()))
                 .AddTransient(provider => new Lazy<IBusinessObjectHandler>(() => provider.GetRequiredService<IBusinessObjectHandler>()))
                 .AddTransient(provider => new Lazy<IOrganizationHandler>(() => provider.GetRequiredService<IOrganizationHandler>()));
@@ -29,5 +32,18 @@ namespace Super.Paula.Application
 
             return services;
         }
+
+        private static readonly Func<IServiceProvider, NotificationHandler> InspectionHandlerFactory = 
+            (IServiceProvider services) =>
+            {
+                var notificationManager = services.GetRequiredService<INotificationManager>();
+                var notificationHandler = new NotificationHandler(notificationManager);
+
+                var notificationMessenger = services.GetRequiredService<INotificationMessenger>();
+
+                notificationHandler.OnCreatedAsync(notificationMessenger.OnCreatedAsync);
+
+                return notificationHandler;
+            };
     }
 }

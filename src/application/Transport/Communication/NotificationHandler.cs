@@ -12,9 +12,10 @@ namespace Super.Paula.Application.Communication
     public class NotificationHandler : INotificationHandler
     {
         private readonly INotificationManager _notificationManager;
+        
+        private Func<NotificationResponse, Task>? _onCreatedHandler;
 
-        public NotificationHandler(
-            INotificationManager notificationManager)
+        public NotificationHandler(INotificationManager notificationManager)
         {
             _notificationManager = notificationManager;
         }
@@ -32,7 +33,7 @@ namespace Super.Paula.Application.Communication
 
             await _notificationManager.InsertAsync(entity);
 
-            return new NotificationResponse
+            var response = new NotificationResponse
             {
                 Date = entity.Date,
                 Time = entity.Time,
@@ -40,6 +41,11 @@ namespace Super.Paula.Application.Communication
                 Inspector = entity.Inspector,
                 Target = entity.Target
             };
+
+            var onCreatedTask = _onCreatedHandler?.Invoke(response);
+            if (onCreatedTask != null) await onCreatedTask;
+
+            return response;
         }
 
         public async ValueTask DeleteAsync(string inspector, int date, int time)
@@ -87,6 +93,12 @@ namespace Super.Paula.Application.Communication
                 Target = entity.Target,
                 Text = entity.Text
             };
+        }
+
+        public Task<IDisposable> OnCreatedAsync(Func<NotificationResponse, Task> handler)
+        {
+            _onCreatedHandler = handler;
+            return Task.FromResult<IDisposable>(null!);
         }
 
         public async ValueTask ReplaceAsync(string inspector, int date, int time, NotificationRequest request)

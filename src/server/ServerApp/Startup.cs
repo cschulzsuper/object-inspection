@@ -25,6 +25,7 @@ namespace Super.Paula
             services.AddEndpointsApiExplorer();
             services.AddSingleton<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerGenOptions>();
             services.AddSwaggerGen();
+            services.AddSignalR();
 
             services.AddPaulaServer(_environment.IsDevelopment());
         }

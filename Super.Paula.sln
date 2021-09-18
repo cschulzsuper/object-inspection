@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31624.102
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31612.314
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "server", "server", "{9C3CA4DD-C643-48F2-8D8D-6024F09DD88D}"
 EndProject
@@ -47,7 +47,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "src\server\Server
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServerApp", "src\server\ServerApp\ServerApp.csproj", "{F6247179-E265-4129-827C-6F00D296A72D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Authorization", "src\application\Authorization\Authorization.csproj", "{6A0E8607-3DDE-4C1C-9E3C-7B93DB89EDA2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Authorization", "src\application\Authorization\Authorization.csproj", "{6A0E8607-3DDE-4C1C-9E3C-7B93DB89EDA2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SignalR.Contract", "src\application\SignalR.Contract\SignalR.Contract.csproj", "{F175B091-3409-44E2-A4E0-390A2CE218B9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SignalR", "src\application\SignalR\SignalR.csproj", "{C4BD20B7-883E-4E5D-80AA-BA6B46E02B0C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -131,6 +135,14 @@ Global
 		{6A0E8607-3DDE-4C1C-9E3C-7B93DB89EDA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6A0E8607-3DDE-4C1C-9E3C-7B93DB89EDA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6A0E8607-3DDE-4C1C-9E3C-7B93DB89EDA2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F175B091-3409-44E2-A4E0-390A2CE218B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F175B091-3409-44E2-A4E0-390A2CE218B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F175B091-3409-44E2-A4E0-390A2CE218B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F175B091-3409-44E2-A4E0-390A2CE218B9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C4BD20B7-883E-4E5D-80AA-BA6B46E02B0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C4BD20B7-883E-4E5D-80AA-BA6B46E02B0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C4BD20B7-883E-4E5D-80AA-BA6B46E02B0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C4BD20B7-883E-4E5D-80AA-BA6B46E02B0C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -155,6 +167,8 @@ Global
 		{5AA820DC-D113-48EE-8BD0-7DA5290F4612} = {9C3CA4DD-C643-48F2-8D8D-6024F09DD88D}
 		{F6247179-E265-4129-827C-6F00D296A72D} = {9C3CA4DD-C643-48F2-8D8D-6024F09DD88D}
 		{6A0E8607-3DDE-4C1C-9E3C-7B93DB89EDA2} = {140CA7C1-13C2-46AF-9A40-7B65C94FF5BC}
+		{F175B091-3409-44E2-A4E0-390A2CE218B9} = {140CA7C1-13C2-46AF-9A40-7B65C94FF5BC}
+		{C4BD20B7-883E-4E5D-80AA-BA6B46E02B0C} = {140CA7C1-13C2-46AF-9A40-7B65C94FF5BC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {167D4B81-B91A-4D40-AEEF-6CC3C49F9CD1}

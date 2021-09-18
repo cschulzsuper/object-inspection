@@ -9,6 +9,11 @@ namespace Super.Paula.Authentication
         private ISet<string> _authorizationFilter = ImmutableHashSet.Create<string>();
         private string _authenticationBrearer = string.Empty;
 
+        public PaulaAuthenticationStateManager()
+        {
+
+        }
+
         public ISet<string> GetAuthorizationsFilter()
             => _authorizationFilter;
 
@@ -28,6 +33,14 @@ namespace Super.Paula.Authentication
         }
 
         public override Task<AuthenticationState> GetAuthenticationStateAsync()
-            => Task.FromResult(new AuthenticationState(new ClaimsPrincipal()));
+            => Task.FromResult(
+                new AuthenticationState(
+                    new ClaimsPrincipal(
+                        new ClaimsIdentity(
+                            new[] {
+                                new Claim(
+                                    Guid.NewGuid().ToString(),
+                                    Guid.NewGuid().ToString())
+                            }))));
     }
 }
