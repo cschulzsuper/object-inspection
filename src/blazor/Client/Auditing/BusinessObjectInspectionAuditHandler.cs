@@ -6,6 +6,7 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Components.Authorization;
 using Super.Paula.Application.Auditing;
 using Super.Paula.Application.Auditing.Requests;
 using Super.Paula.Application.Auditing.Responses;
@@ -26,11 +27,26 @@ namespace Super.Paula.Client.Auditing
             AppSettings appSettings)
         {
             _paulaAuthenticationStateManager = paulaAuthenticationStateManager;
+            _paulaAuthenticationStateManager.AuthenticationStateChanged += AuthenticationStateChanged;
 
             _httpClient = httpClient;
             _httpClient.BaseAddress = new Uri(appSettings.Server);
-            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
-                "Bearer", _paulaAuthenticationStateManager.GetAuthenticationBearer());
+            SetBearerOnHttpClient();
+        }
+
+        private void AuthenticationStateChanged(Task<AuthenticationState> task)
+            => task.ContinueWith(_ =>
+            {
+                SetBearerOnHttpClient();
+            });
+
+        private void SetBearerOnHttpClient()
+        {
+            var bearer = _paulaAuthenticationStateManager.GetAuthenticationBearer();
+
+            _httpClient.DefaultRequestHeaders.Authorization = !string.IsNullOrWhiteSpace(bearer)
+                    ? new AuthenticationHeaderValue("Bearer", bearer)
+                    : null;
         }
 
         public async ValueTask<BusinessObjectInspectionAuditResponse> CreateAsync(string businessObject, BusinessObjectInspectionAuditRequest request)

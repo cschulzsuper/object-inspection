@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Components.Authorization;
 using Super.Paula.Application.Administration;
 using Super.Paula.Application.Administration.Requests;
 using Super.Paula.Application.Administration.Responses;
@@ -27,18 +28,27 @@ namespace Super.Paula.Client.Administration
             AccountHandlerCache accountHandlerCache,
             PaulaAuthenticationStateManager paulaAuthenticationStateManager)
         {
+            _appState = appState;
+            
             _accountHandlerCache = accountHandlerCache;
             _paulaAuthenticationStateManager = paulaAuthenticationStateManager;
+
             _httpClient = httpClient;
             _httpClient.BaseAddress = new Uri(appSettings.Server);
+        }
 
-            _appState = appState;
+        private void SetBearerOnHttpClient()
+        {
+            var bearer = _paulaAuthenticationStateManager.GetAuthenticationBearer();
+
+            _httpClient.DefaultRequestHeaders.Authorization = !string.IsNullOrWhiteSpace(bearer)
+                    ? new AuthenticationHeaderValue("Bearer", bearer)
+                    : null;
         }
 
         public async ValueTask ChangeSecretAsync(ChangeSecretRequest request)
         {
-            var bearer = _paulaAuthenticationStateManager.GetAuthenticationBearer();
-            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", bearer);
+            SetBearerOnHttpClient();
 
             var responseMessage = await _httpClient.PostAsJsonAsync("account/account/change-secret", request);
             
@@ -48,13 +58,10 @@ namespace Super.Paula.Client.Administration
 
         public async ValueTask<QueryAuthorizationsResponse> QueryAuthorizationsAsync()
         {
+            SetBearerOnHttpClient();
+
             if (_accountHandlerCache.QueryAuthorizationsResponse == null)
             {
-                var bearer = _paulaAuthenticationStateManager.GetAuthenticationBearer();
-                _httpClient.DefaultRequestHeaders.Authorization = !string.IsNullOrWhiteSpace(bearer)
-                    ? new AuthenticationHeaderValue("Bearer", bearer)
-                    : null;
-
                 var query = async () =>
                 {
                     var responseMessage = await _httpClient.GetAsync("account/query-authorizations");
@@ -82,11 +89,7 @@ namespace Super.Paula.Client.Administration
 
         public async ValueTask RepairChiefInspectorAsync(RepairChiefInspectorRequest request)
         {
-            var bearer = _paulaAuthenticationStateManager.GetAuthenticationBearer();
-            if (!string.IsNullOrWhiteSpace(bearer))
-            {
-                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", bearer);
-            }
+            SetBearerOnHttpClient();
 
             var responseMessage = await _httpClient.PostAsJsonAsync("account/repair-chief-inspector", request);
             
@@ -96,6 +99,8 @@ namespace Super.Paula.Client.Administration
 
         public async ValueTask RegisterInspectorAsync(RegisterInspectorRequest request)
         {
+            SetBearerOnHttpClient();
+
             var responseMessage = await _httpClient.PostAsJsonAsync("account/register-inspector", request);
             
             responseMessage.RuleOutProblems();
@@ -104,6 +109,8 @@ namespace Super.Paula.Client.Administration
 
         public async ValueTask RegisterOrganizationAsync(RegisterOrganizationRequest request)
         {
+            SetBearerOnHttpClient();
+
             var responseMessage = await _httpClient.PostAsJsonAsync("account/register-organization", request);
             
             responseMessage.RuleOutProblems();
@@ -112,11 +119,7 @@ namespace Super.Paula.Client.Administration
 
         public async ValueTask<AssessChiefInspectorDefectivenessResponse> AssessChiefInspectorDefectivenessAsync(AssessChiefInspectorDefectivenessRequest request)
         {
-            var bearer = _paulaAuthenticationStateManager.GetAuthenticationBearer();
-            if (!string.IsNullOrWhiteSpace(bearer))
-            {
-                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", bearer);
-            }
+            SetBearerOnHttpClient();
 
             var responseMessage = await _httpClient.PostAsJsonAsync("account/assess-chief-inspector-defectiveness", request);
             
@@ -128,6 +131,8 @@ namespace Super.Paula.Client.Administration
 
         public async ValueTask<SignInInspectorResponse> SignInInspectorAsync(SignInInspectorRequest request)
         {
+            SetBearerOnHttpClient();
+
             var responseMessage = await _httpClient.PostAsJsonAsync("account/sign-in-inspector", request);
             
             responseMessage.RuleOutProblems();
@@ -151,11 +156,7 @@ namespace Super.Paula.Client.Administration
 
         public async ValueTask SignOutInspectorAsync()
         {
-            var bearer = _paulaAuthenticationStateManager.GetAuthenticationBearer();
-            if (!string.IsNullOrWhiteSpace(bearer))
-            {
-                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", bearer);
-            }
+            SetBearerOnHttpClient();
 
             _appState.CurrentInspector = string.Empty;
             _appState.CurrentOrganization = string.Empty;
@@ -175,11 +176,7 @@ namespace Super.Paula.Client.Administration
 
         public async ValueTask<StartImpersonationResponse> StartImpersonationAsync(StartImpersonationRequest request)
         {
-            var bearer = _paulaAuthenticationStateManager.GetAuthenticationBearer();
-            if (!string.IsNullOrWhiteSpace(bearer))
-            {
-                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", bearer);
-            }
+            SetBearerOnHttpClient();
 
             var responseMessage = await _httpClient.PostAsJsonAsync("account/start-impersonation", request);
             
@@ -188,7 +185,7 @@ namespace Super.Paula.Client.Administration
 
             var response = (await responseMessage.Content.ReadFromJsonAsync<StartImpersonationResponse>())!;
 
-            _accountHandlerCache.FallbackBearer = bearer;
+            _accountHandlerCache.FallbackBearer = _paulaAuthenticationStateManager.GetAuthenticationBearer();
             _accountHandlerCache.FallbackInspector = _appState.CurrentInspector;
             _accountHandlerCache.FallbackOrganization = _appState.CurrentOrganization;
 
@@ -203,6 +200,8 @@ namespace Super.Paula.Client.Administration
 
         public ValueTask StopImpersonationAsync()
         {
+            SetBearerOnHttpClient();
+
             if (!string.IsNullOrWhiteSpace(_accountHandlerCache.FallbackBearer))
             {
                 _appState.CurrentInspector = _accountHandlerCache.FallbackInspector!;

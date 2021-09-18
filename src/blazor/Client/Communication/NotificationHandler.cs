@@ -55,6 +55,42 @@ namespace Super.Paula.Client.Communication
         public ValueTask DisposeAsync()
             => _hubConnection.DisposeAsync();
 
+        private void AuthenticationStateChanged(Task<AuthenticationState> task)
+            => task.ContinueWith(async _ =>
+                {
+                    SetBearerOnHttpClient();
+                    await StopHubAsync();
+                    await StartHubAsync();
+                });
+
+        private void SetBearerOnHttpClient()
+        {
+            var bearer = _paulaAuthenticationStateManager.GetAuthenticationBearer();
+
+            _httpClient.DefaultRequestHeaders.Authorization = !string.IsNullOrWhiteSpace(bearer)
+                    ? new AuthenticationHeaderValue("Bearer", bearer)
+                    : null;
+        }
+
+        private async Task StartHubAsync()
+        {
+            if (_hubConnection.State == HubConnectionState.Disconnected)
+            {
+                if ((await _accountHandler.QueryAuthorizationsAsync()).Values.Any())
+                {
+                    await _hubConnection.StartAsync();
+                }
+            }
+        }
+
+        private async Task StopHubAsync()
+        {
+            if (_hubConnection.State != HubConnectionState.Disconnected)
+            {
+                await _hubConnection.StopAsync();
+            }
+        }
+
         public async ValueTask<NotificationResponse> CreateAsync(string inspector, NotificationRequest request)
         {
             var responseMessage = await _httpClient.PostAsJsonAsync($"inspectors/{inspector}/notifications", request);
@@ -63,6 +99,13 @@ namespace Super.Paula.Client.Communication
             responseMessage.EnsureSuccessStatusCode();
 
             return (await responseMessage.Content.ReadFromJsonAsync<NotificationResponse>())!;
+        }
+
+        public async Task<IDisposable> OnCreatedAsync(Func<NotificationResponse, Task> handler)
+        {
+            var onCreated = _hubConnection.On("OnCreated", handler);
+            await StartHubAsync();
+            return onCreated;
         }
 
         public async ValueTask DeleteAsync(string inspector, int date, int time)
@@ -132,50 +175,5 @@ namespace Super.Paula.Client.Communication
             responseMessage.RuleOutProblems();
             responseMessage.EnsureSuccessStatusCode();
         }
-
-        private void AuthenticationStateChanged(Task<AuthenticationState> task)
-            => task.ContinueWith(
-                async _ =>
-                {
-                    SetBearerOnHttpClient();
-                    await StopHubAsync();
-                    await StartHubAsync();
-                });
-
-        public async Task<IDisposable> OnCreatedAsync(Func<NotificationResponse, Task> handler)
-        {
-            var onCreated = _hubConnection.On("OnCreated", handler);
-            await StartHubAsync();
-            return onCreated;
-        }
-
-        private void SetBearerOnHttpClient()
-        {
-            var bearer = _paulaAuthenticationStateManager.GetAuthenticationBearer();
-
-            _httpClient.DefaultRequestHeaders.Authorization = !string.IsNullOrWhiteSpace(bearer)
-                    ? new AuthenticationHeaderValue("Bearer", bearer)
-                    : null;
-        }
-
-        private async Task StartHubAsync()
-        {
-            if (_hubConnection.State == HubConnectionState.Disconnected)
-            {
-                if ((await _accountHandler.QueryAuthorizationsAsync()).Values.Any())
-                {
-                    await _hubConnection.StartAsync();
-                }
-            }
-        }
-
-        private async Task StopHubAsync()
-        {
-            if (_hubConnection.State != HubConnectionState.Disconnected)
-            {
-                await _hubConnection.StopAsync();
-            }
-        }
-
     }
 }
