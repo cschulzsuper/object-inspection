@@ -1,4 +1,7 @@
 # Building a Business Application, Part 1
+
+![Title](bucket/9d28d169-291f-4689-9f51-3470c08316da.png)
+
 ## Hey.
 
 In the last couple of weeks I have been creating a small experimental business application based on [.NET 6](https://dotnet.microsoft.com/).
@@ -6,6 +9,8 @@ It uses [Azure Cosmos DB](https://azure.microsoft.com/de-de/services/cosmos-db/)
 [ASP.NET Core](https://github.com/dotnet/aspnetcore) and [Blazor](https://dotnet.microsoft.com/apps/aspnet/web-apps/blazor). 
 
 The idea is that inspections can be attached to business objects. The set of business object inspections can be audited. The auditing results are stored in a history. I’m not sure if I use the right wording here. I'm a developer not a PO.
+
+![Introduction](bucket/42e8bf7e-3b56-475b-a9d6-d6773c822326.gif)
 
 Just imagine that you have an employee who needs to check certain matters on a regular basis. As I seldom have original business ideas myself, this example is inspired by the stuff I do at work. I'm just like a carpenter who is building his own cupboard.
 
