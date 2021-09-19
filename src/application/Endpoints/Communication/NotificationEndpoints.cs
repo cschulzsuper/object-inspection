@@ -20,7 +20,7 @@ namespace Super.Paula.Application.Communication
         {
             endpoints.MapCollection(
                 "/inspectors/{inspector}/notifications",
-                "/inspectors/{inspector}/notifications/{date:int}/{time:int}",
+                "/inspectors/{inspector}/notifications/{date}/{time}",
                 Get,
                 GetAllForInspector,
                 Create,

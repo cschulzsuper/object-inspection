@@ -1,6 +1,8 @@
 ﻿using Super.Paula.Application.Administration;
 using Super.Paula.Application.Communication;
+using Super.Paula.Application.Guidlines;
 using Super.Paula.Data;
+using Super.Paula.Validation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +21,7 @@ namespace Super.Paula.Application
         }
         public ValueTask<Notification> GetAsync(string inspector, int date, int time)
         {
+            EnsureGetable(inspector, date, time);
             return _notificationRepository.GetByIdsAsync(inspector, date, time);
         }
 
@@ -56,5 +59,10 @@ namespace Super.Paula.Application
         {
             return _notificationRepository.DeleteAsync(notification);
         }
+
+        private void EnsureGetable(string inspector, int date, int time)
+            => Validator.Ensure(
+                NotificationValidator.DateIsPositive(date),
+                NotificationValidator.TimeIsInDayTimeRange(time));
     }
 }

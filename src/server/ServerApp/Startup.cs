@@ -7,7 +7,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Super.Paula.Data;
 using Super.Paula.Swagger;
+using Super.Paula.Validation;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using System.Linq;
 using System.Threading.Tasks;
 using ProblemDetails = Super.Paula.ErrorHandling.ProblemDetails;
 
@@ -89,12 +91,35 @@ namespace Super.Paula
 
             context.Response.StatusCode = statusCode;
 
-            await context.Response.WriteAsJsonAsync( 
-                new ProblemDetails {
-                    Detail = exception.StackTrace ?? string.Empty,
-                    Title = exception.Message,
-                    Status = statusCode,
-                    Instance = context.Request.Path});
+            if (exception is ValidationException validationException &&
+                validationException.Errors != null)
+            {
+                var errros = validationException.Errors.ToDictionary(
+                            x => x.Key,
+                            y => y.Value
+                                .Select(x => x.ToString())
+                                .ToArray());
+
+                await context.Response.WriteAsJsonAsync(
+                    new HttpValidationProblemDetails(errros)
+                    {
+                        Detail = exception.StackTrace ?? string.Empty,
+                        Title = exception.Message,
+                        Status = statusCode,
+                        Instance = context.Request.Path
+                    });
+            }
+            else
+            {
+                await context.Response.WriteAsJsonAsync(
+                    new ProblemDetails
+                    {
+                        Detail = exception.StackTrace ?? string.Empty,
+                        Title = exception.Message,
+                        Status = statusCode,
+                        Instance = context.Request.Path
+                    });
+            }
         }
     }
 }

@@ -12,7 +12,7 @@ namespace Super.Paula.Application.Auditing
         {
             endpoints.MapCollection(
                 "/business-objects/{businessObject}/inspection-audits",
-                "/business-objects/{businessObject}/inspection-audits/{inspection}/{date:int}/{time:int}",
+                "/business-objects/{businessObject}/inspection-audits/{inspection}/{date}/{time}",
                 Get,
                 GetAllForBusinessObject,
                 Create,
