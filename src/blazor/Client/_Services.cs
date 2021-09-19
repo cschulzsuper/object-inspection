@@ -5,6 +5,7 @@ using Super.Paula.Application.Auditing;
 using Super.Paula.Application.Communication;
 using Super.Paula.Application.Guidlines;
 using Super.Paula.Application.Inventory;
+using Super.Paula.Authentication;
 using Super.Paula.Client.Administration;
 using Super.Paula.Client.Auditing;
 using Super.Paula.Client.Communication;
@@ -27,7 +28,12 @@ namespace Super.Paula.Client
             services.AddHttpClient<IAccountHandler, AccountHandler>();
             services.AddScoped<AccountHandlerCache>();
 
-            services.AddHttpClient<INotificationHandler, NotificationHandler>();
+            services.AddHttpClient<NotificationHandlerBase>();
+            services.AddScoped<INotificationHandler>(provider => 
+                new NotificationHandler(
+                    provider.GetRequiredService<NotificationHandlerBase>(),
+                    provider.GetRequiredService<PaulaAuthenticationStateManager>()));
+
             services.AddHttpClient<IBusinessObjectHandler, BusinessObjectHandler>();
             services.AddHttpClient<IOrganizationHandler, OrganizationHandler>();
             services.AddHttpClient<IBusinessObjectInspectionAuditHandler, BusinessObjectInspectionAuditHandler>();

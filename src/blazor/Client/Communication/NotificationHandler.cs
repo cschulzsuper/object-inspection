@@ -1,186 +1,149 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Net.Http.Json;
-using System.Text.Json;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.SignalR.Client;
-using Super.Paula.Application.Administration;
+﻿using Microsoft.AspNetCore.Components.Authorization;
 using Super.Paula.Application.Communication;
 using Super.Paula.Application.Communication.Requests;
 using Super.Paula.Application.Communication.Responses;
 using Super.Paula.Authentication;
-using Super.Paula.Client.ErrorHandling;
-using Super.Paula.Environment;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Super.Paula.Client.Communication
 {
-    internal class NotificationHandler : INotificationHandler, IAsyncDisposable
+    public class NotificationHandler : INotificationHandler
     {
-        private readonly PaulaAuthenticationStateManager _paulaAuthenticationStateManager;
-        private readonly AppSettings _appSettings;
-        private readonly IAccountHandler _accountHandler;
+        private readonly INotificationHandler _notificationHandler;
 
-        private readonly HttpClient _httpClient;      
-        private readonly HubConnection _hubConnection;
+        private readonly ISet<NotificationResponse> _notificationResponsCache;
+        private readonly SemaphoreSlim _notificationResponsCacheSemaphore;
+        private bool _notificationResponsCached;
+
+        private readonly PaulaAuthenticationStateManager _paulaAuthenticationStateManager;
 
         public NotificationHandler(
-            HttpClient httpClient,
-            PaulaAuthenticationStateManager paulaAuthenticationStateManager,
-            AppSettings appSettings,
-            IAccountHandler accountHandler)
+            INotificationHandler notificationHandler,
+            PaulaAuthenticationStateManager paulaAuthenticationStateManager)
         {
-            _accountHandler = accountHandler;
-            _appSettings = appSettings;
 
             _paulaAuthenticationStateManager = paulaAuthenticationStateManager;
             _paulaAuthenticationStateManager.AuthenticationStateChanged += AuthenticationStateChanged;
 
-            _httpClient = httpClient;
-            _httpClient.BaseAddress = new Uri(_appSettings.Server);
-            SetBearerOnHttpClient();
+            _notificationHandler = notificationHandler;
+            _notificationHandler.OnCreatedAsync(InternalOnCreatedAsync);
+            _notificationHandler.OnDeletedAsync(InternalOnDeletedAsync);
 
-            _hubConnection = new HubConnectionBuilder()
-                .WithUrl(
-                    new Uri(_httpClient.BaseAddress, "/notifications/signalr"),
-                    c => {
-                        c.AccessTokenProvider = () => Task.FromResult(_paulaAuthenticationStateManager.GetAuthenticationBearer())!;
-                    })
-                .Build();
+            _notificationResponsCache = new HashSet<NotificationResponse>();
+            _notificationResponsCached = false;
+            _notificationResponsCacheSemaphore = new SemaphoreSlim(1, 1);
         }
-
-        public ValueTask DisposeAsync()
-            => _hubConnection.DisposeAsync();
 
         private void AuthenticationStateChanged(Task<AuthenticationState> task)
             => task.ContinueWith(async _ =>
-                {
-                    SetBearerOnHttpClient();
-                    await StopHubAsync();
-                    await StartHubAsync();
-                });
-
-        private void SetBearerOnHttpClient()
-        {
-            var bearer = _paulaAuthenticationStateManager.GetAuthenticationBearer();
-
-            _httpClient.DefaultRequestHeaders.Authorization = !string.IsNullOrWhiteSpace(bearer)
-                    ? new AuthenticationHeaderValue("Bearer", bearer)
-                    : null;
-        }
-
-        private async Task StartHubAsync()
-        {
-            if (_hubConnection.State == HubConnectionState.Disconnected)
             {
-                if ((await _accountHandler.QueryAuthorizationsAsync()).Values.Any())
+                try
                 {
-                    await _hubConnection.StartAsync();
+                    await _notificationResponsCacheSemaphore.WaitAsync();
+                    _notificationResponsCache.Clear();
+                    _notificationResponsCached = false;
                 }
-            }
-        }
-
-        private async Task StopHubAsync()
-        {
-            if (_hubConnection.State != HubConnectionState.Disconnected)
-            {
-                await _hubConnection.StopAsync();
-            }
-        }
-
-        public async ValueTask<NotificationResponse> CreateAsync(string inspector, NotificationRequest request)
-        {
-            var responseMessage = await _httpClient.PostAsJsonAsync($"inspectors/{inspector}/notifications", request);
-
-            responseMessage.RuleOutProblems();
-            responseMessage.EnsureSuccessStatusCode();
-
-            return (await responseMessage.Content.ReadFromJsonAsync<NotificationResponse>())!;
-        }
-
-        public async Task<IDisposable> OnCreatedAsync(Func<NotificationResponse, Task> handler)
-        {
-            var onCreated = _hubConnection.On("OnCreated", handler);
-            await StartHubAsync();
-            return onCreated;
-        }
-
-        public async Task<IDisposable> OnDeletedAsync(Func<string, int, int, Task> handler)
-        {
-            var onDeleted = _hubConnection.On("OnDeleted", handler);
-            await StartHubAsync();
-            return onDeleted;
-        }
-
-        public async ValueTask DeleteAsync(string inspector, int date, int time)
-        {
-            var responseMessage = await _httpClient.DeleteAsync($"inspectors/{inspector}/notifications/{date}/{time}");
-
-            responseMessage.RuleOutProblems();
-            responseMessage.EnsureSuccessStatusCode();
-        }
-
-        public async IAsyncEnumerable<NotificationResponse> GetAll()
-        {
-            var responseMessage = await _httpClient.GetAsync("notifications");
-
-            responseMessage.RuleOutProblems();
-            responseMessage.EnsureSuccessStatusCode();
-
-            var responseStream = await responseMessage.Content.ReadAsStreamAsync();
-            var response = JsonSerializer.DeserializeAsyncEnumerable<NotificationResponse>(
-                responseStream,
-                new JsonSerializerOptions(JsonSerializerDefaults.Web)
+                finally
                 {
-                    DefaultBufferSize = 128
-                });
+                    _notificationResponsCacheSemaphore.Release();
+                }
+            });
 
-            await foreach (var reponseItem in response)
-            {
-                yield return reponseItem!;
-            }
-        }
+        public ValueTask<NotificationResponse> GetAsync(string inspector, int date, int time)
+            => throw new NotImplementedException();
+
+        public IAsyncEnumerable<NotificationResponse> GetAll()
+            => throw new NotImplementedException();
 
         public async IAsyncEnumerable<NotificationResponse> GetAllForInspector(string inspector)
         {
-            var responseMessage = await _httpClient.GetAsync($"inspectors/{inspector}/notifications");
-
-            responseMessage.RuleOutProblems();
-            responseMessage.EnsureSuccessStatusCode();
-
-            var responseStream = await responseMessage.Content.ReadAsStreamAsync();
-            var response = JsonSerializer.DeserializeAsyncEnumerable<NotificationResponse>(
-                responseStream,
-                new JsonSerializerOptions(JsonSerializerDefaults.Web)
-                {
-                    DefaultBufferSize = 128
-                });
-
-            await foreach (var reponseItem in response)
+            try
             {
-                yield return reponseItem!;
+                await _notificationResponsCacheSemaphore.WaitAsync();
+
+                if (_notificationResponsCached)
+                {
+                    foreach (var response in _notificationResponsCache)
+                    {
+                        yield return response;
+                    }
+                }
+                else
+                {
+                    var responses = _notificationHandler.GetAllForInspector(inspector);
+                    await foreach (var response in responses)
+                    {
+                        _notificationResponsCache.Add(response);
+                        yield return response;
+                    }
+
+                    _notificationResponsCached = true;
+                }
+            }
+            finally
+            {
+                _notificationResponsCacheSemaphore.Release();
             }
         }
 
-        public async ValueTask<NotificationResponse> GetAsync(string inspector, int date, int time)
+        public ValueTask<NotificationResponse> CreateAsync(string inspector, NotificationRequest request)
+            => throw new NotImplementedException();
+
+        public Task<IDisposable> OnCreatedAsync(Func<NotificationResponse, Task> handler)
+            => _notificationHandler.OnCreatedAsync(handler);
+
+        private async Task InternalOnCreatedAsync(NotificationResponse response)
         {
-            var responseMessage = await _httpClient.GetAsync($"inspectors/{inspector}/notifications/{date}/{time}");
+            try
+            {
+                await _notificationResponsCacheSemaphore.WaitAsync();
 
-            responseMessage.RuleOutProblems();
-            responseMessage.EnsureSuccessStatusCode();
-
-            return (await responseMessage.Content.ReadFromJsonAsync<NotificationResponse>())!;
+                if (_notificationResponsCached)
+                {
+                    _notificationResponsCache.Add(response);
+                }
+            }
+            finally
+            {
+                _notificationResponsCacheSemaphore.Release();
+            }
         }
 
-        public async ValueTask ReplaceAsync(string inspector, int date, int time, NotificationRequest request)
+        public ValueTask ReplaceAsync(string inspector, int date, int time, NotificationRequest request)
         {
-            var responseMessage = await _httpClient.PostAsJsonAsync($"inspectors/{inspector}/notifications/{date}/{time}", request);
+            throw new NotImplementedException();
+        }
 
-            responseMessage.RuleOutProblems();
-            responseMessage.EnsureSuccessStatusCode();
+        public ValueTask DeleteAsync(string inspector, int date, int time)
+            => _notificationHandler.DeleteAsync(inspector, date, time);
+
+        public Task<IDisposable> OnDeletedAsync(Func<string, int, int, Task> handler)
+            => _notificationHandler.OnDeletedAsync(handler);
+
+        private async Task InternalOnDeletedAsync(string inspector, int date, int time)
+        {
+            try
+            {
+                await _notificationResponsCacheSemaphore.WaitAsync();
+
+                if (_notificationResponsCached)
+                {
+                    _notificationResponsCache.Remove(
+                        _notificationResponsCache.Single(x =>
+                            x.Date == date &&
+                            x.Time == time &&
+                            x.Inspector == inspector));
+                }
+            }
+            finally
+            {
+                _notificationResponsCacheSemaphore.Release();
+            }
         }
     }
 }

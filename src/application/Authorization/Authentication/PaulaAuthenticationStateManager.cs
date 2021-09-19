@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -10,12 +11,8 @@ namespace Super.Paula.Authentication
     public class PaulaAuthenticationStateManager : AuthenticationStateProvider
     {
         private ISet<string> _authorizationFilter = ImmutableHashSet.Create<string>();
-        private string _authenticationBrearer = string.Empty;
+        private string _authenticationBearer = string.Empty;
 
-        public PaulaAuthenticationStateManager()
-        {
-
-        }
 
         public ISet<string> GetAuthorizationsFilter()
             => _authorizationFilter;
@@ -27,23 +24,23 @@ namespace Super.Paula.Authentication
         }
 
         public string GetAuthenticationBearer()
-            => _authenticationBrearer;
+            => _authenticationBearer;
 
-        public void SetAuthenticationBearer(string brearer)
+        public void SetAuthenticationBearer(string bearer)
         {
-            _authenticationBrearer = brearer;
+            _authenticationBearer = bearer;
             NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
         }
 
-        public override Task<AuthenticationState> GetAuthenticationStateAsync()
-            => Task.FromResult(
+        public override Task<AuthenticationState> GetAuthenticationStateAsync() 
+        {
+            var identity = string.IsNullOrEmpty(_authenticationBearer)
+                ? new ClaimsIdentity(Enumerable.Empty<Claim>(), "Password")
+                : new ClaimsIdentity(Enumerable.Empty<Claim>());
+
+            return Task.FromResult(
                 new AuthenticationState(
-                    new ClaimsPrincipal(
-                        new ClaimsIdentity(
-                            new[] {
-                                new Claim(
-                                    Guid.NewGuid().ToString(),
-                                    Guid.NewGuid().ToString())
-                            }))));
+                    new ClaimsPrincipal(identity)));
+        }
     }
 }
