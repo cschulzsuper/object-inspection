@@ -53,13 +53,11 @@ else
         _notificationHandlerOnCreated = NotificationHandler.OnCreatedAsync(OnCreatedAsync);
     }
 
-    public Task OnCreatedAsync(NotificationResponse notification)
-        => InvokeAsync(() =>
-            {
-                _notifications!.Add(notification);
-                StateHasChanged();
-                return Task.CompletedTask;
-            });
+    public Task OnCreatedAsync(NotificationResponse notification) 
+    {
+        _notifications!.Add(notification);
+        return InvokeAsync(StateHasChanged);
+    }
 
     public ValueTask DisposeAsync()
     {
