@@ -6,7 +6,6 @@ using Super.Paula.Validation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Super.Paula.Application
@@ -19,10 +18,17 @@ namespace Super.Paula.Application
         {
             _notificationRepository = notification;
         }
-        public ValueTask<Notification> GetAsync(string inspector, int date, int time)
+        public async ValueTask<Notification> GetAsync(string inspector, int date, int time)
         {
             EnsureGetable(inspector, date, time);
-            return _notificationRepository.GetByIdsAsync(inspector, date, time);
+
+            var notification = await _notificationRepository.GetByIdsOrDefaultAsync(inspector, date, time);
+            if (notification == null)
+            {
+                throw new ManagementException($"Notification '{inspector}/{date}/{time}' was not found");
+            }
+
+            return notification;
         }
 
         public IQueryable<Notification> GetQueryable()
@@ -35,34 +41,103 @@ namespace Super.Paula.Application
             => _notificationRepository.GetAsyncEnumerable(query);
 
         public IQueryable<Notification> GetInspectorBasedQueryable(string inspector)
-            => _notificationRepository.GetPartitionQueryable(inspector);
+        {
+            EnsureGetableInspectorBased(inspector);
+            return _notificationRepository.GetPartitionQueryable(inspector);
+        }
 
         public IAsyncEnumerable<Notification> GetInspectorBasedAsyncEnumerable(string inspector)
-            => _notificationRepository.GetPartitionAsyncEnumerable(inspector);
-
+        {
+            EnsureGetableInspectorBased(inspector);
+            return _notificationRepository.GetPartitionAsyncEnumerable(inspector);
+        }
 
         public IAsyncEnumerable<TResult> GetInspectorBasedAsyncEnumerable<TResult>(string inspector, Func<IQueryable<Notification>, IQueryable<TResult>> query)
-           => _notificationRepository.GetPartitionAsyncEnumerable(query, inspector);
-
-
-        public ValueTask InsertAsync(Notification notification)
         {
-            return _notificationRepository.InsertAsync(notification);
+            EnsureGetableInspectorBased(inspector);
+            return _notificationRepository.GetPartitionAsyncEnumerable(query, inspector);
         }
 
-        public ValueTask UpdateAsync(Notification notification)
+        public async ValueTask InsertAsync(Notification notification)
         {
-            return _notificationRepository.UpdateAsync(notification);
+            EnsureInsertable(notification);
+
+            try
+            {
+                await _notificationRepository.InsertAsync(notification);
+            }
+            catch (Exception exception)
+            {
+                throw new ManagementException($"Could not insert notification '{notification.Inspector}/{notification.Date}/{notification.Time}'", exception);
+            }
         }
 
-        public ValueTask DeleteAsync(Notification notification)
+        public async ValueTask UpdateAsync(Notification notification)
         {
-            return _notificationRepository.DeleteAsync(notification);
+            EnsureUpdatable(notification);
+
+            try
+            {
+                await _notificationRepository.UpdateAsync(notification);
+            }
+            catch (Exception exception)
+            {
+                throw new ManagementException($"Could not update notification '{notification.Inspector}/{notification.Date}/{notification.Time}'", exception);
+            }
         }
 
-        private void EnsureGetable(string inspector, int date, int time)
+        public async ValueTask DeleteAsync(Notification notification)
+        {
+            EnsureDeletable(notification);
+
+            try
+            {
+                await _notificationRepository.DeleteAsync(notification);
+            }
+            catch (Exception exception)
+            {
+                throw new ManagementException($"Could not delete notification '{notification.Inspector}/{notification.Date}/{notification.Time}'", exception);
+            }
+        }
+
+        private static void EnsureGetable(string inspector, int date, int time)
             => Validator.Ensure(
                 NotificationValidator.DateIsPositive(date),
-                NotificationValidator.TimeIsInDayTimeRange(time));
+                NotificationValidator.TimeIsInDayTimeRange(time),
+                NotificationValidator.InspectorIsNotNull(inspector),
+                NotificationValidator.InspectorHasKebabCase(inspector));
+
+        private static void EnsureGetableInspectorBased(string inspector)
+            => Validator.Ensure(
+                NotificationValidator.InspectorIsNotNull(inspector),
+                NotificationValidator.InspectorHasKebabCase(inspector));
+
+        private static void EnsureInsertable(Notification notification)
+            => Validator.Ensure(
+                NotificationValidator.DateIsPositive(notification.Date),
+                NotificationValidator.TimeIsInDayTimeRange(notification.Time),
+                NotificationValidator.InspectorIsNotNull(notification.Inspector),
+                NotificationValidator.InspectorHasKebabCase(notification.Inspector),
+                NotificationValidator.TargetIsNotNull(notification.Target),
+                NotificationValidator.TargetIsRelativeUri(notification.Target),
+                NotificationValidator.TextIsNotNull(notification.Text),
+                NotificationValidator.TextIsNotTooLong(notification.Text));
+
+        private static void EnsureUpdatable(Notification notification)
+            => Validator.Ensure(
+                NotificationValidator.DateIsPositive(notification.Date),
+                NotificationValidator.TimeIsInDayTimeRange(notification.Time),
+                NotificationValidator.InspectorIsNotNull(notification.Inspector),
+                NotificationValidator.InspectorHasKebabCase(notification.Inspector),
+                NotificationValidator.TargetIsNotNull(notification.Target),
+                NotificationValidator.TargetIsRelativeUri(notification.Target),
+                NotificationValidator.TextIsNotNull(notification.Text),
+                NotificationValidator.TextIsNotTooLong(notification.Text));
+
+        private static void EnsureDeletable(Notification notification)
+            => Validator.Ensure(
+                NotificationValidator.DateIsPositive(notification.Date),
+                NotificationValidator.TimeIsInDayTimeRange(notification.Time),
+                NotificationValidator.InspectorIsNotNull(notification.Inspector));
     }
 }

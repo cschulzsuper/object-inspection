@@ -9,8 +9,9 @@ namespace Super.Paula.Client.ErrorHandling
     {
         public static HttpResponseMessage RuleOutProblems(this HttpResponseMessage responseMessage)
         {
-            if (responseMessage.StatusCode == HttpStatusCode.BadRequest ||
-                responseMessage.StatusCode == HttpStatusCode.NotFound)
+            if ((responseMessage.StatusCode == HttpStatusCode.BadRequest ||
+                 responseMessage.StatusCode == HttpStatusCode.NotFound ) &&
+                responseMessage.Content.Headers.ContentType?.MediaType == "application/problem+json")
             {
                 var responseStream = responseMessage.Content.ReadAsStream();
                 var response = JsonSerializer.Deserialize<ProblemDetails>(responseStream, new JsonSerializerOptions
@@ -20,9 +21,9 @@ namespace Super.Paula.Client.ErrorHandling
 
                 if (response != null)
                 {
-                    throw new HttpRequestException(
+                    throw new ProblemDetailsException(
                         response.Title,
-                        null, 
+                        response.Errors, 
                         responseMessage.StatusCode);
                 }
             }

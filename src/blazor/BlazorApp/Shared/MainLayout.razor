@@ -1,5 +1,4 @@
-﻿
-@inherits LayoutComponentBase
+﻿@inherits LayoutComponentBase
 
 @inject IAccountHandler AccountHandler
 @inject NavigationManager NavigationManager   
@@ -47,9 +46,18 @@
                 <ChildContent>
                     @Body             
                 </ChildContent>
-                <ErrorContent >
+                <ErrorContent>
                     <div class="blazor-error-boundary">
-                        @context.Message
+                        <p>@context.Message</p>
+                        @if(context is ProblemDetailsException problems && problems.Errors != null)
+                        {
+                            <ul>
+                            @foreach(var problem in problems.Errors.SelectMany(x => x.Key))
+                            {
+                                <li>@problem</li>
+                            }
+                            </ul>
+                        }
                     </div>
                 </ErrorContent>
             </ErrorBoundary>

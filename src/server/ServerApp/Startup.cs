@@ -9,6 +9,8 @@ using Super.Paula.Data;
 using Super.Paula.Swagger;
 using Super.Paula.Validation;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ProblemDetails = Super.Paula.ErrorHandling.ProblemDetails;
@@ -67,7 +69,7 @@ namespace Super.Paula
             if (exceptionHandlerPathFeature == null)
             {
                 context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-                await context.Response.WriteAsJsonAsync(new ProblemDetails
+                await context.Response.WriteAsJsonAsync(new ProblemDetails(null)
                 {
                     Status = StatusCodes.Status500InternalServerError,
                     Instance = context.Request.Path
@@ -91,35 +93,47 @@ namespace Super.Paula
 
             context.Response.StatusCode = statusCode;
 
-            if (exception is ValidationException validationException &&
-                validationException.Errors != null)
+            if (exception is ValidationException validationException)
             {
-                var errros = validationException.Errors.ToDictionary(
-                            x => x.Key,
-                            y => y.Value
-                                .Select(x => x.ToString())
-                                .ToArray());
+                var errors = validationException.Errors;
+                var problemDetails = new ProblemDetails(errors)
+                {
+                    Detail = exception.StackTrace ?? string.Empty,
+                    Title = exception.Message,
+                    Status = statusCode,
+                    Instance = context.Request.Path
+                };
 
-                await context.Response.WriteAsJsonAsync(
-                    new HttpValidationProblemDetails(errros)
-                    {
-                        Detail = exception.StackTrace ?? string.Empty,
-                        Title = exception.Message,
-                        Status = statusCode,
-                        Instance = context.Request.Path
-                    });
+                await context.Response.WriteAsJsonAsync(problemDetails, null, "application/problem+json");
             }
             else
             {
-                await context.Response.WriteAsJsonAsync(
-                    new ProblemDetails
-                    {
-                        Detail = exception.StackTrace ?? string.Empty,
-                        Title = exception.Message,
-                        Status = statusCode,
-                        Instance = context.Request.Path
-                    });
+                var errors = new Dictionary<string, FormattableString[]> 
+                {
+                    [string.Empty] = GetInnerExceptions(exception).ToArray()
+                };
+                
+                var problemDetails = new ProblemDetails(errors)
+                {
+                    Detail = exception.StackTrace ?? string.Empty,
+                    Title = exception.Message,
+                    Status = statusCode,
+                    Instance = context.Request.Path
+                };
+
+                await context.Response.WriteAsJsonAsync(problemDetails, null, "application/problem+json");
             }
+        }
+
+        public IEnumerable<FormattableString> GetInnerExceptions(Exception exception)
+        {
+            var innerException = exception;
+            do
+            {
+                yield return $"{innerException.Message}";
+                innerException = innerException.InnerException;
+            }
+            while (innerException != null);
         }
     }
 }
