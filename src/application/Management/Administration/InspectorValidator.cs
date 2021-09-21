@@ -7,21 +7,13 @@ namespace Super.Paula.Application.Administration
 {
     public static class InspectorValidator
     {
-        public static (Func<bool, bool>, Func<FormattableString>) InspectorHasValue(string inspector)
-            => (_ => !string.IsNullOrWhiteSpace(inspector),
-                    () => $"Inspector must have a value");
-
-        public static (Func<bool, bool>, Func<FormattableString>) InspectorHasKebabCase(string inspector)
-            => (_ => KebabCaseValidator.IsValid(inspector),
-                    () => $"Inspector '{inspector}' must be in kebab case");
-
-        public static (Func<bool, bool>, Func<FormattableString>) UniqueNameHasValue(Inspector inspector)
-            => (_ => !string.IsNullOrWhiteSpace(inspector.UniqueName),
+        public static (Func<bool, bool>, Func<FormattableString>) UniqueNameHasValue(string uniqueName)
+            => (_ => !string.IsNullOrWhiteSpace(uniqueName),
                     () => $"Unique name of inspector must have a value");
 
-        public static (Func<bool, bool>, Func<FormattableString>) UniqueNameHasKebabCase(Inspector inspector)
-            => (_ => KebabCaseValidator.IsValid(inspector.UniqueName),
-                    () => $"Unique name '{inspector.UniqueName}' of inspector must be in kebab case");
+        public static (Func<bool, bool>, Func<FormattableString>) UniqueNameHasKebabCase(string uniqueName)
+            => (_ => KebabCaseValidator.IsValid(uniqueName),
+                    () => $"Unique name '{uniqueName}' of inspector must be in kebab case");
 
         public static (Func<bool, bool>, Func<FormattableString>) MailAddressIsNotNull(Inspector inspector)
             => (_ => inspector.MailAddress != null,

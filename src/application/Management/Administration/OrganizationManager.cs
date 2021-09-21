@@ -29,22 +29,46 @@ namespace Super.Paula.Application.Administration
             return entity;
         }
 
-        public ValueTask InsertAsync(Organization organization)
+        public async ValueTask InsertAsync(Organization organization)
         {
             EnsureInsertable(organization);
-            return _organizationRepository.InsertAsync(organization);
+
+            try
+            {
+                await _organizationRepository.InsertAsync(organization);
+            }
+            catch (Exception exception)
+            {
+                throw new ManagementException($"Could not insert organization '{organization.UniqueName}'", exception);
+            }
         }
 
-        public ValueTask UpdateAsync(Organization organization)
+        public async ValueTask UpdateAsync(Organization organization)
         {
             EnsureUpdateable(organization);
-            return _organizationRepository.UpdateAsync(organization);
+
+            try
+            {
+                await _organizationRepository.UpdateAsync(organization);
+            }
+            catch (Exception exception)
+            {
+                throw new ManagementException($"Could not update organization '{organization.UniqueName}'", exception);
+            }
         }
 
-        public ValueTask DeleteAsync(Organization organization)
+        public async ValueTask DeleteAsync(Organization organization)
         {
             EnsureDeleteable(organization);
-            return _organizationRepository.DeleteAsync(organization);
+
+            try
+            {
+                await _organizationRepository.DeleteAsync(organization);
+            }
+            catch (Exception exception)
+            {
+                throw new ManagementException($"Could not delete organization '{organization.UniqueName}'", exception);
+            }
         }
 
         public IQueryable<Organization> GetQueryable()
@@ -58,26 +82,26 @@ namespace Super.Paula.Application.Administration
 
         private void EnsureGetable(string organization)
             => Validator.Ensure(
-                OrganizationValidator.OrganizationHasValue(organization),
-                OrganizationValidator.OrganizationHasKebabCase(organization));
+                OrganizationValidator.UniqueNameHasValue(organization),
+                OrganizationValidator.UniqueNameHasKebabCase(organization));
 
         private void EnsureInsertable(Organization organization)
             => Validator.Ensure(
-                OrganizationValidator.UniqueNameHasValue(organization),
-                OrganizationValidator.UniqueNameHasKebabCase(organization),
+                OrganizationValidator.UniqueNameHasValue(organization.UniqueName),
+                OrganizationValidator.UniqueNameHasKebabCase(organization.UniqueName),
                 OrganizationValidator.ChiefInspectorIsNotNull(organization),
                 OrganizationValidator.ChiefInspectorHasKebabCase(organization));
 
         private void EnsureUpdateable(Organization organization)
             => Validator.Ensure(
-                OrganizationValidator.UniqueNameHasValue(organization),
-                OrganizationValidator.UniqueNameHasKebabCase(organization),
+                OrganizationValidator.UniqueNameHasValue(organization.UniqueName),
+                OrganizationValidator.UniqueNameHasKebabCase(organization.UniqueName),
                 OrganizationValidator.ChiefInspectorIsNotNull(organization),
                 OrganizationValidator.ChiefInspectorHasKebabCase(organization));
 
         private void EnsureDeleteable(Organization organization)
             => Validator.Ensure(
-                OrganizationValidator.UniqueNameHasValue(organization),
-                OrganizationValidator.UniqueNameHasKebabCase(organization));
+                OrganizationValidator.UniqueNameHasValue(organization.UniqueName),
+                OrganizationValidator.UniqueNameHasKebabCase(organization.UniqueName));
     }
 }

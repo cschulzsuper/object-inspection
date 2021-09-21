@@ -6,21 +6,13 @@ namespace Super.Paula.Application.Inventory
 {
     public static class BusinessObjectValidator
     {
-        public static (Func<bool, bool>, Func<FormattableString>) BusinessObjectHasValue(string businessObject)
-            => (_ => !string.IsNullOrWhiteSpace(businessObject),
-                    () => $"Business object must have a value");
-
-        public static (Func<bool, bool>, Func<FormattableString>) BusinessObjectHasKebabCase(string businessObject)
-            => (_ => KebabCaseValidator.IsValid(businessObject),
-                    () => $"Business object '{businessObject}' must be in kebab case");
-
-        public static (Func<bool, bool>, Func<FormattableString>) UniqueNameHasValue(BusinessObject businessObject)
-            => (_ => !string.IsNullOrWhiteSpace(businessObject.UniqueName),
+        public static (Func<bool, bool>, Func<FormattableString>) UniqueNameHasValue(string uniqueName)
+            => (_ => !string.IsNullOrWhiteSpace(uniqueName),
                     () => $"Unique name of business object must have a value");
 
-        public static (Func<bool, bool>, Func<FormattableString>) UniqueNameHasKebabCase(BusinessObject businessObject)
-            => (_ => KebabCaseValidator.IsValid(businessObject.UniqueName),
-                    () => $"Unique name '{businessObject.UniqueName}' of business object must be in kebab case");
+        public static (Func<bool, bool>, Func<FormattableString>) UniqueNameHasKebabCase(string uniqueName)
+            => (_ => KebabCaseValidator.IsValid(uniqueName),
+                    () => $"Unique name '{uniqueName}' of business object must be in kebab case");
 
         public static (Func<bool, bool>, Func<FormattableString>) DisplayNameHasValue(BusinessObject businessObject)
             => (_ => !string.IsNullOrWhiteSpace(businessObject.DisplayName),
@@ -28,7 +20,7 @@ namespace Super.Paula.Application.Inventory
 
         public static (Func<bool, bool>, Func<FormattableString>) InspectorIsNotNull(BusinessObject businessObject)
             => (_ => businessObject.Inspector != null,
-                    () => $"Inspector of business object '{businessObject.UniqueName}' can not be null");
+                    () => $"Inspector '{businessObject.UniqueName}' of business object can not be null");
 
         public static (Func<bool, bool>, Func<FormattableString>) InspectorHasKebabCase(BusinessObject businessObject)
             => (_ => KebabCaseValidator.IsValid(businessObject.Inspector),

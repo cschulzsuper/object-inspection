@@ -38,45 +38,69 @@ namespace Super.Paula.Application.Guidlines
         public IAsyncEnumerable<TResult> GetAsyncEnumerable<TResult>(Func<IQueryable<Inspection>, IQueryable<TResult>> query)
             => _inspectionRepository.GetPartitionAsyncEnumerable(query);
 
-        public ValueTask InsertAsync(Inspection inspection)
+        public async ValueTask InsertAsync(Inspection inspection)
         {
             EnsureInsertable(inspection);
-            return _inspectionRepository.InsertAsync(inspection);
+
+            try
+            {
+                await _inspectionRepository.InsertAsync(inspection);
+            }
+            catch (Exception exception)
+            {
+                throw new ManagementException($"Could not insert inspection '{inspection.UniqueName}'", exception);
+            }
         }
 
-        public ValueTask UpdateAsync(Inspection inspection)
+        public async ValueTask UpdateAsync(Inspection inspection)
         {
             EnsureUpdateable(inspection);
-            return _inspectionRepository.UpdateAsync(inspection);
+
+            try
+            {
+                await _inspectionRepository.UpdateAsync(inspection);
+            }
+            catch (Exception exception)
+            {
+                throw new ManagementException($"Could not update inspection '{inspection.UniqueName}'", exception);
+            }
         }
 
-        public ValueTask DeleteAsync(Inspection inspection)
+        public async ValueTask DeleteAsync(Inspection inspection)
         {
             EnsureDeleteable(inspection);
-            return _inspectionRepository.DeleteAsync(inspection);
+
+            try
+            {
+                await _inspectionRepository.DeleteAsync(inspection);
+            }
+            catch (Exception exception)
+            {
+                throw new ManagementException($"Could not delete inspection '{inspection.UniqueName}'", exception);
+            }
         }
 
         private void EnsureGetable(string inspection)
             => Validator.Ensure(
-                InspectionValidator.InspectionHasValue(inspection),
-                InspectionValidator.InspectionHasKebabCase(inspection));
+                InspectionValidator.UniqueNameHasValue(inspection),
+                InspectionValidator.UniqueNameHasKebabCase(inspection));
 
         private void EnsureInsertable(Inspection inspection)
             => Validator.Ensure(
-                InspectionValidator.UniqueNameHasValue(inspection),
-                InspectionValidator.UniqueNameHasKebabCase(inspection),
+                InspectionValidator.UniqueNameHasValue(inspection.UniqueName),
+                InspectionValidator.UniqueNameHasKebabCase(inspection.UniqueName),
                 InspectionValidator.DisplayNameHasValue(inspection));
 
         private void EnsureUpdateable(Inspection inspection)
             => Validator.Ensure(
-                InspectionValidator.UniqueNameHasValue(inspection),
-                InspectionValidator.UniqueNameHasKebabCase(inspection),
+                InspectionValidator.UniqueNameHasValue(inspection.UniqueName),
+                InspectionValidator.UniqueNameHasKebabCase(inspection.UniqueName),
                 InspectionValidator.DisplayNameHasValue(inspection));
 
         private void EnsureDeleteable(Inspection inspection)
             => Validator.Ensure(
-                InspectionValidator.UniqueNameHasValue(inspection),
-                InspectionValidator.UniqueNameHasKebabCase(inspection));
+                InspectionValidator.UniqueNameHasValue(inspection.UniqueName),
+                InspectionValidator.UniqueNameHasKebabCase(inspection.UniqueName));
 
     }
 }

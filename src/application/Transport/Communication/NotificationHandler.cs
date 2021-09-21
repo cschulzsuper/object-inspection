@@ -73,9 +73,7 @@ namespace Super.Paula.Application.Communication
 
         public IAsyncEnumerable<NotificationResponse> GetAllForInspector(string inspector)
             => _notificationManager
-                .GetAsyncEnumerable(query => query
-                    .Where(entity =>
-                        entity.Inspector == inspector)
+                .GetInspectorBasedAsyncEnumerable(inspector, query => query
                     .Select(entity => new NotificationResponse
                     {
                         Date = entity.Date,

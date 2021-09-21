@@ -6,21 +6,13 @@ namespace Super.Paula.Application.Guidlines
 {
     public static class InspectionValidator
     {
-        public static (Func<bool, bool>, Func<FormattableString>) InspectionHasValue(string inspection)
-            => (_ => !string.IsNullOrWhiteSpace(inspection),
-                    () => $"Inspection must have a value");
-
-        public static (Func<bool, bool>, Func<FormattableString>) InspectionHasKebabCase(string inspection)
-            => (_ => KebabCaseValidator.IsValid(inspection),
-                    () => $"Inspection '{inspection}' must be in kebab case");
-
-        public static (Func<bool, bool>, Func<FormattableString>) UniqueNameHasValue(Inspection inspection)
-            => (_ => !string.IsNullOrWhiteSpace(inspection.UniqueName),
+        public static (Func<bool, bool>, Func<FormattableString>) UniqueNameHasValue(string uniqueName)
+            => (_ => !string.IsNullOrWhiteSpace(uniqueName),
                     () => $"Unique name of inspection must have a value");
 
-        public static (Func<bool, bool>, Func<FormattableString>) UniqueNameHasKebabCase(Inspection inspection)
-            => (_ => KebabCaseValidator.IsValid(inspection.UniqueName),
-                    () => $"Unique name '{inspection.UniqueName}' of inspection must be in kebab case");
+        public static (Func<bool, bool>, Func<FormattableString>) UniqueNameHasKebabCase(string uniqueName)
+            => (_ => KebabCaseValidator.IsValid(uniqueName),
+                    () => $"Unique name '{uniqueName}' of inspection must be in kebab case");
 
         public static (Func<bool, bool>, Func<FormattableString>) DisplayNameHasValue(Inspection inspection)
             => (_ => !string.IsNullOrWhiteSpace(inspection.DisplayName),

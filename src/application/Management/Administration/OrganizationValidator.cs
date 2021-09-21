@@ -6,21 +6,13 @@ namespace Super.Paula.Application.Administration
 {
     public static class OrganizationValidator
     {
-        public static (Func<bool, bool>, Func<FormattableString>) OrganizationHasValue(string organization)
-            => (_ => !string.IsNullOrWhiteSpace(organization),
-                    () => $"Organization must have a value");
+        public static (Func<bool, bool>, Func<FormattableString>) UniqueNameHasValue(string uniqueName)
+            => (_ => !string.IsNullOrWhiteSpace(uniqueName),
+                    () => $"Unique name must have a value");
 
-        public static (Func<bool, bool>, Func<FormattableString>) OrganizationHasKebabCase(string organization)
-            => (_ => KebabCaseValidator.IsValid(organization),
-                    () => $"Organization '{organization}' must be in kebab case");
-
-        public static (Func<bool, bool>, Func<FormattableString>) UniqueNameHasValue(Organization organization)
-            => (_ => !string.IsNullOrWhiteSpace(organization.UniqueName),
-                    () => $"Unique name of organization must have a value");
-
-        public static (Func<bool, bool>, Func<FormattableString>) UniqueNameHasKebabCase(Organization organization)
-            => (_ => KebabCaseValidator.IsValid(organization.UniqueName),
-                    () => $"Unique name '{organization.UniqueName}' of organization must be in kebab case");
+        public static (Func<bool, bool>, Func<FormattableString>) UniqueNameHasKebabCase(string uniqueName)
+            => (_ => KebabCaseValidator.IsValid(uniqueName),
+                    () => $"Unique name '{uniqueName}' of organization must be in kebab case");
 
         public static (Func<bool, bool>, Func<FormattableString>) ChiefInspectorIsNotNull(Organization organization)
             => (_ => organization.ChiefInspector != null,

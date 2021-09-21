@@ -38,35 +38,59 @@ namespace Super.Paula.Application.Inventory
         public IAsyncEnumerable<TResult> GetAsyncEnumerable<TResult>(Func<IQueryable<BusinessObject>, IQueryable<TResult>> query)
             => _businessObjectRepository.GetPartitionAsyncEnumerable(query);
 
-        public ValueTask InsertAsync(BusinessObject businessObject)
+        public async ValueTask InsertAsync(BusinessObject businessObject)
         {
             EnsureInsertable(businessObject);
-            return _businessObjectRepository.InsertAsync(businessObject);
+
+            try
+            {
+                await _businessObjectRepository.InsertAsync(businessObject);
+            }
+            catch (Exception exception)
+            {
+                throw new ManagementException($"Could not insert business object '{businessObject.UniqueName}'", exception);
+            }
         }
 
-        public ValueTask UpdateAsync(BusinessObject businessObject)
+        public async ValueTask UpdateAsync(BusinessObject businessObject)
         {
             EnsureUpdateable(businessObject);
-            return _businessObjectRepository.UpdateAsync(businessObject);
+
+            try
+            {
+                await _businessObjectRepository.UpdateAsync(businessObject);
+            }
+            catch (Exception exception)
+            {
+                throw new ManagementException($"Could not update business object '{businessObject.UniqueName}'", exception);
+            }
         }
 
-        public ValueTask DeleteAsync(BusinessObject businessObject)
+        public async ValueTask DeleteAsync(BusinessObject businessObject)
         {
             EnsureDeleteable(businessObject);
-            return _businessObjectRepository.DeleteAsync(businessObject);
+
+            try
+            {
+                await _businessObjectRepository.DeleteAsync(businessObject);
+            }
+            catch (Exception exception)
+            {
+                throw new ManagementException($"Could not delete business object '{businessObject.UniqueName}'", exception);
+            }
         }
 
         private void EnsureGetable(string businessObject)
             => Validator.Ensure(
-                BusinessObjectValidator.BusinessObjectHasValue(businessObject),
-                BusinessObjectValidator.BusinessObjectHasKebabCase(businessObject));
+                BusinessObjectValidator.UniqueNameHasValue(businessObject),
+                BusinessObjectValidator.UniqueNameHasKebabCase(businessObject));
 
         private void EnsureInsertable(BusinessObject businessObject)
         {
             IEnumerable<(Func<bool, bool> assertion, Func<FormattableString> messsage)> Ensurences()
             {
-                yield return BusinessObjectValidator.UniqueNameHasValue(businessObject);
-                yield return BusinessObjectValidator.UniqueNameHasKebabCase(businessObject);
+                yield return BusinessObjectValidator.UniqueNameHasValue(businessObject.UniqueName);
+                yield return BusinessObjectValidator.UniqueNameHasKebabCase(businessObject.UniqueName);
                 yield return BusinessObjectValidator.DisplayNameHasValue(businessObject);
                 yield return BusinessObjectValidator.InspectorIsNotNull(businessObject);
                 yield return BusinessObjectValidator.InspectorHasKebabCase(businessObject);
@@ -93,8 +117,8 @@ namespace Super.Paula.Application.Inventory
         {
             IEnumerable<(Func<bool, bool> assertion, Func<FormattableString> messsage)> Ensurences()
             {
-                yield return BusinessObjectValidator.UniqueNameHasValue(businessObject);
-                yield return BusinessObjectValidator.UniqueNameHasKebabCase(businessObject);
+                yield return BusinessObjectValidator.UniqueNameHasValue(businessObject.UniqueName);
+                yield return BusinessObjectValidator.UniqueNameHasKebabCase(businessObject.UniqueName);
                 yield return BusinessObjectValidator.DisplayNameHasValue(businessObject);
                 yield return BusinessObjectValidator.InspectorIsNotNull(businessObject);
                 yield return BusinessObjectValidator.InspectorHasKebabCase(businessObject);
@@ -119,7 +143,7 @@ namespace Super.Paula.Application.Inventory
 
         private void EnsureDeleteable(BusinessObject businessObject)
             => Validator.Ensure(
-                BusinessObjectValidator.UniqueNameHasValue(businessObject),
-                BusinessObjectValidator.UniqueNameHasKebabCase(businessObject));
+                BusinessObjectValidator.UniqueNameHasValue(businessObject.UniqueName),
+                BusinessObjectValidator.UniqueNameHasKebabCase(businessObject.UniqueName));
     }
 }

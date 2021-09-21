@@ -29,7 +29,11 @@ namespace Super.Paula.Application.Guidlines
 
         public static (bool, Func<(string, FormattableString)>) TargetIsRelativeUri(string target)
             => (Uri.TryCreate(target,UriKind.Relative,out _),
-                    () => (nameof(Notification.Target), $"Target must be a relative uri"));
+                    () => (nameof(Notification.Target), $"Target '{target}' must be a relative uri"));
+
+        public static (bool, Func<(string, FormattableString)>) TargetIsNotTooLong(string target)
+            => (target == null || target.Length <= 140,
+                () => (nameof(Notification.Text), $"Target can not have more than 140 characters"));
 
         public static (bool, Func<(string, FormattableString)>) TextIsNotNull(string text)
             => (!string.IsNullOrWhiteSpace(text),
