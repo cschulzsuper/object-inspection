@@ -16,10 +16,17 @@ namespace Super.Paula.Application.Administration
             _organizationRepository = organizationRepository;
         }
 
-        public ValueTask<Organization> GetAsync(string organization)
+        public async ValueTask<Organization> GetAsync(string organization)
         {
             EnsureGetable(organization);
-            return _organizationRepository.GetByIdAsync(organization);
+
+            var entity = await _organizationRepository.GetByIdsOrDefaultAsync(organization);
+            if (entity == null)
+            {
+                throw new ManagementException($"Organization '{organization}' was not found");
+            }
+
+            return entity;
         }
 
         public ValueTask InsertAsync(Organization organization)

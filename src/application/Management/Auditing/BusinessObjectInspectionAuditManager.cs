@@ -16,10 +16,16 @@ namespace Super.Paula.Application.Auditing
             _businessObjectInspectionAuditRepository = businessObjectInspectionAuditRepository;
         }
 
-        public ValueTask<BusinessObjectInspectionAudit> GetAsync(string businessObject, string inspection, int date, int time)
+        public async ValueTask<BusinessObjectInspectionAudit> GetAsync(string businessObject, string inspection, int date, int time)
         {
             EnsureGetable(businessObject, inspection, date, time);
-            return _businessObjectInspectionAuditRepository.GetByIdsAsync(date, businessObject, inspection, time);
+            var entity = await _businessObjectInspectionAuditRepository.GetByIdsOrDefaultAsync(date, businessObject, inspection, time);
+            if (entity == null)
+            {
+                throw new ManagementException($"Business object inspection audit '{businessObject}/{inspection}/{date}/{time}' was not found");
+            }
+
+            return entity;
         }
 
         public IQueryable<BusinessObjectInspectionAudit> GetQueryable()

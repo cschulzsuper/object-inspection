@@ -16,10 +16,17 @@ namespace Super.Paula.Application.Guidlines
             _inspectionRepository = inspectionRepository;
         }
 
-        public ValueTask<Inspection> GetAsync(string inspection)
+        public async ValueTask<Inspection> GetAsync(string inspection)
         {
             EnsureGetable(inspection);
-            return _inspectionRepository.GetByIdAsync(inspection);
+
+            var entity = await _inspectionRepository.GetByIdsOrDefaultAsync(inspection);
+            if (entity == null)
+            {
+                throw new ManagementException($"Inspection '{inspection}' was not found");
+            }
+
+            return entity;
         }
 
         public IQueryable<Inspection> GetQueryable()

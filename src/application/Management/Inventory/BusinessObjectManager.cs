@@ -16,10 +16,17 @@ namespace Super.Paula.Application.Inventory
             _businessObjectRepository = businessObjectRepository;
         }
 
-        public ValueTask<BusinessObject> GetAsync(string businessObject)
+        public async ValueTask<BusinessObject> GetAsync(string businessObject)
         {
             EnsureGetable(businessObject);
-            return _businessObjectRepository.GetByIdAsync(businessObject);
+
+            var entity = await _businessObjectRepository.GetByIdsOrDefaultAsync(businessObject);
+            if (entity == null)
+            {
+                throw new ManagementException($"Business object '{businessObject}' was not found");
+            }
+
+            return entity;
         }
 
         public IQueryable<BusinessObject> GetQueryable()
