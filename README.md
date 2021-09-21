@@ -22,5 +22,5 @@ A couple of things need to be setup, if you want to start Paula yourself.
   "MaintainerOrganization": "<The organization of the admin user>"
 }
 ```
-* Use `Super.Paula.Web` and `Super.Paula.BlazorServerSideHost` as start project
+* Use `server/Server` and `blazor/BlazorServerSideHost` as start projects.
 * Run the application and register a new organization for your maintainer.
