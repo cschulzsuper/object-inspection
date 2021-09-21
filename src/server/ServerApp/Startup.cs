@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+
 using ProblemDetails = Super.Paula.ErrorHandling.ProblemDetails;
 
 namespace Super.Paula
@@ -45,7 +46,7 @@ namespace Super.Paula
             if (_environment.IsDevelopment())
             {
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Super.Paula.Endpoints v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Super.Paula.Server V1"));
             }
 
             app.UseHttpsRedirection();
@@ -60,6 +61,7 @@ namespace Super.Paula
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapPaulaServer();
+                endpoints.MapGet("/hello/{name}", (string name) => $"Hello {name}");
             });
         }
 

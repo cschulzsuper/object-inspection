@@ -9,7 +9,7 @@
     }
   },
   "profiles": {
-    "Super.Paula.Endpoints": {
+    "Super.Paula.Server": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": false,
