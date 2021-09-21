@@ -14,10 +14,6 @@ namespace Super.Paula.Application.Inventory
             => (_ => KebabCaseValidator.IsValid(businessObject),
                     () => $"Business object '{businessObject}' must be in kebab case");
 
-        public static (Func<bool, bool>, Func<FormattableString>) BusinessObjectExists(string businessObject, IQueryable<BusinessObject> businessObjects)
-            => (x => !x || businessObjects.FirstOrDefault(x => x.UniqueName == businessObject) != null,
-                    () => $"Business object '{businessObject}' does not exist");
-
         public static (Func<bool, bool>, Func<FormattableString>) UniqueNameHasValue(BusinessObject businessObject)
             => (_ => !string.IsNullOrWhiteSpace(businessObject.UniqueName),
                     () => $"Unique name of business object must have a value");
@@ -25,14 +21,6 @@ namespace Super.Paula.Application.Inventory
         public static (Func<bool, bool>, Func<FormattableString>) UniqueNameHasKebabCase(BusinessObject businessObject)
             => (_ => KebabCaseValidator.IsValid(businessObject.UniqueName),
                     () => $"Unique name '{businessObject.UniqueName}' of business object must be in kebab case");
-
-        public static (Func<bool, bool>, Func<FormattableString>) UniqueNameIsUnqiue(BusinessObject businessObject, IQueryable<BusinessObject> businessObjects)
-            => (x => !x || businessObjects.FirstOrDefault(x => x.UniqueName == businessObject.UniqueName) == null,
-                    () => $"Unique name '{businessObject.UniqueName}' of business object already exists");
-
-        public static (Func<bool, bool>, Func<FormattableString>) UniqueNameExists(BusinessObject businessObject, IQueryable<BusinessObject> businessObjects)
-            => (x => !x || businessObjects.FirstOrDefault(x => x.UniqueName == businessObject.UniqueName) != null,
-                    () => $"Unique name '{businessObject.UniqueName}' of business object does not exist");
 
         public static (Func<bool, bool>, Func<FormattableString>) DisplayNameHasValue(BusinessObject businessObject)
             => (_ => !string.IsNullOrWhiteSpace(businessObject.DisplayName),
@@ -53,10 +41,6 @@ namespace Super.Paula.Application.Inventory
         public static (Func<bool, bool>, Func<FormattableString>) InspectionUniqueNameHasKebabCase(BusinessObject.EmbeddedInspection inspection)
             => (_ => KebabCaseValidator.IsValid(inspection.UniqueName),
                     () => $"Unique name '{inspection.UniqueName}' of business object inspection must be in kebab case");
-
-        public static (Func<bool, bool>, Func<FormattableString>) InspectionUniqueNameIsUnqiue(BusinessObject.EmbeddedInspection inspection, BusinessObject businessObject)
-            => (_ => businessObject.Inspections.FirstOrDefault(x => x != inspection && x.UniqueName == inspection.UniqueName) == null,
-                    () => $"Unique name '{inspection.UniqueName}' of business object inspection already exists");
 
         public static (Func<bool, bool>, Func<FormattableString>) InspectionTextIsNotNull(BusinessObject.EmbeddedInspection inspection)
             => (_ => inspection.Text != null,
@@ -85,6 +69,7 @@ namespace Super.Paula.Application.Inventory
         public static (Func<bool, bool>, Func<FormattableString>) InspectionAuditDateIsPositive(BusinessObject.EmbeddedInspection inspection)
             => (_ => inspection.AuditDate >= 0,
                     () => $"Audit date '{inspection.AuditDate}' of business object inspection '{inspection.UniqueName}' must be positive");
+
         public static (Func<bool, bool>, Func<FormattableString>) InspectionAuditTimeIsInDayTimeRange(BusinessObject.EmbeddedInspection inspection)
             => (_ => inspection.AuditTime >= 0 && inspection.AuditTime < 86400000,
                     () => $"Audit time '{inspection.AuditTime}' of business object inspection '{inspection.UniqueName}' must be positive and less than 86400000");

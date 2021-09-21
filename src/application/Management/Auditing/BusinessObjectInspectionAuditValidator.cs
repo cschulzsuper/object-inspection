@@ -30,19 +30,6 @@ namespace Super.Paula.Application.Auditing
             => (_ => time >= 0 && time < 86400000,
                     () => $"Audit time '{time}' must be positive and less than 86400000");
 
-
-        public static (Func<bool, bool>, Func<FormattableString>) BusinessObjectInspectionAuditExists(string businessObject, string inspection, int date, int time,
-            IQueryable<BusinessObjectInspectionAudit> audits)
-
-            => (x => !x || audits
-                .FirstOrDefault(x =>
-                    x.BusinessObject == businessObject &&
-                    x.Inspection == inspection &&
-                    x.AuditDate == date &&
-                    x.AuditTime == time) != null,
-
-                    () => $"Business object inspection audit '{businessObject}/{inspection}/{date}/{time}' does not exist");
-
         public static (Func<bool, bool>, Func<FormattableString>) BusinessObjectHasValue(BusinessObjectInspectionAudit audit)
             => (_ => !string.IsNullOrWhiteSpace(audit.BusinessObject),
                     () => $"Business object of business object inspection audit must have a value");
@@ -59,35 +46,13 @@ namespace Super.Paula.Application.Auditing
             => (_ => KebabCaseValidator.IsValid(audit.Inspection),
                     () => $"Inspection '{audit.Inspection}' of business object inspection audit must be in kebab case");
 
-        public static (Func<bool, bool>, Func<FormattableString>) BusinessObjectInspectionAuditIsUnqiue(BusinessObjectInspectionAudit audit,
-            IQueryable<BusinessObjectInspectionAudit> audits)
-            => (x => !x || audits
-                .FirstOrDefault(x =>
-                    x.BusinessObject == audit.BusinessObject &&
-                    x.Inspection == audit.Inspection &&
-                    x.AuditDate == audit.AuditDate &&
-                    x.AuditTime == audit.AuditTime) == null,
-
-                    () => $"Business object inspection audit '{audit.BusinessObject}/{audit.Inspection}/{audit.AuditDate}/{audit.AuditTime}' already exists");
-
-        public static (Func<bool, bool>, Func<FormattableString>) InspectorHasValue(BusinessObjectInspectionAudit audit)
+       public static (Func<bool, bool>, Func<FormattableString>) InspectorHasValue(BusinessObjectInspectionAudit audit)
             => (_ => !string.IsNullOrWhiteSpace(audit.Inspector),
                     () => $"Inspector of business object inspection audit must have a value");
 
         public static (Func<bool, bool>, Func<FormattableString>) InspectorHasKebabCase(BusinessObjectInspectionAudit audit)
             => (_ => KebabCaseValidator.IsValid(audit.Inspector),
                     () => $"Inspector '{audit.Inspection}' of business object inspection audit must be in kebab case");
-
-        public static (Func<bool, bool>, Func<FormattableString>) BusinessObjectInspectionAuditExists(BusinessObjectInspectionAudit audit,
-            IQueryable<BusinessObjectInspectionAudit> audits)
-            => (x => !x || audits
-                .FirstOrDefault(x =>
-                    x.BusinessObject == audit.BusinessObject &&
-                    x.Inspection == audit.Inspection &&
-                    x.AuditDate == audit.AuditDate &&
-                    x.AuditTime == audit.AuditTime) != null,
-
-                    () => $"Business object inspection audit '{audit.BusinessObject}/{audit.Inspection}/{audit.AuditDate}/{audit.AuditTime}' does not exist");
 
         public static (Func<bool, bool>, Func<FormattableString>) InspectionDisplayNameHasValue(BusinessObjectInspectionAudit audit)
             => (_ => !string.IsNullOrWhiteSpace(audit.InspectionDisplayName),

@@ -52,28 +52,24 @@ namespace Super.Paula.Application.Guidlines
         private void EnsureGetable(string inspection)
             => Validator.Ensure(
                 InspectionValidator.InspectionHasValue(inspection),
-                InspectionValidator.InspectionHasKebabCase(inspection),
-                InspectionValidator.InspectionExists(inspection, GetQueryable()));
+                InspectionValidator.InspectionHasKebabCase(inspection));
 
         private void EnsureInsertable(Inspection inspection)
             => Validator.Ensure(
                 InspectionValidator.UniqueNameHasValue(inspection),
                 InspectionValidator.UniqueNameHasKebabCase(inspection),
-                InspectionValidator.DisplayNameHasValue(inspection),
-                InspectionValidator.UniqueNameIsUnqiue(inspection, GetQueryable()));
+                InspectionValidator.DisplayNameHasValue(inspection));
 
         private void EnsureUpdateable(Inspection inspection)
             => Validator.Ensure(
                 InspectionValidator.UniqueNameHasValue(inspection),
                 InspectionValidator.UniqueNameHasKebabCase(inspection),
-                InspectionValidator.DisplayNameHasValue(inspection),
-                InspectionValidator.UniqueNameExists(inspection, GetQueryable()));
+                InspectionValidator.DisplayNameHasValue(inspection));
 
         private void EnsureDeleteable(Inspection inspection)
             => Validator.Ensure(
                 InspectionValidator.UniqueNameHasValue(inspection),
-                InspectionValidator.UniqueNameHasKebabCase(inspection),
-                InspectionValidator.UniqueNameExists(inspection, GetQueryable()));
+                InspectionValidator.UniqueNameHasKebabCase(inspection));
 
     }
 }

@@ -53,29 +53,25 @@ namespace Super.Paula.Application.Administration
         private void EnsureGetable(string inspector)
             => Validator.Ensure(
                 InspectorValidator.InspectorHasValue(inspector),
-                InspectorValidator.InspectorHasKebabCase(inspector),
-                InspectorValidator.InspectorExists(inspector, GetQueryable()));
+                InspectorValidator.InspectorHasKebabCase(inspector));
 
         private void EnsureInsertable(Inspector inspector)
             => Validator.Ensure(
                 InspectorValidator.UniqueNameHasValue(inspector),
                 InspectorValidator.UniqueNameHasKebabCase(inspector),
                 InspectorValidator.MailAddressIsNotNull(inspector),
-                InspectorValidator.MailAddressIsMailAddress(inspector),
-                InspectorValidator.UniqueNameIsUnqiue(inspector, GetQueryable()));
+                InspectorValidator.MailAddressIsMailAddress(inspector));
 
         private void EnsureUpdateable(Inspector inspector)
             => Validator.Ensure(
                 InspectorValidator.UniqueNameHasValue(inspector),
                 InspectorValidator.UniqueNameHasKebabCase(inspector),
                 InspectorValidator.MailAddressIsNotNull(inspector),
-                InspectorValidator.MailAddressIsMailAddress(inspector),
-                InspectorValidator.UniqueNameExists(inspector, GetQueryable()));
+                InspectorValidator.MailAddressIsMailAddress(inspector));
 
         private void EnsureDeleteable(Inspector inspector)
             => Validator.Ensure(
                 InspectorValidator.UniqueNameHasValue(inspector),
-                InspectorValidator.UniqueNameHasKebabCase(inspector),
-                InspectorValidator.UniqueNameExists(inspector, GetQueryable()));
+                InspectorValidator.UniqueNameHasKebabCase(inspector));
     }
 }

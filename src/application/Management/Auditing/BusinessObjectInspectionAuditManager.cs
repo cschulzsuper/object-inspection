@@ -78,8 +78,7 @@ namespace Super.Paula.Application.Auditing
                 BusinessObjectInspectionAuditValidator.InspectionHasValue(businessObject),
                 BusinessObjectInspectionAuditValidator.InspectionHasKebabCase(businessObject),
                 BusinessObjectInspectionAuditValidator.AuditDateIsPositive(date),
-                BusinessObjectInspectionAuditValidator.AuditTimeIsInDayTimeRange(time),
-                BusinessObjectInspectionAuditValidator.BusinessObjectInspectionAuditExists(businessObject, inspection, date, time, GetDateBasedQueryable(date)));
+                BusinessObjectInspectionAuditValidator.AuditTimeIsInDayTimeRange(time));
 
         private void EnsureInsertable(BusinessObjectInspectionAudit audit)
             => Validator.Ensure(
@@ -96,8 +95,7 @@ namespace Super.Paula.Application.Auditing
                 BusinessObjectInspectionAuditValidator.ResultHasValidValue(audit),
                 BusinessObjectInspectionAuditValidator.AnnotationIsNotNull(audit),
                 BusinessObjectInspectionAuditValidator.AuditDateIsPositive(audit),
-                BusinessObjectInspectionAuditValidator.AuditTimeIsInDayTimeRange(audit),
-                BusinessObjectInspectionAuditValidator.BusinessObjectInspectionAuditIsUnqiue(audit, GetDateBasedQueryable(audit.AuditDate)));
+                BusinessObjectInspectionAuditValidator.AuditTimeIsInDayTimeRange(audit));
 
         private void EnsureUpdateable(BusinessObjectInspectionAudit audit)
             => Validator.Ensure(
@@ -112,8 +110,7 @@ namespace Super.Paula.Application.Auditing
                 BusinessObjectInspectionAuditValidator.InspectorHasValue(audit),
                 BusinessObjectInspectionAuditValidator.InspectorHasKebabCase(audit),
                 BusinessObjectInspectionAuditValidator.ResultHasValidValue(audit),
-                BusinessObjectInspectionAuditValidator.AnnotationIsNotNull(audit),
-                BusinessObjectInspectionAuditValidator.BusinessObjectInspectionAuditExists(audit, GetDateBasedQueryable(audit.AuditDate)));
+                BusinessObjectInspectionAuditValidator.AnnotationIsNotNull(audit));
 
         private void EnsureDeleteable(BusinessObjectInspectionAudit audit)
             => Validator.Ensure(
@@ -122,7 +119,6 @@ namespace Super.Paula.Application.Auditing
                 BusinessObjectInspectionAuditValidator.InspectionHasValue(audit),
                 BusinessObjectInspectionAuditValidator.InspectionHasKebabCase(audit),
                 BusinessObjectInspectionAuditValidator.AuditDateIsPositive(audit),
-                BusinessObjectInspectionAuditValidator.AuditTimeIsInDayTimeRange(audit),
-                BusinessObjectInspectionAuditValidator.BusinessObjectInspectionAuditExists(audit, GetDateBasedQueryable(audit.AuditDate)));
+                BusinessObjectInspectionAuditValidator.AuditTimeIsInDayTimeRange(audit));
     }
 }

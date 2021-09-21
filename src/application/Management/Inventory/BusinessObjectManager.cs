@@ -52,8 +52,7 @@ namespace Super.Paula.Application.Inventory
         private void EnsureGetable(string businessObject)
             => Validator.Ensure(
                 BusinessObjectValidator.BusinessObjectHasValue(businessObject),
-                BusinessObjectValidator.BusinessObjectHasKebabCase(businessObject),
-                BusinessObjectValidator.BusinessObjectExists(businessObject, GetQueryable()));
+                BusinessObjectValidator.BusinessObjectHasKebabCase(businessObject));
 
         private void EnsureInsertable(BusinessObject businessObject)
         {
@@ -69,7 +68,6 @@ namespace Super.Paula.Application.Inventory
                 {
                     yield return BusinessObjectValidator.InspectionUniqueNameHasValue(inspection);
                     yield return BusinessObjectValidator.InspectionUniqueNameHasKebabCase(inspection);
-                    yield return BusinessObjectValidator.InspectionUniqueNameIsUnqiue(inspection, businessObject);
                     yield return BusinessObjectValidator.InspectionDisplayNameHasValue(inspection);
                     yield return BusinessObjectValidator.InspectionTextIsNotNull(inspection);
                     yield return BusinessObjectValidator.InspectionAuditInspectorIsNotNull(inspection);
@@ -78,9 +76,7 @@ namespace Super.Paula.Application.Inventory
                     yield return BusinessObjectValidator.InspectionAuditResultHasValidValue(inspection);
                     yield return BusinessObjectValidator.InspectionAuditDateIsPositive(inspection);
                     yield return BusinessObjectValidator.InspectionAuditTimeIsInDayTimeRange(inspection);
-                }
-
-                yield return BusinessObjectValidator.UniqueNameIsUnqiue(businessObject, GetQueryable());
+                };
             };
 
             Validator.Ensure(Ensurences());
@@ -100,7 +96,6 @@ namespace Super.Paula.Application.Inventory
                 {
                     yield return BusinessObjectValidator.InspectionUniqueNameHasValue(inspection);
                     yield return BusinessObjectValidator.InspectionUniqueNameHasKebabCase(inspection);
-                    yield return BusinessObjectValidator.InspectionUniqueNameIsUnqiue(inspection, businessObject);
                     yield return BusinessObjectValidator.InspectionDisplayNameHasValue(inspection);
                     yield return BusinessObjectValidator.InspectionTextIsNotNull(inspection);
                     yield return BusinessObjectValidator.InspectionAuditInspectorIsNotNull(inspection);
@@ -110,8 +105,6 @@ namespace Super.Paula.Application.Inventory
                     yield return BusinessObjectValidator.InspectionAuditDateIsPositive(inspection);
                     yield return BusinessObjectValidator.InspectionAuditTimeIsInDayTimeRange(inspection);
                 }
-
-                yield return BusinessObjectValidator.UniqueNameExists(businessObject, GetQueryable());
             };
 
             Validator.Ensure(Ensurences());
@@ -120,7 +113,6 @@ namespace Super.Paula.Application.Inventory
         private void EnsureDeleteable(BusinessObject businessObject)
             => Validator.Ensure(
                 BusinessObjectValidator.UniqueNameHasValue(businessObject),
-                BusinessObjectValidator.UniqueNameHasKebabCase(businessObject),
-                BusinessObjectValidator.UniqueNameExists(businessObject, GetQueryable()));
+                BusinessObjectValidator.UniqueNameHasKebabCase(businessObject));
     }
 }

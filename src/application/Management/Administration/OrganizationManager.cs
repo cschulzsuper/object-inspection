@@ -52,29 +52,25 @@ namespace Super.Paula.Application.Administration
         private void EnsureGetable(string organization)
             => Validator.Ensure(
                 OrganizationValidator.OrganizationHasValue(organization),
-                OrganizationValidator.OrganizationHasKebabCase(organization),
-                OrganizationValidator.OrganizationExists(organization, GetQueryable()));
+                OrganizationValidator.OrganizationHasKebabCase(organization));
 
         private void EnsureInsertable(Organization organization)
             => Validator.Ensure(
                 OrganizationValidator.UniqueNameHasValue(organization),
                 OrganizationValidator.UniqueNameHasKebabCase(organization),
                 OrganizationValidator.ChiefInspectorIsNotNull(organization),
-                OrganizationValidator.ChiefInspectorHasKebabCase(organization),
-                OrganizationValidator.UniqueNameIsUnqiue(organization, GetQueryable()));
+                OrganizationValidator.ChiefInspectorHasKebabCase(organization));
 
         private void EnsureUpdateable(Organization organization)
             => Validator.Ensure(
                 OrganizationValidator.UniqueNameHasValue(organization),
                 OrganizationValidator.UniqueNameHasKebabCase(organization),
                 OrganizationValidator.ChiefInspectorIsNotNull(organization),
-                OrganizationValidator.ChiefInspectorHasKebabCase(organization),
-                OrganizationValidator.UniqueNameExists(organization, GetQueryable()));
+                OrganizationValidator.ChiefInspectorHasKebabCase(organization));
 
         private void EnsureDeleteable(Organization organization)
             => Validator.Ensure(
                 OrganizationValidator.UniqueNameHasValue(organization),
-                OrganizationValidator.UniqueNameHasKebabCase(organization),
-                OrganizationValidator.UniqueNameExists(organization, GetQueryable()));
+                OrganizationValidator.UniqueNameHasKebabCase(organization));
     }
 }
