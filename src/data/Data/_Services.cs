@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Net.Http;
+using Microsoft.Azure.Cosmos;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Super.Paula.Application.Administration;
@@ -20,7 +22,7 @@ namespace Super.Paula.Data
     [SuppressMessage("Style", "IDE1006")]
     public static class _Services
     {
-        public static IServiceCollection AddPaulaServerData(this IServiceCollection services)
+        public static IServiceCollection AddPaulaServerData(this IServiceCollection services, bool isDevelopment)
         {
             services.AddDbContext<PaulaContext>((services, options) =>
             {
@@ -29,7 +31,23 @@ namespace Super.Paula.Data
                 options.UseCosmos(
                     appSeetings.CosmosEndpoint,
                     appSeetings.CosmosKey,
-                    "Paula");
+                    "Paula",
+                    options =>
+                    {
+                        if (isDevelopment)
+                        {
+                            options.HttpClientFactory(() =>
+                            {
+                                HttpMessageHandler httpMessageHandler = new HttpClientHandler()
+                                {
+                                    ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+                                };
+
+                                return new HttpClient(httpMessageHandler);
+                            });
+                            options.ConnectionMode(ConnectionMode.Gateway);
+                        }
+                    });
                 
                 options.LogTo(Console.WriteLine);
             });

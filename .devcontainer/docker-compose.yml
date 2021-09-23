@@ -5,16 +5,16 @@ services:
   cosmos:
     image: mcr.microsoft.com/cosmosdb/linux/azure-cosmos-emulator
     mem_limit: 3g
-    cpu_count: 2
+    cpu_count: 1
     environment:
-        AZURE_COSMOS_EMULATOR_PARTITION_COUNT: 10
+        AZURE_COSMOS_EMULATOR_PARTITION_COUNT: 3
         AZURE_COSMOS_EMULATOR_ENABLE_DATA_PERSISTENCE: "true"
     volumes:
         - /var/run/docker.sock:/var/run/docker-host.sock
 
   app:
     depends_on:
-      - cosmos
+      - "cosmos"
     build: 
       context: .
       dockerfile: Dockerfile

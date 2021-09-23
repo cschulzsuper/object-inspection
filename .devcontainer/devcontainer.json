@@ -1,7 +1,7 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
 // https://github.com/microsoft/vscode-dev-containers/tree/v0.194.0/containers/dotnet-mssql
 {
-	"name": "C# (.NET) and Azure Comsmos DB",
+	"name": "Super Pauler power by .NET and Azure Comsmos DB",
 	"dockerComposeFile": "docker-compose.yml",
 	"service": "app",
 	"workspaceFolder": "/workspace",
@@ -14,6 +14,20 @@
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [5000, 5001],
+
+	"postCreateCommand": "bash -i ${containerWorkspaceFolder}/.devcontainer/scripts/container-creation.sh",
+
+	"remoteEnv": {
+		// Add the locally installed dotnet to the path to ensure that it is activated
+		// This is needed so that things like the C# extension can resolve the correct SDK version
+		"PATH": "${containerWorkspaceFolder}/.dotnet:${containerEnv:PATH}",
+		"DOTNET_MULTILEVEL_LOOKUP": "0",
+
+		"ASPNETCORE_CosmosEndpoint": "https://cosmos:8081",
+        "ASPNETCORE_CosmosKey": "C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==",
+        "ASPNETCORE_Maintainer": "demo",
+        "ASPNETCORE_MaintainerOrganization": "demo"
+	}
 
 	// [Optional] To reuse of your local HTTPS dev cert:
 	//
@@ -34,19 +48,4 @@
 	//      2. Drag ~/.aspnet/https/aspnetapp.pfx into the root of the file explorer
 	//      3. Open a terminal in VS Code and run "mkdir -p /home/vscode/.aspnet/https && mv aspnetapp.pfx /home/vscode/.aspnet/https"
 
-	"postCreateCommand": "bash -i ${containerWorkspaceFolder}/.devcontainer/scripts/container-creation.sh",
-
-	// Add the locally installed dotnet to the path to ensure that it is activated
-	// This is needed so that things like the C# extension can resolve the correct SDK version
-
-	"remoteEnv": {
-		"PATH": "${containerWorkspaceFolder}/.dotnet:${containerEnv:PATH}",
-		"DOTNET_MULTILEVEL_LOOKUP": "0",
-		"TARGET": "net6.0",
-
-		"ASPNETCORE_CosmosEndpoint": "https://localhost:8081",
-        "ASPNETCORE_CosmosKey": "C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==",
-        "ASPNETCORE_Maintainer": "demo",
-        "ASPNETCORE_MaintainerOrganization": "demo"
-	}
 }

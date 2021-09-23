@@ -9,7 +9,7 @@ namespace Super.Paula.Application
     [SuppressMessage("Style", "IDE1006")]
     public static class _Services
     {
-        public static IServiceCollection AddPaulaSignalR(this IServiceCollection services)
+        public static IServiceCollection AddPaulaServerSignalR(this IServiceCollection services)
             => services
                 .AddScoped<HubContextResolver>()
                 .AddScoped<INotificationMessenger, NotificationMessenger>();
