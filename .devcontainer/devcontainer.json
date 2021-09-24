@@ -1,7 +1,7 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
 // https://github.com/microsoft/vscode-dev-containers/tree/v0.194.0/containers/dotnet-mssql
 {
-	"name": "Super Pauler power by .NET and Azure Comsmos DB",
+	"name": "Super Paula power by .NET and Azure Comsmos DB",
 	"dockerComposeFile": "docker-compose.yml",
 	"service": "app",
 	"workspaceFolder": "/workspace",
@@ -18,34 +18,19 @@
 	"postCreateCommand": "bash -i ${containerWorkspaceFolder}/.devcontainer/scripts/container-creation.sh",
 
 	"remoteEnv": {
-		// Add the locally installed dotnet to the path to ensure that it is activated
-		// This is needed so that things like the C# extension can resolve the correct SDK version
+		// Add the locally installed dotnet to the path to ensure that it is used
 		"PATH": "${containerWorkspaceFolder}/.dotnet:${containerEnv:PATH}",
 		"DOTNET_MULTILEVEL_LOOKUP": "0",
 
+		// Url and key for the Azure CosmosDB Emulator
 		"ASPNETCORE_CosmosEndpoint": "https://cosmos:8081",
         "ASPNETCORE_CosmosKey": "C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==",
-        "ASPNETCORE_Maintainer": "demo",
-        "ASPNETCORE_MaintainerOrganization": "demo"
+
+		// Settings for paula BlazorApp
+		"ASPNETCORE_Server" : "https://localhost:5001",
+
+		// Settings for paula ServerApp
+		"ASPNETCORE_Maintainer": "demo",
+    "ASPNETCORE_MaintainerOrganization": "demo"
 	}
-
-	// [Optional] To reuse of your local HTTPS dev cert:
-	//
-	// 1. Export it locally using this command:
-	//    * Windows PowerShell:
-	//        dotnet dev-certs https --trust; dotnet dev-certs https -ep "$env:USERPROFILE/.aspnet/https/aspnetapp.pfx" -p "SecurePwdGoesHere"
-	//    * macOS/Linux terminal:
-	//        dotnet dev-certs https --trust; dotnet dev-certs https -ep "${HOME}/.aspnet/https/aspnetapp.pfx" -p "SecurePwdGoesHere"
-	// 
-	// 2. Uncomment these 'remoteEnv' lines:
-	//    "remoteEnv": {
-	// 	      "ASPNETCORE_Kestrel__Certificates__Default__Password": "SecurePwdGoesHere",
-	//        "ASPNETCORE_Kestrel__Certificates__Default__Path": "/home/vscode/.aspnet/https/aspnetapp.pfx",
-	//    },
-	//
-	// 3. Next, copy your certificate into the container:
-	//      1. Start the container
-	//      2. Drag ~/.aspnet/https/aspnetapp.pfx into the root of the file explorer
-	//      3. Open a terminal in VS Code and run "mkdir -p /home/vscode/.aspnet/https && mv aspnetapp.pfx /home/vscode/.aspnet/https"
-
 }

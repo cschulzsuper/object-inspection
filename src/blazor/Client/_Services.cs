@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Net.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Super.Paula.Application.Administration;
 using Super.Paula.Application.Auditing;
@@ -39,7 +40,6 @@ namespace Super.Paula.Client
             services.AddHttpClient<IBusinessObjectInspectionAuditHandler, BusinessObjectInspectionAuditHandler>();
             services.AddHttpClient<IInspectionHandler, InspectionHandler>();
             services.AddHttpClient<IInspectorHandler, InspectorHandler>();
-
 
             services.AddSingleton<ITranslator,Translator>();
 
