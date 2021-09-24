@@ -1,8 +1,10 @@
-# Hey.
+# Building a Business Application, Part 3
+
+![Title](bucket/3c68fed6-ab89-4c01-b8d2-09440a32c0a7.png)
 
 The Getting Started process for new developers in big software projects is often an accumulation of dependencies, folder and configuration scripts. A lot of things need to be executed in the correct order. A tiny mistake in the setup might confuse the toolchain and results in a huge amount of time wasted. Getting Started should not be hard, it should be easy.
 
-In a recent [ASP.NET Community Standup](https://youtu.be/hVdwb41FPvU), that was all about contributing to [ASP.NET Core](https://docs.microsoft.com/de-de/aspnet/core) I saw [GitHub Codespaces](https://github.com/features/codespaces) productively used for the first time. I'm not the type who wants to contribute to ASP.NET Core but I liked that Codepages was actually used by the team. Safaia Abdulla ([@captainsafia](https://twitter.com/captainsafia)) showed how she uses Codespaces to run and build ASP.NET Core in the __BROWSER__.
+In a recent [ASP.NET Community Standup](https://youtu.be/hVdwb41FPvU) that was all about contributing to [ASP.NET Core](https://docs.microsoft.com/de-de/aspnet/core) I saw [GitHub Codespaces](https://github.com/features/codespaces) productively used for the first time. I'm not the type who wants to contribute to ASP.NET Core but I liked that Codespaces was actually used by the team. Safaia Abdulla ([@captainsafia](https://twitter.com/captainsafia)) showed how she uses Codespaces to run and build ASP.NET Core in the __BROWSER__.
 
 # The Short Summary.
 
@@ -16,7 +18,7 @@ The configuration for a Codespace is stored in a devcontainer setup, which needs
 
 # I want that too.
 
-I immediately wanted a Codespace for my experimental business application as well. Sadly, Codespaces is only available for teams, enterprises and beta users. I’m not a beta user, I’m not a team and I’m certainly not an enterprise.
+I immediately wanted a Codespace for my [experimental business application](https://github.com/cschulzsuper/paula) as well. Sadly, Codespaces is only available for teams, enterprises and beta users. I’m not a beta user, I’m not a team and I’m certainly not an enterprise.
 
 For now, this left me with a local devcontainer that I can use in Codespaces once it is available to me.
 
@@ -42,7 +44,7 @@ After some final configuration in the devcontainer, I was able to compile the se
 
 ![RemoteEnv](./bucket/5f96dcda-96e6-4488-8955-48401d6c874c.png)
 
-I ran the project and got another certificate error, as they are my kryptonite. The certificate from Azure Cosmos DB is for `localhost`, but in the container configuration I don’t use `localhost` as hostname I use `cosmos`.
+I ran the project and got another certificate error, as they are my kryptonite. The certificate from Azure Cosmos DB is for `localhost`, but in the container I don’t use `localhost` as hostname I use `cosmos`.
 
 As the devcontainer is only for development, I have the option to disable some of the security magic related to the certificate. I modified the cosmos connection in the EF Core configuration.
 
@@ -52,8 +54,8 @@ Because of a timing issue, I also needed to extend the script where the certific
 
 ![Wait](./bucket/ea926f69-3579-40c6-90d0-bbda85232966.png)
 
-And that was it for the most part. The result can be seen in my repository. I would lie if I'd tell you that from now on I will only develop in a devcontainer, because there are two very uncomfortable issues left. 
-* One problem, which makes me feel that we might not safe the planet after all, is that the Docker container for Azure Cosmos DB is rushing my CPU, even when my application is not running. This might be an issue of the Azure Cosmos DB container, but I’m unsure.
+And that was it for the most part. The result can be seen in my [repository](https://github.com/cschulzsuper/paula). I would lie if I'd tell you that from now on I will only develop in a devcontainer, because there are two very uncomfortable issues left. 
+* One problem, which makes me feel that we might not save the planet after all, is that the Docker container for Azure Cosmos DB is rushing my CPU, even when my application is not running. This might be an issue of the Azure Cosmos DB container, but I’m unsure.
 * The second problem is the development certificate. I was able to open Swagger on the ServerApp and the homepage in the BlazorApp, but the dotnet-to-dotnet communication between the two was affected by serious trust issues. There are a couple of [GitHub Issues](https://github.com/dotnet/aspnetcore/issues/32842) on that topic, which also contain suggestions how to solve them, but that has nothing to do with comfort. I was able to fix the problem after all, but only after some intense frustration. The good news is that fixes for these issues are in the pipeline. I'll guess I just have to wait. But I'm still amazed how much is already working, despite my usage of preview versions.
 
 Overall this was another fun thing to experiment with. I might use the devcontainer once all the nooks and crannies are gone. I'm prepared for the future, but for now I will stick to Visual Studio 2022, as I’m quite comfortable with it.
