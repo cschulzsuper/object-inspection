@@ -81,27 +81,33 @@ namespace Super.Paula.Application.Administration
         }
 
         private void EnsureGetable(string inspector)
-            => Validator.Ensure(
+            => Validator.Ensure($"unique name {inspector} for inspector",
                 InspectorValidator.UniqueNameHasValue(inspector),
-                InspectorValidator.UniqueNameHasKebabCase(inspector));
+                InspectorValidator.UniqueNameHasKebabCase(inspector),
+                InspectorValidator.UniqueNameIsNotTooLong(inspector));
 
         private void EnsureInsertable(Inspector inspector)
-            => Validator.Ensure(
+            => Validator.Ensure($"inspector with unique name '{inspector.UniqueName}'",
                 InspectorValidator.UniqueNameHasValue(inspector.UniqueName),
                 InspectorValidator.UniqueNameHasKebabCase(inspector.UniqueName),
-                InspectorValidator.MailAddressIsNotNull(inspector),
-                InspectorValidator.MailAddressIsMailAddress(inspector));
+                InspectorValidator.UniqueNameIsNotTooLong(inspector.UniqueName),
+                InspectorValidator.MailAddressIsNotNull(inspector.MailAddress),
+                InspectorValidator.MailAddressIsMailAddress(inspector.MailAddress),
+                InspectorValidator.MailAddressIsNotTooLong(inspector.MailAddress));
 
         private void EnsureUpdateable(Inspector inspector)
-            => Validator.Ensure(
+            => Validator.Ensure($"inspector with unique name '{inspector.UniqueName}'",
                 InspectorValidator.UniqueNameHasValue(inspector.UniqueName),
                 InspectorValidator.UniqueNameHasKebabCase(inspector.UniqueName),
-                InspectorValidator.MailAddressIsNotNull(inspector),
-                InspectorValidator.MailAddressIsMailAddress(inspector));
+                InspectorValidator.UniqueNameIsNotTooLong(inspector.UniqueName),
+                InspectorValidator.MailAddressIsNotNull(inspector.MailAddress),
+                InspectorValidator.MailAddressIsMailAddress(inspector.MailAddress),
+                InspectorValidator.MailAddressIsNotTooLong(inspector.MailAddress));
 
         private void EnsureDeleteable(Inspector inspector)
-            => Validator.Ensure(
+            => Validator.Ensure($"inspector with unique name '{inspector.UniqueName}'",
                 InspectorValidator.UniqueNameHasValue(inspector.UniqueName),
-                InspectorValidator.UniqueNameHasKebabCase(inspector.UniqueName));
+                InspectorValidator.UniqueNameHasKebabCase(inspector.UniqueName),
+                InspectorValidator.UniqueNameIsNotTooLong(inspector.UniqueName));
     }
 }

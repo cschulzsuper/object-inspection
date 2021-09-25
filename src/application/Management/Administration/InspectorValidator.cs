@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Net.Mail;
 using Super.Paula.Validation;
 
@@ -7,21 +6,28 @@ namespace Super.Paula.Application.Administration
 {
     public static class InspectorValidator
     {
-        public static (Func<bool, bool>, Func<FormattableString>) UniqueNameHasValue(string uniqueName)
-            => (_ => !string.IsNullOrWhiteSpace(uniqueName),
-                    () => $"Unique name of inspector must have a value");
+        public static (bool, Func<(string, FormattableString)>) UniqueNameHasValue(string uniqueName)
+            => (!string.IsNullOrWhiteSpace(uniqueName),
+                () => (nameof(Inspector.UniqueName), $"Unique name must have a value"));
 
-        public static (Func<bool, bool>, Func<FormattableString>) UniqueNameHasKebabCase(string uniqueName)
-            => (_ => KebabCaseValidator.IsValid(uniqueName),
-                    () => $"Unique name '{uniqueName}' of inspector must be in kebab case");
+        public static (bool, Func<(string, FormattableString)>) UniqueNameHasKebabCase(string uniqueName)
+            => (KebabCaseValidator.IsValid(uniqueName),
+                () => (nameof(Inspector.UniqueName), $"Unique name '{uniqueName}' must be in kebab case"));
 
-        public static (Func<bool, bool>, Func<FormattableString>) MailAddressIsNotNull(Inspector inspector)
-            => (_ => inspector.MailAddress != null,
-                    () => $"Mail address of inspector '{inspector.UniqueName}' can not be null");
+        public static (bool, Func<(string, FormattableString)>) UniqueNameIsNotTooLong(string inspector)
+            => (inspector == null || inspector.Length <= 140,
+                () => (nameof(Inspector.UniqueName), $"Unique name can not have more than 140 characters"));
 
-        public static (Func<bool, bool>, Func<FormattableString>) MailAddressIsMailAddress(Inspector inspector)
-            => (_ => MailAddress.TryCreate(inspector.MailAddress, out var _),
-                    () => $"Mail address of inspector '{inspector.UniqueName}' is not a mail address");
+        public static (bool, Func<(string, FormattableString)>) MailAddressIsNotNull(string mailAddress)
+            => (mailAddress != null,
+                () => (nameof(Inspector.MailAddress), $"Mail address can not be null"));
 
+        public static (bool, Func<(string, FormattableString)>) MailAddressIsMailAddress(string mailAddress)
+            => (MailAddress.TryCreate(mailAddress, out var _),
+                () => (nameof(Inspector.MailAddress), $"Mail address '{mailAddress}' is not a mail address"));
+
+        public static (bool, Func<(string, FormattableString)>) MailAddressIsNotTooLong(string mailAddress)
+            => (mailAddress == null || mailAddress.Length <= 140,
+                () => (nameof(Inspector.MailAddress), $"Mail address can not have more than 140 characters"));
     }
 }

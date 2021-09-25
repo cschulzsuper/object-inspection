@@ -101,46 +101,51 @@ namespace Super.Paula.Application
         }
 
         private static void EnsureGetable(string inspector, int date, int time)
-            => Validator.Ensure($"id {inspector}/{date}/{time} for notification",
+            => Validator.Ensure($"id '{inspector}/{date}/{time}' for notification",
                 NotificationValidator.DateIsPositive(date),
                 NotificationValidator.TimeIsInDayTimeRange(time),
-                NotificationValidator.InspectorIsNotNull(inspector),
-                NotificationValidator.InspectorHasKebabCase(inspector));
+                NotificationValidator.InspectorHasValue(inspector),
+                NotificationValidator.InspectorHasKebabCase(inspector),
+                NotificationValidator.InspectorIsNotTooLong(inspector));
 
         private static void EnsureGetableInspectorBased(string inspector)
             => Validator.Ensure($"inspector for notifications",
-                NotificationValidator.InspectorIsNotNull(inspector),
-                NotificationValidator.InspectorHasKebabCase(inspector));
+                NotificationValidator.InspectorHasValue(inspector),
+                NotificationValidator.InspectorHasKebabCase(inspector),
+                NotificationValidator.InspectorIsNotTooLong(inspector));
 
         private static void EnsureInsertable(Notification notification)
-            => Validator.Ensure($"notification with id {notification.Inspector}/{notification.Date}/{notification.Time}",
+            => Validator.Ensure($"notification with id '{notification.Inspector}/{notification.Date}/{notification.Time}'",
                 NotificationValidator.DateIsPositive(notification.Date),
                 NotificationValidator.TimeIsInDayTimeRange(notification.Time),
-                NotificationValidator.InspectorIsNotNull(notification.Inspector),
+                NotificationValidator.InspectorHasValue(notification.Inspector),
                 NotificationValidator.InspectorHasKebabCase(notification.Inspector),
-                NotificationValidator.TargetIsNotNull(notification.Target),
+                NotificationValidator.InspectorIsNotTooLong(notification.Inspector),
+                NotificationValidator.TargetHasValue(notification.Target),
                 NotificationValidator.TargetIsRelativeUri(notification.Target),
                 NotificationValidator.TargetIsNotTooLong(notification.Target),
-                NotificationValidator.TextIsNotNull(notification.Text),
+                NotificationValidator.TextHasValue(notification.Text),
                 NotificationValidator.TextIsNotTooLong(notification.Text));
 
         private static void EnsureUpdatable(Notification notification)
-            => Validator.Ensure($"notification with id {notification.Inspector}/{notification.Date}/{notification.Time}",
+            => Validator.Ensure($"notification with id '{notification.Inspector}/{notification.Date}/{notification.Time}'",
                 NotificationValidator.DateIsPositive(notification.Date),
                 NotificationValidator.TimeIsInDayTimeRange(notification.Time),
-                NotificationValidator.InspectorIsNotNull(notification.Inspector),
+                NotificationValidator.InspectorHasValue(notification.Inspector),
                 NotificationValidator.InspectorHasKebabCase(notification.Inspector),
-                NotificationValidator.TargetIsNotNull(notification.Target),
+                NotificationValidator.InspectorIsNotTooLong(notification.Inspector),
+                NotificationValidator.TargetHasValue(notification.Target),
                 NotificationValidator.TargetIsRelativeUri(notification.Target),
                 NotificationValidator.TargetIsNotTooLong(notification.Target),
-                NotificationValidator.TextIsNotNull(notification.Text),
+                NotificationValidator.TextHasValue(notification.Text),
                 NotificationValidator.TextIsNotTooLong(notification.Text));
 
         private static void EnsureDeletable(Notification notification)
-            => Validator.Ensure($"notification with id {notification.Inspector}/{notification.Date}/{notification.Time}",
+            => Validator.Ensure($"notification with id '{notification.Inspector}/{notification.Date}/{notification.Time}'",
                 NotificationValidator.DateIsPositive(notification.Date),
                 NotificationValidator.TimeIsInDayTimeRange(notification.Time),
-                NotificationValidator.InspectorIsNotNull(notification.Inspector),
-                NotificationValidator.InspectorHasKebabCase(notification.Inspector));
+                NotificationValidator.InspectorHasValue(notification.Inspector),
+                NotificationValidator.InspectorHasKebabCase(notification.Inspector),
+                NotificationValidator.InspectorIsNotTooLong(notification.Inspector));
     }
 }

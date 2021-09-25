@@ -15,17 +15,21 @@ namespace Super.Paula.Application.Guidlines
             => (MillisecondsValidator.IsValid(time),
                     () => (nameof(Notification.Time), $"Time '{time}' must be positive and less than 86400000"));
 
-        public static (bool, Func<(string, FormattableString)>) InspectorIsNotNull(string inspector)
-            => (inspector != null,
-                    () => (nameof(Notification.Inspector), $"Inspector can not be null"));
+        public static (bool, Func<(string, FormattableString)>) InspectorHasValue(string inspector)
+            => (!string.IsNullOrWhiteSpace(inspector),
+                    () => (nameof(Notification.Inspector), $"Inspector musst have a value"));
 
         public static (bool, Func<(string, FormattableString)>) InspectorHasKebabCase(string inspector)
             => (KebabCaseValidator.IsValid(inspector),
                     () => (nameof(Notification.Inspector), $"Inspector '{inspector}' must be in kebab case"));
 
-        public static (bool, Func<(string, FormattableString)>) TargetIsNotNull(string target)
+        public static (bool, Func<(string, FormattableString)>) InspectorIsNotTooLong(string inspector)
+            => (inspector == null || inspector.Length <= 140,
+                    () => (nameof(Notification.Text), $"Inspector can not have more than 140 characters"));
+
+        public static (bool, Func<(string, FormattableString)>) TargetHasValue(string target)
             => (!string.IsNullOrWhiteSpace(target),
-                    () => (nameof(Notification.Target), $"Target can not be null"));
+                    () => (nameof(Notification.Target), $"Target musst have a value"));
 
         public static (bool, Func<(string, FormattableString)>) TargetIsRelativeUri(string target)
             => (Uri.TryCreate(target,UriKind.Relative,out _),
@@ -35,9 +39,9 @@ namespace Super.Paula.Application.Guidlines
             => (target == null || target.Length <= 140,
                 () => (nameof(Notification.Text), $"Target can not have more than 140 characters"));
 
-        public static (bool, Func<(string, FormattableString)>) TextIsNotNull(string text)
+        public static (bool, Func<(string, FormattableString)>) TextHasValue(string text)
             => (!string.IsNullOrWhiteSpace(text),
-                    () => (nameof(Notification.Text), $"Text can not be null"));
+                    () => (nameof(Notification.Text), $"Text musst have a value"));
 
         public static (bool, Func<(string, FormattableString)>) TextIsNotTooLong(string text)
             => (text == null || text.Length <= 140,
