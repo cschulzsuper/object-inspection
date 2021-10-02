@@ -38,11 +38,11 @@ namespace Super.Paula.Application.Auditing
             => (_ => KebabCaseValidator.IsValid(audit.Inspector),
                     () => $"Inspector '{audit.Inspection}' of business object inspection audit must be in kebab case");
 
-        public static (Func<bool, bool>, Func<FormattableString>) InspectionDisplayNameHasValue(BusinessObjectInspectionAudit audit)
+        public static (Func<bool, bool>, Func<FormattableString>) InspectionDisplayNameIsNotEmpty(BusinessObjectInspectionAudit audit)
             => (_ => !string.IsNullOrWhiteSpace(audit.InspectionDisplayName),
                     () => $"Inspection display name of business object inspection audit '{audit.BusinessObject}/{audit.Inspection}/{audit.AuditDate}/{audit.AuditTime}' must have a value");
 
-        public static (Func<bool, bool>, Func<FormattableString>) BusinessObjectDisplayNameHasValue(BusinessObjectInspectionAudit audit)
+        public static (Func<bool, bool>, Func<FormattableString>) BusinessObjectDisplayNameIsNotEmpty(BusinessObjectInspectionAudit audit)
             => (_ => !string.IsNullOrWhiteSpace(audit.BusinessObjectDisplayName),
                     () => $"Business object display name of business object inspection audit '{audit.BusinessObject}/{audit.Inspection}/{audit.AuditDate}/{audit.AuditTime}' must have a value");
 

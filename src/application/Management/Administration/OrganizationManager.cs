@@ -91,7 +91,7 @@ namespace Super.Paula.Application.Administration
                 OrganizationValidator.UniqueNameIsNotEmpty(organization.UniqueName),
                 OrganizationValidator.UniqueNameHasKebabCase(organization.UniqueName),
                 OrganizationValidator.UniqueNameIsNotTooLong(organization.UniqueName),
-                OrganizationValidator.DisplayNameHasValue(organization.DisplayName),
+                OrganizationValidator.DisplayNameIsNotEmpty(organization.DisplayName),
                 OrganizationValidator.DisplayNameIsNotTooLong(organization.DisplayName),
                 OrganizationValidator.ChiefInspectorIsNotEmpty(organization.ChiefInspector),
                 OrganizationValidator.ChiefInspectorHasKebabCase(organization.ChiefInspector),
@@ -102,7 +102,7 @@ namespace Super.Paula.Application.Administration
                 OrganizationValidator.UniqueNameIsNotEmpty(organization.UniqueName),
                 OrganizationValidator.UniqueNameHasKebabCase(organization.UniqueName),
                 OrganizationValidator.UniqueNameIsNotTooLong(organization.UniqueName),
-                OrganizationValidator.DisplayNameHasValue(organization.DisplayName),
+                OrganizationValidator.DisplayNameIsNotEmpty(organization.DisplayName),
                 OrganizationValidator.DisplayNameIsNotTooLong(organization.DisplayName),
                 OrganizationValidator.ChiefInspectorIsNotEmpty(organization.ChiefInspector),
                 OrganizationValidator.ChiefInspectorHasKebabCase(organization.ChiefInspector),
@@ -110,8 +110,8 @@ namespace Super.Paula.Application.Administration
 
         private static void EnsureDeleteable(Organization organization)
             => Validator.Ensure($"organization with unique name '{organization.UniqueName}'",
-                InspectorValidator.UniqueNameIsNotEmpty(organization.UniqueName),
-                InspectorValidator.UniqueNameHasKebabCase(organization.UniqueName),
-                InspectorValidator.UniqueNameIsNotTooLong(organization.UniqueName));
+                OrganizationValidator.UniqueNameIsNotEmpty(organization.UniqueName),
+                OrganizationValidator.UniqueNameHasKebabCase(organization.UniqueName),
+                OrganizationValidator.UniqueNameIsNotTooLong(organization.UniqueName));
     }
 }

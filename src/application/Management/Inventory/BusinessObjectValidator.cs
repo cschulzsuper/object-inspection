@@ -14,7 +14,7 @@ namespace Super.Paula.Application.Inventory
             => (_ => KebabCaseValidator.IsValid(uniqueName),
                     () => $"Unique name '{uniqueName}' of business object must be in kebab case");
 
-        public static (Func<bool, bool>, Func<FormattableString>) DisplayNameHasValue(BusinessObject businessObject)
+        public static (Func<bool, bool>, Func<FormattableString>) DisplayNameIsNotEmpty(BusinessObject businessObject)
             => (_ => !string.IsNullOrWhiteSpace(businessObject.DisplayName),
                     () => $"Display name of business object '{businessObject.UniqueName}' must have a value");
 
@@ -38,7 +38,7 @@ namespace Super.Paula.Application.Inventory
             => (_ => inspection.Text != null,
                     () => $"Text of business object inspection '{inspection.UniqueName}' can not be null");
 
-        public static (Func<bool, bool>, Func<FormattableString>) InspectionDisplayNameHasValue(BusinessObject.EmbeddedInspection inspection)
+        public static (Func<bool, bool>, Func<FormattableString>) InspectionDisplayNameIsNotEmpty(BusinessObject.EmbeddedInspection inspection)
             => (_ => !string.IsNullOrWhiteSpace(inspection.DisplayName),
                     () => $"Display name of business object inspection '{inspection.UniqueName}' must have a value");
 

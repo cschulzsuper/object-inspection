@@ -18,7 +18,7 @@ namespace Super.Paula.Application.Administration
             => (uniqueName == null || uniqueName.Length <= 140,
                 () => (nameof(uniqueName), $"Unique name can not have more than 140 characters"));
 
-        public static (bool, Func<(string, FormattableString)>) DisplayNameHasValue(string displayName)
+        public static (bool, Func<(string, FormattableString)>) DisplayNameIsNotEmpty(string displayName)
             => (!string.IsNullOrWhiteSpace(displayName),
                 () => (nameof(displayName), $"Display name can not be empty"));
 

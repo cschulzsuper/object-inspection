@@ -42,7 +42,7 @@ namespace Super.Paula.Application.Administration
             => (organization == null || organization.Length <= 140,
                 () => (nameof(organization), $"Organization can not have more than 140 characters"));
 
-        public static (bool, Func<(string, FormattableString)>) OrganizationDisplayNameHasValue(string organizationDisplayName)
+        public static (bool, Func<(string, FormattableString)>) OrganizationDisplayNameIsNotEmpty(string organizationDisplayName)
             => (!string.IsNullOrWhiteSpace(organizationDisplayName),
                 () => (nameof(organizationDisplayName), $"Organization display name can not be empty"));
 

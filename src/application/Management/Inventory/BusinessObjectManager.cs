@@ -91,7 +91,7 @@ namespace Super.Paula.Application.Inventory
             {
                 yield return BusinessObjectValidator.UniqueNameHasValue(businessObject.UniqueName);
                 yield return BusinessObjectValidator.UniqueNameHasKebabCase(businessObject.UniqueName);
-                yield return BusinessObjectValidator.DisplayNameHasValue(businessObject);
+                yield return BusinessObjectValidator.DisplayNameIsNotEmpty(businessObject);
                 yield return BusinessObjectValidator.InspectorIsNotNull(businessObject);
                 yield return BusinessObjectValidator.InspectorHasKebabCase(businessObject);
 
@@ -99,7 +99,7 @@ namespace Super.Paula.Application.Inventory
                 {
                     yield return BusinessObjectValidator.InspectionUniqueNameHasValue(inspection);
                     yield return BusinessObjectValidator.InspectionUniqueNameHasKebabCase(inspection);
-                    yield return BusinessObjectValidator.InspectionDisplayNameHasValue(inspection);
+                    yield return BusinessObjectValidator.InspectionDisplayNameIsNotEmpty(inspection);
                     yield return BusinessObjectValidator.InspectionTextIsNotNull(inspection);
                     yield return BusinessObjectValidator.InspectionAuditInspectorIsNotNull(inspection);
                     yield return BusinessObjectValidator.InspectionAuditInspectorHasKebabCase(inspection);
@@ -119,7 +119,7 @@ namespace Super.Paula.Application.Inventory
             {
                 yield return BusinessObjectValidator.UniqueNameHasValue(businessObject.UniqueName);
                 yield return BusinessObjectValidator.UniqueNameHasKebabCase(businessObject.UniqueName);
-                yield return BusinessObjectValidator.DisplayNameHasValue(businessObject);
+                yield return BusinessObjectValidator.DisplayNameIsNotEmpty(businessObject);
                 yield return BusinessObjectValidator.InspectorIsNotNull(businessObject);
                 yield return BusinessObjectValidator.InspectorHasKebabCase(businessObject);
 
@@ -127,7 +127,7 @@ namespace Super.Paula.Application.Inventory
                 {
                     yield return BusinessObjectValidator.InspectionUniqueNameHasValue(inspection);
                     yield return BusinessObjectValidator.InspectionUniqueNameHasKebabCase(inspection);
-                    yield return BusinessObjectValidator.InspectionDisplayNameHasValue(inspection);
+                    yield return BusinessObjectValidator.InspectionDisplayNameIsNotEmpty(inspection);
                     yield return BusinessObjectValidator.InspectionTextIsNotNull(inspection);
                     yield return BusinessObjectValidator.InspectionAuditInspectorIsNotNull(inspection);
                     yield return BusinessObjectValidator.InspectionAuditInspectorHasKebabCase(inspection);
