@@ -171,7 +171,8 @@ namespace Super.Paula.Application.Administration
                     x.UniqueName == _appState.CurrentInspector &&
                     x.Organization == _appState.CurrentOrganization);
 
-            inspector.Proof = $"{Guid.NewGuid()}";
+            inspector.Proof = Convert.ToBase64String(
+                Encoding.UTF8.GetBytes($"{Guid.NewGuid()}"));
 
             await _inspectorManager.UpdateAsync(inspector);
         }

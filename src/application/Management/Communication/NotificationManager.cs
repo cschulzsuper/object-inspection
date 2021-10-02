@@ -104,13 +104,13 @@ namespace Super.Paula.Application
             => Validator.Ensure($"id '{inspector}/{date}/{time}' for notification",
                 NotificationValidator.DateIsPositive(date),
                 NotificationValidator.TimeIsInDayTimeRange(time),
-                NotificationValidator.InspectorHasValue(inspector),
+                NotificationValidator.InspectorIsNotEmpty(inspector),
                 NotificationValidator.InspectorHasKebabCase(inspector),
                 NotificationValidator.InspectorIsNotTooLong(inspector));
 
         private static void EnsureGetableInspectorBased(string inspector)
             => Validator.Ensure($"inspector for notifications",
-                NotificationValidator.InspectorHasValue(inspector),
+                NotificationValidator.InspectorIsNotEmpty(inspector),
                 NotificationValidator.InspectorHasKebabCase(inspector),
                 NotificationValidator.InspectorIsNotTooLong(inspector));
 
@@ -118,10 +118,10 @@ namespace Super.Paula.Application
             => Validator.Ensure($"notification with id '{notification.Inspector}/{notification.Date}/{notification.Time}'",
                 NotificationValidator.DateIsPositive(notification.Date),
                 NotificationValidator.TimeIsInDayTimeRange(notification.Time),
-                NotificationValidator.InspectorHasValue(notification.Inspector),
+                NotificationValidator.InspectorIsNotEmpty(notification.Inspector),
                 NotificationValidator.InspectorHasKebabCase(notification.Inspector),
                 NotificationValidator.InspectorIsNotTooLong(notification.Inspector),
-                NotificationValidator.TargetHasValue(notification.Target),
+                NotificationValidator.TargetIsNotEmpty(notification.Target),
                 NotificationValidator.TargetIsRelativeUri(notification.Target),
                 NotificationValidator.TargetIsNotTooLong(notification.Target),
                 NotificationValidator.TextHasValue(notification.Text),
@@ -131,10 +131,10 @@ namespace Super.Paula.Application
             => Validator.Ensure($"notification with id '{notification.Inspector}/{notification.Date}/{notification.Time}'",
                 NotificationValidator.DateIsPositive(notification.Date),
                 NotificationValidator.TimeIsInDayTimeRange(notification.Time),
-                NotificationValidator.InspectorHasValue(notification.Inspector),
+                NotificationValidator.InspectorIsNotEmpty(notification.Inspector),
                 NotificationValidator.InspectorHasKebabCase(notification.Inspector),
                 NotificationValidator.InspectorIsNotTooLong(notification.Inspector),
-                NotificationValidator.TargetHasValue(notification.Target),
+                NotificationValidator.TargetIsNotEmpty(notification.Target),
                 NotificationValidator.TargetIsRelativeUri(notification.Target),
                 NotificationValidator.TargetIsNotTooLong(notification.Target),
                 NotificationValidator.TextHasValue(notification.Text),
@@ -144,7 +144,7 @@ namespace Super.Paula.Application
             => Validator.Ensure($"notification with id '{notification.Inspector}/{notification.Date}/{notification.Time}'",
                 NotificationValidator.DateIsPositive(notification.Date),
                 NotificationValidator.TimeIsInDayTimeRange(notification.Time),
-                NotificationValidator.InspectorHasValue(notification.Inspector),
+                NotificationValidator.InspectorIsNotEmpty(notification.Inspector),
                 NotificationValidator.InspectorHasKebabCase(notification.Inspector),
                 NotificationValidator.InspectorIsNotTooLong(notification.Inspector));
     }

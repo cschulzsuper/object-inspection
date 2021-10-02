@@ -49,7 +49,6 @@ namespace Super.Paula.Data.Mappings.Administration
 
             builder
                 .Property(x => x.Proof)
-                .ValueGeneratedOnAdd()
                 .HasMaxLength(140)
                 .IsRequired();
 

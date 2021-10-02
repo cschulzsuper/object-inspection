@@ -4,6 +4,7 @@ using Super.Paula.Environment;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Super.Paula.Application.Administration
@@ -37,7 +38,8 @@ namespace Super.Paula.Application.Administration
                 Organization = organization.UniqueName,
                 OrganizationActivated = organization.Activated,
                 OrganizationDisplayName = organization.DisplayName,
-                Proof = $"{Guid.NewGuid()}"
+                Proof = Convert.ToBase64String(
+                    Encoding.UTF8.GetBytes($"{Guid.NewGuid()}"))
             };
 
             await _inspectorManager.InsertAsync(entity);

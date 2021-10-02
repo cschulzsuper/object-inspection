@@ -82,31 +82,49 @@ namespace Super.Paula.Application.Administration
 
         private void EnsureGetable(string inspector)
             => Validator.Ensure($"unique name {inspector} for inspector",
-                InspectorValidator.UniqueNameHasValue(inspector),
+                InspectorValidator.UniqueNameIsNotEmpty(inspector),
                 InspectorValidator.UniqueNameHasKebabCase(inspector),
                 InspectorValidator.UniqueNameIsNotTooLong(inspector));
 
         private void EnsureInsertable(Inspector inspector)
             => Validator.Ensure($"inspector with unique name '{inspector.UniqueName}'",
-                InspectorValidator.UniqueNameHasValue(inspector.UniqueName),
+                InspectorValidator.UniqueNameIsNotEmpty(inspector.UniqueName),
                 InspectorValidator.UniqueNameHasKebabCase(inspector.UniqueName),
                 InspectorValidator.UniqueNameIsNotTooLong(inspector.UniqueName),
                 InspectorValidator.MailAddressIsNotNull(inspector.MailAddress),
                 InspectorValidator.MailAddressIsMailAddress(inspector.MailAddress),
-                InspectorValidator.MailAddressIsNotTooLong(inspector.MailAddress));
+                InspectorValidator.MailAddressIsNotTooLong(inspector.MailAddress),
+                InspectorValidator.OrganizationIsNotEmpty(inspector.Organization),
+                InspectorValidator.OrganizationHasKebabCase(inspector.Organization),
+                InspectorValidator.OrganizationIsNotTooLong(inspector.Organization),
+                InspectorValidator.OrganizationDisplayNameHasValue(inspector.OrganizationDisplayName),
+                InspectorValidator.OrganizationDisplayNameIsNotTooLong(inspector.OrganizationDisplayName),
+                InspectorValidator.ProofHasValue(inspector.Proof),
+                InspectorValidator.ProofIsNotTooLong(inspector.Proof),
+                InspectorValidator.SecretHasValue(inspector.Secret),
+                InspectorValidator.SecretIsNotTooLong(inspector.Secret));
 
         private void EnsureUpdateable(Inspector inspector)
             => Validator.Ensure($"inspector with unique name '{inspector.UniqueName}'",
-                InspectorValidator.UniqueNameHasValue(inspector.UniqueName),
+                InspectorValidator.UniqueNameIsNotEmpty(inspector.UniqueName),
                 InspectorValidator.UniqueNameHasKebabCase(inspector.UniqueName),
                 InspectorValidator.UniqueNameIsNotTooLong(inspector.UniqueName),
                 InspectorValidator.MailAddressIsNotNull(inspector.MailAddress),
                 InspectorValidator.MailAddressIsMailAddress(inspector.MailAddress),
-                InspectorValidator.MailAddressIsNotTooLong(inspector.MailAddress));
+                InspectorValidator.MailAddressIsNotTooLong(inspector.MailAddress),
+                InspectorValidator.OrganizationIsNotEmpty(inspector.Organization),
+                InspectorValidator.OrganizationHasKebabCase(inspector.Organization),
+                InspectorValidator.OrganizationIsNotTooLong(inspector.Organization),
+                InspectorValidator.OrganizationDisplayNameHasValue(inspector.OrganizationDisplayName),
+                InspectorValidator.OrganizationDisplayNameIsNotTooLong(inspector.OrganizationDisplayName),
+                InspectorValidator.ProofHasValue(inspector.Proof),
+                InspectorValidator.ProofIsNotTooLong(inspector.Proof),
+                InspectorValidator.SecretHasValue(inspector.Secret),
+                InspectorValidator.SecretIsNotTooLong(inspector.Secret));
 
         private void EnsureDeleteable(Inspector inspector)
             => Validator.Ensure($"inspector with unique name '{inspector.UniqueName}'",
-                InspectorValidator.UniqueNameHasValue(inspector.UniqueName),
+                InspectorValidator.UniqueNameIsNotEmpty(inspector.UniqueName),
                 InspectorValidator.UniqueNameHasKebabCase(inspector.UniqueName),
                 InspectorValidator.UniqueNameIsNotTooLong(inspector.UniqueName));
     }
