@@ -46,14 +46,21 @@ namespace Super.Paula.Validation
             if (errors.Any())
             { 
                 throw new ValidationException(
-                    FormattableStringFactory.Create($"Validation of {term.Format} failed", term.GetArguments()), 
+                    FormattableStringFactory.Create($"Validation of {term.Format} failed", TrimArguments(term.GetArguments())), 
                     errors.ToDictionary(
                         x => x.Key, 
-                        y =>y.Value.ToArray()));
+                        y => y.Value
+                            .Select(x => FormattableStringFactory.Create(x.Format,TrimArguments(x.GetArguments())))
+                            .ToArray()));
             }
         }
 
         public static void Ensure(FormattableString term, params (bool, Func<(string, FormattableString)>)[] ensureances)
             => Ensure(term, ensureances.AsEnumerable());
+
+        public static object?[] TrimArguments(object?[] arguments)
+            => arguments
+                .Select(arg => arg is string stringArg ? stringArg?.Substring(0, 140) : arg)
+                .ToArray();
     }
 }

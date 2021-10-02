@@ -80,13 +80,13 @@ namespace Super.Paula.Application.Administration
             }
         }
 
-        private void EnsureGetable(string inspector)
-            => Validator.Ensure($"unique name {inspector} for inspector",
+        private static void EnsureGetable(string inspector)
+            => Validator.Ensure($"unique name '{inspector}' of inspector",
                 InspectorValidator.UniqueNameIsNotEmpty(inspector),
                 InspectorValidator.UniqueNameHasKebabCase(inspector),
                 InspectorValidator.UniqueNameIsNotTooLong(inspector));
 
-        private void EnsureInsertable(Inspector inspector)
+        private static void EnsureInsertable(Inspector inspector)
             => Validator.Ensure($"inspector with unique name '{inspector.UniqueName}'",
                 InspectorValidator.UniqueNameIsNotEmpty(inspector.UniqueName),
                 InspectorValidator.UniqueNameHasKebabCase(inspector.UniqueName),
@@ -104,7 +104,7 @@ namespace Super.Paula.Application.Administration
                 InspectorValidator.SecretHasValue(inspector.Secret),
                 InspectorValidator.SecretIsNotTooLong(inspector.Secret));
 
-        private void EnsureUpdateable(Inspector inspector)
+        private static void EnsureUpdateable(Inspector inspector)
             => Validator.Ensure($"inspector with unique name '{inspector.UniqueName}'",
                 InspectorValidator.UniqueNameIsNotEmpty(inspector.UniqueName),
                 InspectorValidator.UniqueNameHasKebabCase(inspector.UniqueName),
@@ -122,7 +122,7 @@ namespace Super.Paula.Application.Administration
                 InspectorValidator.SecretHasValue(inspector.Secret),
                 InspectorValidator.SecretIsNotTooLong(inspector.Secret));
 
-        private void EnsureDeleteable(Inspector inspector)
+        private static void EnsureDeleteable(Inspector inspector)
             => Validator.Ensure($"inspector with unique name '{inspector.UniqueName}'",
                 InspectorValidator.UniqueNameIsNotEmpty(inspector.UniqueName),
                 InspectorValidator.UniqueNameHasKebabCase(inspector.UniqueName),

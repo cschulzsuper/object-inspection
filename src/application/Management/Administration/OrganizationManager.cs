@@ -80,28 +80,38 @@ namespace Super.Paula.Application.Administration
         public IAsyncEnumerable<TResult> GetAsyncEnumerable<TResult>(Func<IQueryable<Organization>, IQueryable<TResult>> query)
             => _organizationRepository.GetAsyncEnumerable(query);
 
-        private void EnsureGetable(string organization)
-            => Validator.Ensure(
-                OrganizationValidator.UniqueNameHasValue(organization),
-                OrganizationValidator.UniqueNameHasKebabCase(organization));
+        private static void EnsureGetable(string organization)
+            => Validator.Ensure($"unique name '{organization}' of organization",
+                OrganizationValidator.UniqueNameIsNotEmpty(organization),
+                OrganizationValidator.UniqueNameHasKebabCase(organization),
+                OrganizationValidator.UniqueNameIsNotTooLong(organization));
 
-        private void EnsureInsertable(Organization organization)
-            => Validator.Ensure(
-                OrganizationValidator.UniqueNameHasValue(organization.UniqueName),
+        private static void EnsureInsertable(Organization organization)
+            => Validator.Ensure($"organization with unique name '{organization.UniqueName}'",
+                OrganizationValidator.UniqueNameIsNotEmpty(organization.UniqueName),
                 OrganizationValidator.UniqueNameHasKebabCase(organization.UniqueName),
-                OrganizationValidator.ChiefInspectorIsNotNull(organization),
-                OrganizationValidator.ChiefInspectorHasKebabCase(organization));
+                OrganizationValidator.UniqueNameIsNotTooLong(organization.UniqueName),
+                OrganizationValidator.DisplayNameHasValue(organization.DisplayName),
+                OrganizationValidator.DisplayNameIsNotTooLong(organization.DisplayName),
+                OrganizationValidator.ChiefInspectorIsNotEmpty(organization.ChiefInspector),
+                OrganizationValidator.ChiefInspectorHasKebabCase(organization.ChiefInspector),
+                OrganizationValidator.ChiefInspectorIsNotTooLong(organization.ChiefInspector));
 
-        private void EnsureUpdateable(Organization organization)
-            => Validator.Ensure(
-                OrganizationValidator.UniqueNameHasValue(organization.UniqueName),
+        private static void EnsureUpdateable(Organization organization)
+            => Validator.Ensure($"organization with unique name '{organization.UniqueName}'",
+                OrganizationValidator.UniqueNameIsNotEmpty(organization.UniqueName),
                 OrganizationValidator.UniqueNameHasKebabCase(organization.UniqueName),
-                OrganizationValidator.ChiefInspectorIsNotNull(organization),
-                OrganizationValidator.ChiefInspectorHasKebabCase(organization));
+                OrganizationValidator.UniqueNameIsNotTooLong(organization.UniqueName),
+                OrganizationValidator.DisplayNameHasValue(organization.DisplayName),
+                OrganizationValidator.DisplayNameIsNotTooLong(organization.DisplayName),
+                OrganizationValidator.ChiefInspectorIsNotEmpty(organization.ChiefInspector),
+                OrganizationValidator.ChiefInspectorHasKebabCase(organization.ChiefInspector),
+                OrganizationValidator.ChiefInspectorIsNotTooLong(organization.ChiefInspector));
 
-        private void EnsureDeleteable(Organization organization)
-            => Validator.Ensure(
-                OrganizationValidator.UniqueNameHasValue(organization.UniqueName),
-                OrganizationValidator.UniqueNameHasKebabCase(organization.UniqueName));
+        private static void EnsureDeleteable(Organization organization)
+            => Validator.Ensure($"organization with unique name '{organization.UniqueName}'",
+                InspectorValidator.UniqueNameIsNotEmpty(organization.UniqueName),
+                InspectorValidator.UniqueNameHasKebabCase(organization.UniqueName),
+                InspectorValidator.UniqueNameIsNotTooLong(organization.UniqueName));
     }
 }

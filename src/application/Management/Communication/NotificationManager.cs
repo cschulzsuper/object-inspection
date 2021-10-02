@@ -101,7 +101,7 @@ namespace Super.Paula.Application
         }
 
         private static void EnsureGetable(string inspector, int date, int time)
-            => Validator.Ensure($"id '{inspector}/{date}/{time}' for notification",
+            => Validator.Ensure($"id '{inspector}/{date}/{time}' of notification",
                 NotificationValidator.DateIsPositive(date),
                 NotificationValidator.TimeIsInDayTimeRange(time),
                 NotificationValidator.InspectorIsNotEmpty(inspector),
