@@ -6,64 +6,101 @@ namespace Super.Paula.Application.Inventory
 {
     public static class BusinessObjectValidator
     {
-        public static (Func<bool, bool>, Func<FormattableString>) UniqueNameHasValue(string uniqueName)
-            => (_ => !string.IsNullOrWhiteSpace(uniqueName),
-                    () => $"Unique name of business object must have a value");
+        public static (bool, Func<(string, FormattableString)>) UniqueNameIsNotEmpty(string uniqueName)
+            => (!string.IsNullOrWhiteSpace(uniqueName),
+                () => (nameof(uniqueName), $"Unique name can not be empty"));
 
-        public static (Func<bool, bool>, Func<FormattableString>) UniqueNameHasKebabCase(string uniqueName)
-            => (_ => KebabCaseValidator.IsValid(uniqueName),
-                    () => $"Unique name '{uniqueName}' of business object must be in kebab case");
+        public static (bool, Func<(string, FormattableString)>) UniqueNameHasKebabCase(string uniqueName)
+            => (string.IsNullOrWhiteSpace(uniqueName) || KebabCaseValidator.IsValid(uniqueName),
+                () => (nameof(uniqueName), $"Unique name '{uniqueName}' must be in kebab case"));
 
-        public static (Func<bool, bool>, Func<FormattableString>) DisplayNameIsNotEmpty(BusinessObject businessObject)
-            => (_ => !string.IsNullOrWhiteSpace(businessObject.DisplayName),
-                    () => $"Display name of business object '{businessObject.UniqueName}' must have a value");
+        public static (bool, Func<(string, FormattableString)>) UniqueNameIsNotTooLong(string uniqueName)
+            => (string.IsNullOrWhiteSpace(uniqueName) || uniqueName.Length <= 140,
+                () => (nameof(uniqueName), $"Unique name '{uniqueName}' can not have more than 140 characters"));
 
-        public static (Func<bool, bool>, Func<FormattableString>) InspectorIsNotNull(BusinessObject businessObject)
-            => (_ => businessObject.Inspector != null,
-                    () => $"Inspector '{businessObject.UniqueName}' of business object can not be null");
+        public static (bool, Func<(string, FormattableString)>) DisplayNameIsNotEmpty(string displayName)
+            => (!string.IsNullOrWhiteSpace(displayName),
+                () => (nameof(displayName), $"Display name can not be empty"));
 
-        public static (Func<bool, bool>, Func<FormattableString>) InspectorHasKebabCase(BusinessObject businessObject)
-            => (_ => KebabCaseValidator.IsValid(businessObject.Inspector),
-                    () => $"Inspector '{businessObject.Inspector}' of business object '{businessObject.UniqueName}' must be in kebab case");
+        public static (bool, Func<(string, FormattableString)>) DisplayNameIsNotTooLong(string displayName)
+            => (string.IsNullOrWhiteSpace(displayName) || displayName.Length <= 140,
+                () => (nameof(displayName), $"Display name '{displayName}' can not have more than 140 characters"));
 
-        public static (Func<bool, bool>, Func<FormattableString>) InspectionUniqueNameHasValue(BusinessObject.EmbeddedInspection inspection)
-            => (_ => !string.IsNullOrWhiteSpace(inspection.UniqueName),
-                    () => $"Unique name of business object inspection must have a value");
+        public static (bool, Func<(string, FormattableString)>) InspectorIsNotNull(string inspector)
+            => (inspector != null,
+                () => (nameof(inspector), $"Inspector can not be null"));
 
-        public static (Func<bool, bool>, Func<FormattableString>) InspectionUniqueNameHasKebabCase(BusinessObject.EmbeddedInspection inspection)
-            => (_ => KebabCaseValidator.IsValid(inspection.UniqueName),
-                    () => $"Unique name '{inspection.UniqueName}' of business object inspection must be in kebab case");
+        public static (bool, Func<(string, FormattableString)>) InspectorHasKebabCase(string inspector)
+            => (inspector == null || KebabCaseValidator.IsValid(inspector),
+                () => (nameof(inspector), $"Inspector '{inspector}' must be in kebab case"));
 
-        public static (Func<bool, bool>, Func<FormattableString>) InspectionTextIsNotNull(BusinessObject.EmbeddedInspection inspection)
-            => (_ => inspection.Text != null,
-                    () => $"Text of business object inspection '{inspection.UniqueName}' can not be null");
+        public static (bool, Func<(string, FormattableString)>) InspectorIsNotTooLong(string inspector)
+            => (inspector == null || inspector.Length <= 140,
+                () => (nameof(inspector), $"Inspector '{inspector}' can not have more than 140 characters"));
 
-        public static (Func<bool, bool>, Func<FormattableString>) InspectionDisplayNameIsNotEmpty(BusinessObject.EmbeddedInspection inspection)
-            => (_ => !string.IsNullOrWhiteSpace(inspection.DisplayName),
-                    () => $"Display name of business object inspection '{inspection.UniqueName}' must have a value");
+        public static (bool, Func<(string, FormattableString)>) InspectionUniqueNameIsNotEmpty(string inspectionUniqueName)
+            => (!string.IsNullOrWhiteSpace(inspectionUniqueName),
+                () => (nameof(inspectionUniqueName), $"Unique name of inspection can not be empty"));
 
-        public static (Func<bool, bool>, Func<FormattableString>) InspectionAuditInspectorIsNotNull(BusinessObject.EmbeddedInspection inspection)
-            => (_ => inspection.AuditInspector != null,
-                    () => $"Audit inspector of business object inspection '{inspection.UniqueName}' can not be null");
+        public static (bool, Func<(string, FormattableString)>) InspectionUniqueNameHasKebabCase(string inspectionUniqueName)
+            => (string.IsNullOrWhiteSpace(inspectionUniqueName) || KebabCaseValidator.IsValid(inspectionUniqueName),
+                () => (nameof(inspectionUniqueName), $"Unique name '{inspectionUniqueName}' of inspection must be in kebab case"));
 
-        public static (Func<bool, bool>, Func<FormattableString>) InspectionAuditInspectorHasKebabCase(BusinessObject.EmbeddedInspection inspection)
-            => (_ => KebabCaseValidator.IsValid(inspection.AuditInspector),
-                    () => $"Audit inspector '{inspection.AuditInspector}' of business object inspection '{inspection.UniqueName}' must be in kebab case");
+        public static (bool, Func<(string, FormattableString)>) InspectionUniqueNameIsNotTooLong(string inspectionUniqueName)
+            => (string.IsNullOrWhiteSpace(inspectionUniqueName) || inspectionUniqueName.Length <= 140,
+                () => (nameof(inspectionUniqueName), $"Unique name '{inspectionUniqueName}' of inspection can not have more than 140 characters"));
 
-        public static (Func<bool, bool>, Func<FormattableString>) InspectionAuditAnnotationIsNotNull(BusinessObject.EmbeddedInspection inspection)
-            => (_ => inspection.AuditAnnotation != null,
-                    () => $"Audit annotation of business object inspection '{inspection.UniqueName}' can not be null");
 
-        public static (Func<bool, bool>, Func<FormattableString>) InspectionAuditResultHasValidValue(BusinessObject.EmbeddedInspection inspection)
-            => (_ => (new[] { string.Empty, "satisfying", "insufficient", "failed" }).Contains(inspection.AuditResult),
-                    () => $"Audit result '{inspection.AuditResult}' of business object inspection '{inspection.UniqueName}' is not a valid value");
+        public static (bool, Func<(string, FormattableString)>) InspectionDisplayNameIsNotEmpty(string inspectionDisplayName)
+            => (!string.IsNullOrWhiteSpace(inspectionDisplayName),
+                () => (nameof(inspectionDisplayName), $"Display name of inspection can not be empty"));
 
-        public static (Func<bool, bool>, Func<FormattableString>) InspectionAuditDateIsPositive(BusinessObject.EmbeddedInspection inspection)
-            => (_ => inspection.AuditDate >= 0,
-                    () => $"Audit date '{inspection.AuditDate}' of business object inspection '{inspection.UniqueName}' must be positive");
+        public static (bool, Func<(string, FormattableString)>) InspectionDisplayNameIsNotTooLong(string inspectionDisplayName)
+            => (string.IsNullOrWhiteSpace(inspectionDisplayName) || inspectionDisplayName.Length <= 140,
+                () => (nameof(inspectionDisplayName), $"Display name '{inspectionDisplayName}' of inspection can not have more than 140 characters"));
 
-        public static (Func<bool, bool>, Func<FormattableString>) InspectionAuditTimeIsInDayTimeRange(BusinessObject.EmbeddedInspection inspection)
-            => (_ => inspection.AuditTime >= 0 && inspection.AuditTime < 86400000,
-                    () => $"Audit time '{inspection.AuditTime}' of business object inspection '{inspection.UniqueName}' must be positive and less than 86400000");
+        public static (bool, Func<(string, FormattableString)>) InspectionTextIsNotNull(string inspectionText)
+            => (inspectionText != null,
+                () => (nameof(inspectionText), $"Text of inspection can not be null"));
+
+        public static (bool, Func<(string, FormattableString)>) InspectionTextIsNotTooLong(string inspectionText)
+            => (inspectionText == null || inspectionText.Length <= 4000,
+                () => (nameof(inspectionText), $"Text '{inspectionText}' of inspection can not have more than 4000 characters"));
+
+        public static (bool, Func<(string, FormattableString)>) InspectionAuditInspectorIsNotNull(string inspectionAuditInspector)
+            => (inspectionAuditInspector != null,
+                () => (nameof(inspectionAuditInspector), $"Audit inspector '{inspectionAuditInspector}' of inspection can not be null"));
+
+        public static (bool, Func<(string, FormattableString)>) InspectionAuditInspectorHasKebabCase(string inspectionAuditInspector)
+            => (inspectionAuditInspector == null || KebabCaseValidator.IsValid(inspectionAuditInspector),
+                () => (nameof(inspectionAuditInspector), $"Audit inspector '{inspectionAuditInspector}' of inspection must be in kebab case"));
+
+        public static (bool, Func<(string, FormattableString)>) InspectionAuditInspectorIsNotTooLong(string inspectionAuditInspector)
+            => (inspectionAuditInspector == null || inspectionAuditInspector.Length <= 140,
+                () => (nameof(inspectionAuditInspector), $"Audit inspector '{inspectionAuditInspector}' of inspection can not have more than 140 characters"));
+
+        public static (bool, Func<(string, FormattableString)>) InspectionAuditAnnotationIsNotNull(string inspectionAuditAnnotation)
+            => (inspectionAuditAnnotation != null,
+                () => (nameof(inspectionAuditAnnotation), $"Audit annotation of inspection can not be null"));
+
+        public static (bool, Func<(string, FormattableString)>) InspectionAuditAnnotationIsNotTooLong(string inspectionAuditAnnotation)
+            => (inspectionAuditAnnotation == null || inspectionAuditAnnotation.Length <= 4000,
+                () => (nameof(inspectionAuditAnnotation), $"Audit annotation '{inspectionAuditAnnotation}' of inspection can not have more than 4000 characters"));
+
+        public static (bool, Func<(string, FormattableString)>) InspectionAuditResultIsNotNull(string inspectionAuditResult)
+            => (inspectionAuditResult != null,
+                () => (nameof(inspectionAuditResult), $"Audit result of inspection can not be null"));
+
+        public static (bool, Func<(string, FormattableString)>) InspectionAuditResultHasValidValue(string inspectionAuditResult)
+            => (inspectionAuditResult == null || ValidValuesValidator.IsValid(inspectionAuditResult, string.Empty, "satisfying", "insufficient", "failed"),
+                () => (nameof(inspectionAuditResult), $"Audit result '{inspectionAuditResult}' of inspection is not a valid value"));
+
+        public static (bool, Func<(string, FormattableString)>) InspectionAuditDateIsPositive(int inspectionAuditDate)
+            => (DayNumberValidator.IsValid(inspectionAuditDate),
+                () => (nameof(inspectionAuditDate), $"Audit date '{inspectionAuditDate}' of inspection must be positive"));
+
+        public static (bool, Func<(string, FormattableString)>) InspectionAuditTimeIsInDayTimeRange(int inspectionAuditTime)
+            => (MillisecondsValidator.IsValid(inspectionAuditTime),
+                () => (nameof(inspectionAuditTime), $"Audit time '{inspectionAuditTime}' of inspection must be positive and less than 86400000"));
     }
 }

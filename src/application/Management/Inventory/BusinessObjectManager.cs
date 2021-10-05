@@ -81,69 +81,89 @@ namespace Super.Paula.Application.Inventory
         }
 
         private void EnsureGetable(string businessObject)
-            => Validator.Ensure(
-                BusinessObjectValidator.UniqueNameHasValue(businessObject),
-                BusinessObjectValidator.UniqueNameHasKebabCase(businessObject));
+            => Validator.Ensure($"unique name '{businessObject}' of business object",
+                BusinessObjectValidator.UniqueNameIsNotEmpty(businessObject),
+                BusinessObjectValidator.UniqueNameHasKebabCase(businessObject),
+                BusinessObjectValidator.UniqueNameIsNotTooLong(businessObject));
 
         private void EnsureInsertable(BusinessObject businessObject)
         {
-            IEnumerable<(Func<bool, bool> assertion, Func<FormattableString> messsage)> Ensurences()
+            IEnumerable<(bool, Func<(string, FormattableString)>)> Ensurences()
             {
-                yield return BusinessObjectValidator.UniqueNameHasValue(businessObject.UniqueName);
+                yield return BusinessObjectValidator.UniqueNameIsNotEmpty(businessObject.UniqueName);
                 yield return BusinessObjectValidator.UniqueNameHasKebabCase(businessObject.UniqueName);
-                yield return BusinessObjectValidator.DisplayNameIsNotEmpty(businessObject);
-                yield return BusinessObjectValidator.InspectorIsNotNull(businessObject);
-                yield return BusinessObjectValidator.InspectorHasKebabCase(businessObject);
+                yield return BusinessObjectValidator.UniqueNameIsNotTooLong(businessObject.UniqueName);
+                yield return BusinessObjectValidator.DisplayNameIsNotEmpty(businessObject.DisplayName);
+                yield return BusinessObjectValidator.DisplayNameIsNotTooLong(businessObject.DisplayName);
+                yield return BusinessObjectValidator.InspectorIsNotNull(businessObject.Inspector);
+                yield return BusinessObjectValidator.InspectorHasKebabCase(businessObject.Inspector);
+                yield return BusinessObjectValidator.InspectorIsNotTooLong(businessObject.Inspector);
 
-                foreach(var inspection in businessObject.Inspections )
+                foreach (var inspection in businessObject.Inspections )
                 {
-                    yield return BusinessObjectValidator.InspectionUniqueNameHasValue(inspection);
-                    yield return BusinessObjectValidator.InspectionUniqueNameHasKebabCase(inspection);
-                    yield return BusinessObjectValidator.InspectionDisplayNameIsNotEmpty(inspection);
-                    yield return BusinessObjectValidator.InspectionTextIsNotNull(inspection);
-                    yield return BusinessObjectValidator.InspectionAuditInspectorIsNotNull(inspection);
-                    yield return BusinessObjectValidator.InspectionAuditInspectorHasKebabCase(inspection);
-                    yield return BusinessObjectValidator.InspectionAuditAnnotationIsNotNull(inspection);
-                    yield return BusinessObjectValidator.InspectionAuditResultHasValidValue(inspection);
-                    yield return BusinessObjectValidator.InspectionAuditDateIsPositive(inspection);
-                    yield return BusinessObjectValidator.InspectionAuditTimeIsInDayTimeRange(inspection);
+                    yield return BusinessObjectValidator.InspectionUniqueNameIsNotEmpty(inspection.UniqueName);
+                    yield return BusinessObjectValidator.InspectionUniqueNameHasKebabCase(inspection.UniqueName);
+                    yield return BusinessObjectValidator.InspectionUniqueNameIsNotTooLong(inspection.UniqueName);
+                    yield return BusinessObjectValidator.InspectionDisplayNameIsNotEmpty(inspection.DisplayName);
+                    yield return BusinessObjectValidator.InspectionDisplayNameIsNotTooLong(inspection.DisplayName);
+                    yield return BusinessObjectValidator.InspectionTextIsNotNull(inspection.Text);
+                    yield return BusinessObjectValidator.InspectionTextIsNotTooLong(inspection.Text);
+                    yield return BusinessObjectValidator.InspectionAuditInspectorIsNotNull(inspection.AuditInspector);
+                    yield return BusinessObjectValidator.InspectionAuditInspectorHasKebabCase(inspection.AuditInspector);
+                    yield return BusinessObjectValidator.InspectionAuditInspectorIsNotTooLong(inspection.AuditInspector);
+                    yield return BusinessObjectValidator.InspectionAuditAnnotationIsNotNull(inspection.AuditAnnotation);
+                    yield return BusinessObjectValidator.InspectionAuditAnnotationIsNotTooLong(inspection.AuditAnnotation);
+                    yield return BusinessObjectValidator.InspectionAuditResultIsNotNull(inspection.AuditAnnotation);
+                    yield return BusinessObjectValidator.InspectionAuditResultHasValidValue(inspection.AuditAnnotation);
+                    yield return BusinessObjectValidator.InspectionAuditDateIsPositive(inspection.AuditDate);
+                    yield return BusinessObjectValidator.InspectionAuditTimeIsInDayTimeRange(inspection.AuditTime);
                 };
             };
 
-            Validator.Ensure(Ensurences());
+            Validator.Ensure($"business object with unique name '{businessObject.UniqueName}'", Ensurences());
         }
 
         private void EnsureUpdateable(BusinessObject businessObject)
         {
-            IEnumerable<(Func<bool, bool> assertion, Func<FormattableString> messsage)> Ensurences()
+            IEnumerable<(bool, Func<(string, FormattableString)>)> Ensurences()
             {
-                yield return BusinessObjectValidator.UniqueNameHasValue(businessObject.UniqueName);
+                yield return BusinessObjectValidator.UniqueNameIsNotEmpty(businessObject.UniqueName);
                 yield return BusinessObjectValidator.UniqueNameHasKebabCase(businessObject.UniqueName);
-                yield return BusinessObjectValidator.DisplayNameIsNotEmpty(businessObject);
-                yield return BusinessObjectValidator.InspectorIsNotNull(businessObject);
-                yield return BusinessObjectValidator.InspectorHasKebabCase(businessObject);
+                yield return BusinessObjectValidator.UniqueNameIsNotTooLong(businessObject.UniqueName);
+                yield return BusinessObjectValidator.DisplayNameIsNotEmpty(businessObject.DisplayName);
+                yield return BusinessObjectValidator.DisplayNameIsNotTooLong(businessObject.DisplayName);
+                yield return BusinessObjectValidator.InspectorIsNotNull(businessObject.Inspector);
+                yield return BusinessObjectValidator.InspectorHasKebabCase(businessObject.Inspector);
+                yield return BusinessObjectValidator.InspectorIsNotTooLong(businessObject.Inspector);
 
                 foreach (var inspection in businessObject.Inspections)
                 {
-                    yield return BusinessObjectValidator.InspectionUniqueNameHasValue(inspection);
-                    yield return BusinessObjectValidator.InspectionUniqueNameHasKebabCase(inspection);
-                    yield return BusinessObjectValidator.InspectionDisplayNameIsNotEmpty(inspection);
-                    yield return BusinessObjectValidator.InspectionTextIsNotNull(inspection);
-                    yield return BusinessObjectValidator.InspectionAuditInspectorIsNotNull(inspection);
-                    yield return BusinessObjectValidator.InspectionAuditInspectorHasKebabCase(inspection);
-                    yield return BusinessObjectValidator.InspectionAuditAnnotationIsNotNull(inspection);
-                    yield return BusinessObjectValidator.InspectionAuditResultHasValidValue(inspection);
-                    yield return BusinessObjectValidator.InspectionAuditDateIsPositive(inspection);
-                    yield return BusinessObjectValidator.InspectionAuditTimeIsInDayTimeRange(inspection);
-                }
+                    yield return BusinessObjectValidator.InspectionUniqueNameIsNotEmpty(inspection.UniqueName);
+                    yield return BusinessObjectValidator.InspectionUniqueNameHasKebabCase(inspection.UniqueName);
+                    yield return BusinessObjectValidator.InspectionUniqueNameIsNotTooLong(inspection.UniqueName);
+                    yield return BusinessObjectValidator.InspectionDisplayNameIsNotEmpty(inspection.DisplayName);
+                    yield return BusinessObjectValidator.InspectionDisplayNameIsNotTooLong(inspection.DisplayName);
+                    yield return BusinessObjectValidator.InspectionTextIsNotNull(inspection.Text);
+                    yield return BusinessObjectValidator.InspectionTextIsNotTooLong(inspection.Text);
+                    yield return BusinessObjectValidator.InspectionAuditInspectorIsNotNull(inspection.AuditInspector);
+                    yield return BusinessObjectValidator.InspectionAuditInspectorHasKebabCase(inspection.AuditInspector);
+                    yield return BusinessObjectValidator.InspectionAuditInspectorIsNotTooLong(inspection.AuditInspector);
+                    yield return BusinessObjectValidator.InspectionAuditAnnotationIsNotNull(inspection.AuditAnnotation);
+                    yield return BusinessObjectValidator.InspectionAuditAnnotationIsNotTooLong(inspection.AuditAnnotation);
+                    yield return BusinessObjectValidator.InspectionAuditResultIsNotNull(inspection.AuditAnnotation);
+                    yield return BusinessObjectValidator.InspectionAuditResultHasValidValue(inspection.AuditAnnotation);
+                    yield return BusinessObjectValidator.InspectionAuditDateIsPositive(inspection.AuditDate);
+                    yield return BusinessObjectValidator.InspectionAuditTimeIsInDayTimeRange(inspection.AuditTime);
+                };
             };
 
-            Validator.Ensure(Ensurences());
+            Validator.Ensure($"business object with unique name '{businessObject.UniqueName}'", Ensurences());
         }
 
         private void EnsureDeleteable(BusinessObject businessObject)
-            => Validator.Ensure(
-                BusinessObjectValidator.UniqueNameHasValue(businessObject.UniqueName),
-                BusinessObjectValidator.UniqueNameHasKebabCase(businessObject.UniqueName));
+            => Validator.Ensure($"business object with unique name '{businessObject.UniqueName}'",
+                BusinessObjectValidator.UniqueNameIsNotEmpty(businessObject.UniqueName),
+                BusinessObjectValidator.UniqueNameHasKebabCase(businessObject.UniqueName),
+                BusinessObjectValidator.UniqueNameIsNotTooLong(businessObject.UniqueName));
     }
 }
