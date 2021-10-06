@@ -21,7 +21,7 @@ namespace Super.Paula.Application.Guidlines
 
         public static (bool, Func<(string, FormattableString)>) InspectorHasKebabCase(string inspector)
             => (string.IsNullOrWhiteSpace(inspector) || KebabCaseValidator.IsValid(inspector),
-                () => (nameof(inspector), $"Inspector '{inspector}' must be in kebab case"));
+                () => (nameof(inspector), $"Inspector '{inspector}' must have kebab case"));
 
         public static (bool, Func<(string, FormattableString)>) InspectorIsNotTooLong(string inspector)
             => (string.IsNullOrWhiteSpace(inspector) || inspector.Length <= 140,

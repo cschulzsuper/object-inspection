@@ -97,54 +97,72 @@ namespace Super.Paula.Application.Auditing
             }
         }
 
-        private void EnsureGetableDateBased(int date)
-            => Validator.Ensure(
+        private static void EnsureGetableDateBased(int date)
+            => Validator.Ensure($"date for business object inspection audits",
                 BusinessObjectInspectionAuditValidator.AuditDateIsPositive(date));
 
-        private void EnsureGetable(string businessObject, string inspection, int date, int time)
-            => Validator.Ensure(
-                BusinessObjectInspectionAuditValidator.BusinessObjectHasValue(businessObject),
+        private static void EnsureGetable(string businessObject, string inspection, int date, int time)
+            => Validator.Ensure($"id '{date}/{businessObject}/{inspection}/{time}' of notification",
+                BusinessObjectInspectionAuditValidator.BusinessObjectIsNotEmpty(businessObject),
+                BusinessObjectInspectionAuditValidator.BusinessObjectIsNotTooLong(businessObject),
                 BusinessObjectInspectionAuditValidator.BusinessObjectHasKebabCase(businessObject),
-                BusinessObjectInspectionAuditValidator.InspectionHasValue(businessObject),
-                BusinessObjectInspectionAuditValidator.InspectionHasKebabCase(businessObject),
+                BusinessObjectInspectionAuditValidator.InspectionIsNotEmpty(inspection),
+                BusinessObjectInspectionAuditValidator.InspectionIsNotTooLong(inspection),
+                BusinessObjectInspectionAuditValidator.InspectionHasKebabCase(inspection),
                 BusinessObjectInspectionAuditValidator.AuditDateIsPositive(date),
                 BusinessObjectInspectionAuditValidator.AuditTimeIsInDayTimeRange(time));
 
-        private void EnsureInsertable(BusinessObjectInspectionAudit audit)
-            => Validator.Ensure(
-                BusinessObjectInspectionAuditValidator.BusinessObjectHasValue(audit.BusinessObject),
+        private static void EnsureInsertable(BusinessObjectInspectionAudit audit)
+            => Validator.Ensure($"business object inspection audit with id '{audit.AuditDate}/{audit.BusinessObject}/{audit.Inspection}/{audit.AuditTime}'",
+                BusinessObjectInspectionAuditValidator.BusinessObjectIsNotEmpty(audit.BusinessObject),
+                BusinessObjectInspectionAuditValidator.BusinessObjectIsNotTooLong(audit.BusinessObject),
                 BusinessObjectInspectionAuditValidator.BusinessObjectHasKebabCase(audit.BusinessObject),
-                BusinessObjectInspectionAuditValidator.InspectionHasValue(audit.Inspection),
+                BusinessObjectInspectionAuditValidator.InspectionIsNotEmpty(audit.Inspection),
+                BusinessObjectInspectionAuditValidator.InspectionIsNotTooLong(audit.Inspection),
                 BusinessObjectInspectionAuditValidator.InspectionHasKebabCase(audit.Inspection),
                 BusinessObjectInspectionAuditValidator.AuditDateIsPositive(audit.AuditDate),
                 BusinessObjectInspectionAuditValidator.AuditTimeIsInDayTimeRange(audit.AuditTime),
-                BusinessObjectInspectionAuditValidator.BusinessObjectDisplayNameIsNotEmpty(audit),
-                BusinessObjectInspectionAuditValidator.InspectionDisplayNameIsNotEmpty(audit),
-                BusinessObjectInspectionAuditValidator.InspectorHasValue(audit),
-                BusinessObjectInspectionAuditValidator.InspectorHasKebabCase(audit),
-                BusinessObjectInspectionAuditValidator.ResultHasValidValue(audit),
-                BusinessObjectInspectionAuditValidator.AnnotationIsNotNull(audit));
+                BusinessObjectInspectionAuditValidator.BussinesObjectDisplayNameIsNotEmpty(audit.BusinessObjectDisplayName),
+                BusinessObjectInspectionAuditValidator.BussinesObjectDisplayNameIsNotTooLong(audit.BusinessObjectDisplayName),
+                BusinessObjectInspectionAuditValidator.InspectionDisplayNameIsNotEmpty(audit.InspectionDisplayName),
+                BusinessObjectInspectionAuditValidator.InspectionDisplayNameIsNotTooLong(audit.InspectionDisplayName),
+                BusinessObjectInspectionAuditValidator.InspectorIsNotEmpty(audit.Inspector),
+                BusinessObjectInspectionAuditValidator.InspectorIsNotTooLong(audit.Inspector),
+                BusinessObjectInspectionAuditValidator.InspectorHasKebabCase(audit.Inspector),
+                BusinessObjectInspectionAuditValidator.ResultIsNotNull(audit.Result),
+                BusinessObjectInspectionAuditValidator.ResultHasValidValue(audit.Result),
+                BusinessObjectInspectionAuditValidator.AnnotationIsNotNull(audit.Annotation),
+                BusinessObjectInspectionAuditValidator.AnnotationIsNotTooLong(audit.Annotation));
 
-        private void EnsureUpdateable(BusinessObjectInspectionAudit audit)
-            => Validator.Ensure(
-                BusinessObjectInspectionAuditValidator.BusinessObjectHasValue(audit.BusinessObject),
+        private static void EnsureUpdateable(BusinessObjectInspectionAudit audit)
+            => Validator.Ensure($"business object inspection audit with id '{audit.AuditDate}/{audit.BusinessObject}/{audit.Inspection}/{audit.AuditTime}'",
+                BusinessObjectInspectionAuditValidator.BusinessObjectIsNotEmpty(audit.BusinessObject),
+                BusinessObjectInspectionAuditValidator.BusinessObjectIsNotTooLong(audit.BusinessObject),
                 BusinessObjectInspectionAuditValidator.BusinessObjectHasKebabCase(audit.BusinessObject),
-                BusinessObjectInspectionAuditValidator.InspectionHasValue(audit.Inspection),
+                BusinessObjectInspectionAuditValidator.InspectionIsNotEmpty(audit.Inspection),
+                BusinessObjectInspectionAuditValidator.InspectionIsNotTooLong(audit.Inspection),
                 BusinessObjectInspectionAuditValidator.InspectionHasKebabCase(audit.Inspection),
                 BusinessObjectInspectionAuditValidator.AuditDateIsPositive(audit.AuditDate),
                 BusinessObjectInspectionAuditValidator.AuditTimeIsInDayTimeRange(audit.AuditTime),
-                BusinessObjectInspectionAuditValidator.BusinessObjectDisplayNameIsNotEmpty(audit),
-                BusinessObjectInspectionAuditValidator.InspectionDisplayNameIsNotEmpty(audit),
-                BusinessObjectInspectionAuditValidator.InspectorHasValue(audit),
-                BusinessObjectInspectionAuditValidator.InspectorHasKebabCase(audit),
-                BusinessObjectInspectionAuditValidator.ResultHasValidValue(audit),
-                BusinessObjectInspectionAuditValidator.AnnotationIsNotNull(audit));
+                BusinessObjectInspectionAuditValidator.BussinesObjectDisplayNameIsNotEmpty(audit.BusinessObjectDisplayName),
+                BusinessObjectInspectionAuditValidator.BussinesObjectDisplayNameIsNotTooLong(audit.BusinessObjectDisplayName),
+                BusinessObjectInspectionAuditValidator.InspectionDisplayNameIsNotEmpty(audit.InspectionDisplayName),
+                BusinessObjectInspectionAuditValidator.InspectionDisplayNameIsNotTooLong(audit.InspectionDisplayName),
+                BusinessObjectInspectionAuditValidator.InspectorIsNotEmpty(audit.Inspector),
+                BusinessObjectInspectionAuditValidator.InspectorIsNotTooLong(audit.Inspector),
+                BusinessObjectInspectionAuditValidator.InspectorHasKebabCase(audit.Inspector),
+                BusinessObjectInspectionAuditValidator.ResultIsNotNull(audit.Result),
+                BusinessObjectInspectionAuditValidator.ResultHasValidValue(audit.Result),
+                BusinessObjectInspectionAuditValidator.AnnotationIsNotNull(audit.Annotation),
+                BusinessObjectInspectionAuditValidator.AnnotationIsNotTooLong(audit.Annotation));
 
-        private void EnsureDeleteable(BusinessObjectInspectionAudit audit)
-            => Validator.Ensure(
-                BusinessObjectInspectionAuditValidator.BusinessObjectHasValue(audit.BusinessObject),
+        private static void EnsureDeleteable(BusinessObjectInspectionAudit audit)
+            => Validator.Ensure($"business object inspection audit with id '{audit.AuditDate}/{audit.BusinessObject}/{audit.Inspection}/{audit.AuditTime}'",
+                BusinessObjectInspectionAuditValidator.BusinessObjectIsNotEmpty(audit.BusinessObject),
+                BusinessObjectInspectionAuditValidator.BusinessObjectIsNotTooLong(audit.BusinessObject),
                 BusinessObjectInspectionAuditValidator.BusinessObjectHasKebabCase(audit.BusinessObject),
-                BusinessObjectInspectionAuditValidator.InspectionHasValue(audit.Inspection),
+                BusinessObjectInspectionAuditValidator.InspectionIsNotEmpty(audit.Inspection),
+                BusinessObjectInspectionAuditValidator.InspectionIsNotTooLong(audit.Inspection),
                 BusinessObjectInspectionAuditValidator.InspectionHasKebabCase(audit.Inspection),
                 BusinessObjectInspectionAuditValidator.AuditDateIsPositive(audit.AuditDate),
                 BusinessObjectInspectionAuditValidator.AuditTimeIsInDayTimeRange(audit.AuditTime));

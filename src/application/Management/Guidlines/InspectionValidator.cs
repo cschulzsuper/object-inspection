@@ -12,7 +12,7 @@ namespace Super.Paula.Application.Guidlines
 
         public static (bool, Func<(string, FormattableString)>) UniqueNameHasKebabCase(string uniqueName)
             => (string.IsNullOrWhiteSpace(uniqueName) || KebabCaseValidator.IsValid(uniqueName),
-                () => (nameof(uniqueName), $"Unique name '{uniqueName}' must be in kebab case"));
+                () => (nameof(uniqueName), $"Unique name '{uniqueName}' must have kebab case"));
 
         public static (bool, Func<(string, FormattableString)>) UniqueNameIsNotTooLong(string uniqueName)
             => (string.IsNullOrWhiteSpace(uniqueName) || uniqueName.Length <= 140,

@@ -12,7 +12,7 @@ namespace Super.Paula.Application.Administration
 
         public static (bool, Func<(string, FormattableString)>) UniqueNameHasKebabCase(string uniqueName)
             => (string.IsNullOrWhiteSpace(uniqueName) || KebabCaseValidator.IsValid(uniqueName),
-                () => (nameof(uniqueName), $"Unique name '{uniqueName}' must be in kebab case"));
+                () => (nameof(uniqueName), $"Unique name '{uniqueName}' must have kebab case"));
 
         public static (bool, Func<(string, FormattableString)>) UniqueNameIsNotTooLong(string uniqueName)
             => (string.IsNullOrWhiteSpace(uniqueName) || uniqueName.Length <= 140,
@@ -36,7 +36,7 @@ namespace Super.Paula.Application.Administration
 
         public static (bool, Func<(string, FormattableString)>) OrganizationHasKebabCase(string organization)
             => (string.IsNullOrWhiteSpace(organization) || KebabCaseValidator.IsValid(organization),
-                () => (nameof(organization), $"Organization '{organization}' must be in kebab case"));
+                () => (nameof(organization), $"Organization '{organization}' must have kebab case"));
 
         public static (bool, Func<(string, FormattableString)>) OrganizationIsNotTooLong(string organization)
             => (string.IsNullOrWhiteSpace(organization) || organization.Length <= 140,

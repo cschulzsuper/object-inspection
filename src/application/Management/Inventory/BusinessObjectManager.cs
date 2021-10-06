@@ -80,13 +80,13 @@ namespace Super.Paula.Application.Inventory
             }
         }
 
-        private void EnsureGetable(string businessObject)
+        private static void EnsureGetable(string businessObject)
             => Validator.Ensure($"unique name '{businessObject}' of business object",
                 BusinessObjectValidator.UniqueNameIsNotEmpty(businessObject),
                 BusinessObjectValidator.UniqueNameHasKebabCase(businessObject),
                 BusinessObjectValidator.UniqueNameIsNotTooLong(businessObject));
 
-        private void EnsureInsertable(BusinessObject businessObject)
+        private static void EnsureInsertable(BusinessObject businessObject)
         {
             IEnumerable<(bool, Func<(string, FormattableString)>)> Ensurences()
             {
@@ -123,7 +123,7 @@ namespace Super.Paula.Application.Inventory
             Validator.Ensure($"business object with unique name '{businessObject.UniqueName}'", Ensurences());
         }
 
-        private void EnsureUpdateable(BusinessObject businessObject)
+        private static void EnsureUpdateable(BusinessObject businessObject)
         {
             IEnumerable<(bool, Func<(string, FormattableString)>)> Ensurences()
             {
@@ -150,8 +150,8 @@ namespace Super.Paula.Application.Inventory
                     yield return BusinessObjectValidator.InspectionAuditInspectorIsNotTooLong(inspection.AuditInspector);
                     yield return BusinessObjectValidator.InspectionAuditAnnotationIsNotNull(inspection.AuditAnnotation);
                     yield return BusinessObjectValidator.InspectionAuditAnnotationIsNotTooLong(inspection.AuditAnnotation);
-                    yield return BusinessObjectValidator.InspectionAuditResultIsNotNull(inspection.AuditAnnotation);
-                    yield return BusinessObjectValidator.InspectionAuditResultHasValidValue(inspection.AuditAnnotation);
+                    yield return BusinessObjectValidator.InspectionAuditResultIsNotNull(inspection.AuditResult);
+                    yield return BusinessObjectValidator.InspectionAuditResultHasValidValue(inspection.AuditResult);
                     yield return BusinessObjectValidator.InspectionAuditDateIsPositive(inspection.AuditDate);
                     yield return BusinessObjectValidator.InspectionAuditTimeIsInDayTimeRange(inspection.AuditTime);
                 };
@@ -160,7 +160,7 @@ namespace Super.Paula.Application.Inventory
             Validator.Ensure($"business object with unique name '{businessObject.UniqueName}'", Ensurences());
         }
 
-        private void EnsureDeleteable(BusinessObject businessObject)
+        private static void EnsureDeleteable(BusinessObject businessObject)
             => Validator.Ensure($"business object with unique name '{businessObject.UniqueName}'",
                 BusinessObjectValidator.UniqueNameIsNotEmpty(businessObject.UniqueName),
                 BusinessObjectValidator.UniqueNameHasKebabCase(businessObject.UniqueName),

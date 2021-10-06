@@ -7,26 +7,6 @@ namespace Super.Paula.Validation
 {
     public static class Validator
     {
-        [Obsolete]
-        public static void Ensure(IEnumerable<(Func<bool, bool> assertion, Func<FormattableString> messsage)> ensureances)
-        {
-            var valid = true;
-            foreach (var (assertion, message) in ensureances)
-            {
-                valid = assertion.Invoke(valid);
-
-                if (!valid)
-                {
-                    throw new ValidationException(message());
-                }
-            }
-
-        }
-
-        [Obsolete]
-        public static void Ensure(params (Func<bool, bool> assertion, Func<FormattableString> messsage)[] ensureances)
-            => Ensure(ensureances.AsEnumerable());
-
         public static void Ensure(FormattableString term, IEnumerable<(bool, Func<(string,FormattableString)>)> ensureances)
         {
             var errors = new Dictionary<string, ISet<FormattableString>>();
@@ -60,7 +40,7 @@ namespace Super.Paula.Validation
 
         public static object?[] TrimArguments(object?[] arguments)
             => arguments
-                .Select(arg => arg is string stringArg ? stringArg?.Substring(0, 140) : arg)
+                .Select(arg => arg is string stringArg ? stringArg?.Substring(0, Math.Min(stringArg.Length,140)) : arg)
                 .ToArray();
     }
 }

@@ -24,7 +24,7 @@ namespace Super.Paula.Application.Auditing.Requests
         public string Inspector { get; set; } = string.Empty;
 
         [Required]
-        [ValidValues("satisfying", "insufficient", "failed")]
+        [AuditResult]
         public string Result { get; set; } = string.Empty;
 
         [Required]
