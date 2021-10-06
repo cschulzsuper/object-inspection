@@ -63,7 +63,17 @@ else
             {
                 <tr>
                     <td class="col-2">@((inspectionAudit.AuditDate, inspectionAudit.AuditTime).ToLocalTimeString())</td>
-                    <td class="col-7">@inspectionAudit.InspectionDisplayName</td>
+                    <td class="col-7">
+                        <button class="btn btn-outline-secondary btn-block text-left" 
+                                @onclick="() => ToggleAnnotationVisibility(inspectionAudit)">@inspectionAudit.InspectionDisplayName</button>
+
+                        @if (_inspectionAuditAnnotationVisibile?[inspectionAudit] == true && !string.IsNullOrWhiteSpace(inspectionAudit.Annotation))
+                        {
+                            <div class="card card-body text-wrap">
+                                @inspectionAudit.Annotation
+                            </div>
+                        }
+                    </td>
                     <td class="col-2">@inspectionAudit.Inspector</td>
                     <td class="col-1">
                     @switch(inspectionAudit.Result) 
@@ -90,6 +100,8 @@ else
 @code {
 
     private ICollection<BusinessObjectInspectionAuditResponse>? _inspectionAudits;
+
+    private IDictionary<BusinessObjectInspectionAuditResponse,bool>? _inspectionAuditAnnotationVisibile;
 
     private IEnumerable<BusinessObjectInspectionAuditResponse>? InspectionAudits =>
         _inspectionAudits?
@@ -141,6 +153,9 @@ else
             _inspectionAudits.Add(inspectionAudit);
             this.StateHasChanged();            
         }
+
+        _inspectionAuditAnnotationVisibile = _inspectionAudits
+            .ToDictionary(key => key, _ => false);
     }
 
     private void ShowSatisfyingChanged(ChangeEventArgs e)
@@ -185,4 +200,12 @@ else
             await QueryAsync();
         }
     }    
+
+    private void ToggleAnnotationVisibility(BusinessObjectInspectionAuditResponse audit)
+    {
+        if (_inspectionAuditAnnotationVisibile != null)
+        {
+            _inspectionAuditAnnotationVisibile[audit] = !_inspectionAuditAnnotationVisibile[audit];
+        }
+    }
 }

@@ -29,7 +29,7 @@ else
             </tr>
         </thead>
         <tbody>
-            @foreach (var inspection in _businessObject.Inspections)
+            @foreach (var inspection in _businessObject.Inspections.Where(x => x.Activated && x.ActivatedGlobally))
             {
                 <tr>
                     <td class="col-8">
@@ -113,6 +113,7 @@ else
 
         var nextResult = new Dictionary<string,string>
         {
+            [""] = "satisfying",
             ["satisfying"] = "insufficient",
             ["insufficient"] = "failed",
             ["failed"] = "satisfying"
