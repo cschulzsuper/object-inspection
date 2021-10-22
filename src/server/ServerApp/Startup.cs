@@ -61,7 +61,7 @@ namespace Super.Paula
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapPaulaServer();
-                endpoints.MapGet("/hello/{name}", (string name) => $"Hello {name}");
+                endpoints.MapGet("", () => $"It works!");
             });
         }
 
