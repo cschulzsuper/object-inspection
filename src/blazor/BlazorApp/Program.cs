@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Super.Paula.Client.Configuration;
 
 namespace Super.Paula.Client
 {
@@ -12,6 +13,12 @@ namespace Super.Paula.Client
             builder.RootComponents.Add<App>("#app");
 
             builder.Services.ConfigureServices(builder.HostEnvironment);
+
+            var blazorApiUrl = builder.HostEnvironment.IsDevelopment()
+                    ? "http://localhost:7071"
+                    : builder.HostEnvironment.BaseAddress;
+
+            await builder.Configuration.AddBlazorApiConfigurationAsync(blazorApiUrl);
 
             var host = builder.Build();
             await host.RunAsync();

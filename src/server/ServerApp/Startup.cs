@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
@@ -21,10 +22,12 @@ namespace Super.Paula
     public class Startup
     {
         private readonly IWebHostEnvironment _environment;
+        private readonly IConfiguration _configuration;
 
-        public Startup(IWebHostEnvironment environment)
+        public Startup(IWebHostEnvironment environment, IConfiguration configuration)
         {
             _environment = environment;
+            _configuration = configuration;
         }
 
         public void ConfigureServices(IServiceCollection services)
@@ -33,6 +36,11 @@ namespace Super.Paula
             services.AddSingleton<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerGenOptions>();
             services.AddSwaggerGen();
             services.AddSignalR();
+            services.AddCors(options => 
+                options.AddDefaultPolicy(policy => 
+                    policy
+                        .WithOrigins(_configuration["BlazorApp"])
+                        .AllowAnyHeader()));
 
             services.AddPaulaServer(_environment.IsDevelopment());
         }
@@ -52,6 +60,8 @@ namespace Super.Paula
             app.UseHttpsRedirection();
 
             app.UseRouting();
+            app.UseCors();
+
             app.UseAuthentication();
 
             app.UsePaulaAppAuthentication();
