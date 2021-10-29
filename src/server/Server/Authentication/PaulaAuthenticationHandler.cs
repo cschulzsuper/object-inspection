@@ -32,6 +32,13 @@ namespace Super.Paula.Authentication
         {
             var authorizationHeader = _context?.Request.Headers.Authorization.ToString();
 
+
+            if (string.IsNullOrWhiteSpace(authorizationHeader) &&
+                _context?.Request.Query.ContainsKey("access_token") == true)
+            {
+                authorizationHeader = $"Bearer {_context.Request.Query["access_token"]}";
+            }
+
             if (authorizationHeader != null &&
                 authorizationHeader.StartsWith("Bearer "))
             {

@@ -49,7 +49,7 @@ namespace Super.Paula.Data
                         }
                     });
                 
-                options.LogTo(Console.WriteLine);
+               options.LogTo(Console.WriteLine);
             });
 
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));

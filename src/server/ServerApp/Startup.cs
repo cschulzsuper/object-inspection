@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -35,11 +36,19 @@ namespace Super.Paula
             services.AddEndpointsApiExplorer();
             services.AddSingleton<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerGenOptions>();
             services.AddSwaggerGen();
+            
             services.AddSignalR();
+            services.AddResponseCompression(opts =>
+            {
+                opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
+                    new[] { "application/octet-stream" });
+            });
+
             services.AddCors(options => 
                 options.AddDefaultPolicy(policy => 
                     policy
                         .WithOrigins(_configuration["BlazorApp"])
+                        .AllowAnyMethod()
                         .AllowAnyHeader()));
 
             services.AddPaulaServer(_environment.IsDevelopment());
@@ -49,6 +58,7 @@ namespace Super.Paula
         {
             app.EnsurePaulaData();
 
+            app.UseResponseCompression();
             app.UseExceptionHandler(appBuilder => appBuilder.Run(HandleError));
 
             if (_environment.IsDevelopment())
