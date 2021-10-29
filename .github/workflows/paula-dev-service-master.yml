@@ -4,9 +4,6 @@
 name: Build and deploy ASP.Net Core app to Azure Web App - paula-dev-service
 
 on:
-  push:
-    branches:
-      - master
   workflow_dispatch:
 
 jobs:
