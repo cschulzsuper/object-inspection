@@ -21,4 +21,8 @@
     <ProjectReference Include="..\..\data\Data.AspNetCore\Data.AspNetCore.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Blacklist\" />
+  </ItemGroup>
+
 </Project>

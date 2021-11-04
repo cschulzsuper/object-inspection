@@ -15,6 +15,7 @@ namespace Super.Paula.Application
         public static IServiceCollection AddPaulaServerTransport(this IServiceCollection services)
         {
             services
+                .AddSingleton<IConnectionBlacklist, ConnectionBlacklist>()
                 .AddScoped<IAccountHandler, AccountHandler>()
                 .AddScoped<IBusinessObjectHandler, BusinessObjectHandler>()
                 .AddScoped<IBusinessObjectInspectionAuditHandler, BusinessObjectInspectionAuditHandler>()

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
@@ -7,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
+using Super.Paula.Application.Administration;
 using Super.Paula.Data;
 using Super.Paula.Swagger;
 using Super.Paula.Validation;
@@ -58,6 +60,8 @@ namespace Super.Paula
         {
             app.EnsurePaulaData();
 
+            app.UsePaulaBlacklist();
+
             app.UseResponseCompression();
             app.UseExceptionHandler(appBuilder => appBuilder.Run(HandleError));
 
@@ -87,6 +91,14 @@ namespace Super.Paula
 
         public async Task HandleError(HttpContext context)
         {
+            var authorizeAttribute = context.GetEndpoint()?.Metadata.GetMetadata<AuthorizeAttribute>();
+            if (authorizeAttribute == null)
+            {
+                context.RequestServices
+                    .GetRequiredService<IConnectionBlacklist>()
+                    .Trace(context.Connection.RemoteIpAddress);
+            }
+
             var exceptionHandlerPathFeature = context.Features.Get<IExceptionHandlerPathFeature>();
             if (exceptionHandlerPathFeature == null)
             {
