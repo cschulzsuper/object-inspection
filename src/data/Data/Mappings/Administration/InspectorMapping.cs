@@ -48,11 +48,6 @@ namespace Super.Paula.Data.Mappings.Administration
                 .IsRequired();
 
             builder
-                .Property(x => x.Proof)
-                .HasMaxLength(140)
-                .IsRequired();
-
-            builder
                 .Property(x => x.Secret)
                 .HasMaxLength(140)
                 .IsRequired();

@@ -99,8 +99,6 @@ namespace Super.Paula.Application.Administration
                 InspectorValidator.OrganizationIsNotTooLong(inspector.Organization),
                 InspectorValidator.OrganizationDisplayNameIsNotEmpty(inspector.OrganizationDisplayName),
                 InspectorValidator.OrganizationDisplayNameIsNotTooLong(inspector.OrganizationDisplayName),
-                InspectorValidator.ProofHasValue(inspector.Proof),
-                InspectorValidator.ProofIsNotTooLong(inspector.Proof),
                 InspectorValidator.SecretHasValue(inspector.Secret),
                 InspectorValidator.SecretIsNotTooLong(inspector.Secret));
 
@@ -117,8 +115,6 @@ namespace Super.Paula.Application.Administration
                 InspectorValidator.OrganizationIsNotTooLong(inspector.Organization),
                 InspectorValidator.OrganizationDisplayNameIsNotEmpty(inspector.OrganizationDisplayName),
                 InspectorValidator.OrganizationDisplayNameIsNotTooLong(inspector.OrganizationDisplayName),
-                InspectorValidator.ProofHasValue(inspector.Proof),
-                InspectorValidator.ProofIsNotTooLong(inspector.Proof),
                 InspectorValidator.SecretHasValue(inspector.Secret),
                 InspectorValidator.SecretIsNotTooLong(inspector.Secret));
 

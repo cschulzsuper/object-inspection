@@ -37,9 +37,7 @@ namespace Super.Paula.Application.Administration
                 Activated = request.Activated,
                 Organization = organization.UniqueName,
                 OrganizationActivated = organization.Activated,
-                OrganizationDisplayName = organization.DisplayName,
-                Proof = Convert.ToBase64String(
-                    Encoding.UTF8.GetBytes($"{Guid.NewGuid()}"))
+                OrganizationDisplayName = organization.DisplayName
             };
 
             await _inspectorManager.InsertAsync(entity);

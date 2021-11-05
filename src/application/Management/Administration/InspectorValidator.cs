@@ -50,14 +50,6 @@ namespace Super.Paula.Application.Administration
             => (string.IsNullOrWhiteSpace(organizationDisplayName) || organizationDisplayName.Length <= 140,
                 () => (nameof(organizationDisplayName), $"Organization display name '{organizationDisplayName}' can not have more than 140 characters"));
 
-        public static (bool, Func<(string, FormattableString)>) ProofHasValue(string proof)
-            => (proof != null,
-                () => (nameof(proof), $"Proof can not be null"));
-
-        public static (bool, Func<(string, FormattableString)>) ProofIsNotTooLong(string proof)
-            => (proof == null || proof.Length <= 140,
-                () => (nameof(proof), $"Proof '{proof}' can not have more than 140 characters"));
-
         public static (bool, Func<(string, FormattableString)>) SecretHasValue(string secret)
             => (!string.IsNullOrWhiteSpace(secret),
                 () => (nameof(secret), $"Secret can not be empty"));

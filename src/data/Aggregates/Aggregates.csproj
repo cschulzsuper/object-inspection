@@ -7,4 +7,8 @@
     <RootNamespace>Super.Paula.Application</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\RuntimeData.Contract\RuntimeData.Contract.csproj" />
+  </ItemGroup>
+
 </Project>

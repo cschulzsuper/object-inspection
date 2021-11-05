@@ -19,10 +19,7 @@
     <ProjectReference Include="..\..\application\SignalR\SignalR.csproj" />
     <ProjectReference Include="..\..\application\Transport\Transport.csproj" />
     <ProjectReference Include="..\..\data\Data.AspNetCore\Data.AspNetCore.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Blacklist\" />
+    <ProjectReference Include="..\..\data\RuntimeData\RuntimeData.csproj" />
   </ItemGroup>
 
 </Project>

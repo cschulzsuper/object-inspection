@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Super.Paula.Application.Administration;
+using Super.Paula.Application.Runtime;
 using Super.Paula.Data;
 using Super.Paula.Swagger;
 using Super.Paula.Validation;
@@ -92,11 +93,13 @@ namespace Super.Paula
         public async Task HandleError(HttpContext context)
         {
             var authorizeAttribute = context.GetEndpoint()?.Metadata.GetMetadata<AuthorizeAttribute>();
-            if (authorizeAttribute == null)
+            var connectionIpAddress = context.Connection.RemoteIpAddress?.ToString();
+
+            if (authorizeAttribute == null && connectionIpAddress != null)
             {
                 context.RequestServices
-                    .GetRequiredService<IConnectionBlacklist>()
-                    .Trace(context.Connection.RemoteIpAddress);
+                    .GetRequiredService<IConnectionViolationManager>()
+                    .Trace(connectionIpAddress);
             }
 
             var exceptionHandlerPathFeature = context.Features.Get<IExceptionHandlerPathFeature>();

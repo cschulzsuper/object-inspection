@@ -7,13 +7,14 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Super.Paula.Application.Administration;
+using Super.Paula.Application.Runtime;
 using Super.Paula.Environment;
 
 namespace Super.Paula.Authentication
 {
     public class PaulaAuthenticationHandler : IAuthenticationHandler
     {
-        private IInspectorManager? _inspectorManager;
+        private IConnectionManager? _connectionManager;
         private AuthenticationScheme? _scheme;
         private HttpContext? _context;
         private AppSettings? _appSettings;
@@ -22,7 +23,7 @@ namespace Super.Paula.Authentication
         {
             _scheme = scheme;
             _context = context;
-            _inspectorManager = context.RequestServices.GetRequiredService<IInspectorManager>();
+            _connectionManager = context.RequestServices.GetRequiredService<IConnectionManager>();
             _appSettings = context.RequestServices.GetRequiredService<AppSettings>();
 
             return Task.CompletedTask;
@@ -74,14 +75,12 @@ namespace Super.Paula.Authentication
                 return null;
             }
 
-            var inspector = _inspectorManager!.GetQueryable()
-                .SingleOrDefault(x =>
-                    x.Activated &&
-                    x.Organization == subjectValues[0] &&
-                    x.UniqueName == subjectValues[1] &&
-                    x.Proof == subjectValues[2]);
+            var validInspector = _connectionManager!.Verify(
+                subjectValues[0],
+                subjectValues[1],
+                subjectValues[2]);
 
-            if (inspector != null)
+            if (validInspector)
             {
                 return $"{subjectValues[0]}:{subjectValues[1]}";
             }
@@ -96,19 +95,14 @@ namespace Super.Paula.Authentication
                 return null;
             }
 
-            var maintainer = _inspectorManager!.GetQueryable()
-                .SingleOrDefault(x =>
-                    x.Activated &&
-                    x.Organization == fallbackSubjectValues[0] &&
-                    x.UniqueName == fallbackSubjectValues[1] &&
-                    x.Proof == fallbackSubjectValues[2]);
+            var validMaintainer = _connectionManager!.Verify(
+                fallbackSubjectValues[0],
+                fallbackSubjectValues[1],
+                fallbackSubjectValues[2]);
 
-            if (maintainer == null)
-            {
-                return null;
-            }
-
-            return $"{subjectValues[0]}:{subjectValues[1]}";
+            return validMaintainer
+                ? $"{subjectValues[0]}:{subjectValues[1]}"
+                : null;
         }
 
         public Task ChallengeAsync(AuthenticationProperties? properties)

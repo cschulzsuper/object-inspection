@@ -20,6 +20,7 @@ namespace Super.Paula
                 .AddPaulaAppSettings()
                 .AddPaulaAppState()
                 .AddPaulaServerData(isDevlopment)
+                .AddPaulaServerRuntimeData()
                 .AddPaulaServerManagement()
                 .AddPaulaServerSignalR()
                 .AddPaulaServerTransport()

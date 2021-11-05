@@ -3,7 +3,7 @@ using System.Net;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.DependencyInjection;
-using Super.Paula.Application.Administration;
+using Super.Paula.Application.Runtime;
 
 namespace Super.Paula
 {
@@ -19,8 +19,13 @@ namespace Super.Paula
 
             app.Use(async (context, next) =>
             {
-                var blacklist = context.RequestServices.GetRequiredService<IConnectionBlacklist>();
-                var blacklisted = blacklist.Contains(context.Connection.RemoteIpAddress);
+                var connectionViolationManager = context.RequestServices.GetRequiredService<IConnectionViolationManager>();
+                var connectionIpAddress = context.Connection.RemoteIpAddress?.ToString();
+
+                var blacklisted = 
+                    connectionIpAddress != null &&
+                    connectionViolationManager.Verify(connectionIpAddress);
+
                 if (blacklisted)
                 {
                     context.Response.StatusCode = (int)HttpStatusCode.Forbidden;

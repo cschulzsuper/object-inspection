@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Super.Paula.Application.Administration.Requests;
 using Super.Paula.Application.Administration.Responses;
+using Super.Paula.Application.Runtime;
 using Super.Paula.Environment;
 
 namespace Super.Paula.Application.Administration
@@ -13,6 +14,7 @@ namespace Super.Paula.Application.Administration
     {
         private readonly IInspectorManager _inspectorManager;
         private readonly IOrganizationManager _organizationManager;
+        private readonly IConnectionManager _connectionManager;
         private readonly AppState _appState;
         private readonly AppSettings _appSettings;
         private readonly AppAuthentication _appAuthentication;
@@ -20,12 +22,14 @@ namespace Super.Paula.Application.Administration
         public AccountHandler(
             IInspectorManager inspectorManager,
             IOrganizationManager organizationManager,
+            IConnectionManager connectionManager,
             AppState appState,
             AppSettings appSettings,
             AppAuthentication appAuthentication)
         {
             _inspectorManager = inspectorManager;
             _organizationManager = organizationManager;
+            _connectionManager = connectionManager;
             _appState = appState;
             _appSettings = appSettings;
             _appAuthentication = appAuthentication;
@@ -152,15 +156,20 @@ namespace Super.Paula.Application.Administration
                     x.Secret == request.Secret &&
                     x.Organization == request.Organization);
 
-            inspector.Proof = Convert.ToBase64String(
+            await _inspectorManager.UpdateAsync(inspector);
+
+            var connectionProof = Convert.ToBase64String(
                 Encoding.UTF8.GetBytes($"{Guid.NewGuid()}"));
 
-            await _inspectorManager.UpdateAsync(inspector);
+            _connectionManager.Trace(
+                request.Organization,
+                request.UniqueName,
+                connectionProof);
 
             return new SignInInspectorResponse
             {
                 Bearer = Convert.ToBase64String(
-                    Encoding.UTF8.GetBytes($"{inspector.Organization}:{inspector.UniqueName}:{inspector.Proof}"))
+                    Encoding.UTF8.GetBytes($"{inspector.Organization}:{inspector.UniqueName}:{connectionProof}"))
             };
         }
 
@@ -171,8 +180,9 @@ namespace Super.Paula.Application.Administration
                     x.UniqueName == _appState.CurrentInspector &&
                     x.Organization == _appState.CurrentOrganization);
 
-            inspector.Proof = Convert.ToBase64String(
-                Encoding.UTF8.GetBytes($"{Guid.NewGuid()}"));
+            _connectionManager.Forget(
+                inspector.Organization,
+                inspector.UniqueName);
 
             await _inspectorManager.UpdateAsync(inspector);
         }

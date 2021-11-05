@@ -8,7 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\data\Data\Data.csproj" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0-rc.2.21480.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\data\Data.Contract\Data.Contract.csproj" />
     <ProjectReference Include="..\Management.Contract\Management.Contract.csproj" />
     <ProjectReference Include="..\Shared\Shared.csproj" />
   </ItemGroup>

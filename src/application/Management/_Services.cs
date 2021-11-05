@@ -3,6 +3,7 @@ using Super.Paula.Application.Administration;
 using Super.Paula.Application.Auditing;
 using Super.Paula.Application.Guidlines;
 using Super.Paula.Application.Inventory;
+using Super.Paula.Application.Runtime;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Super.Paula.Application
@@ -17,6 +18,8 @@ namespace Super.Paula.Application
                 .AddScoped<IInspectionManager, InspectionManager>()
                 .AddScoped<IInspectorManager, InspectorManager>()
                 .AddScoped<INotificationManager, NotificationManager>()
-                .AddScoped<IOrganizationManager, OrganizationManager>();
+                .AddScoped<IOrganizationManager, OrganizationManager>()
+                .AddScoped<IConnectionManager, ConnectionManager>()
+                .AddScoped<IConnectionViolationManager, ConnectionViolationManager>();
     }
 }
