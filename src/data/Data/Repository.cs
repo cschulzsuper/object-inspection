@@ -78,6 +78,15 @@ namespace Super.Paula.Data
             if (_repositoryContext.Entry(entity).State == EntityState.Detached)
             {
                 var entityEntry = _repositoryContext.Add(entity);
+
+                var partitionKeyProperty = entityEntry.Metadata.GetPartitionKeyProperty(); 
+                if (partitionKeyProperty != null)
+                {
+                    var partitionKey = entityEntry.Properties.Single(x => x.Metadata == partitionKeyProperty);
+                    var partitionKeyValue = partitionKey.CurrentValue as string;
+                    partitionKey.IsModified = true;
+                }
+
                 entityEntry.State = EntityState.Modified;
             } 
 
