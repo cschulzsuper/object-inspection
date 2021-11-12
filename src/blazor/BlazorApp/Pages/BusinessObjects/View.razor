@@ -105,9 +105,14 @@ else
             ? _businessObjects?.Values.Where(x => x.Inspector == string.Empty)
             : _businessObjects?.Values;
 
-
-    protected override Task OnInitializedAsync()
-        => QueryAsync();
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if(firstRender)
+        {
+            await QueryAsync();
+            StateHasChanged();
+        }
+    }
 
     public async Task QueryAsync()
     {

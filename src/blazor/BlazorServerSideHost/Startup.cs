@@ -20,6 +20,7 @@ namespace Super.Paula.Client
             services.AddServerSideBlazor();
 
             services.AddPaulaClient(_environment.IsDevelopment());
+            services.AddSingleton<ISessionStorage, ProtectedSessionStorage>();
         }
 
         public void Configure(IApplicationBuilder app)

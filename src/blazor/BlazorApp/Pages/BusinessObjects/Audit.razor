@@ -85,9 +85,13 @@ else
     [Parameter]
     public string BusinessObject { get; set; } = null!;
 
-    protected override Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        return QueryAsync();
+        if (firstRender)
+        {
+            await QueryAsync();
+            StateHasChanged();
+        }
     }
 
     public async Task QueryAsync()

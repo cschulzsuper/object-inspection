@@ -1,15 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
 	<PropertyGroup>
-	<TargetFramework>net6.0</TargetFramework>
-	<Nullable>enable</Nullable>
-    <LangVersion>Preview</LangVersion>
-    <RootNamespace>Super.Paula.Client</RootNamespace>
-    <UserSecretsId>7604232f-8b5e-4159-a38c-8802b735f823</UserSecretsId>
+		<TargetFramework>net6.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<LangVersion>Preview</LangVersion>
+		<RootNamespace>Super.Paula.Client</RootNamespace>
+		<UserSecretsId>7604232f-8b5e-4159-a38c-8802b735f823</UserSecretsId>
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\BlazorApp\BlazorApp.csproj" />
+		<ProjectReference Include="..\BlazorApp\BlazorApp.csproj" />
 	</ItemGroup>
- 
+
 </Project>

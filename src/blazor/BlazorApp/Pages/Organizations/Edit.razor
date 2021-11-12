@@ -72,23 +72,28 @@ else
 
     private AssessChiefInspectorDefectivenessResponse? _chiefInspectorDefective;
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        var response = await OrganizationHandler.GetAsync(Organization);
-
-        _request = new OrganizationRequest
+        if (firstRender)
         {
-            ChiefInspector = response.ChiefInspector,
-            DisplayName = response.DisplayName,
-            UniqueName = response.UniqueName,
-            Activated = response.Activated
-        };
+            var response = await OrganizationHandler.GetAsync(Organization);
 
-        _chiefInspectorDefective = await AccountHandler.AssessChiefInspectorDefectivenessAsync(
-             new AssessChiefInspectorDefectivenessRequest
-             {
-                 Organization = Organization
-             });
+            _request = new OrganizationRequest
+                {
+                    ChiefInspector = response.ChiefInspector,
+                    DisplayName = response.DisplayName,
+                    UniqueName = response.UniqueName,
+                    Activated = response.Activated
+                };
+
+            _chiefInspectorDefective = await AccountHandler.AssessChiefInspectorDefectivenessAsync(
+                 new AssessChiefInspectorDefectivenessRequest
+                     {
+                         Organization = Organization
+                     });
+
+            StateHasChanged();
+        }
     }
 
     private async Task OnValidSubmitAsync()

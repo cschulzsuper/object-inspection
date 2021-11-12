@@ -72,15 +72,19 @@ else
 
     private BusinessObjectResponse.EmbeddedInspection? _inspection = null;
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        var response = await BusinessObjectHandler.GetAsync(BusinessObject);
+        if (firstRender)
+        {
+            var response = await BusinessObjectHandler.GetAsync(BusinessObject);
 
-        _inspection = response.Inspections
-            .Single(inspection =>
-                inspection.UniqueName == Inspection &&
-                inspection.AuditDate == AuditDate &&
-                inspection.AuditTime == AuditTime);
+            _inspection = response.Inspections
+                .Single(inspection =>
+                    inspection.UniqueName == Inspection &&
+                    inspection.AuditDate == AuditDate &&
+                    inspection.AuditTime == AuditTime);
+            StateHasChanged();
+        }
     }
 
     private async Task OnValidSubmitAsync()

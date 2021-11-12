@@ -87,14 +87,19 @@ else
 
     private IDictionary<string,OrganizationResponse>? _organizations;
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        _organizations = new Dictionary<string,OrganizationResponse>(); 
-
-        await foreach(var organization in OrganizationHandler.GetAll())
+        if (firstRender)
         {
-            _organizations.Add(organization.UniqueName, organization);
-            this.StateHasChanged();            
+            _organizations = new Dictionary<string, OrganizationResponse>();
+
+            await foreach (var organization in OrganizationHandler.GetAll())
+            {
+                _organizations.Add(organization.UniqueName, organization);
+                StateHasChanged();
+            }
+
+            StateHasChanged();
         }
     }
 

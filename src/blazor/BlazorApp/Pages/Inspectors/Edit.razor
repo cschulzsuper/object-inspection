@@ -65,17 +65,22 @@ else
 
     private InspectorRequest? _request = null;
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        var response = await InspectorHandler.GetAsync(Inspector);
-
-        _request = new InspectorRequest
+        if (firstRender)
         {
-            MailAddress = response.MailAddress,
-            Secret = response.Secret,
-            UniqueName = response.UniqueName,
-            Activated = response.Activated
-        };
+            var response = await InspectorHandler.GetAsync(Inspector);
+
+            _request = new InspectorRequest
+                {
+                    MailAddress = response.MailAddress,
+                    Secret = response.Secret,
+                    UniqueName = response.UniqueName,
+                    Activated = response.Activated
+                };
+
+            StateHasChanged();
+        }
     }
 
     private async Task OnValidSubmitAsync()

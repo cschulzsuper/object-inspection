@@ -123,9 +123,13 @@ else
 
     private string _searchScope = string.Empty;
 
-    protected override Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        return QueryAsync();
+        if(firstRender)
+        {
+            await QueryAsync();
+            StateHasChanged();
+        }
     }
 
     private async Task QueryAsync()

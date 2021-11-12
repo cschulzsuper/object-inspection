@@ -87,20 +87,25 @@ else
 
     private IDictionary<string,bool>? _inspectionsTextVisibile;
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        _inspections = new Dictionary<string,InspectionResponse>();
-
-        var response = InspectionHandler.GetAll();
-
-        await foreach(var inspection in response)
+        if (firstRender)
         {
-            _inspections.Add(inspection.UniqueName,inspection);
-            this.StateHasChanged();            
-        }
+            _inspections = new Dictionary<string, InspectionResponse>();
 
-        _inspectionsTextVisibile = _inspections.Keys
-            .ToDictionary(key => key, _ => false);
+            var response = InspectionHandler.GetAll();
+
+            await foreach (var inspection in response)
+            {
+                _inspections.Add(inspection.UniqueName, inspection);
+                StateHasChanged();
+            }
+
+            _inspectionsTextVisibile = _inspections.Keys
+                .ToDictionary(key => key, _ => false);
+
+            StateHasChanged();
+        }
     }
 
     public void Create()

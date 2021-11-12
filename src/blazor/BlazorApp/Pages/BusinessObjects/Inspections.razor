@@ -107,8 +107,14 @@ else
             ? _inspectionBusinessObjects?.Values
             : _inspections?.Values;
 
-    protected override Task OnInitializedAsync()
-        => QueryAsync();
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if(firstRender)
+        {
+            await QueryAsync();
+            StateHasChanged();
+        }
+    }
 
     public async Task QueryAsync()
     {

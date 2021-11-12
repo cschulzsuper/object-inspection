@@ -111,18 +111,23 @@ else
 
     private IDictionary<string,InspectorResponse>? _inspectors;
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        _inspectors = new Dictionary<string,InspectorResponse>();
-
-        var response = Organization == null
-            ? InspectorHandler.GetAll()
-            : InspectorHandler.GetAllForOrganization(Organization);
-
-        await foreach(var inspector in response)
+        if (firstRender)
         {
-            _inspectors.Add(inspector.UniqueName, inspector);
-            this.StateHasChanged();            
+            _inspectors = new Dictionary<string, InspectorResponse>();
+
+            var response = Organization == null
+                ? InspectorHandler.GetAll()
+                : InspectorHandler.GetAllForOrganization(Organization);
+
+            await foreach (var inspector in response)
+            {
+                _inspectors.Add(inspector.UniqueName, inspector);
+                StateHasChanged();
+            }
+
+            StateHasChanged();
         }
     }
 

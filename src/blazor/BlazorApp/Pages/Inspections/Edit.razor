@@ -66,17 +66,22 @@ else
 
     private InspectionRequest? _request = null;
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        var response = await InspectionHandler.GetAsync(Inspection);
-
-        _request = new InspectionRequest
+        if (firstRender)
         {
-            Activated = response.Activated,
-            DisplayName = response.DisplayName,
-            Text = response.Text,
-            UniqueName = response.UniqueName
-        };
+            var response = await InspectionHandler.GetAsync(Inspection);
+
+            _request = new InspectionRequest
+                {
+                    Activated = response.Activated,
+                    DisplayName = response.DisplayName,
+                    Text = response.Text,
+                    UniqueName = response.UniqueName
+                };
+
+            StateHasChanged();
+        }
     }
 
     private async Task OnValidSubmitAsync()
