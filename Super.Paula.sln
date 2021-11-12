@@ -55,11 +55,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SignalR", "src\application\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorApi", "src\blazor\BlazorApi\BlazorApi.csproj", "{A06745C0-75BF-425F-9AD1-726C4139708E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RuntimeData", "src\data\RuntimeData\RuntimeData.csproj", "{88525FC6-892A-4EFD-99EC-024B55D8F633}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RuntimeData", "src\data\RuntimeData\RuntimeData.csproj", "{88525FC6-892A-4EFD-99EC-024B55D8F633}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RuntimeData.Contract", "src\data\RuntimeData.Contract\RuntimeData.Contract.csproj", "{4F81A8E2-0438-4C55-A14B-DE7CC35F8C5D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RuntimeData.Contract", "src\data\RuntimeData.Contract\RuntimeData.Contract.csproj", "{4F81A8E2-0438-4C55-A14B-DE7CC35F8C5D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.Contract", "src\data\Data.Contract\Data.Contract.csproj", "{46AB5C8F-CD7C-4458-A2A6-A09E2826CB93}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data.Contract", "src\data\Data.Contract\Data.Contract.csproj", "{46AB5C8F-CD7C-4458-A2A6-A09E2826CB93}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
