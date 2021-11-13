@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Super.Paula.Application.Administration;
 using Super.Paula.Application.Administration.Requests;
 using Super.Paula.Application.Administration.Responses;
-using Super.Paula.Authentication;
+using Super.Paula.Client.Authentication;
 using Super.Paula.Client.ErrorHandling;
 using Super.Paula.Environment;
 
@@ -17,35 +17,14 @@ namespace Super.Paula.Client.Administration
 {
     internal class OrganizationHandler : IOrganizationHandler
     {
-        private readonly PaulaAuthenticationStateManager _paulaAuthenticationStateManager;
         private readonly HttpClient _httpClient;
 
         public OrganizationHandler(
             HttpClient httpClient,
-            PaulaAuthenticationStateManager paulaAuthenticationStateManager,
             AppSettings appSettings)
         {
-            _paulaAuthenticationStateManager = paulaAuthenticationStateManager;
-            _paulaAuthenticationStateManager.AuthenticationStateChanged += AuthenticationStateChanged;
-
             _httpClient = httpClient;
             _httpClient.BaseAddress = new Uri(appSettings.Server);
-            SetBearerOnHttpClient();
-        }
-
-        private void AuthenticationStateChanged(Task<AuthenticationState> task)
-            => task.ContinueWith(_ =>
-            {
-                SetBearerOnHttpClient();
-            });
-
-        private void SetBearerOnHttpClient()
-        {
-            var bearer = _paulaAuthenticationStateManager.GetAuthenticationBearer();
-
-            _httpClient.DefaultRequestHeaders.Authorization = !string.IsNullOrWhiteSpace(bearer)
-                    ? new AuthenticationHeaderValue("Bearer", bearer)
-                    : null;
         }
 
         public async ValueTask ActivateAsync(string organization)

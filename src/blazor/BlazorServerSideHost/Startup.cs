@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Super.Paula.Client.Storage;
 
 namespace Super.Paula.Client
 {
@@ -19,8 +20,7 @@ namespace Super.Paula.Client
             services.AddRazorPages();
             services.AddServerSideBlazor();
 
-            services.AddPaulaClient(_environment.IsDevelopment());
-            services.AddSingleton<ISessionStorage, ProtectedSessionStorage>();
+            services.AddPaulaClient<ProtectedSessionStorage>(_environment.IsDevelopment());
         }
 
         public void Configure(IApplicationBuilder app)

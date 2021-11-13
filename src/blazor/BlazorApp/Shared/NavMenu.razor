@@ -106,14 +106,14 @@
     [CascadingParameter]
     private Task<AuthenticationState>? authenticationStateTask { get; set; }
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        _notificationHandlerOnCreated = await NotificationHandler.OnCreatedAsync(OnCreatedAsync);
-        _notificationHandlerOnDeleted = await NotificationHandler.OnDeletedAsync(OnDeletedAsync);
-    }
+        if (firstRender)
+        {
+            _notificationHandlerOnCreated = await NotificationHandler.OnCreatedAsync(OnCreatedAsync);
+            _notificationHandlerOnDeleted = await NotificationHandler.OnDeletedAsync(OnDeletedAsync);
+        }
 
-    protected override async Task OnParametersSetAsync()
-    {
         _notificationCount = 0;
 
         if((await AccountHandler.QueryAuthorizationsAsync()).Values.Any())

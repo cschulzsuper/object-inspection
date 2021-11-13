@@ -15,4 +15,8 @@
 	  <ProjectReference Include="..\Transport.Contract\Transport.Contract.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Authentication\" />
+	</ItemGroup>
+
 </Project>

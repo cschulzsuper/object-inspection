@@ -12,7 +12,7 @@ using Super.Paula.Application.Administration;
 using Super.Paula.Application.Communication;
 using Super.Paula.Application.Communication.Requests;
 using Super.Paula.Application.Communication.Responses;
-using Super.Paula.Authentication;
+using Super.Paula.Client.Authentication;
 using Super.Paula.Client.ErrorHandling;
 using Super.Paula.Environment;
 
@@ -20,7 +20,7 @@ namespace Super.Paula.Client.Communication
 {
     internal class NotificationHandlerBase : INotificationHandler, IAsyncDisposable
     {
-        private readonly PaulaAuthenticationStateManager _paulaAuthenticationStateManager;
+        private readonly AuthenticationStateManager _authenticationStateManager;
         private readonly AppSettings _appSettings;
         private readonly IAccountHandler _accountHandler;
 
@@ -29,25 +29,24 @@ namespace Super.Paula.Client.Communication
 
         public NotificationHandlerBase(
             HttpClient httpClient,
-            PaulaAuthenticationStateManager paulaAuthenticationStateManager,
+            AuthenticationStateManager authenticationStateManager,
             AppSettings appSettings,
             IAccountHandler accountHandler)
         {
             _accountHandler = accountHandler;
             _appSettings = appSettings;
 
-            _paulaAuthenticationStateManager = paulaAuthenticationStateManager;
-            _paulaAuthenticationStateManager.AuthenticationStateChanged += AuthenticationStateChanged;
+            _authenticationStateManager = authenticationStateManager;
+            _authenticationStateManager.AuthenticationStateChanged += AuthenticationStateChanged;
 
             _httpClient = httpClient;
             _httpClient.BaseAddress = new Uri(_appSettings.Server);
-            SetBearerOnHttpClient();
 
             _hubConnection = new HubConnectionBuilder()
                 .WithUrl(
                     new Uri(_httpClient.BaseAddress, "/notifications/signalr"),
                     c => {
-                        c.AccessTokenProvider = () => Task.FromResult(_paulaAuthenticationStateManager.GetAuthenticationBearer())!;
+                        c.AccessTokenProvider = () => Task.FromResult(_authenticationStateManager.GetAuthenticationBearer())!;
                     })
                 .Build();
         }
@@ -58,19 +57,9 @@ namespace Super.Paula.Client.Communication
         private void AuthenticationStateChanged(Task<AuthenticationState> task)
             => task.ContinueWith(async _ =>
                 {
-                    SetBearerOnHttpClient();
                     await StopHubAsync();
                     await StartHubAsync();
                 });
-
-        private void SetBearerOnHttpClient()
-        {
-            var bearer = _paulaAuthenticationStateManager.GetAuthenticationBearer();
-
-            _httpClient.DefaultRequestHeaders.Authorization = !string.IsNullOrWhiteSpace(bearer)
-                    ? new AuthenticationHeaderValue("Bearer", bearer)
-                    : null;
-        }
 
         private async Task StartHubAsync()
         {

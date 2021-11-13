@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.DependencyInjection;
-using Super.Paula.Authentication;
 using Super.Paula.Authorization;
+using Super.Paula.Client.Authentication;
 
 namespace Super.Paula.Client
 {
@@ -16,9 +16,9 @@ namespace Super.Paula.Client
             services.AddSingleton<IAuthorizationPolicyProvider, PaulaAuthorizationPolicyProvider>();
             services.AddScoped<IAuthorizationHandler, PaulaAuthorizationHandler>();
 
-            services.AddScoped<PaulaAuthenticationStateManager>();
-            services.AddScoped<AuthenticationStateProvider, PaulaAuthenticationStateManager>(provider
-                 => provider.GetRequiredService<PaulaAuthenticationStateManager>());
+            services.AddSingleton<AuthenticationStateManager>();
+            services.AddSingleton<AuthenticationStateProvider, AuthenticationStateManager>(provider
+                 => provider.GetRequiredService<AuthenticationStateManager>());
 
             return services;
         }

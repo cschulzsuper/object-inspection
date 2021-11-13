@@ -2,7 +2,7 @@
 using Super.Paula.Application.Communication;
 using Super.Paula.Application.Communication.Requests;
 using Super.Paula.Application.Communication.Responses;
-using Super.Paula.Authentication;
+using Super.Paula.Client.Authentication;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,15 +20,15 @@ namespace Super.Paula.Client.Communication
         private readonly SemaphoreSlim _notificationResponsCacheSemaphore;
         private bool _notificationResponsCached;
 
-        private readonly PaulaAuthenticationStateManager _paulaAuthenticationStateManager;
+        private readonly AuthenticationStateManager _authenticationStateManager;
 
         public NotificationHandler(
             INotificationHandler notificationHandler,
-            PaulaAuthenticationStateManager paulaAuthenticationStateManager)
+            AuthenticationStateManager authenticationStateManager)
         {
 
-            _paulaAuthenticationStateManager = paulaAuthenticationStateManager;
-            _paulaAuthenticationStateManager.AuthenticationStateChanged += AuthenticationStateChanged;
+            _authenticationStateManager = authenticationStateManager;
+            _authenticationStateManager.AuthenticationStateChanged += AuthenticationStateChanged;
 
             _notificationHandler = notificationHandler;
             _notificationHandler.OnCreatedAsync(InternalOnCreatedAsync);

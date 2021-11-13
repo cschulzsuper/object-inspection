@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace Super.Paula.Client.Administration
 {
-    internal class AccountHandlerCache
+    public class AccountHandlerCache
     {
         public Task<QueryAuthorizationsResponse?>? QueryAuthorizationsResponse { get; set; } = null;
 

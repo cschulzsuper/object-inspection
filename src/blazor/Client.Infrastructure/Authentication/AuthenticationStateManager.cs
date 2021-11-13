@@ -5,14 +5,14 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components.Authorization;
+using Super.Paula.Client.Storage;
 
-namespace Super.Paula.Authentication
+namespace Super.Paula.Client.Authentication
 {
-    public class PaulaAuthenticationStateManager : AuthenticationStateProvider
+    public class AuthenticationStateManager : AuthenticationStateProvider
     {
         private ISet<string> _authorizationFilter = ImmutableHashSet.Create<string>();
-        private string _authenticationBearer = string.Empty;
-
+        private string _authorizationBearer = string.Empty;
 
         public ISet<string> GetAuthorizationsFilter()
             => _authorizationFilter;
@@ -24,23 +24,26 @@ namespace Super.Paula.Authentication
         }
 
         public string GetAuthenticationBearer()
-            => _authenticationBearer;
+        {
+            return _authorizationBearer;
+        }
 
         public void SetAuthenticationBearer(string bearer)
         {
-            _authenticationBearer = bearer;
-            NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
+            if (bearer != _authorizationBearer)
+            {
+                _authorizationBearer = bearer;
+                NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
+            }
         }
 
-        public override Task<AuthenticationState> GetAuthenticationStateAsync() 
+        public override Task<AuthenticationState> GetAuthenticationStateAsync()
         {
-            var identity = string.IsNullOrEmpty(_authenticationBearer)
+            var identity = string.IsNullOrWhiteSpace(_authorizationBearer)
                 ? new ClaimsIdentity(Enumerable.Empty<Claim>(), "Password")
                 : new ClaimsIdentity(Enumerable.Empty<Claim>());
 
-            return Task.FromResult(
-                new AuthenticationState(
-                    new ClaimsPrincipal(identity)));
+            return Task.FromResult(new AuthenticationState(new ClaimsPrincipal(identity)));
         }
     }
 }

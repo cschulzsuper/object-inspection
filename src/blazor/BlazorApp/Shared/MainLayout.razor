@@ -3,7 +3,7 @@
 @inject IAccountHandler AccountHandler
 @inject NavigationManager NavigationManager   
 @inject AppEnvironment AppEnvironment
-@inject PaulaAuthenticationStateManager PaulaAuthenticationStateManager
+@inject AuthenticationStateManager authenticationStateManager
 
 <div class="page">
     <div class="sidebar text-nowrap">
@@ -97,6 +97,6 @@
             .Where(x => !string.IsNullOrWhiteSpace(x))
             .ToArray();
 
-        PaulaAuthenticationStateManager.SetAuthorizationsFilter(authorizationFilter);
+        authenticationStateManager.SetAuthorizationsFilter(authorizationFilter);
     }
 }

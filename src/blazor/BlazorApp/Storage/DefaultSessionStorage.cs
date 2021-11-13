@@ -3,7 +3,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Super.Paula.Client
+namespace Super.Paula.Client.Storage
 {
     public class DefaultSessionStorage : ISessionStorage
     {
@@ -17,11 +17,15 @@ namespace Super.Paula.Client
         public ValueTask<bool> ContainKeyAsync(string key, CancellationToken? cancellationToken = null)
             => _sessionStorageService.ContainKeyAsync(key);
 
-        public async ValueTask<T> GetItemAsync<T>(string key, CancellationToken? cancellationToken = null)
+        public async ValueTask<T?> GetItemAsync<T>(string key, CancellationToken? cancellationToken = null)
         {
             var result = await _sessionStorageService.GetItemAsStringAsync(key);
-            var deserializedResult = JsonSerializer.Deserialize<T>(result);
-            return deserializedResult!;
+            
+            var deserializedResult = result != null
+                ? JsonSerializer.Deserialize<T>(result)
+                : default;
+
+            return deserializedResult;
         }
 
         public ValueTask RemoveItemAsync(string key, CancellationToken? cancellationToken = null)

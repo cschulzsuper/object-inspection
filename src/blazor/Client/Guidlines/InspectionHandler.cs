@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Super.Paula.Application.Guidlines;
 using Super.Paula.Application.Guidlines.Requests;
 using Super.Paula.Application.Guidlines.Responses;
-using Super.Paula.Authentication;
+using Super.Paula.Client.Authentication;
 using Super.Paula.Client.ErrorHandling;
 using Super.Paula.Environment;
 
@@ -17,35 +17,15 @@ namespace Super.Paula.Client.Guidlines
 {
     internal class InspectionHandler : IInspectionHandler
     {
-        private readonly PaulaAuthenticationStateManager _paulaAuthenticationStateManager;
         private readonly HttpClient _httpClient;
 
         public InspectionHandler(
             HttpClient httpClient,
-            PaulaAuthenticationStateManager paulaAuthenticationStateManager,
             AppSettings appSettings)
         {
-            _paulaAuthenticationStateManager = paulaAuthenticationStateManager;
-            _paulaAuthenticationStateManager.AuthenticationStateChanged += AuthenticationStateChanged;
 
             _httpClient = httpClient;
             _httpClient.BaseAddress = new Uri(appSettings.Server);
-            SetBearerOnHttpClient();
-        }
-
-        private void AuthenticationStateChanged(Task<AuthenticationState> task)
-            => task.ContinueWith(_ =>
-            {
-                SetBearerOnHttpClient();
-            });
-
-        private void SetBearerOnHttpClient()
-        {
-            var bearer = _paulaAuthenticationStateManager.GetAuthenticationBearer();
-
-            _httpClient.DefaultRequestHeaders.Authorization = !string.IsNullOrWhiteSpace(bearer)
-                    ? new AuthenticationHeaderValue("Bearer", bearer)
-                    : null;
         }
 
         public async ValueTask ActivateAsync(string inspection)

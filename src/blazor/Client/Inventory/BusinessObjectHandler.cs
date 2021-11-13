@@ -11,7 +11,7 @@ using Super.Paula.Application.Administration.Requests;
 using Super.Paula.Application.Inventory;
 using Super.Paula.Application.Inventory.Requests;
 using Super.Paula.Application.Inventory.Responses;
-using Super.Paula.Authentication;
+using Super.Paula.Client.Authentication;
 using Super.Paula.Client.ErrorHandling;
 using Super.Paula.Environment;
 
@@ -19,35 +19,14 @@ namespace Super.Paula.Client.Inventory
 {
     internal class BusinessObjectHandler : IBusinessObjectHandler
     {
-        private readonly PaulaAuthenticationStateManager _paulaAuthenticationStateManager;
         private readonly HttpClient _httpClient;
 
         public BusinessObjectHandler(
             HttpClient httpClient,
-            PaulaAuthenticationStateManager paulaAuthenticationStateManager,
             AppSettings appSettings)
         {
-            _paulaAuthenticationStateManager = paulaAuthenticationStateManager;
-            _paulaAuthenticationStateManager.AuthenticationStateChanged += AuthenticationStateChanged;
-
             _httpClient = httpClient;
             _httpClient.BaseAddress = new Uri(appSettings.Server);
-            SetBearerOnHttpClient();
-        }
-
-        private void AuthenticationStateChanged(Task<AuthenticationState> task)
-            => task.ContinueWith(_ =>
-            {
-                SetBearerOnHttpClient();
-            });
-
-        private void SetBearerOnHttpClient()
-        {
-            var bearer = _paulaAuthenticationStateManager.GetAuthenticationBearer();
-
-            _httpClient.DefaultRequestHeaders.Authorization = !string.IsNullOrWhiteSpace(bearer)
-                    ? new AuthenticationHeaderValue("Bearer", bearer)
-                    : null;
         }
 
         public async ValueTask AssignInspectionAsync(string businessObject, AssignInspectionRequest request)

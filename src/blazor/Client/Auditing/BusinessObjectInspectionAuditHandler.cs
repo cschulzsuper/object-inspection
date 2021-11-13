@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Super.Paula.Application.Auditing;
 using Super.Paula.Application.Auditing.Requests;
 using Super.Paula.Application.Auditing.Responses;
-using Super.Paula.Authentication;
+using Super.Paula.Client.Authentication;
 using Super.Paula.Client.ErrorHandling;
 using Super.Paula.Environment;
 
@@ -18,35 +18,14 @@ namespace Super.Paula.Client.Auditing
 {
     internal class BusinessObjectInspectionAuditHandler : IBusinessObjectInspectionAuditHandler
     {
-        private readonly PaulaAuthenticationStateManager _paulaAuthenticationStateManager;
         private readonly HttpClient _httpClient;
 
         public BusinessObjectInspectionAuditHandler(
             HttpClient httpClient,
-            PaulaAuthenticationStateManager paulaAuthenticationStateManager,
             AppSettings appSettings)
         {
-            _paulaAuthenticationStateManager = paulaAuthenticationStateManager;
-            _paulaAuthenticationStateManager.AuthenticationStateChanged += AuthenticationStateChanged;
-
             _httpClient = httpClient;
             _httpClient.BaseAddress = new Uri(appSettings.Server);
-            SetBearerOnHttpClient();
-        }
-
-        private void AuthenticationStateChanged(Task<AuthenticationState> task)
-            => task.ContinueWith(_ =>
-            {
-                SetBearerOnHttpClient();
-            });
-
-        private void SetBearerOnHttpClient()
-        {
-            var bearer = _paulaAuthenticationStateManager.GetAuthenticationBearer();
-
-            _httpClient.DefaultRequestHeaders.Authorization = !string.IsNullOrWhiteSpace(bearer)
-                    ? new AuthenticationHeaderValue("Bearer", bearer)
-                    : null;
         }
 
         public async ValueTask<BusinessObjectInspectionAuditResponse> CreateAsync(string businessObject, BusinessObjectInspectionAuditRequest request)

@@ -8,8 +8,9 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Super.Paula.Application.Administration;
 using Super.Paula.Application.Administration.Requests;
 using Super.Paula.Application.Administration.Responses;
-using Super.Paula.Authentication;
+using Super.Paula.Client.Authentication;
 using Super.Paula.Client.ErrorHandling;
+using Super.Paula.Client.Storage;
 using Super.Paula.Environment;
 
 namespace Super.Paula.Client.Administration
@@ -18,7 +19,7 @@ namespace Super.Paula.Client.Administration
     {
         private readonly AppState _appState;
         private readonly AccountHandlerCache _accountHandlerCache;
-        private readonly PaulaAuthenticationStateManager _paulaAuthenticationStateManager;
+        private readonly AuthenticationStateManager _authenticationStateManager;
         private readonly HttpClient _httpClient;
 
         public AccountHandler(
@@ -26,30 +27,18 @@ namespace Super.Paula.Client.Administration
             AppState appState,
             AppSettings appSettings,
             AccountHandlerCache accountHandlerCache,
-            PaulaAuthenticationStateManager paulaAuthenticationStateManager)
+            AuthenticationStateManager authenticationStateManager)
         {
             _appState = appState;
             
             _accountHandlerCache = accountHandlerCache;
-            _paulaAuthenticationStateManager = paulaAuthenticationStateManager;
-
+            _authenticationStateManager = authenticationStateManager;
             _httpClient = httpClient;
             _httpClient.BaseAddress = new Uri(appSettings.Server);
         }
 
-        private void SetBearerOnHttpClient()
-        {
-            var bearer = _paulaAuthenticationStateManager.GetAuthenticationBearer();
-
-            _httpClient.DefaultRequestHeaders.Authorization = !string.IsNullOrWhiteSpace(bearer)
-                    ? new AuthenticationHeaderValue("Bearer", bearer)
-                    : null;
-        }
-
         public async ValueTask ChangeSecretAsync(ChangeSecretRequest request)
         {
-            SetBearerOnHttpClient();
-
             var responseMessage = await _httpClient.PostAsJsonAsync("account/account/change-secret", request);
             
             responseMessage.RuleOutProblems();
@@ -58,8 +47,6 @@ namespace Super.Paula.Client.Administration
 
         public async ValueTask<QueryAuthorizationsResponse> QueryAuthorizationsAsync()
         {
-            SetBearerOnHttpClient();
-
             if (_accountHandlerCache.QueryAuthorizationsResponse == null)
             {
                 var query = async () =>
@@ -75,7 +62,7 @@ namespace Super.Paula.Client.Administration
                 _accountHandlerCache.QueryAuthorizationsResponse = query.Invoke();
             }
 
-            var authorizationFilter = _paulaAuthenticationStateManager.GetAuthorizationsFilter();
+            var authorizationFilter = _authenticationStateManager.GetAuthorizationsFilter();
 
             return new QueryAuthorizationsResponse
             {
@@ -89,8 +76,6 @@ namespace Super.Paula.Client.Administration
 
         public async ValueTask RepairChiefInspectorAsync(RepairChiefInspectorRequest request)
         {
-            SetBearerOnHttpClient();
-
             var responseMessage = await _httpClient.PostAsJsonAsync("account/repair-chief-inspector", request);
             
             responseMessage.RuleOutProblems();
@@ -99,8 +84,6 @@ namespace Super.Paula.Client.Administration
 
         public async ValueTask RegisterInspectorAsync(RegisterInspectorRequest request)
         {
-            SetBearerOnHttpClient();
-
             var responseMessage = await _httpClient.PostAsJsonAsync("account/register-inspector", request);
             
             responseMessage.RuleOutProblems();
@@ -109,8 +92,6 @@ namespace Super.Paula.Client.Administration
 
         public async ValueTask RegisterOrganizationAsync(RegisterOrganizationRequest request)
         {
-            SetBearerOnHttpClient();
-
             var responseMessage = await _httpClient.PostAsJsonAsync("account/register-organization", request);
             
             responseMessage.RuleOutProblems();
@@ -119,8 +100,6 @@ namespace Super.Paula.Client.Administration
 
         public async ValueTask<AssessChiefInspectorDefectivenessResponse> AssessChiefInspectorDefectivenessAsync(AssessChiefInspectorDefectivenessRequest request)
         {
-            SetBearerOnHttpClient();
-
             var responseMessage = await _httpClient.PostAsJsonAsync("account/assess-chief-inspector-defectiveness", request);
             
             responseMessage.RuleOutProblems();
@@ -131,8 +110,6 @@ namespace Super.Paula.Client.Administration
 
         public async ValueTask<SignInInspectorResponse> SignInInspectorAsync(SignInInspectorRequest request)
         {
-            SetBearerOnHttpClient();
-
             var responseMessage = await _httpClient.PostAsJsonAsync("account/sign-in-inspector", request);
             
             responseMessage.RuleOutProblems();
@@ -149,14 +126,17 @@ namespace Super.Paula.Client.Administration
 
             _accountHandlerCache.QueryAuthorizationsResponse = null;
 
-            _paulaAuthenticationStateManager.SetAuthenticationBearer(response.Bearer);
+            _authenticationStateManager.SetAuthenticationBearer(response.Bearer);
 
             return response;
         }
 
         public async ValueTask SignOutInspectorAsync()
         {
-            SetBearerOnHttpClient();
+            var responseMessage = await _httpClient.PostAsync("account/sign-out-inspector", null);
+
+            responseMessage.RuleOutProblems();
+            responseMessage.EnsureSuccessStatusCode();
 
             _appState.CurrentInspector = string.Empty;
             _appState.CurrentOrganization = string.Empty;
@@ -166,18 +146,12 @@ namespace Super.Paula.Client.Administration
             _accountHandlerCache.FallbackOrganization = string.Empty;
 
             _accountHandlerCache.QueryAuthorizationsResponse = null;
-            _paulaAuthenticationStateManager.SetAuthenticationBearer(string.Empty);
 
-            var responseMessage = await _httpClient.PostAsync("account/sign-out-inspector", null);
-            
-            responseMessage.RuleOutProblems();
-            responseMessage.EnsureSuccessStatusCode();
+            _authenticationStateManager.SetAuthenticationBearer(string.Empty);
         }
 
         public async ValueTask<StartImpersonationResponse> StartImpersonationAsync(StartImpersonationRequest request)
         {
-            SetBearerOnHttpClient();
-
             var responseMessage = await _httpClient.PostAsJsonAsync("account/start-impersonation", request);
             
             responseMessage.RuleOutProblems();
@@ -185,7 +159,7 @@ namespace Super.Paula.Client.Administration
 
             var response = (await responseMessage.Content.ReadFromJsonAsync<StartImpersonationResponse>())!;
 
-            _accountHandlerCache.FallbackBearer = _paulaAuthenticationStateManager.GetAuthenticationBearer();
+            _accountHandlerCache.FallbackBearer = _authenticationStateManager.GetAuthenticationBearer();
             _accountHandlerCache.FallbackInspector = _appState.CurrentInspector;
             _accountHandlerCache.FallbackOrganization = _appState.CurrentOrganization;
 
@@ -193,27 +167,25 @@ namespace Super.Paula.Client.Administration
             _appState.CurrentOrganization = request.Organization;
 
             _accountHandlerCache.QueryAuthorizationsResponse = null;
-            _paulaAuthenticationStateManager.SetAuthenticationBearer(response.Bearer);
+
+            _authenticationStateManager.SetAuthenticationBearer(response.Bearer);
 
             return response;
         }
 
         public ValueTask StopImpersonationAsync()
         {
-            SetBearerOnHttpClient();
-
             if (!string.IsNullOrWhiteSpace(_accountHandlerCache.FallbackBearer))
             {
                 _appState.CurrentInspector = _accountHandlerCache.FallbackInspector!;
                 _appState.CurrentOrganization = _accountHandlerCache.FallbackOrganization!;
 
                 _accountHandlerCache.QueryAuthorizationsResponse = null;
-                _paulaAuthenticationStateManager.SetAuthenticationBearer(_accountHandlerCache.FallbackBearer!);
+                _authenticationStateManager.SetAuthenticationBearer(_accountHandlerCache.FallbackBearer!);
 
                 _accountHandlerCache.FallbackBearer = string.Empty;
                 _accountHandlerCache.FallbackInspector = string.Empty;
                 _accountHandlerCache.FallbackOrganization = string.Empty;
-
             }
 
             return ValueTask.CompletedTask;
