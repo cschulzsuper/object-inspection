@@ -3,7 +3,7 @@
 @inject ITranslator Translator
 @inject NavigationManager NavigationManager
 @inject INotificationHandler NotificationHandler
-@inject AppState AppState
+@inject AppAuthentication AppAuthentication
 
 @implements IAsyncDisposable
 
@@ -46,7 +46,7 @@ else
         {
             _notifications = new List<NotificationResponse>();
 
-            await foreach (var notification in NotificationHandler.GetAllForInspector(AppState.CurrentInspector))
+            await foreach (var notification in NotificationHandler.GetAllForInspector(AppAuthentication.Inspector))
             {
                 _notifications.Add(notification);
                 StateHasChanged();

@@ -1,4 +1,6 @@
 ﻿
+using Super.Paula.Client.Storage;
+using Super.Paula.Environment;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;
@@ -8,19 +10,19 @@ namespace Super.Paula.Client.Authentication
 {
     public class AuthenticationMessageHandler : DelegatingHandler
     {
-        private readonly AuthenticationStateManager _authenticationStateManager;
+        private readonly ILocalStorage _localStorage;
 
-        public AuthenticationMessageHandler(AuthenticationStateManager authenticationStateManager)
+        public AuthenticationMessageHandler(ILocalStorage localStorage)
         {
-            _authenticationStateManager = authenticationStateManager;
+            _localStorage = localStorage;
         }
 
         protected async override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            var bearer = _authenticationStateManager.GetAuthenticationBearer();
+            var appAuthentication = await _localStorage.GetItemAsync<AppAuthentication>("app-authentication");
 
-            request.Headers.Authorization = !string.IsNullOrWhiteSpace(bearer)
-                    ? new AuthenticationHeaderValue("Bearer", bearer)
+            request.Headers.Authorization = !string.IsNullOrWhiteSpace(appAuthentication?.Bearer)
+                    ? new AuthenticationHeaderValue("Bearer", appAuthentication.Bearer)
                     : null;
 
             return await base.SendAsync(request, cancellationToken);

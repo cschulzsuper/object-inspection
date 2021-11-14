@@ -52,6 +52,7 @@ namespace Super.Paula.Authentication
                 }
                 var claims = new[]
                 {
+                    new Claim("Bearer", bearer),
                     new Claim(ClaimTypes.NameIdentifier, subject)
                 };
 
@@ -89,7 +90,8 @@ namespace Super.Paula.Authentication
             var fallbackSubjectValue = Encoding.UTF8.GetString(fallbackSubject);
             var fallbackSubjectValues = fallbackSubjectValue.Split(':', 3);
 
-            if (_appSettings!.Maintainer != fallbackSubjectValues[1] ||
+            if (fallbackSubjectValues.Length != 3 ||
+                _appSettings!.Maintainer != fallbackSubjectValues[1] ||
                 _appSettings!.MaintainerOrganization != fallbackSubjectValues[0])
             {
                 return null;

@@ -1,5 +1,5 @@
 ﻿@inject INotificationHandler NotificationHandler
-@inject AppState AppState
+@inject AppAuthentication AppAuthentication
 @inject IAccountHandler AccountHandler
 
 @implements IAsyncDisposable
@@ -97,7 +97,7 @@
     private IDisposable? _notificationHandlerOnCreated;
     private IDisposable? _notificationHandlerOnDeleted;
 
-    private long _notificationCount;
+    private long? _notificationCount;
 
     private bool collapseNavMenu = true;
 
@@ -106,6 +106,14 @@
     [CascadingParameter]
     private Task<AuthenticationState>? authenticationStateTask { get; set; }
 
+    protected override async Task OnParametersSetAsync()
+    {          
+        if (authenticationStateTask != null) 
+            await authenticationStateTask;
+
+        await InitializeNotificationCounter();
+    }
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
@@ -113,14 +121,18 @@
             _notificationHandlerOnCreated = await NotificationHandler.OnCreatedAsync(OnCreatedAsync);
             _notificationHandlerOnDeleted = await NotificationHandler.OnDeletedAsync(OnDeletedAsync);
         }
+    }
 
+    public async Task InitializeNotificationCounter()
+    {
         _notificationCount = 0;
 
-        if((await AccountHandler.QueryAuthorizationsAsync()).Values.Any())
+        if ((await AccountHandler.QueryAuthorizationsAsync()).Values.Any())
         {
-            await foreach(var _ in NotificationHandler.GetAllForInspector(AppState.CurrentInspector))
+            await foreach (var _ in NotificationHandler.GetAllForInspector(AppAuthentication.Inspector))
             {
                 _notificationCount++;
+                StateHasChanged();
             }
         }
     }

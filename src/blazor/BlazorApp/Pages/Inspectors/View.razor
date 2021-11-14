@@ -4,7 +4,7 @@
 @inject ITranslator Translator
 @inject NavigationManager NavigationManager
 @inject IAccountHandler AccountHandler
-@inject AppState AppState
+@inject AppAuthentication AppAuthentication
 @inject IInspectorHandler InspectorHandler
 
 
@@ -56,7 +56,7 @@ else
                         @if(inspector.Activated)
                         {
                             <td>
-                                @if (inspector.UniqueName != AppState.CurrentInspector)
+                                @if (inspector.UniqueName != AppAuthentication.Inspector)
                                 {
                                     <button class="btn btn-primary btn-block" 
                                         @onclick="() => DeactivateAsync(inspector.UniqueName)">@Translator["Deactivate"]</button>
@@ -64,7 +64,7 @@ else
                             </td>
                         } else {
                             <td>
-                                @if (inspector.UniqueName != AppState.CurrentInspector)
+                                @if (inspector.UniqueName != AppAuthentication.Inspector)
                                 {
                                     <button class="btn btn-outline-primary btn-block" 
                                         @onclick="() => ActivateAsync(inspector.UniqueName)">@Translator["Activate"]</button>
@@ -76,7 +76,7 @@ else
                                 @onclick="() => Edit(inspector.UniqueName)">@Translator["Edit"]</button>
                         </td>
                         <td>
-                            @if (inspector.UniqueName != AppState.CurrentInspector)
+                            @if (inspector.UniqueName != AppAuthentication.Inspector)
                             {
                                 <button class="btn btn-outline-danger btn-block" 
                                     @onclick="() => DeleteAsync(inspector.UniqueName)">@Translator["Delete"]</button>
@@ -87,7 +87,7 @@ else
                         <Authorized>
                             <td>
                                 @if (inspector.Activated &&
-                                     inspector.UniqueName != AppState.CurrentInspector)
+                                     inspector.UniqueName != AppAuthentication.Inspector)
                                 {
                                     <button class="btn btn-outline-danger btn-block" 
                                     @onclick="() => ImpersonateAsync(inspector.UniqueName)">@Translator["Impersonate"]</button>
@@ -159,7 +159,7 @@ else
         await AccountHandler.StartImpersonationAsync(new StartImpersonationRequest
         {
             UniqueName = inspector,
-            Organization = Organization ?? AppState.CurrentOrganization
+            Organization = Organization ?? AppAuthentication.Organization
         });
 
         NavigationManager.NavigateTo("/");

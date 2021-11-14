@@ -15,7 +15,6 @@ namespace Super.Paula.Application.Administration
         private readonly IInspectorManager _inspectorManager;
         private readonly IOrganizationManager _organizationManager;
         private readonly IConnectionManager _connectionManager;
-        private readonly AppState _appState;
         private readonly AppSettings _appSettings;
         private readonly AppAuthentication _appAuthentication;
 
@@ -23,14 +22,12 @@ namespace Super.Paula.Application.Administration
             IInspectorManager inspectorManager,
             IOrganizationManager organizationManager,
             IConnectionManager connectionManager,
-            AppState appState,
             AppSettings appSettings,
             AppAuthentication appAuthentication)
         {
             _inspectorManager = inspectorManager;
             _organizationManager = organizationManager;
             _connectionManager = connectionManager;
-            _appState = appState;
             _appSettings = appSettings;
             _appAuthentication = appAuthentication;
         }
@@ -39,8 +36,8 @@ namespace Super.Paula.Application.Administration
         {
             var inspector = _inspectorManager.GetQueryable()
                 .Single(x =>
-                    x.UniqueName == _appState.CurrentInspector &&
-                    x.Organization == _appState.CurrentOrganization &&
+                    x.UniqueName == _appAuthentication.Inspector &&
+                    x.Organization == _appAuthentication.Organization &&
                     x.Secret == request.OldSecret);
 
             inspector.Secret = request.NewSecret;
@@ -71,26 +68,26 @@ namespace Super.Paula.Application.Administration
         {
             var authorizationValues = new HashSet<string>();
 
-            if (!string.IsNullOrWhiteSpace(_appState.CurrentOrganization) &&
-                !string.IsNullOrWhiteSpace(_appState.CurrentInspector))
+            if (!string.IsNullOrWhiteSpace(_appAuthentication.Organization) &&
+                !string.IsNullOrWhiteSpace(_appAuthentication.Inspector))
             {
                 var organization = _organizationManager.GetQueryable()
-                    .Single(x => x.UniqueName == _appState.CurrentOrganization);
+                    .Single(x => x.UniqueName == _appAuthentication.Organization);
 
                 authorizationValues.Add("Inspector");
 
-                if (organization.ChiefInspector == _appState.CurrentInspector)
+                if (organization.ChiefInspector == _appAuthentication.Inspector)
                 {
                     authorizationValues.Add("ChiefInspector");
                 }
 
-                if (_appSettings.Maintainer == _appState.CurrentInspector &&
-                    _appSettings.MaintainerOrganization == _appState.CurrentOrganization)
+                if (_appSettings.Maintainer == _appAuthentication.Inspector &&
+                    _appSettings.MaintainerOrganization == _appAuthentication.Organization)
                 {
                     authorizationValues.Add("Maintainer");
                 }
 
-                if (!string.IsNullOrWhiteSpace(_appAuthentication.Impersonator))
+                if (!string.IsNullOrWhiteSpace(_appAuthentication.ImpersonatorBearer))
                 {
                     authorizationValues.Add("Impersonator");
                 }
@@ -123,21 +120,21 @@ namespace Super.Paula.Application.Administration
 
         public async ValueTask RegisterOrganizationAsync(RegisterOrganizationRequest request)
         {
-            var activateOrganisation = _organizationManager.GetQueryable().FirstOrDefault() == null;
+            var activateOrganization = _organizationManager.GetQueryable().FirstOrDefault() == null;
 
             await _organizationManager.InsertAsync(new Organization
             {
                 ChiefInspector = request.ChiefInspector,
                 UniqueName = request.UniqueName,
                 DisplayName = request.DisplayName,
-                Activated = activateOrganisation,
+                Activated = activateOrganization,
             });
 
             await _inspectorManager.InsertAsync(new Inspector
             {
                 MailAddress = request.ChiefInspectorMail,
                 Organization = request.UniqueName,
-                OrganizationActivated = activateOrganisation,
+                OrganizationActivated = activateOrganization,
                 OrganizationDisplayName = request.DisplayName,
                 Secret = request.ChiefInspectorSecret,
                 UniqueName = request.ChiefInspector,
@@ -177,8 +174,8 @@ namespace Super.Paula.Application.Administration
         {
             var inspector = _inspectorManager.GetQueryable()
                 .Single(x =>
-                    x.UniqueName == _appState.CurrentInspector &&
-                    x.Organization == _appState.CurrentOrganization);
+                    x.UniqueName == _appAuthentication.Inspector &&
+                    x.Organization == _appAuthentication.Organization);
 
             _connectionManager.Forget(
                 inspector.Organization,

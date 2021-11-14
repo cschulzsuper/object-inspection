@@ -1,7 +1,8 @@
 using System.Threading.Tasks;
-using Blazored.SessionStorage;
+using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Super.Paula.Client.Authentication;
 using Super.Paula.Client.Configuration;
 using Super.Paula.Client.Storage;
 
@@ -28,8 +29,11 @@ namespace Super.Paula.Client
 
         public static void ConfigureServices(this IServiceCollection services, IWebAssemblyHostEnvironment environment)
         {
-            services.AddBlazoredSessionStorage();
-            services.AddPaulaClient<DefaultSessionStorage>(environment.IsDevelopment());
+            services.AddBlazoredLocalStorage();
+
+            services
+                .AddPaulaClient(environment.IsDevelopment(), isWebAssembly: true)
+                .AddScoped<ILocalStorage, DefaultLocalStorage>();
         }
     }
 }

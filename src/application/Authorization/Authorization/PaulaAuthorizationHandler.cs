@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Super.Paula.Application.Administration;
+using Super.Paula.Environment;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -7,16 +8,20 @@ namespace Super.Paula.Authorization
 {
     public class PaulaAuthorizationHandler : AuthorizationHandler<PaulaAuthorizationRequirement>
     {
-        private readonly IAccountHandler _accountHandler;
+        private readonly AppAuthentication _appAuthentication;
 
-        public PaulaAuthorizationHandler(IAccountHandler accountHandler)
+        public PaulaAuthorizationHandler(AppAuthentication appAuthentication)
         {
-            _accountHandler = accountHandler;
+            _appAuthentication = appAuthentication;
         }
 
-        protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, PaulaAuthorizationRequirement requirement)
+        protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, PaulaAuthorizationRequirement requirement)
         {
-            var authorizations = (await _accountHandler.QueryAuthorizationsAsync()).Values;
+            var authorizations = _appAuthentication.Authorizations
+                .Where(x =>
+                        _appAuthentication.AuthorizationsFilter.Any() == false ||
+                        _appAuthentication.AuthorizationsFilter.Contains(x))
+                .ToArray();
 
             if (string.IsNullOrWhiteSpace(requirement.Value) &&
                 authorizations.Any())
@@ -28,6 +33,8 @@ namespace Super.Paula.Authorization
             {
                 context.Succeed(requirement);
             }
+
+            return Task.CompletedTask;
         }
     }
 }

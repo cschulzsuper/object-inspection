@@ -1,194 +1,140 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Net.Http.Json;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Components.Authorization;
 using Super.Paula.Application.Administration;
 using Super.Paula.Application.Administration.Requests;
 using Super.Paula.Application.Administration.Responses;
 using Super.Paula.Client.Authentication;
-using Super.Paula.Client.ErrorHandling;
-using Super.Paula.Client.Storage;
 using Super.Paula.Environment;
 
 namespace Super.Paula.Client.Administration
 {
     internal class AccountHandler : IAccountHandler
     {
-        private readonly AppState _appState;
-        private readonly AccountHandlerCache _accountHandlerCache;
+        private readonly IAccountHandler _accountHandler;
+
+        private readonly AppAuthentication _appAuthentication;
         private readonly AuthenticationStateManager _authenticationStateManager;
-        private readonly HttpClient _httpClient;
 
         public AccountHandler(
-            HttpClient httpClient,
-            AppState appState,
-            AppSettings appSettings,
-            AccountHandlerCache accountHandlerCache,
+            IAccountHandler accountHandler,
+            AppAuthentication appAuthentication,
             AuthenticationStateManager authenticationStateManager)
         {
-            _appState = appState;
+            _accountHandler = accountHandler;
+            _appAuthentication = appAuthentication;
             
-            _accountHandlerCache = accountHandlerCache;
             _authenticationStateManager = authenticationStateManager;
-            _httpClient = httpClient;
-            _httpClient.BaseAddress = new Uri(appSettings.Server);
         }
 
-        public async ValueTask ChangeSecretAsync(ChangeSecretRequest request)
+        public ValueTask ChangeSecretAsync(ChangeSecretRequest request)
+            => _accountHandler.ChangeSecretAsync(request);
+
+        public ValueTask<QueryAuthorizationsResponse> QueryAuthorizationsAsync()
         {
-            var responseMessage = await _httpClient.PostAsJsonAsync("account/account/change-secret", request);
-            
-            responseMessage.RuleOutProblems();
-            responseMessage.EnsureSuccessStatusCode();
+            var authorizations = _appAuthentication.Authorizations
+                .Where(x =>
+                        _appAuthentication.AuthorizationsFilter.Any() == false ||
+                        _appAuthentication.AuthorizationsFilter.Contains(x))
+                .ToHashSet();
+
+            return ValueTask.FromResult(new QueryAuthorizationsResponse { Values = authorizations } );
         }
 
-        public async ValueTask<QueryAuthorizationsResponse> QueryAuthorizationsAsync()
-        {
-            if (_accountHandlerCache.QueryAuthorizationsResponse == null)
-            {
-                var query = async () =>
-                {
-                    var responseMessage = await _httpClient.GetAsync("account/query-authorizations");
-                    
-                    responseMessage.RuleOutProblems();
-                    responseMessage.EnsureSuccessStatusCode();
+        public ValueTask RepairChiefInspectorAsync(RepairChiefInspectorRequest request)
+            => _accountHandler.RepairChiefInspectorAsync(request);
 
-                    return (await responseMessage.Content.ReadFromJsonAsync<QueryAuthorizationsResponse>())!;
-                };
+        public ValueTask RegisterInspectorAsync(RegisterInspectorRequest request)
+            => _accountHandler.RegisterInspectorAsync(request);
 
-                _accountHandlerCache.QueryAuthorizationsResponse = query.Invoke();
-            }
+        public ValueTask RegisterOrganizationAsync(RegisterOrganizationRequest request)
+            => _accountHandler.RegisterOrganizationAsync(request);
 
-            var authorizationFilter = _authenticationStateManager.GetAuthorizationsFilter();
-
-            return new QueryAuthorizationsResponse
-            {
-                Values = (await _accountHandlerCache.QueryAuthorizationsResponse)!.Values
-                    .Where(x =>
-                        authorizationFilter.Any() == false ||
-                        authorizationFilter.Contains(x))
-                    .ToHashSet()
-            };
-        }
-
-        public async ValueTask RepairChiefInspectorAsync(RepairChiefInspectorRequest request)
-        {
-            var responseMessage = await _httpClient.PostAsJsonAsync("account/repair-chief-inspector", request);
-            
-            responseMessage.RuleOutProblems();
-            responseMessage.EnsureSuccessStatusCode();
-        }
-
-        public async ValueTask RegisterInspectorAsync(RegisterInspectorRequest request)
-        {
-            var responseMessage = await _httpClient.PostAsJsonAsync("account/register-inspector", request);
-            
-            responseMessage.RuleOutProblems();
-            responseMessage.EnsureSuccessStatusCode();
-        }
-
-        public async ValueTask RegisterOrganizationAsync(RegisterOrganizationRequest request)
-        {
-            var responseMessage = await _httpClient.PostAsJsonAsync("account/register-organization", request);
-            
-            responseMessage.RuleOutProblems();
-            responseMessage.EnsureSuccessStatusCode();
-        }
-
-        public async ValueTask<AssessChiefInspectorDefectivenessResponse> AssessChiefInspectorDefectivenessAsync(AssessChiefInspectorDefectivenessRequest request)
-        {
-            var responseMessage = await _httpClient.PostAsJsonAsync("account/assess-chief-inspector-defectiveness", request);
-            
-            responseMessage.RuleOutProblems();
-            responseMessage.EnsureSuccessStatusCode();
-
-            return (await responseMessage.Content.ReadFromJsonAsync<AssessChiefInspectorDefectivenessResponse>())!;
-        }
+        public ValueTask<AssessChiefInspectorDefectivenessResponse> AssessChiefInspectorDefectivenessAsync(AssessChiefInspectorDefectivenessRequest request)
+            => _accountHandler.AssessChiefInspectorDefectivenessAsync(request);
 
         public async ValueTask<SignInInspectorResponse> SignInInspectorAsync(SignInInspectorRequest request)
         {
-            var responseMessage = await _httpClient.PostAsJsonAsync("account/sign-in-inspector", request);
-            
-            responseMessage.RuleOutProblems();
-            responseMessage.EnsureSuccessStatusCode();
+            var response = await _accountHandler.SignInInspectorAsync(request);
 
-            var response = (await responseMessage.Content.ReadFromJsonAsync<SignInInspectorResponse>())!;
+            _appAuthentication.Bearer = response.Bearer;
+            _appAuthentication.Inspector = request.UniqueName;
+            _appAuthentication.Organization = request.Organization;
 
-            _appState.CurrentInspector = request.UniqueName;
-            _appState.CurrentOrganization = request.Organization;
+            _appAuthentication.ImpersonatorBearer = string.Empty;
+            _appAuthentication.ImpersonatorInspector = string.Empty;
+            _appAuthentication.ImpersonatorOrganization = string.Empty;
 
-            _accountHandlerCache.FallbackBearer = string.Empty;
-            _accountHandlerCache.FallbackInspector = string.Empty;
-            _accountHandlerCache.FallbackOrganization = string.Empty;
+            await _authenticationStateManager.PersistAuthenticationStateAsync();
 
-            _accountHandlerCache.QueryAuthorizationsResponse = null;
+            _appAuthentication.Authorizations = (await _accountHandler.QueryAuthorizationsAsync()).Values.ToArray();
+            _appAuthentication.AuthorizationsFilter = Array.Empty<string>();
 
-            _authenticationStateManager.SetAuthenticationBearer(response.Bearer);
+            await _authenticationStateManager.PersistAuthenticationStateAsync();
 
             return response;
         }
 
         public async ValueTask SignOutInspectorAsync()
         {
-            var responseMessage = await _httpClient.PostAsync("account/sign-out-inspector", null);
+            await _accountHandler.SignOutInspectorAsync();
 
-            responseMessage.RuleOutProblems();
-            responseMessage.EnsureSuccessStatusCode();
+            _appAuthentication.Bearer = string.Empty;
+            _appAuthentication.Inspector = string.Empty;
+            _appAuthentication.Organization = string.Empty;
 
-            _appState.CurrentInspector = string.Empty;
-            _appState.CurrentOrganization = string.Empty;
+            _appAuthentication.ImpersonatorBearer = string.Empty;
+            _appAuthentication.ImpersonatorInspector = string.Empty;
+            _appAuthentication.ImpersonatorOrganization = string.Empty;
 
-            _accountHandlerCache.FallbackBearer = string.Empty;
-            _accountHandlerCache.FallbackInspector = string.Empty;
-            _accountHandlerCache.FallbackOrganization = string.Empty;
+            _appAuthentication.Authorizations = Array.Empty<string>();
+            _appAuthentication.AuthorizationsFilter = Array.Empty<string>();
 
-            _accountHandlerCache.QueryAuthorizationsResponse = null;
-
-            _authenticationStateManager.SetAuthenticationBearer(string.Empty);
+            await _authenticationStateManager.PersistAuthenticationStateAsync();
         }
 
         public async ValueTask<StartImpersonationResponse> StartImpersonationAsync(StartImpersonationRequest request)
         {
-            var responseMessage = await _httpClient.PostAsJsonAsync("account/start-impersonation", request);
-            
-            responseMessage.RuleOutProblems();
-            responseMessage.EnsureSuccessStatusCode();
+            var response = await _accountHandler.StartImpersonationAsync(request);
 
-            var response = (await responseMessage.Content.ReadFromJsonAsync<StartImpersonationResponse>())!;
+            _appAuthentication.ImpersonatorBearer = _appAuthentication.Bearer;
+            _appAuthentication.ImpersonatorInspector = _appAuthentication.Inspector;
+            _appAuthentication.ImpersonatorOrganization = _appAuthentication.Organization;
 
-            _accountHandlerCache.FallbackBearer = _authenticationStateManager.GetAuthenticationBearer();
-            _accountHandlerCache.FallbackInspector = _appState.CurrentInspector;
-            _accountHandlerCache.FallbackOrganization = _appState.CurrentOrganization;
+            _appAuthentication.Bearer = response.Bearer;
+            _appAuthentication.Inspector = request.UniqueName;
+            _appAuthentication.Organization = request.Organization;
 
-            _appState.CurrentInspector = request.UniqueName;
-            _appState.CurrentOrganization = request.Organization;
+            await _authenticationStateManager.PersistAuthenticationStateAsync();
 
-            _accountHandlerCache.QueryAuthorizationsResponse = null;
+            _appAuthentication.Authorizations = (await _accountHandler.QueryAuthorizationsAsync()).Values.ToArray();
+            _appAuthentication.AuthorizationsFilter = Array.Empty<string>();
 
-            _authenticationStateManager.SetAuthenticationBearer(response.Bearer);
+            await _authenticationStateManager.PersistAuthenticationStateAsync();
 
             return response;
         }
 
-        public ValueTask StopImpersonationAsync()
+        public async ValueTask StopImpersonationAsync()
         {
-            if (!string.IsNullOrWhiteSpace(_accountHandlerCache.FallbackBearer))
+            if (!string.IsNullOrWhiteSpace(_appAuthentication.ImpersonatorBearer))
             {
-                _appState.CurrentInspector = _accountHandlerCache.FallbackInspector!;
-                _appState.CurrentOrganization = _accountHandlerCache.FallbackOrganization!;
+                _appAuthentication.Bearer = _appAuthentication.ImpersonatorBearer!;
+                _appAuthentication.Inspector = _appAuthentication.ImpersonatorInspector!;
+                _appAuthentication.Organization = _appAuthentication.ImpersonatorOrganization!;
 
-                _accountHandlerCache.QueryAuthorizationsResponse = null;
-                _authenticationStateManager.SetAuthenticationBearer(_accountHandlerCache.FallbackBearer!);
+                _appAuthentication.ImpersonatorBearer = string.Empty;
+                _appAuthentication.ImpersonatorInspector = string.Empty;
+                _appAuthentication.ImpersonatorOrganization = string.Empty;
 
-                _accountHandlerCache.FallbackBearer = string.Empty;
-                _accountHandlerCache.FallbackInspector = string.Empty;
-                _accountHandlerCache.FallbackOrganization = string.Empty;
+                await _authenticationStateManager.PersistAuthenticationStateAsync();
+
+                _appAuthentication.Authorizations = (await _accountHandler.QueryAuthorizationsAsync()).Values.ToArray();
+                _appAuthentication.AuthorizationsFilter = Array.Empty<string>();
+
+                await _authenticationStateManager.PersistAuthenticationStateAsync();
             }
-
-            return ValueTask.CompletedTask;
         }
     }
 }

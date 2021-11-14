@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace Super.Paula.Client.Storage
 {
-    public interface ISessionStorage
+    public interface ILocalStorage
     {
         ValueTask<T?> GetItemAsync<T>(string key, CancellationToken? cancellationToken = null);
 

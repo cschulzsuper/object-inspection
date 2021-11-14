@@ -6,44 +6,60 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components.Authorization;
 using Super.Paula.Client.Storage;
+using Super.Paula.Environment;
 
 namespace Super.Paula.Client.Authentication
 {
     public class AuthenticationStateManager : AuthenticationStateProvider
     {
-        private ISet<string> _authorizationFilter = ImmutableHashSet.Create<string>();
-        private string _authorizationBearer = string.Empty;
+        private readonly AppAuthentication _appAuthentication;
+        private readonly ILocalStorage _localStorage;
 
-        public ISet<string> GetAuthorizationsFilter()
-            => _authorizationFilter;
-
-        public void SetAuthorizationsFilter(params string[] authorizations)
+        public AuthenticationStateManager(
+            AppAuthentication appAuthentication,
+            ILocalStorage localStorage)
         {
-            _authorizationFilter = ImmutableHashSet.CreateRange(authorizations);
-            NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
+            _appAuthentication = appAuthentication;
+            _localStorage = localStorage;
         }
 
-        public string GetAuthenticationBearer()
+        public async Task PersistAuthenticationStateAsync()
         {
-            return _authorizationBearer;
+            _appAuthentication.Ticks = DateTime.Now.Ticks;
+
+            await _localStorage.SetItemAsync("app-authentication", _appAuthentication);
+            NotifyAuthenticationStateChanged(CreatePrincipalAuthenticationStateAsync());
         }
 
-        public void SetAuthenticationBearer(string bearer)
+        public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
-            if (bearer != _authorizationBearer)
+            var appAuthentication = await _localStorage.GetItemAsync<AppAuthentication>("app-authentication");
+
+            if (_appAuthentication.Ticks < appAuthentication?.Ticks)
             {
-                _authorizationBearer = bearer;
-                NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
+                _appAuthentication.Ticks = appAuthentication.Ticks;
+                _appAuthentication.Bearer = appAuthentication.Bearer;
+                _appAuthentication.Inspector = appAuthentication.Inspector;
+                _appAuthentication.Organization = appAuthentication.Organization;
+                _appAuthentication.ImpersonatorBearer = appAuthentication.ImpersonatorBearer;
+                _appAuthentication.ImpersonatorInspector = appAuthentication.ImpersonatorInspector;
+                _appAuthentication.ImpersonatorOrganization = appAuthentication.ImpersonatorOrganization;
+                _appAuthentication.Authorizations = appAuthentication.Authorizations;
+                _appAuthentication.AuthorizationsFilter = appAuthentication.AuthorizationsFilter;
             }
+
+            return await CreatePrincipalAuthenticationStateAsync();
         }
 
-        public override Task<AuthenticationState> GetAuthenticationStateAsync()
+        private Task<AuthenticationState> CreatePrincipalAuthenticationStateAsync()
         {
-            var identity = string.IsNullOrWhiteSpace(_authorizationBearer)
+            var identity = string.IsNullOrWhiteSpace(_appAuthentication.Bearer)
                 ? new ClaimsIdentity(Enumerable.Empty<Claim>(), "Password")
                 : new ClaimsIdentity(Enumerable.Empty<Claim>());
 
-            return Task.FromResult(new AuthenticationState(new ClaimsPrincipal(identity)));
+            return Task.FromResult(
+                new AuthenticationState(
+                    new ClaimsPrincipal(identity)));
         }
     }
 }

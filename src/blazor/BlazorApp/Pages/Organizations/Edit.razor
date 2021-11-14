@@ -4,7 +4,7 @@
 @inject NavigationManager NavigationManager
 @inject IOrganizationHandler OrganizationHandler
 @inject IAccountHandler AccountHandler
-@inject AppState AppState
+@inject AppAuthentication AppAuthentication
 
 @attribute [Authorize("Maintainer")]
 
@@ -36,7 +36,7 @@ else
             </div>
             <div class="form-check">
                 <InputCheckbox class="form-check-input" id="activated" @bind-Value="_request.Activated"
-                    disabled="@(_request.UniqueName == AppState.CurrentOrganization)"/>
+                    disabled="@(_request.UniqueName == AppAuthentication.Organization)"/>
                 <label class="form-check-label" for="activated">@Translator["Activated"]</label>     
             </div>
         </div>

@@ -6,26 +6,28 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
+using msft = Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+
 namespace Super.Paula.Client.Storage
 {
-    public class ProtectedSessionStorage : ISessionStorage
+    public class ProtectedLocalStorage : ILocalStorage
     {
-        private readonly Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage.ProtectedSessionStorage _protectedSessionStorage;
+        private readonly msft::ProtectedLocalStorage _protectedLocalStorage;
 
-        public ProtectedSessionStorage(Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage.ProtectedSessionStorage protectedSessionStorage)
+        public ProtectedLocalStorage(msft::ProtectedLocalStorage protectedLocalStorage)
         {
-            _protectedSessionStorage = protectedSessionStorage;
+            _protectedLocalStorage = protectedLocalStorage;
         }
 
         public async ValueTask<bool> ContainKeyAsync(string key, CancellationToken? cancellationToken = null)
         {
-            var result = await _protectedSessionStorage.GetAsync<string>("secret", key);
+            var result = await _protectedLocalStorage.GetAsync<string>("secret", key);
             return result.Success;
         }
 
         public async ValueTask<T?> GetItemAsync<T>(string key, CancellationToken? cancellationToken = null)
         {
-            var result = await _protectedSessionStorage.GetAsync<string>("secret", key);
+            var result = await _protectedLocalStorage.GetAsync<string>("secret", key);
             
             var deserializedResult = result.Value != null
                 ? JsonSerializer.Deserialize<T>(result.Value)
@@ -35,12 +37,12 @@ namespace Super.Paula.Client.Storage
         }
 
         public ValueTask RemoveItemAsync(string key, CancellationToken? cancellationToken = null)
-            => _protectedSessionStorage.DeleteAsync(key);
+            => _protectedLocalStorage.DeleteAsync(key);
 
         public async ValueTask SetItemAsync<T>(string key, T data, CancellationToken? cancellationToken = null)
         {
             var serializedData = JsonSerializer.Serialize(data);
-            await _protectedSessionStorage.SetAsync("secret", key, serializedData);
+            await _protectedLocalStorage.SetAsync("secret", key, serializedData);
         }
     }
 }

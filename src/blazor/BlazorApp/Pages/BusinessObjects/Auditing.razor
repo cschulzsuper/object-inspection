@@ -3,7 +3,7 @@
 @inject ITranslator Translator
 @inject NavigationManager NavigationManager
 @inject IBusinessObjectHandler BusinessObjectHandler
-@inject AppState AppState
+@inject AppAuthentication AppAuthentication
 
 @attribute [Authorize("Inspector")]
 
@@ -62,7 +62,7 @@ else
     {
         _businessObjects = new List<BusinessObjectResponse>();
 
-        var response = BusinessObjectHandler.GetAllForInspector(AppState.CurrentInspector);
+        var response = BusinessObjectHandler.GetAllForInspector(AppAuthentication.Inspector);
 
         await foreach (var businessObject in response)
         {

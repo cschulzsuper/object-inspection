@@ -16,8 +16,8 @@ namespace Super.Paula.Client
             services.AddSingleton<IAuthorizationPolicyProvider, PaulaAuthorizationPolicyProvider>();
             services.AddScoped<IAuthorizationHandler, PaulaAuthorizationHandler>();
 
-            services.AddSingleton<AuthenticationStateManager>();
-            services.AddSingleton<AuthenticationStateProvider, AuthenticationStateManager>(provider
+            services.AddScoped<AuthenticationStateManager>();
+            services.AddScoped<AuthenticationStateProvider, AuthenticationStateManager>(provider
                  => provider.GetRequiredService<AuthenticationStateManager>());
 
             return services;

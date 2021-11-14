@@ -21,6 +21,7 @@ namespace Super.Paula.Client.Communication
     internal class NotificationHandlerBase : INotificationHandler, IAsyncDisposable
     {
         private readonly AuthenticationStateManager _authenticationStateManager;
+        private readonly AppAuthentication _appAuthentication;
         private readonly AppSettings _appSettings;
         private readonly IAccountHandler _accountHandler;
 
@@ -30,6 +31,7 @@ namespace Super.Paula.Client.Communication
         public NotificationHandlerBase(
             HttpClient httpClient,
             AuthenticationStateManager authenticationStateManager,
+            AppAuthentication appAuthentication,
             AppSettings appSettings,
             IAccountHandler accountHandler)
         {
@@ -37,6 +39,7 @@ namespace Super.Paula.Client.Communication
             _appSettings = appSettings;
 
             _authenticationStateManager = authenticationStateManager;
+            _appAuthentication = appAuthentication;
             _authenticationStateManager.AuthenticationStateChanged += AuthenticationStateChanged;
 
             _httpClient = httpClient;
@@ -46,7 +49,7 @@ namespace Super.Paula.Client.Communication
                 .WithUrl(
                     new Uri(_httpClient.BaseAddress, "/notifications/signalr"),
                     c => {
-                        c.AccessTokenProvider = () => Task.FromResult(_authenticationStateManager.GetAuthenticationBearer())!;
+                        c.AccessTokenProvider = () => Task.FromResult(_appAuthentication.Bearer)!;
                     })
                 .Build();
         }

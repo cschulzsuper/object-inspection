@@ -3,7 +3,7 @@
 @inject ITranslator Translator
 @inject NavigationManager NavigationManager
 @inject IOrganizationHandler OrganizationHandler
-@inject AppState AppState
+@inject AppAuthentication AppAuthentication
 
 @attribute [Authorize("Maintainer")]
 
@@ -44,7 +44,7 @@ else
                     <td>@organization.ChiefInspector</td>
                     @if(organization.Activated) {
                         <td>
-                            @if (organization.UniqueName != AppState.CurrentOrganization)
+                            @if (organization.UniqueName != AppAuthentication.Organization)
                             {
                                 <button class="btn btn-primary btn-block" 
                                     @onclick="() => DeactivateAsync(organization.UniqueName)">@Translator["Deactivate"]</button>
@@ -52,7 +52,7 @@ else
                         </td>
                     } else {
                         <td>
-                            @if (organization.UniqueName != AppState.CurrentOrganization)
+                            @if (organization.UniqueName != AppAuthentication.Organization)
                             {
 
                                 <button class="btn btn-outline-primary btn-block" 
@@ -65,7 +65,7 @@ else
                             @onclick="() => Edit(organization.UniqueName)">@Translator["Edit"]</button>
                     </td>
                     <td>
-                        @if (organization.UniqueName != AppState.CurrentOrganization)
+                        @if (organization.UniqueName != AppAuthentication.Organization)
                         {
                             <button class="btn btn-outline-danger btn-block" 
                                 @onclick="() => DeleteAsync(organization.UniqueName)">@Translator["Delete"]</button>

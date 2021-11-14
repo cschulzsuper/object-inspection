@@ -3,7 +3,7 @@
 @inject ITranslator Translator
 @inject NavigationManager NavigationManager
 @inject IInspectorHandler InspectorHandler
-@inject AppState AppState
+@inject AppAuthentication AppAuthentication
 
 @attribute [Authorize("ChiefInspector")]
 
@@ -35,7 +35,7 @@ else
             </div>
             <div class="form-check">
                 <InputCheckbox class="form-check-input" id="activated" @bind-Value="_request.Activated"
-                    disabled="@(_request.UniqueName == AppState.CurrentInspector)"/>
+                    disabled="@(_request.UniqueName == AppAuthentication.Inspector)"/>
                 <label class="form-check-label" for="activated">@Translator["Activated"]</label>     
             </div>
         </div>

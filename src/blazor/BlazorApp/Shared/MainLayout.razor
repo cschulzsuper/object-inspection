@@ -3,7 +3,8 @@
 @inject IAccountHandler AccountHandler
 @inject NavigationManager NavigationManager   
 @inject AppEnvironment AppEnvironment
-@inject AuthenticationStateManager authenticationStateManager
+@inject AppAuthentication AppAuthentication
+@inject AuthenticationStateManager AuthenticationStateManager
 
 <div class="page">
     <div class="sidebar text-nowrap">
@@ -88,7 +89,7 @@
         NavigationManager.NavigateTo("/");
     }
 
-    public void AuthorizationFilterChanged(object? value)
+    public async Task AuthorizationFilterChanged(object? value)
     {
         _authorizationFilter = ((string)value!);
 
@@ -97,6 +98,7 @@
             .Where(x => !string.IsNullOrWhiteSpace(x))
             .ToArray();
 
-        authenticationStateManager.SetAuthorizationsFilter(authorizationFilter);
+        AppAuthentication.AuthorizationsFilter = authorizationFilter;  
+        await AuthenticationStateManager.PersistAuthenticationStateAsync();
     }
 }
