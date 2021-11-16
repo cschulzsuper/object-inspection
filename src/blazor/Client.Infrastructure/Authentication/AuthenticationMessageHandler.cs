@@ -10,19 +10,17 @@ namespace Super.Paula.Client.Authentication
 {
     public class AuthenticationMessageHandler : DelegatingHandler
     {
-        private readonly ILocalStorage _localStorage;
+        private readonly AppAuthentication _appAuthentication;
 
-        public AuthenticationMessageHandler(ILocalStorage localStorage)
+        public AuthenticationMessageHandler(AppAuthentication appAuthentication)
         {
-            _localStorage = localStorage;
+            _appAuthentication = appAuthentication;
         }
 
         protected async override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            var appAuthentication = await _localStorage.GetItemAsync<AppAuthentication>("app-authentication");
-
-            request.Headers.Authorization = !string.IsNullOrWhiteSpace(appAuthentication?.Bearer)
-                    ? new AuthenticationHeaderValue("Bearer", appAuthentication.Bearer)
+            request.Headers.Authorization = !string.IsNullOrWhiteSpace(_appAuthentication?.Bearer)
+                    ? new AuthenticationHeaderValue("Bearer", _appAuthentication.Bearer)
                     : null;
 
             return await base.SendAsync(request, cancellationToken);

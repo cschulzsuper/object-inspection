@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components.Authorization;
+using Super.Paula.Application.Administration;
 using Super.Paula.Client.Storage;
 using Super.Paula.Environment;
 
@@ -14,13 +13,16 @@ namespace Super.Paula.Client.Authentication
     {
         private readonly AppAuthentication _appAuthentication;
         private readonly ILocalStorage _localStorage;
+        private readonly IAccountHandler _accountHandler;
 
         public AuthenticationStateManager(
             AppAuthentication appAuthentication,
-            ILocalStorage localStorage)
+            ILocalStorage localStorage,
+            IAccountHandler accountHandler)
         {
             _appAuthentication = appAuthentication;
             _localStorage = localStorage;
+            _accountHandler = accountHandler;
         }
 
         public async Task PersistAuthenticationStateAsync()
@@ -46,6 +48,8 @@ namespace Super.Paula.Client.Authentication
                 _appAuthentication.ImpersonatorOrganization = appAuthentication.ImpersonatorOrganization;
                 _appAuthentication.Authorizations = appAuthentication.Authorizations;
                 _appAuthentication.AuthorizationsFilter = appAuthentication.AuthorizationsFilter;
+
+                await _accountHandler.VerifyAsync();
             }
 
             return await CreatePrincipalAuthenticationStateAsync();

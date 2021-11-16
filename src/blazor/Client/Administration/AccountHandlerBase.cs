@@ -109,5 +109,13 @@ namespace Super.Paula.Client.Administration
 
         public ValueTask StopImpersonationAsync()
             => ValueTask.CompletedTask;
+
+        public async ValueTask VerifyAsync()
+        {
+            var responseMessage = await _httpClient.PostAsync("account/verify", null);
+
+            responseMessage.RuleOutProblems();
+            responseMessage.EnsureSuccessStatusCode();
+        }
     }
 }

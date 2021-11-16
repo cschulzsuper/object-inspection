@@ -226,5 +226,10 @@ namespace Super.Paula.Application.Administration
                 Defective = inspector == null,
             };
         }
+
+        public ValueTask VerifyAsync()
+        {
+            return ValueTask.CompletedTask;
+        }
     }
 }

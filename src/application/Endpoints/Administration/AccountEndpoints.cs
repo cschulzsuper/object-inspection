@@ -19,7 +19,8 @@ namespace Super.Paula.Application.Administration
                 ("/change-secret", ChangeSecret),
                 ("/start-impersonation", StartImpersonation),
                 ("/repair-chief-inspector", RepairChiefInspector),
-                ("/assess-chief-inspector-defectiveness", AssessChiefInspectorDefectiveness));
+                ("/assess-chief-inspector-defectiveness", AssessChiefInspectorDefectiveness),
+                ("/verify", Verify));
 
             endpoints.MapQueries(
                 "/account",
@@ -73,5 +74,10 @@ namespace Super.Paula.Application.Administration
             [IgnoreCurrentOrganization]
             (IAccountHandler handler, AssessChiefInspectorDefectivenessRequest request)
                 => handler.AssessChiefInspectorDefectivenessAsync(request);
+
+        private static Delegate Verify =>
+            [Authorize("Inspector")]
+            (IAccountHandler handler)
+                => handler.VerifyAsync();
     }
 }

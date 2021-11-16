@@ -9,6 +9,8 @@ namespace Super.Paula.Application.Administration
         ValueTask RegisterInspectorAsync(RegisterInspectorRequest request);
         ValueTask RegisterOrganizationAsync(RegisterOrganizationRequest request);
         ValueTask<SignInInspectorResponse> SignInInspectorAsync(SignInInspectorRequest request);
+        
+        ValueTask VerifyAsync();
         ValueTask SignOutInspectorAsync();
         ValueTask ChangeSecretAsync(ChangeSecretRequest request);
         ValueTask<QueryAuthorizationsResponse> QueryAuthorizationsAsync();

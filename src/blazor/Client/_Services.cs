@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;
@@ -79,14 +80,11 @@ namespace Super.Paula.Client
                     .AddHttpMessageHandler<AuthenticationMessageHandler>();
             }
 
-
-            services.AddScoped<AccountHandlerCache>();
-
             services.AddScoped<IAccountHandler>(provider =>
                 new AccountHandler(
                     provider.GetRequiredService<AccountHandlerBase>(),
                     provider.GetRequiredService<AppAuthentication>(),
-                    provider.GetRequiredService<AuthenticationStateManager>()));
+                    new Lazy<AuthenticationStateManager>(() => provider.GetRequiredService<AuthenticationStateManager>())));
 
             services.AddScoped<INotificationHandler>(provider => 
                 new NotificationHandler(
@@ -107,7 +105,7 @@ namespace Super.Paula.Client
                 var clientFactory = sp.GetRequiredService<ITypedHttpClientFactory<THandler>>();
 
                 var factoryHandler = messageHandlerFactory.CreateHandler();
-                var fullHandler = new AuthenticationMessageHandler(sp.GetRequiredService<ILocalStorage>());
+                var fullHandler = new AuthenticationMessageHandler(sp.GetRequiredService<AppAuthentication>());
                 fullHandler.InnerHandler = factoryHandler;
 
                 var httpClient = new HttpClient(fullHandler, disposeHandler: true);
@@ -125,7 +123,7 @@ namespace Super.Paula.Client
                 var clientFactory = sp.GetRequiredService<ITypedHttpClientFactory<THandler>>();
 
                 var factoryHandler = messageHandlerFactory.CreateHandler();
-                var fullHandler = new AuthenticationMessageHandler(sp.GetRequiredService<ILocalStorage>());
+                var fullHandler = new AuthenticationMessageHandler(sp.GetRequiredService<AppAuthentication>());
                 fullHandler.InnerHandler = factoryHandler;
 
                 var httpClient = new HttpClient(fullHandler, disposeHandler: true);
