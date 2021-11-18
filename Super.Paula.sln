@@ -61,6 +61,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RuntimeData.Contract", "src
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data.Contract", "src\data\Data.Contract\Data.Contract.csproj", "{46AB5C8F-CD7C-4458-A2A6-A09E2826CB93}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Migrator", "src\data\Migrator\Migrator.csproj", "{4F427EA4-3A6D-4B8A-BD91-9D01B6B1FBB1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -167,6 +169,10 @@ Global
 		{46AB5C8F-CD7C-4458-A2A6-A09E2826CB93}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{46AB5C8F-CD7C-4458-A2A6-A09E2826CB93}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{46AB5C8F-CD7C-4458-A2A6-A09E2826CB93}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4F427EA4-3A6D-4B8A-BD91-9D01B6B1FBB1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4F427EA4-3A6D-4B8A-BD91-9D01B6B1FBB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4F427EA4-3A6D-4B8A-BD91-9D01B6B1FBB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F427EA4-3A6D-4B8A-BD91-9D01B6B1FBB1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -197,6 +203,7 @@ Global
 		{88525FC6-892A-4EFD-99EC-024B55D8F633} = {A96EC778-2B46-4FF6-A71D-AC0E7714A31E}
 		{4F81A8E2-0438-4C55-A14B-DE7CC35F8C5D} = {A96EC778-2B46-4FF6-A71D-AC0E7714A31E}
 		{46AB5C8F-CD7C-4458-A2A6-A09E2826CB93} = {A96EC778-2B46-4FF6-A71D-AC0E7714A31E}
+		{4F427EA4-3A6D-4B8A-BD91-9D01B6B1FBB1} = {A96EC778-2B46-4FF6-A71D-AC0E7714A31E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {167D4B81-B91A-4D40-AEEF-6CC3C49F9CD1}

@@ -31,7 +31,7 @@ namespace Super.Paula.Data
                 options.UseCosmos(
                     appSeetings.CosmosEndpoint,
                     appSeetings.CosmosKey,
-                    "Paula",
+                    "Paula2",
                     options =>
                     {
                         if (isDevelopment)
