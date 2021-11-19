@@ -4,6 +4,30 @@ on:
   workflow_dispatch:
 
 jobs:
+  migrator:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '6.0.x'
+          include-prerelease: true
+
+      - name: Build with dotnet
+        run: dotnet build --configuration Release ./src/data/Migrator/Migrator.csproj
+
+      - name: dotnet publish
+        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/Migrator ./src/server/Migrator/Migrator.csproj
+
+      - name: Upload artifact for deployment job
+        uses: actions/upload-artifact@v2
+        with:
+          name: .net-app
+          path: ${{env.DOTNET_ROOT}}/Migrator
+
   build:
     runs-on: ubuntu-latest
 
@@ -40,6 +64,8 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: .net-app
+
+      - name:
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp

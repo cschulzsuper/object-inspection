@@ -31,7 +31,7 @@ namespace Super.Paula.Data
                 options.UseCosmos(
                     appSeetings.CosmosEndpoint,
                     appSeetings.CosmosKey,
-                    "Paula2",
+                    "Paula",
                     options =>
                     {
                         if (isDevelopment)
@@ -56,6 +56,7 @@ namespace Super.Paula.Data
 
             services.AddScoped<IPartitionKeyValueGenerator<BusinessObject>, BusinessObjectPartitionKeyValueGenerator>();
             services.AddScoped<IPartitionKeyValueGenerator<BusinessObjectInspectionAudit>, BusinessObjectInspectionAuditPartitionKeyValueGenerator>();
+            services.AddScoped<IPartitionKeyValueGenerator<Identity>, IdentityPartitionKeyValueGenerator>();
             services.AddScoped<IPartitionKeyValueGenerator<Inspection>, InspectionPartitionKeyValueGenerator>();
             services.AddScoped<IPartitionKeyValueGenerator<Inspector>, InspectorPartitionKeyValueGenerator>();
             services.AddScoped<IPartitionKeyValueGenerator<Notification>, NotificationPartitionKeyValueGenerator>();
