@@ -18,9 +18,10 @@ A couple of things need to be setup, if you want to start Paula yourself.
 {
   "CosmosEndpoint": "<URI of the Azure Cosmos DB emulator>",
   "CosmosKey": "<Primary Key of the Azure Cosmos DB emulator>",
+  "CosmosDatabase": "<Name of the Azure Cosmos DB Database>",
   "Maintainer": "<The user that will be the admin>",
   "MaintainerOrganization": "<The organization of the admin user>"
 }
 ```
-* Use `server/Server` and `blazor/BlazorServerSideHost` as start projects.
-* Run the application and register a new organization for your maintainer.
+* Set `server/ServerApp` and `blazor/BlazorServerSideHost` as multiple start projects.
+* Run the application (https://localhost:5002) and register a new organization for your maintainer.

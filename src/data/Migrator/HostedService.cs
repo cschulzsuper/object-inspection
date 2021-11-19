@@ -32,6 +32,7 @@ namespace Super.Playground.Data.Migrator
         {
             _appSettings.CosmosEndpoint = _configuration["CosmosEndpoint"];
             _appSettings.CosmosKey = _configuration["CosmosKey"];
+            _appSettings.CosmosDatabase = _configuration["CosmosDatabase"];
 
             await IStep.ExecuteAsync<Initialization>(_serviceProvider);
 

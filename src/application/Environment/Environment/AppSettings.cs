@@ -6,6 +6,8 @@
 
         public virtual string CosmosKey { get; set; } = string.Empty!;
 
+        public virtual string CosmosDatabase { get; set; } = string.Empty!;
+
         public virtual string Maintainer { get; set; } = string.Empty!;
 
         public virtual string MaintainerOrganization { get; set; } = string.Empty!;

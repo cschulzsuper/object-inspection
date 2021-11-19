@@ -30,6 +30,7 @@ namespace Super.Paula
                     {
                         CosmosEndpoint = configuration["CosmosEndpoint"],
                         CosmosKey = configuration["CosmosKey"],
+                        CosmosDatabase = configuration["CosmosDatabase"],
                         Maintainer = configuration["Maintainer"],
                         MaintainerOrganization = configuration["MaintainerOrganization"],
                         Server = configuration["Server"]
