@@ -32,7 +32,7 @@ namespace Super.Playground.Data.Migrator
                 })
                 .ConfigureAppConfiguration((context, builder) =>
                 {
-                    builder.AddUserSecrets<Program>();
+                    builder.AddUserSecrets<Program>(true);
                 });
     }
 }
