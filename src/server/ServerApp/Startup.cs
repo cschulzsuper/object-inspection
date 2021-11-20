@@ -59,8 +59,6 @@ namespace Super.Paula
 
         public void Configure(IApplicationBuilder app)
         {
-            app.EnsurePaulaData();
-
             app.UsePaulaBlacklist();
 
             app.UseResponseCompression();

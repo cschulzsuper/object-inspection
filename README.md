@@ -12,7 +12,20 @@
 A couple of things need to be setup, if you want to start Paula yourself.
 
 * Install the Azure Cosmos DB emulator
-* Create a `usersecrets.json` for the `Super.Paula.Web` project.
+
+* Create a `usersecrets.json` for the `data/Migrator` project.
+
+```json
+{
+  "CosmosEndpoint": "<URI of the Azure Cosmos DB emulator>",
+  "CosmosKey": "<Primary Key of the Azure Cosmos DB emulator>",
+  "CosmosDatabase": "<Name of the Azure Cosmos DB Database>",
+}
+```
+
+* Run `data/Migrator` to initialize the database.
+
+* Create a `usersecrets.json` for the `server/ServerApp` project.
 
 ```json
 {
