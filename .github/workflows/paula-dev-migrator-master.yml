@@ -32,8 +32,8 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     env:
-      CosmosEndpoint: ${{env.AZURE_COSMOS_DB_PAULA_DEV_ENDPOINT}}
-      CosmosKey: ${{env.AZURE_COSMOS_DB_PAULA_DEV_KEY}}
+      CosmosEndpoint: ${{secrets.AZURE_COSMOS_DB_PAULA_DEV_ENDPOINT}}
+      CosmosKey: ${{secrets.AZURE_COSMOS_DB_PAULA_DEV_KEY}}
       CosmosDatabase: 'Paula'
 
     steps:
