@@ -25,3 +25,9 @@ A couple of things need to be setup, if you want to start Paula yourself.
 ```
 * Set `server/ServerApp` and `blazor/BlazorServerSideHost` as multiple start projects.
 * Run the application (https://localhost:5002) and register a new organization for your maintainer.
+
+## Currenty Status
+
+Check out the project board if you are interessted on the topics I might be working on.
+
+* [Project Board @ Trello](https://trello.com/b/xUlXP4Rm/paula)
