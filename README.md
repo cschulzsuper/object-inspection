@@ -2,7 +2,7 @@
 
 * Tom: _"Who is Paula?"_
 * Peter: _"Paula is an experimental business application."_
-* Ton: _"Like a playground?"_
+* Tom: _"Like a playground?"_
 * Peter: _"Exactly!"_
 
 ![Introduction](/docs/bucket/42e8bf7e-3b56-475b-a9d6-d6773c822326.gif)
@@ -41,6 +41,6 @@ A couple of things need to be setup, if you want to start Paula yourself.
 
 ## Currenty Status
 
-Check out the project board if you are interessted on the topics I might be working on.
+I'm tracking the progress of the application on the project board.
 
 * [Project Board @ Trello](https://trello.com/b/xUlXP4Rm/paula)
