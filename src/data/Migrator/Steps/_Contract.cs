@@ -8,7 +8,7 @@ namespace Migrator
     {
         Task ExecuteAsync();
 
-        public static Task ExecuteAsync<TStep>(IServiceProvider services)
+        public static async Task ExecuteAsync<TStep>(IServiceProvider services)
             where TStep : IStep
         {
             using var scope = services.CreateScope();
@@ -16,7 +16,7 @@ namespace Migrator
             var scopedServices = scope.ServiceProvider;
             var scopedStep = scopedServices.GetRequiredService<TStep>();
 
-            return scopedStep.ExecuteAsync();
+            await scopedStep.ExecuteAsync();
         }
     }
 }

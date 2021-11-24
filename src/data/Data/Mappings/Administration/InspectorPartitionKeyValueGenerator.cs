@@ -8,8 +8,6 @@ namespace Super.Paula.Data.Mappings.Administration
 {
     internal class InspectorPartitionKeyValueGenerator : ValueGenerator<string>, IPartitionKeyValueGenerator<Inspector>
     {
-        private const string Version = "1";
-
         public override bool GeneratesTemporaryValues => false;
 
         public override string Next(EntityEntry entry)
@@ -20,11 +18,11 @@ namespace Super.Paula.Data.Mappings.Administration
         public string Value(AppState appState, Inspector entity)
             => appState.IgnoreCurrentOrganization
                 ? string.Empty
-                : $"{Version}/{appState.CurrentOrganization}";
+                : appState.CurrentOrganization;
 
         public string Value(AppState appState, Queue<object> partitionKeyComponents)
             => appState.IgnoreCurrentOrganization
                 ? string.Empty
-                : $"{Version}/{appState.CurrentOrganization}";
+                : appState.CurrentOrganization;
     }
 }

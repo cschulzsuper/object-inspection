@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Migrator.Steps;
 using Super.Paula;
 using Super.Paula.Data;
+using Super.Paula.Data.Steps;
 using Super.Paula.Environment;
 using System.Threading.Tasks;
 
@@ -27,7 +27,8 @@ namespace Super.Playground.Data.Migrator
                     services.AddPaulaServerData(context.HostingEnvironment.IsDevelopment());
 
                     services
-                        .AddScoped<Initialization>();
+                        .AddScoped<Initialization>()
+                        .AddScoped<Identity>();
 
                 })
                 .ConfigureAppConfiguration((context, builder) =>

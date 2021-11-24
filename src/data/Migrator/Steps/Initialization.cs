@@ -1,7 +1,8 @@
-﻿using Super.Paula.Data;
+﻿using Migrator;
+using Super.Paula.Data;
 using System.Threading.Tasks;
 
-namespace Migrator.Steps
+namespace Super.Paula.Data.Steps
 {
     public class Initialization : IStep
     {

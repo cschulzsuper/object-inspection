@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Migrator;
-using Migrator.Steps;
+using Super.Paula.Data.Steps;
 using Super.Paula.Environment;
 
 namespace Super.Playground.Data.Migrator
@@ -35,6 +35,7 @@ namespace Super.Playground.Data.Migrator
             _appSettings.CosmosDatabase = _configuration["CosmosDatabase"];
 
             await IStep.ExecuteAsync<Initialization>(_serviceProvider);
+            await IStep.ExecuteAsync<Identity>(_serviceProvider);
 
             _applicationLifetime.StopApplication();
         }
