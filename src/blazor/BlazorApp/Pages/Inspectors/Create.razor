@@ -22,12 +22,8 @@
             <InputText class="form-control" id="uniqueName" @bind-Value="_request.UniqueName" />
         </div>
         <div class="form-group">
-            <label>@Translator["Mail address"]</label>
-            <InputText class="form-control" id="mailAddress" @bind-Value="_request.MailAddress" />
-        </div>
-        <div class="form-group">
-            <label>@Translator["Secret"]</label>
-            <InputText class="form-control" id="secret" type="password" @bind-Value="_request.Secret" />
+            <label>@Translator["Identity"]</label>
+            <InputText class="form-control" id="mailAddress" @bind-Value="_request.Identity" />
         </div>
         <div class="form-check">
             <InputCheckbox class="form-check-input" id="activated" @bind-Value="_request.Activated"/>

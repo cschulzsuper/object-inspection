@@ -29,6 +29,9 @@ namespace Super.Paula.Application.Administration
             return entity;
         }
 
+        public IQueryable<Identity> GetQueryable()
+            => _identityRepository.GetQueryable();
+
         public async ValueTask InsertAsync(Identity identity)
         {
             EnsureInsertable(identity);

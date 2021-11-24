@@ -18,17 +18,13 @@ namespace Super.Paula.Application.Administration
             => (string.IsNullOrWhiteSpace(uniqueName) || uniqueName.Length <= 140,
                 () => (nameof(uniqueName), $"Unique name '{uniqueName}' can not have more than 140 characters"));
 
-        public static (bool, Func<(string, FormattableString)>) MailAddressIsNotNull(string mailAddress)
-            => (mailAddress != null,
-                () => (nameof(mailAddress), $"Mail address can not be null"));
+        public static (bool, Func<(string, FormattableString)>) IdentityIsNotNull(string identity)
+            => (identity != null,
+                () => (nameof(identity), $"Identity can not be null"));
 
-        public static (bool, Func<(string, FormattableString)>) MailAddressIsMailAddress(string mailAddress)
-            => (mailAddress == null || MailAddress.TryCreate(mailAddress, out var _),
-                () => (nameof(mailAddress), $"Mail address '{mailAddress}' is not a mail address"));
-
-        public static (bool, Func<(string, FormattableString)>) MailAddressIsNotTooLong(string mailAddress)
-            => (mailAddress == null || mailAddress.Length <= 140,
-                () => (nameof(mailAddress), $"Mail address '{mailAddress}' can not have more than 140 characters"));
+        public static (bool, Func<(string, FormattableString)>) IdentityIsNotTooLong(string identity)
+            => (identity == null || identity.Length <= 140,
+                () => (nameof(identity), $"Identity '{identity}' can not have more than 140 characters"));
 
         public static (bool, Func<(string, FormattableString)>) OrganizationIsNotEmpty(string organization)
             => (!string.IsNullOrWhiteSpace(organization),
@@ -49,13 +45,5 @@ namespace Super.Paula.Application.Administration
         public static (bool, Func<(string, FormattableString)>) OrganizationDisplayNameIsNotTooLong(string organizationDisplayName)
             => (string.IsNullOrWhiteSpace(organizationDisplayName) || organizationDisplayName.Length <= 140,
                 () => (nameof(organizationDisplayName), $"Organization display name '{organizationDisplayName}' can not have more than 140 characters"));
-
-        public static (bool, Func<(string, FormattableString)>) SecretHasValue(string secret)
-            => (!string.IsNullOrWhiteSpace(secret),
-                () => (nameof(secret), $"Secret can not be empty"));
-
-        public static (bool, Func<(string, FormattableString)>) SecretIsNotTooLong(string secret)
-            => (string.IsNullOrWhiteSpace(secret) || secret.Length <= 140,
-                () => (nameof(secret), $"Secret '{secret}' can not have more than 140 characters"));
     }
 }

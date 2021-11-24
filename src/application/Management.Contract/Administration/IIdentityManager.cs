@@ -8,6 +8,7 @@ namespace Super.Paula.Application.Administration
     public interface IIdentityManager
     {
         ValueTask<Identity> GetAsync(string identity);
+        IQueryable<Identity> GetQueryable();
         ValueTask InsertAsync(Identity identity);
         ValueTask UpdateAsync(Identity identity);
         ValueTask DeleteAsync(Identity identity);

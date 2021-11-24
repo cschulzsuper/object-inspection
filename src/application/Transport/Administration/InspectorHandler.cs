@@ -31,8 +31,7 @@ namespace Super.Paula.Application.Administration
 
             var entity = new Inspector
             {
-                MailAddress = request.MailAddress,
-                Secret = request.Secret,
+                Identity = request.UniqueName,
                 UniqueName = request.UniqueName,
                 Activated = request.Activated,
                 Organization = organization.UniqueName,
@@ -44,8 +43,7 @@ namespace Super.Paula.Application.Administration
 
             return new InspectorResponse
             {
-                MailAddress = entity.MailAddress,
-                Secret = entity.Secret,
+                Identity = entity.Identity,
                 UniqueName = entity.UniqueName,
                 Activated = entity.Activated
             };
@@ -63,8 +61,7 @@ namespace Super.Paula.Application.Administration
                 .GetAsyncEnumerable(query => query
                 .Select(entity => new InspectorResponse
                 {
-                    MailAddress = entity.MailAddress,
-                    Secret = entity.Secret,
+                    Identity = entity.Identity,
                     UniqueName = entity.UniqueName,
                     Activated = entity.Activated
                 }));
@@ -75,8 +72,7 @@ namespace Super.Paula.Application.Administration
          
             return new InspectorResponse
             {
-                MailAddress = entity.MailAddress,
-                Secret = entity.Secret,
+                Identity = entity.Identity,
                 UniqueName = entity.UniqueName,
                 Activated = entity.Activated
             };
@@ -86,8 +82,7 @@ namespace Super.Paula.Application.Administration
         {
             var entity = await _inspectorManager.GetAsync(inspector);
 
-            entity.MailAddress = request.MailAddress;
-            entity.Secret = request.Secret;
+            entity.Identity = request.Identity;
             entity.UniqueName = request.UniqueName;
             entity.Activated = request.Activated;
 
@@ -119,8 +114,7 @@ namespace Super.Paula.Application.Administration
                    .Where(x => x.Organization == organization)
                    .Select(entity => new InspectorResponse
                    {
-                       MailAddress = entity.MailAddress,
-                       Secret = entity.Secret,
+                       Identity = entity.Identity,
                        UniqueName = entity.UniqueName,
                        Activated = entity.Activated
                    }));

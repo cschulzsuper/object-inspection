@@ -43,12 +43,7 @@ namespace Super.Paula.Data.Mappings.Administration
                 .IsRequired();
 
             builder
-                .Property(x => x.MailAddress)
-                .HasMaxLength(140)
-                .IsRequired();
-
-            builder
-                .Property(x => x.Secret)
+                .Property(x => x.Identity)
                 .HasMaxLength(140)
                 .IsRequired();
 

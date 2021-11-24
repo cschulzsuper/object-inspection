@@ -31,7 +31,7 @@ else
         <thead>
             <tr>
                 <th>@Translator["Unique name"]</th>
-                <th>@Translator["Mail address"]</th>
+                <th>@Translator["Identity"]</th>
                 @if (Organization == null)
                 {
                     <th></th>
@@ -50,7 +50,7 @@ else
             {
                 <tr>
                     <td>@inspector.UniqueName</td>
-                    <td>@inspector.MailAddress</td>
+                    <td>@inspector.Identity</td>
                     @if(Organization == null)
                     {
                         @if(inspector.Activated)

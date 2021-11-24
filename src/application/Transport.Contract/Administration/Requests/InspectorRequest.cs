@@ -5,13 +5,9 @@ namespace Super.Paula.Application.Administration.Requests
 {
     public class InspectorRequest
     {
-        [EmailAddress]
-        [StringLength(140)]
-        public string MailAddress { get; set; } = string.Empty;
-
         [Required]
         [StringLength(140)]
-        public string Secret { get; set; } = string.Empty;
+        public string Identity { get; set; } = string.Empty;
 
         [Required]
         [KebabCase]

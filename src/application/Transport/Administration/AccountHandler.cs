@@ -13,6 +13,7 @@ namespace Super.Paula.Application.Administration
     internal class AccountHandler : IAccountHandler
     {
         private readonly IInspectorManager _inspectorManager;
+        private readonly IIdentityManager _identityManager;
         private readonly IOrganizationManager _organizationManager;
         private readonly IConnectionManager _connectionManager;
         private readonly AppSettings _appSettings;
@@ -20,12 +21,14 @@ namespace Super.Paula.Application.Administration
 
         public AccountHandler(
             IInspectorManager inspectorManager,
+            IIdentityManager identityManager,
             IOrganizationManager organizationManager,
             IConnectionManager connectionManager,
             AppSettings appSettings,
             AppAuthentication appAuthentication)
         {
             _inspectorManager = inspectorManager;
+            _identityManager = identityManager;
             _organizationManager = organizationManager;
             _connectionManager = connectionManager;
             _appSettings = appSettings;
@@ -37,12 +40,16 @@ namespace Super.Paula.Application.Administration
             var inspector = _inspectorManager.GetQueryable()
                 .Single(x =>
                     x.UniqueName == _appAuthentication.Inspector &&
-                    x.Organization == _appAuthentication.Organization &&
+                    x.Organization == _appAuthentication.Organization);
+
+            var identity = _identityManager.GetQueryable()
+                .Single(x =>
+                    x.UniqueName == inspector.Identity &&
                     x.Secret == request.OldSecret);
 
-            inspector.Secret = request.NewSecret;
+            identity.Secret = request.NewSecret;
 
-            await _inspectorManager.UpdateAsync(inspector);
+            await _identityManager.UpdateAsync(identity);
         }
 
         public ValueTask<StartImpersonationResponse> StartImpersonationAsync(StartImpersonationRequest request)
@@ -99,22 +106,28 @@ namespace Super.Paula.Application.Administration
             });
         }
 
-        public ValueTask RegisterInspectorAsync(RegisterInspectorRequest request)
+        public async ValueTask RegisterInspectorAsync(RegisterInspectorRequest request)
         {
             var organization = _organizationManager.GetQueryable()
                 .Single(x =>
                     x.UniqueName == request.Organization &&
                     x.Activated);
 
-            return _inspectorManager.InsertAsync(new Inspector
+            await _inspectorManager.InsertAsync(new Inspector
             {
-                MailAddress = request.MailAddress,
+                Identity = request.UniqueName,
                 Organization = organization.UniqueName,
                 OrganizationActivated = organization.Activated,
                 OrganizationDisplayName = organization.DisplayName,
-                Secret = request.Secret,
                 UniqueName = request.UniqueName,
                 Activated = false
+            });
+
+            await _identityManager.InsertAsync(new Identity
+            {
+                MailAddress = request.MailAddress,
+                Secret = request.Secret,
+                UniqueName = request.UniqueName
             });
         }
 
@@ -132,28 +145,35 @@ namespace Super.Paula.Application.Administration
 
             await _inspectorManager.InsertAsync(new Inspector
             {
-                MailAddress = request.ChiefInspectorMail,
+                Identity = request.ChiefInspector,
                 Organization = request.UniqueName,
                 OrganizationActivated = activateOrganization,
                 OrganizationDisplayName = request.DisplayName,
-                Secret = request.ChiefInspectorSecret,
                 UniqueName = request.ChiefInspector,
                 Activated = true
             });
+
+            await _identityManager.InsertAsync(new Identity
+            {
+                MailAddress = request.ChiefInspectorMail,
+                Secret = request.ChiefInspectorSecret,
+                UniqueName = request.UniqueName
+            });
         }
 
-        public async ValueTask<SignInInspectorResponse> SignInInspectorAsync(SignInInspectorRequest request)
+        public ValueTask<SignInInspectorResponse> SignInInspectorAsync(SignInInspectorRequest request)
         {
-
             var inspector = _inspectorManager.GetQueryable()
                 .Single(x =>
                     x.Activated &&
                     x.OrganizationActivated &&
                     x.UniqueName == request.UniqueName &&
-                    x.Secret == request.Secret &&
                     x.Organization == request.Organization);
 
-            await _inspectorManager.UpdateAsync(inspector);
+            _ = _identityManager.GetQueryable()
+                .Single(x =>
+                    x.UniqueName == inspector.Identity &&
+                    x.Secret == request.Secret);
 
             var connectionProof = Convert.ToBase64String(
                 Encoding.UTF8.GetBytes($"{Guid.NewGuid()}"));
@@ -163,11 +183,13 @@ namespace Super.Paula.Application.Administration
                 request.UniqueName,
                 connectionProof);
 
-            return new SignInInspectorResponse
+            var response = new SignInInspectorResponse
             {
                 Bearer = Convert.ToBase64String(
                     Encoding.UTF8.GetBytes($"{inspector.Organization}:{inspector.UniqueName}:{connectionProof}"))
             };
+
+            return ValueTask.FromResult(response);
         }
 
         public async ValueTask SignOutInspectorAsync()
@@ -194,22 +216,45 @@ namespace Super.Paula.Application.Administration
             var inspector = _inspectorManager.GetQueryable()
                 .SingleOrDefault(x =>
                     x.UniqueName == organization.ChiefInspector);
-            
+
             if (inspector != null)
             {
                 inspector.Activated = true;
                 await _inspectorManager.UpdateAsync(inspector);
             }
-
-            inspector ??= new Inspector
+            else
             {
-                Activated = true,
-                Organization = request.Organization,
-                Secret = "default",
-                UniqueName = organization.ChiefInspector,
-            };
+                inspector = new Inspector
+                {
+                    Activated = true,
+                    Organization = request.Organization,
+                    UniqueName = organization.ChiefInspector,
+                    Identity = organization.ChiefInspector
+                };
 
-            await _inspectorManager.InsertAsync(inspector);
+                await _inspectorManager.InsertAsync(inspector);
+            }
+
+            var identity = _identityManager.GetQueryable()
+                .SingleOrDefault(x =>
+                    x.UniqueName == organization.ChiefInspector);
+
+            if (identity != null)
+            {
+                identity.Secret = "default";
+                await _identityManager.UpdateAsync(identity);
+            }
+            else
+            {
+                identity = new Identity
+                {
+                    Secret = "default",
+                    MailAddress = string.Empty,
+                    UniqueName = inspector.Identity
+                };
+
+                await _identityManager.InsertAsync(identity);
+            }
         }
 
         public async ValueTask<AssessChiefInspectorDefectivenessResponse> AssessChiefInspectorDefectivenessAsync(AssessChiefInspectorDefectivenessRequest request)
