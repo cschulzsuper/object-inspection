@@ -106,23 +106,8 @@ namespace Super.Paula.Application.Administration
             });
         }
 
-        public async ValueTask RegisterInspectorAsync(RegisterInspectorRequest request)
+        public async ValueTask RegisterIdentityAsync(RegisterIdentityRequest request)
         {
-            var organization = _organizationManager.GetQueryable()
-                .Single(x =>
-                    x.UniqueName == request.Organization &&
-                    x.Activated);
-
-            await _inspectorManager.InsertAsync(new Inspector
-            {
-                Identity = request.UniqueName,
-                Organization = organization.UniqueName,
-                OrganizationActivated = organization.Activated,
-                OrganizationDisplayName = organization.DisplayName,
-                UniqueName = request.UniqueName,
-                Activated = false
-            });
-
             await _identityManager.InsertAsync(new Identity
             {
                 MailAddress = request.MailAddress,
@@ -133,21 +118,29 @@ namespace Super.Paula.Application.Administration
 
         public async ValueTask RegisterOrganizationAsync(RegisterOrganizationRequest request)
         {
-            var activateOrganization = _organizationManager.GetQueryable().FirstOrDefault() == null;
+            if (_appSettings.Maintainer != request.ChiefInspector)
+            {
+                throw new TransportException($"Only the maintainer can register with an organization");
+            }
+
+            if (_appSettings.MaintainerOrganization != request.UniqueName)
+            {
+                throw new TransportException($"Only the maintainer organization can be registered");
+            }
 
             await _organizationManager.InsertAsync(new Organization
             {
                 ChiefInspector = request.ChiefInspector,
                 UniqueName = request.UniqueName,
                 DisplayName = request.DisplayName,
-                Activated = activateOrganization,
+                Activated = true,
             });
 
             await _inspectorManager.InsertAsync(new Inspector
             {
                 Identity = request.ChiefInspector,
                 Organization = request.UniqueName,
-                OrganizationActivated = activateOrganization,
+                OrganizationActivated = true,
                 OrganizationDisplayName = request.DisplayName,
                 UniqueName = request.ChiefInspector,
                 Activated = true
@@ -228,32 +221,12 @@ namespace Super.Paula.Application.Administration
                 {
                     Activated = true,
                     Organization = request.Organization,
+                    OrganizationDisplayName = organization.DisplayName,
                     UniqueName = organization.ChiefInspector,
-                    Identity = organization.ChiefInspector
+                    Identity = string.Empty
                 };
 
                 await _inspectorManager.InsertAsync(inspector);
-            }
-
-            var identity = _identityManager.GetQueryable()
-                .SingleOrDefault(x =>
-                    x.UniqueName == organization.ChiefInspector);
-
-            if (identity != null)
-            {
-                identity.Secret = "default";
-                await _identityManager.UpdateAsync(identity);
-            }
-            else
-            {
-                identity = new Identity
-                {
-                    Secret = "default",
-                    MailAddress = string.Empty,
-                    UniqueName = inspector.Identity
-                };
-
-                await _identityManager.InsertAsync(identity);
             }
         }
 

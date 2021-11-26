@@ -6,7 +6,7 @@ namespace Super.Paula.Application.Administration
 {
     public interface IAccountHandler
     {
-        ValueTask RegisterInspectorAsync(RegisterInspectorRequest request);
+        ValueTask RegisterIdentityAsync(RegisterIdentityRequest request);
         ValueTask RegisterOrganizationAsync(RegisterOrganizationRequest request);
         ValueTask<SignInInspectorResponse> SignInInspectorAsync(SignInInspectorRequest request);
         

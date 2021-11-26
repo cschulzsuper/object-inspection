@@ -16,26 +16,26 @@
 
     <div class="container mt-2 mt-md-3">
         <div class="form-group">
-            <label>@Translator["Unique name"]</label>
-            <InputText class="form-control" id="uniqueName" @bind-Value="model.UniqueName" />
+            <label>@Translator["Organization unique name"]</label>
+            <InputText class="form-control" id="organizationUniqueName" @bind-Value="model.UniqueName" />
         </div>
         <div class="form-group">
-            <label>@Translator["Display name"]</label>
-            <InputText class="form-control" id="uniqueName" @bind-Value="model.DisplayName" />
+            <label>@Translator["Organization display name"]</label>
+            <InputText class="form-control" id="organizationDisplayName" @bind-Value="model.DisplayName" />
         </div>
         <hr />
         <h4>Chief inspector details</h4>
         <div class="form-group">
-            <label>@Translator["Username"]</label>
-            <InputText class="form-control" id="uniqueName" @bind-Value="model.ChiefInspector" />
+            <label>@Translator["Identity"]</label>
+            <InputText class="form-control" id="chiefInspector" @bind-Value="model.ChiefInspector" />
         </div>
         <div class="form-group">
             <label>@Translator["Mail address"]</label>
-            <InputText class="form-control" id="uniqueName" @bind-Value="model.ChiefInspectorMail" />
+            <InputText class="form-control" id="chiefInspectorMail" @bind-Value="model.ChiefInspectorMail" />
         </div>
         <div class="form-group">
             <label>@Translator["Password"]</label>
-            <InputText class="form-control" id="secret" @bind-Value="model.ChiefInspectorSecret" type="password"/>
+            <InputText class="form-control" id="chiefInspectorSecret" @bind-Value="model.ChiefInspectorSecret" type="password"/>
         </div>
     </div>
 

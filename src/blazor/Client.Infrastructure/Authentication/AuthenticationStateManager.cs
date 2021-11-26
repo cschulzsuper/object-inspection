@@ -25,12 +25,15 @@ namespace Super.Paula.Client.Authentication
             _accountHandler = accountHandler;
         }
 
-        public async Task PersistAuthenticationStateAsync()
+        public async Task PersistAuthenticationStateAsync(bool notify = true)
         {
             _appAuthentication.Ticks = DateTime.Now.Ticks;
 
             await _localStorage.SetItemAsync("app-authentication", _appAuthentication);
-            NotifyAuthenticationStateChanged(CreatePrincipalAuthenticationStateAsync());
+            if (notify)
+            {
+                NotifyAuthenticationStateChanged(CreatePrincipalAuthenticationStateAsync());
+            }
         }
 
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()

@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Linq;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Components.Authorization;
 using Super.Paula.Application.Administration;
 using Super.Paula.Application.Administration.Requests;
 using Super.Paula.Application.Administration.Responses;
-using Super.Paula.Client.Authentication;
 using Super.Paula.Client.ErrorHandling;
-using Super.Paula.Client.Storage;
 using Super.Paula.Environment;
 
 namespace Super.Paula.Client.Administration
@@ -53,9 +48,9 @@ namespace Super.Paula.Client.Administration
             responseMessage.EnsureSuccessStatusCode();
         }
 
-        public async ValueTask RegisterInspectorAsync(RegisterInspectorRequest request)
+        public async ValueTask RegisterIdentityAsync(RegisterIdentityRequest request)
         {
-            var responseMessage = await _httpClient.PostAsJsonAsync("account/register-inspector", request);
+            var responseMessage = await _httpClient.PostAsJsonAsync("account/register", request);
             
             responseMessage.RuleOutProblems();
             responseMessage.EnsureSuccessStatusCode();

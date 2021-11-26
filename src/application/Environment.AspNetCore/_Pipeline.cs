@@ -33,6 +33,7 @@ namespace Super.Paula
                         {
                             appAuthentication.Organization = subjectValues[0];
                             appAuthentication.Inspector = subjectValues[1];
+                            appAuthentication.Bearer = bearer;
 
                             var accountHandler = context.RequestServices.GetRequiredService<IAccountHandler>();
                             appAuthentication.Authorizations = (await accountHandler.QueryAuthorizationsAsync())
@@ -45,8 +46,10 @@ namespace Super.Paula
                                 var fallbackSubjectValue = Encoding.UTF8.GetString(fallbackSubject);
                                 if (fallbackSubjectValue.Count(x => x == ':') == 2)
                                 {
-                                    appAuthentication.ImpersonatorOrganization = subjectValues[0];
-                                    appAuthentication.ImpersonatorInspector = subjectValues[1];
+                                    var fallbackSubjectValues = subjectValue.Split(':', 3);
+
+                                    appAuthentication.ImpersonatorOrganization = fallbackSubjectValues[0];
+                                    appAuthentication.ImpersonatorInspector = fallbackSubjectValues[1];
                                     appAuthentication.ImpersonatorBearer = subjectValues[2];
                                 }
                             }

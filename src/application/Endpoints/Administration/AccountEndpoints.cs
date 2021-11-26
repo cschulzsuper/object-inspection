@@ -14,7 +14,7 @@ namespace Super.Paula.Application.Administration
                 "/account",
                 ("/sign-in-inspector", SignInInspector),
                 ("/sign-out-inspector", SignOutInspector),
-                ("/register-inspector", RegisterInspector),
+                ("/register", Register),
                 ("/register-organization", RegisterOrganization),
                 ("/change-secret", ChangeSecret),
                 ("/start-impersonation", StartImpersonation),
@@ -38,13 +38,11 @@ namespace Super.Paula.Application.Administration
             (IAccountHandler handler)
                 => handler.SignOutInspectorAsync();
 
-        private static Delegate RegisterInspector =>
-            [IgnoreCurrentOrganization]
-            (IAccountHandler handler, RegisterInspectorRequest request)
-                => handler.RegisterInspectorAsync(request);
+        private static Delegate Register =>
+            (IAccountHandler handler, RegisterIdentityRequest request)
+                => handler.RegisterIdentityAsync(request);
 
         private static Delegate RegisterOrganization =>
-            [IgnoreCurrentOrganization]
             (IAccountHandler handler, RegisterOrganizationRequest request)
                 => handler.RegisterOrganizationAsync(request);
 

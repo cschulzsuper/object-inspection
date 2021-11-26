@@ -1,6 +1,7 @@
 ﻿@inject INotificationHandler NotificationHandler
 @inject AppAuthentication AppAuthentication
 @inject IAccountHandler AccountHandler
+@inject AppEnvironment AppEnvironment
 
 @implements IAsyncDisposable
 
@@ -20,16 +21,14 @@
                         <span class="oi oi-account-login" aria-hidden="true"></span> Sign in
                     </NavLink>
                 </div>
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" Match="NavLinkMatch.All" href="account/register-organization">
-                        <span class="oi oi-people" aria-hidden="true"></span> Sign up (Organization)
-                    </NavLink>
-                </div>
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" Match="NavLinkMatch.All" href="account/register-inspector">
-                        <span class="oi oi-person" aria-hidden="true"></span> Sign up (Inspector)
-                    </NavLink>
-                </div>
+                @if (AppEnvironment.IsDevelopment)
+                {
+                    <div class="nav-item px-3">
+                        <NavLink class="nav-link" Match="NavLinkMatch.All" href="account/register">
+                            <span class="oi oi-person" aria-hidden="true"></span> Sign up
+                        </NavLink>
+                    </div>
+                }
             </NotAuthorized>
         </AuthorizeView>
         <AuthorizeView Policy="Maintainer">

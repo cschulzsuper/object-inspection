@@ -45,8 +45,8 @@ namespace Super.Paula.Client.Administration
         public ValueTask RepairChiefInspectorAsync(RepairChiefInspectorRequest request)
             => _accountHandler.RepairChiefInspectorAsync(request);
 
-        public ValueTask RegisterInspectorAsync(RegisterInspectorRequest request)
-            => _accountHandler.RegisterInspectorAsync(request);
+        public ValueTask RegisterIdentityAsync(RegisterIdentityRequest request)
+            => _accountHandler.RegisterIdentityAsync(request);
 
         public ValueTask RegisterOrganizationAsync(RegisterOrganizationRequest request)
             => _accountHandler.RegisterOrganizationAsync(request);
@@ -66,7 +66,7 @@ namespace Super.Paula.Client.Administration
             _appAuthentication.ImpersonatorInspector = string.Empty;
             _appAuthentication.ImpersonatorOrganization = string.Empty;
 
-            await _authenticationStateManager.Value.PersistAuthenticationStateAsync();
+            await _authenticationStateManager.Value.PersistAuthenticationStateAsync(notify: false);
 
             _appAuthentication.Authorizations = (await _accountHandler.QueryAuthorizationsAsync()).Values.ToArray();
             _appAuthentication.AuthorizationsFilter = Array.Empty<string>();
@@ -106,7 +106,7 @@ namespace Super.Paula.Client.Administration
             _appAuthentication.Inspector = request.UniqueName;
             _appAuthentication.Organization = request.Organization;
 
-            await _authenticationStateManager.Value.PersistAuthenticationStateAsync();
+            await _authenticationStateManager.Value.PersistAuthenticationStateAsync(notify: false);
 
             _appAuthentication.Authorizations = (await _accountHandler.QueryAuthorizationsAsync()).Values.ToArray();
             _appAuthentication.AuthorizationsFilter = Array.Empty<string>();
@@ -128,7 +128,7 @@ namespace Super.Paula.Client.Administration
                 _appAuthentication.ImpersonatorInspector = string.Empty;
                 _appAuthentication.ImpersonatorOrganization = string.Empty;
 
-                await _authenticationStateManager.Value.PersistAuthenticationStateAsync();
+                await _authenticationStateManager.Value.PersistAuthenticationStateAsync(notify: false);
 
                 _appAuthentication.Authorizations = (await _accountHandler.QueryAuthorizationsAsync()).Values.ToArray();
                 _appAuthentication.AuthorizationsFilter = Array.Empty<string>();

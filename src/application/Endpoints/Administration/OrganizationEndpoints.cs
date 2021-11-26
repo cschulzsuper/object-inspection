@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Routing;
 using Super.Paula.Application.Administration.Requests;
+using Super.Paula.Environment;
 using System;
 
 namespace Super.Paula.Application.Administration
@@ -52,11 +53,13 @@ namespace Super.Paula.Application.Administration
 
         private static Delegate Activate =>
             [Authorize("Maintainer")]
+            [IgnoreCurrentOrganization]
             (IOrganizationHandler handler, string organization)
                 => handler.ActivateAsync(organization);
 
         private static Delegate Deactivate =>
             [Authorize("Maintainer")]
+            [IgnoreCurrentOrganization]
             (IOrganizationHandler handler, string organization)
                 => handler.DeactivateAsync(organization);
     }
