@@ -35,10 +35,10 @@ namespace Super.Paula.Client
             services.AddPaulaAppEnvironment(isDevelopment);
             services.AddPaulaClientAuthorization();
 
-            services.AddScoped<AuthenticationMessageHandler>();
-
             if (!isWebAssembly)
             {
+                services.AddScoped<AuthenticationMessageHandler>();
+
                 services.AddHttpClient();
                 services.AddHttpClientHandler<AccountHandlerBase>();
                 services.AddHttpClientHandler<NotificationHandlerBase>();
@@ -51,6 +51,7 @@ namespace Super.Paula.Client
             }
             else
             {
+                services.AddScoped<AuthenticationMessageHandler>();
                 services
                     .AddHttpClient<AccountHandlerBase>()
                     .AddHttpMessageHandler<AuthenticationMessageHandler>();
@@ -105,7 +106,7 @@ namespace Super.Paula.Client
                 var clientFactory = sp.GetRequiredService<ITypedHttpClientFactory<THandler>>();
 
                 var factoryHandler = messageHandlerFactory.CreateHandler();
-                var fullHandler = new AuthenticationMessageHandler(sp.GetRequiredService<AppAuthentication>());
+                var fullHandler = new AuthenticationMessageHandler(sp.GetRequiredService<ILocalStorage>());
                 fullHandler.InnerHandler = factoryHandler;
 
                 var httpClient = new HttpClient(fullHandler, disposeHandler: true);
@@ -123,7 +124,7 @@ namespace Super.Paula.Client
                 var clientFactory = sp.GetRequiredService<ITypedHttpClientFactory<THandler>>();
 
                 var factoryHandler = messageHandlerFactory.CreateHandler();
-                var fullHandler = new AuthenticationMessageHandler(sp.GetRequiredService<AppAuthentication>());
+                var fullHandler = new AuthenticationMessageHandler(sp.GetRequiredService<ILocalStorage>());
                 fullHandler.InnerHandler = factoryHandler;
 
                 var httpClient = new HttpClient(fullHandler, disposeHandler: true);
