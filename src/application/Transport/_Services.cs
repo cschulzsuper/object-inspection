@@ -18,6 +18,7 @@ namespace Super.Paula.Application
                 .AddScoped<IAccountHandler, AccountHandler>()
                 .AddScoped<IBusinessObjectHandler, BusinessObjectHandler>()
                 .AddScoped<IBusinessObjectInspectionAuditHandler, BusinessObjectInspectionAuditHandler>()
+                .AddScoped<IIdentityHandler, IdentityHandler>()
                 .AddScoped<IInspectorHandler, InspectorHandler>()
                 .AddScoped<IInspectionHandler, InspectionHandler>()
                 .AddScoped<INotificationHandler, NotificationHandler>(InspectionHandlerFactory)

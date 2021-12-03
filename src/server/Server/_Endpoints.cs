@@ -16,6 +16,7 @@ namespace Super.Paula
                 .MapAccount()
                 .MapBusinessObject()
                 .MapBusinessObjectInspectionAudit()
+                .MapIdentity()
                 .MapInspection()
                 .MapInspector()
                 .MapNotification()

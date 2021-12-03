@@ -48,6 +48,7 @@ namespace Super.Paula.Client
                 services.AddHttpClientHandler<IBusinessObjectInspectionAuditHandler, BusinessObjectInspectionAuditHandler>();
                 services.AddHttpClientHandler<IInspectionHandler, InspectionHandler>();
                 services.AddHttpClientHandler<IInspectorHandler, InspectorHandler>();
+                services.AddHttpClientHandler<IIdentityHandler, IdentityHandler>();
             }
             else
             {
@@ -78,6 +79,10 @@ namespace Super.Paula.Client
 
                 services
                     .AddHttpClient<IInspectorHandler, InspectorHandler>()
+                    .AddHttpMessageHandler<AuthenticationMessageHandler>();
+
+                services
+                    .AddHttpClient<IIdentityHandler, IdentityHandler>()
                     .AddHttpMessageHandler<AuthenticationMessageHandler>();
             }
 

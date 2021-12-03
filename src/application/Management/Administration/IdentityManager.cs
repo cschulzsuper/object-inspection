@@ -32,6 +32,12 @@ namespace Super.Paula.Application.Administration
         public IQueryable<Identity> GetQueryable()
             => _identityRepository.GetQueryable();
 
+        public IAsyncEnumerable<Identity> GetAsyncEnumerable()
+            => _identityRepository.GetPartitionAsyncEnumerable();
+
+        public IAsyncEnumerable<TResult> GetAsyncEnumerable<TResult>(Func<IQueryable<Identity>, IQueryable<TResult>> query)
+            => _identityRepository.GetPartitionAsyncEnumerable(query);
+
         public async ValueTask InsertAsync(Identity identity)
         {
             EnsureInsertable(identity);
