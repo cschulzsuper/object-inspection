@@ -1,0 +1,82 @@
+﻿@page "/identities/{identity}/edit"
+@using Super.Paula.Client.Localization
+@using Super.Paula.Application.Guidlines
+@using Super.Paula.Application.Guidlines.Requests
+
+@inject ITranslator Translator
+@inject NavigationManager NavigationManager
+@inject IIdentityHandler IdentityHandler
+
+@attribute [Authorize("Maintainer")]
+
+<div class="container mt-2 mt-md-3">
+    <h1>@Translator["Edit identity"]</h1>
+</div>
+
+@if (_request == null)
+{
+    <p><em>Loading...</em></p>
+}
+else 
+{
+    <EditForm Model="@_request" OnValidSubmit="@OnValidSubmitAsync">
+        <DataAnnotationsValidator />
+
+        <div class="container mt-2 mt-md-3">
+            <div class="form-group">
+                <label>@Translator["Unique name"]</label>
+                <InputText class="form-control" id="uniqueName" @bind-Value="_request.UniqueName" readonly/>
+            </div>
+            <div class="form-group">
+                <label>@Translator["Mail address"]</label>
+                <InputText class="form-control" id="displayName" @bind-Value="_request.MailAddress" />
+            </div>
+        </div>
+
+        @if(context.GetValidationMessages().Any())
+        {
+            <div class="container mt-2 mt-md-3">
+                <div class="card card-body tex-wrap">
+                    <ValidationSummary />    
+                </div>
+            </div>
+        } 
+        else 
+        {
+            <div class="container mt-2 mt-md-3">
+                <button type="submit" class="btn btn-primary">@Translator["Submit"]</button>
+            </div>
+        }
+
+    </EditForm>
+}
+
+@code {
+
+    [Parameter]
+    public string Identity { get; set; } = string.Empty;
+
+    private IdentityRequest? _request = null;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var response = await IdentityHandler.GetAsync(Identity);
+
+            _request = new IdentityRequest
+                {
+                    MailAddress = response.MailAddress,
+                    UniqueName = response.UniqueName
+                };
+
+            StateHasChanged();
+        }
+    }
+
+    private async Task OnValidSubmitAsync()
+    {
+        await IdentityHandler.ReplaceAsync(Identity, _request!);
+        NavigationManager.NavigateTo("/identities");
+    }
+}

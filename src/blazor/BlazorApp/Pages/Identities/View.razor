@@ -1,0 +1,109 @@
+﻿@page "/identities"
+@using Super.Paula.Client.Localization
+@using Super.Paula.Application.Guidlines
+@using Super.Paula.Application.Guidlines.Responses
+
+@inject ITranslator Translator
+@inject NavigationManager NavigationManager
+@inject IIdentityHandler IdentityHandler
+
+@attribute [Authorize("Maintainer")]
+
+<div class="container mt-2 mt-md-3">
+    <h1>@Translator["Identities"]</h1>
+</div>
+
+<div class="container mt-2 mt-md-3">
+    <button class="btn btn-primary"
+        @onclick="() => Create()">@Translator["Create"]</button>
+</div>
+
+<div class="container mt-2 mt-md-3">
+
+@if (_identities == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>@Translator["Unique name"]</th>
+                <th>@Translator["Mail address"]</th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var identity in _identities.Values)
+            {
+                <tr>
+                    <td class="col-4">@identity.UniqueName</td>
+                    <td class="col-5">@identity.MailAddress</td>
+                    <td class="col-1">
+                        <button class="btn btn-outline-primary btn-block" 
+                            @onclick="() => ResetAsync(identity.UniqueName)">@Translator["Reset"]</button>
+                    </td>
+                    <td class="col-1">
+                        <button class="btn btn-outline-info btn-block" 
+                            @onclick="() => Edit(identity.UniqueName)">@Translator["Edit"]</button>
+                    </td>
+                    <td class="col-1">
+                        <button class="btn btn-outline-danger btn-block" 
+                            @onclick="() => DeleteAsync(identity.UniqueName)">@Translator["Delete"]</button>
+                    </td>
+                    
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+</div>
+
+@code {
+
+    private IDictionary<string,IdentityResponse>? _identities;
+
+    private IDictionary<string,bool>? _identitiesTextVisibile;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _identities = new Dictionary<string, IdentityResponse>();
+
+            var response = IdentityHandler.GetAll();
+
+            await foreach (var identity in response)
+            {
+                _identities.Add(identity.UniqueName, identity);
+                StateHasChanged();
+            }
+
+            _identitiesTextVisibile = _identities.Keys
+                .ToDictionary(key => key, _ => false);
+
+            StateHasChanged();
+        }
+    }
+
+    public void Create()
+        => NavigationManager.NavigateTo("/identities/create");
+
+    public void Edit(string identity)
+        => NavigationManager.NavigateTo($"/identities/{identity}/edit");
+
+    public async Task DeleteAsync(string identity)
+    {
+        await IdentityHandler.DeleteAsync(identity);
+        _identities!.Remove(identity);
+    }
+
+    public async Task ResetAsync(string identity) 
+    {
+        await IdentityHandler.ResetAsync(identity);
+    }
+}
