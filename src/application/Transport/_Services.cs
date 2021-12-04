@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Super.Paula.Application.Administration;
 using Super.Paula.Application.Auditing;
@@ -15,10 +16,13 @@ namespace Super.Paula.Application
         public static IServiceCollection AddPaulaServerTransport(this IServiceCollection services)
         {
             services
+                .AddScoped<IPasswordHasher<Identity>, IdentityPasswordHasher>()
+                .AddScoped<IIdentityHandler, IdentityHandler>();
+
+            services
                 .AddScoped<IAccountHandler, AccountHandler>()
                 .AddScoped<IBusinessObjectHandler, BusinessObjectHandler>()
                 .AddScoped<IBusinessObjectInspectionAuditHandler, BusinessObjectInspectionAuditHandler>()
-                .AddScoped<IIdentityHandler, IdentityHandler>()
                 .AddScoped<IInspectorHandler, InspectorHandler>()
                 .AddScoped<IInspectionHandler, InspectionHandler>()
                 .AddScoped<INotificationHandler, NotificationHandler>(InspectionHandlerFactory)

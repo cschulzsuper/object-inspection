@@ -24,7 +24,7 @@ namespace Super.Paula.Client.Administration
 
         public async ValueTask ChangeSecretAsync(ChangeSecretRequest request)
         {
-            var responseMessage = await _httpClient.PostAsJsonAsync("account/account/change-secret", request);
+            var responseMessage = await _httpClient.PostAsJsonAsync("account/change-secret", request);
             
             responseMessage.RuleOutProblems();
             responseMessage.EnsureSuccessStatusCode();

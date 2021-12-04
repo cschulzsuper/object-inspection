@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Super.Paula.Application.Administration.Requests;
 using Super.Paula.Application.Administration.Responses;
 using Super.Paula.Application.Runtime;
@@ -16,6 +17,7 @@ namespace Super.Paula.Application.Administration
         private readonly IIdentityManager _identityManager;
         private readonly IOrganizationManager _organizationManager;
         private readonly IConnectionManager _connectionManager;
+        private readonly IPasswordHasher<Identity> _passwordHasher;
         private readonly AppSettings _appSettings;
         private readonly AppAuthentication _appAuthentication;
 
@@ -24,6 +26,7 @@ namespace Super.Paula.Application.Administration
             IIdentityManager identityManager,
             IOrganizationManager organizationManager,
             IConnectionManager connectionManager,
+            IPasswordHasher<Identity> passwordHasher,
             AppSettings appSettings,
             AppAuthentication appAuthentication)
         {
@@ -31,6 +34,7 @@ namespace Super.Paula.Application.Administration
             _identityManager = identityManager;
             _organizationManager = organizationManager;
             _connectionManager = connectionManager;
+            _passwordHasher = passwordHasher;
             _appSettings = appSettings;
             _appAuthentication = appAuthentication;
         }
@@ -42,12 +46,15 @@ namespace Super.Paula.Application.Administration
                     x.UniqueName == _appAuthentication.Inspector &&
                     x.Organization == _appAuthentication.Organization);
 
-            var identity = _identityManager.GetQueryable()
-                .Single(x =>
-                    x.UniqueName == inspector.Identity &&
-                    x.Secret == request.OldSecret);
+            var identity = await _identityManager.GetAsync(inspector.Identity);
 
-            identity.Secret = request.NewSecret;
+            var oldSecretVerfication = _passwordHasher.VerifyHashedPassword(identity, identity.Secret, request.OldSecret);
+            if(oldSecretVerfication == PasswordVerificationResult.Failed)
+            {
+                throw new TransportException($"The old secret does not match");
+            }
+
+            identity.Secret = _passwordHasher.HashPassword(identity, request.NewSecret);
 
             await _identityManager.UpdateAsync(identity);
         }
@@ -108,12 +115,15 @@ namespace Super.Paula.Application.Administration
 
         public async ValueTask RegisterIdentityAsync(RegisterIdentityRequest request)
         {
-            await _identityManager.InsertAsync(new Identity
+            var identity = new Identity
             {
                 MailAddress = request.MailAddress,
-                Secret = request.Secret,
                 UniqueName = request.UniqueName
-            });
+            };
+
+            identity.Secret = _passwordHasher.HashPassword(identity, request.Secret);
+
+            await _identityManager.InsertAsync(identity);
         }
 
         public async ValueTask RegisterOrganizationAsync(RegisterOrganizationRequest request)
@@ -146,15 +156,18 @@ namespace Super.Paula.Application.Administration
                 Activated = true
             });
 
-            await _identityManager.InsertAsync(new Identity
+            var identity = new Identity
             {
                 MailAddress = request.ChiefInspectorMail,
-                Secret = request.ChiefInspectorSecret,
                 UniqueName = request.UniqueName
-            });
+            };
+
+            identity.Secret = _passwordHasher.HashPassword(identity, request.ChiefInspectorSecret);
+
+            await _identityManager.InsertAsync(identity);
         }
 
-        public ValueTask<SignInInspectorResponse> SignInInspectorAsync(SignInInspectorRequest request)
+        public async ValueTask<SignInInspectorResponse> SignInInspectorAsync(SignInInspectorRequest request)
         {
             var inspector = _inspectorManager.GetQueryable()
                 .Single(x =>
@@ -163,10 +176,22 @@ namespace Super.Paula.Application.Administration
                     x.UniqueName == request.UniqueName &&
                     x.Organization == request.Organization);
 
-            _ = _identityManager.GetQueryable()
-                .Single(x =>
-                    x.UniqueName == inspector.Identity &&
-                    x.Secret == request.Secret);
+            var identity = await _identityManager.GetAsync(inspector.Identity);
+
+            var secretVerfication = _passwordHasher.VerifyHashedPassword(identity, identity.Secret, request.Secret);
+            switch (secretVerfication)
+            {
+                case PasswordVerificationResult.Success:
+                    break;
+
+                case PasswordVerificationResult.SuccessRehashNeeded:
+                    identity.Secret = _passwordHasher.HashPassword(identity, request.Secret);
+                    await _identityManager.UpdateAsync(identity);
+                    break;
+
+                case PasswordVerificationResult.Failed:
+                    throw new TransportException($"The secret does not match");
+            }
 
             var connectionProof = Convert.ToBase64String(
                 Encoding.UTF8.GetBytes($"{Guid.NewGuid()}"));
@@ -182,7 +207,7 @@ namespace Super.Paula.Application.Administration
                     Encoding.UTF8.GetBytes($"{inspector.Organization}:{inspector.UniqueName}:{connectionProof}"))
             };
 
-            return ValueTask.FromResult(response);
+            return response;
         }
 
         public async ValueTask SignOutInspectorAsync()

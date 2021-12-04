@@ -1,4 +1,5 @@
-﻿using Super.Paula.Application.Administration.Requests;
+﻿using Microsoft.AspNetCore.Identity;
+using Super.Paula.Application.Administration.Requests;
 using Super.Paula.Application.Administration.Responses;
 using Super.Paula.Environment;
 using System;
@@ -12,10 +13,14 @@ namespace Super.Paula.Application.Administration
     internal class IdentityHandler : IIdentityHandler
     {
         private readonly IIdentityManager _identityManager;
+        private readonly IPasswordHasher<Identity> _passwordHasher;
 
-        public IdentityHandler(IIdentityManager identityManager) 
+        public IdentityHandler(
+            IIdentityManager identityManager,
+            IPasswordHasher<Identity> passwordHasher) 
         {
             _identityManager = identityManager;
+            _passwordHasher = passwordHasher;
         }
 
         public async ValueTask<IdentityResponse> CreateAsync(IdentityRequest request)
@@ -23,9 +28,10 @@ namespace Super.Paula.Application.Administration
             var entity = new Identity
             {
                 UniqueName = request.UniqueName,
-                MailAddress = request.MailAddress,
-                Secret = "default"
+                MailAddress = request.MailAddress
             };
+
+            entity.Secret = _passwordHasher.HashPassword(entity, "default");
 
             await _identityManager.InsertAsync(entity);
 
@@ -77,7 +83,7 @@ namespace Super.Paula.Application.Administration
         {
             var entity = await _identityManager.GetAsync(identity);
 
-            entity.Secret = "default";
+            entity.Secret = _passwordHasher.HashPassword(entity, "default");
 
             await _identityManager.UpdateAsync(entity);
         }
