@@ -139,9 +139,6 @@ namespace Super.Paula.Client.Inventory
             return (await responseMessage.Content.ReadFromJsonAsync<BusinessObjectResponse>())!;
         }
 
-        public ValueTask RefreshInspectionAsync(string inspection, RefreshInspectionRequest request)
-            => throw new NotSupportedException("This operation is not supported on the client side");
-
         public async ValueTask ReplaceAsync(string businessObject, BusinessObjectRequest request)
         {
             var responseMessage = await _httpClient.PutAsJsonAsync($"business-objects/{businessObject}", request);

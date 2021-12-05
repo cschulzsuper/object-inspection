@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Super.Paula.Application.Inventory
 {
-    internal class BusinessObjectHandler : IBusinessObjectHandler
+    internal class BusinessObjectHandler : IBusinessObjectHandler, IBusinessObjectEventHandler
     {
         private readonly IBusinessObjectManager _businessObjectManager;
         private readonly Lazy<IInspectionHandler> _inspectionHandler;
@@ -323,7 +323,7 @@ namespace Super.Paula.Application.Inventory
                     UniqueName = entity.UniqueName
                 }));
 
-        public async ValueTask RefreshInspectionAsync(string inspection, RefreshInspectionRequest request)
+        public async ValueTask ProcessAsync(string inspection, InspectionEvent @event)
         {
             // See https://github.com/dotnet/efcore/issues/17957
             // for the reason why AsEnumerable is necessary 
@@ -338,9 +338,9 @@ namespace Super.Paula.Application.Inventory
                 {
                     if (bussinesObjectInspection.UniqueName == inspection)
                     {
-                        bussinesObjectInspection.DisplayName = request.DisplayName;
-                        bussinesObjectInspection.Text = request.Text;
-                        bussinesObjectInspection.ActivatedGlobally = request.Activated;
+                        bussinesObjectInspection.DisplayName = @event.DisplayName;
+                        bussinesObjectInspection.Text = @event.Text;
+                        bussinesObjectInspection.ActivatedGlobally = @event.Activated;
 
                         if (bussinesObjectInspection.AuditDate != default &&
                             bussinesObjectInspection.AuditTime != default)

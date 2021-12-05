@@ -12,29 +12,27 @@ namespace Super.Paula.Application.Guidlines
     internal class InspectionHandler : IInspectionHandler
     {
         private readonly IInspectionManager _inspectionManager;
-        private readonly Lazy<IBusinessObjectHandler> _businessObjectHandler;
+        private readonly IEventBus _eventBus;
 
         public InspectionHandler(
             IInspectionManager inspectionManager,
-            Lazy<IBusinessObjectHandler> businessObjectHandler)
+            IEventBus eventBus)
         {
             _inspectionManager = inspectionManager;
-            _businessObjectHandler = businessObjectHandler;
+            _eventBus = eventBus;
         }
 
         public async ValueTask ActivateAsync(string inspection)
         {
             var entity = await _inspectionManager.GetAsync(inspection);
 
-            var refresh = entity.Activated != true;
-
-            entity.Activated = true;
-
-            await _inspectionManager.UpdateAsync(entity);
-
-            if (refresh)
+            var required = entity.Activated != true;
+            if (required)
             {
-                await RefreshInspectionAsync(entity);
+                entity.Activated = true;
+
+                await _inspectionManager.UpdateAsync(entity);
+                await NotifyAsync(entity);
             }
         }
 
@@ -42,15 +40,13 @@ namespace Super.Paula.Application.Guidlines
         {
             var entity = await _inspectionManager.GetAsync(inspection);
 
-            var refresh = entity.Activated != false;
-
-            entity.Activated = false;
-
-            await _inspectionManager.UpdateAsync(entity);
-
-            if (refresh)
+            var required = entity.Activated != false;
+            if (required)
             {
-                await RefreshInspectionAsync(entity);
+                entity.Activated = false;
+
+                await _inspectionManager.UpdateAsync(entity);
+                await NotifyAsync(entity);
             }
         }
 
@@ -110,34 +106,33 @@ namespace Super.Paula.Application.Guidlines
         {
             var entity = await _inspectionManager.GetAsync(inspection);
 
-            var refresh =
+            var required =
                 entity.Activated != request.Activated ||
                 entity.DisplayName != request.DisplayName ||
                 entity.Text != request.Text;
 
-            entity.Activated = request.Activated;
-            entity.DisplayName = request.DisplayName;
-            entity.Text = request.Text;
-            entity.UniqueName = request.UniqueName;
-
-            await _inspectionManager.UpdateAsync(entity);
-
-            if (refresh)
+            if (required)
             {
-                await RefreshInspectionAsync(entity);
+                entity.Activated = request.Activated;
+                entity.DisplayName = request.DisplayName;
+                entity.Text = request.Text;
+                entity.UniqueName = request.UniqueName;
+
+                await _inspectionManager.UpdateAsync(entity);
+                await NotifyAsync(entity);
             }
         }
 
-        private async ValueTask RefreshInspectionAsync(Inspection inspection)
+        private async ValueTask NotifyAsync(Inspection inspection)
         {
-            var request = new RefreshInspectionRequest
+            var @event = new InspectionEvent
             {
                 DisplayName = inspection.DisplayName,
                 Text = inspection.Text,
                 Activated = inspection.Activated
             };
 
-            await _businessObjectHandler.Value.RefreshInspectionAsync(inspection.UniqueName, request);
+            await _eventBus.PublishAsync(EventCategories.BusinessObject, inspection.UniqueName, @event);
         }
     }
 }

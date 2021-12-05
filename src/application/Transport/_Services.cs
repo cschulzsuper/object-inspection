@@ -16,12 +16,19 @@ namespace Super.Paula.Application
         public static IServiceCollection AddPaulaServerTransport(this IServiceCollection services)
         {
             services
+                .AddScoped<IEventBus, EventBus>();
+
+            services
                 .AddScoped<IPasswordHasher<Identity>, IdentityPasswordHasher>()
                 .AddScoped<IIdentityHandler, IdentityHandler>();
 
             services
                 .AddScoped<IAccountHandler, AccountHandler>()
-                .AddScoped<IBusinessObjectHandler, BusinessObjectHandler>()
+
+                .AddScoped<BusinessObjectHandler>()
+                .AddScoped<IBusinessObjectHandler>(x => x.GetRequiredService<BusinessObjectHandler>())
+                .AddScoped<IBusinessObjectEventHandler>(x => x.GetRequiredService<BusinessObjectHandler>())
+
                 .AddScoped<IBusinessObjectInspectionAuditHandler, BusinessObjectInspectionAuditHandler>()
                 .AddScoped<IInspectorHandler, InspectorHandler>()
                 .AddScoped<IInspectionHandler, InspectionHandler>()
@@ -29,7 +36,6 @@ namespace Super.Paula.Application
                 .AddScoped<IOrganizationHandler, OrganizationHandler>();
 
             services
-                .AddTransient(provider => new Lazy<IBusinessObjectHandler>(() => provider.GetRequiredService<IBusinessObjectHandler>()))
                 .AddTransient(provider => new Lazy<IBusinessObjectInspectionAuditHandler>(() => provider.GetRequiredService<IBusinessObjectInspectionAuditHandler>()))
                 .AddTransient(provider => new Lazy<IInspectionHandler>(() => provider.GetRequiredService<IInspectionHandler>()))
                 .AddTransient(provider => new Lazy<INotificationHandler>(() => provider.GetRequiredService<INotificationHandler>()))
