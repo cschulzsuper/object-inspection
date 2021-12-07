@@ -47,11 +47,31 @@ namespace Super.Paula.Data
 
         public IQueryable<TEntity> GetPartitionQueryable(params object[] partitionKeyComponents)
         {
-            var partitionKeyCompoenentsQueue = new Queue<object>(partitionKeyComponents);
-            var partitionKey = _partitionKeyValueGenerator.Value(_appState, partitionKeyCompoenentsQueue);
+            var partitionKeyComponentsQueue = new Queue<object>(partitionKeyComponents);
+            var partitionKey = _partitionKeyValueGenerator.Value(_appState, partitionKeyComponentsQueue);
 
             var query = _repositoryContext.Set<TEntity>().AsQueryable();
             
+            if (!string.IsNullOrWhiteSpace(partitionKey))
+            {
+                query = query.WithPartitionKey(partitionKey);
+            }
+
+            return query.AsNoTracking();
+        }
+
+        public IQueryable<TEntity> GetPartitionQueryable(FormattableString expression, params object[] partitionKeyComponents)
+        {
+            var partitionKeyComponentsQueue = new Queue<object>(partitionKeyComponents);
+            var partitionKey = _partitionKeyValueGenerator.Value(_appState, partitionKeyComponentsQueue);
+
+            var query = _repositoryContext.Set<TEntity>()
+                .FromSqlRaw(
+                    expression.Format,
+                    expression.GetArguments()
+                        .Where(x => x != null)
+                        .ToArray()!);
+
             if (!string.IsNullOrWhiteSpace(partitionKey))
             {
                 query = query.WithPartitionKey(partitionKey);

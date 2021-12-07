@@ -32,6 +32,10 @@ namespace Super.Paula.Application.Inventory
         public IQueryable<BusinessObject> GetQueryable()
             => _businessObjectRepository.GetPartitionQueryable();
 
+        public IQueryable<BusinessObject> GetQueryableWithInspection(string inspection)
+            => _businessObjectRepository.GetPartitionQueryable(
+                $"SELECT * FROM c WHERE ARRAY_CONTAINS(c.Inspections, {{\"UniqueName\": {inspection}}}, true)");
+
         public IAsyncEnumerable<BusinessObject> GetAsyncEnumerable()
             => _businessObjectRepository.GetPartitionAsyncEnumerable();
 

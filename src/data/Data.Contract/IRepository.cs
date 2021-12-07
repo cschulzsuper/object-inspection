@@ -34,6 +34,9 @@ namespace Super.Paula.Data
         IQueryable<TEntity> GetPartitionQueryable(params object[] partitionKeyComponents);
 
         [ErrorMessage("Could not query entity list")]
+        IQueryable<TEntity> GetPartitionQueryable(FormattableString expression, params object[] partitionKeyComponents);
+
+        [ErrorMessage("Could not query entity list")]
         IAsyncEnumerable<TEntity> GetPartitionAsyncEnumerable(params object[] partitionKeyComponents);
 
         [ErrorMessage("Could not query entity list")]

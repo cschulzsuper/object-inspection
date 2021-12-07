@@ -107,26 +107,26 @@ namespace Super.Paula.Application.Inventory
             if (oldEntityDisplayName != request.DisplayName ||
                 oldEntityUniqueName != request.UniqueName)
             {
-                foreach (var bussinesObjectInspection in entity.Inspections)
+                foreach (var businessObjectInspection in entity.Inspections)
                 {
-                    if (bussinesObjectInspection.AuditDate != default &&
-                        bussinesObjectInspection.AuditTime != default)
+                    if (businessObjectInspection.AuditDate != default &&
+                        businessObjectInspection.AuditTime != default)
                     {
                         await _businessObjectInspectionAuditHandler.Value.ReplaceAsync(
                         entity.UniqueName,
-                        bussinesObjectInspection.UniqueName,
-                        bussinesObjectInspection.AuditDate,
-                        bussinesObjectInspection.AuditTime,
+                        businessObjectInspection.UniqueName,
+                        businessObjectInspection.AuditDate,
+                        businessObjectInspection.AuditTime,
                         new BusinessObjectInspectionAuditRequest
                         {
-                            Annotation = bussinesObjectInspection.AuditAnnotation,
-                            AuditDate = bussinesObjectInspection.AuditDate,
-                            AuditTime = bussinesObjectInspection.AuditTime,
+                            Annotation = businessObjectInspection.AuditAnnotation,
+                            AuditDate = businessObjectInspection.AuditDate,
+                            AuditTime = businessObjectInspection.AuditTime,
                             BusinessObjectDisplayName = entity.DisplayName,
-                            Inspection = bussinesObjectInspection.UniqueName,
-                            InspectionDisplayName = bussinesObjectInspection.DisplayName,
-                            Inspector = bussinesObjectInspection.AuditInspector,
-                            Result = bussinesObjectInspection.AuditResult
+                            Inspection = businessObjectInspection.UniqueName,
+                            InspectionDisplayName = businessObjectInspection.DisplayName,
+                            Inspector = businessObjectInspection.AuditInspector,
+                            Result = businessObjectInspection.AuditResult
                         });
                     }
                 }
@@ -225,32 +225,32 @@ namespace Super.Paula.Application.Inventory
         {
             var entity = await _businessObjectManager.GetAsync(businessObject);
 
-            var bussinesObjectInspection = entity.Inspections
+            var businessObjectInspection = entity.Inspections
                 .Single(x => x.UniqueName == inspection);
 
-            bussinesObjectInspection.AuditInspector = _appState.CurrentInspector;
-            bussinesObjectInspection.AuditResult = request.Result;
+            businessObjectInspection.AuditInspector = _appState.CurrentInspector;
+            businessObjectInspection.AuditResult = request.Result;
 
             await _businessObjectManager.UpdateAsync(entity);
 
-            if (bussinesObjectInspection.AuditDate != default &&
-                bussinesObjectInspection.AuditTime != default)
+            if (businessObjectInspection.AuditDate != default &&
+                businessObjectInspection.AuditTime != default)
             {
                 await _businessObjectInspectionAuditHandler.Value.ReplaceAsync(
                 entity.UniqueName,
-                bussinesObjectInspection.UniqueName,
-                bussinesObjectInspection.AuditDate,
-                bussinesObjectInspection.AuditTime,
+                businessObjectInspection.UniqueName,
+                businessObjectInspection.AuditDate,
+                businessObjectInspection.AuditTime,
                 new BusinessObjectInspectionAuditRequest
                 {
-                    Annotation = bussinesObjectInspection.AuditAnnotation,
-                    AuditDate = bussinesObjectInspection.AuditDate,
-                    AuditTime = bussinesObjectInspection.AuditTime,
+                    Annotation = businessObjectInspection.AuditAnnotation,
+                    AuditDate = businessObjectInspection.AuditDate,
+                    AuditTime = businessObjectInspection.AuditTime,
                     BusinessObjectDisplayName = entity.DisplayName,
-                    Inspection = bussinesObjectInspection.UniqueName,
-                    InspectionDisplayName = bussinesObjectInspection.DisplayName,
-                    Inspector = bussinesObjectInspection.AuditInspector,
-                    Result = bussinesObjectInspection.AuditResult
+                    Inspection = businessObjectInspection.UniqueName,
+                    InspectionDisplayName = businessObjectInspection.DisplayName,
+                    Inspector = businessObjectInspection.AuditInspector,
+                    Result = businessObjectInspection.AuditResult
                 });
             }
         }
@@ -259,32 +259,32 @@ namespace Super.Paula.Application.Inventory
         {
             var entity = await _businessObjectManager.GetAsync(businessObject);
 
-            var bussinesObjectInspection = entity.Inspections
+            var businessObjectInspection = entity.Inspections
                 .Single(x => x.UniqueName == inspection);
 
-            bussinesObjectInspection.AuditInspector = _appState.CurrentInspector;
-            bussinesObjectInspection.AuditAnnotation = request.Annotation;
+            businessObjectInspection.AuditInspector = _appState.CurrentInspector;
+            businessObjectInspection.AuditAnnotation = request.Annotation;
 
             await _businessObjectManager.UpdateAsync(entity);
 
-            if (bussinesObjectInspection.AuditDate != default &&
-                bussinesObjectInspection.AuditTime != default)
+            if (businessObjectInspection.AuditDate != default &&
+                businessObjectInspection.AuditTime != default)
             {
                 await _businessObjectInspectionAuditHandler.Value.ReplaceAsync(
                 entity.UniqueName,
-                bussinesObjectInspection.UniqueName,
-                bussinesObjectInspection.AuditDate,
-                bussinesObjectInspection.AuditTime,
+                businessObjectInspection.UniqueName,
+                businessObjectInspection.AuditDate,
+                businessObjectInspection.AuditTime,
                 new BusinessObjectInspectionAuditRequest
                 {
-                    Annotation = bussinesObjectInspection.AuditAnnotation,
-                    AuditDate = bussinesObjectInspection.AuditDate,
-                    AuditTime = bussinesObjectInspection.AuditTime,
+                    Annotation = businessObjectInspection.AuditAnnotation,
+                    AuditDate = businessObjectInspection.AuditDate,
+                    AuditTime = businessObjectInspection.AuditTime,
                     BusinessObjectDisplayName = entity.DisplayName,
-                    Inspection = bussinesObjectInspection.UniqueName,
-                    InspectionDisplayName = bussinesObjectInspection.DisplayName,
-                    Inspector = bussinesObjectInspection.AuditInspector,
-                    Result = bussinesObjectInspection.AuditResult
+                    Inspection = businessObjectInspection.UniqueName,
+                    InspectionDisplayName = businessObjectInspection.DisplayName,
+                    Inspector = businessObjectInspection.AuditInspector,
+                    Result = businessObjectInspection.AuditResult
                 });
             }
         }
@@ -325,47 +325,42 @@ namespace Super.Paula.Application.Inventory
 
         public async ValueTask ProcessAsync(string inspection, InspectionEvent @event)
         {
-            // See https://github.com/dotnet/efcore/issues/17957
-            // for the reason why AsEnumerable is necessary 
+            var businessObjects = _businessObjectManager.GetQueryableWithInspection(inspection);
 
-            var bussinesObjects = _businessObjectManager.GetQueryable()
-                .AsEnumerable()
-                .Where(x => x.Inspections.Any(x => x.UniqueName == inspection));
-
-            foreach (var bussinesObject in bussinesObjects)
+            foreach (var businessObject in businessObjects)
             {
-                foreach(var bussinesObjectInspection in bussinesObject.Inspections)
+                foreach(var businessObjectInspection in businessObject.Inspections)
                 {
-                    if (bussinesObjectInspection.UniqueName == inspection)
+                    if (businessObjectInspection.UniqueName == inspection)
                     {
-                        bussinesObjectInspection.DisplayName = @event.DisplayName;
-                        bussinesObjectInspection.Text = @event.Text;
-                        bussinesObjectInspection.ActivatedGlobally = @event.Activated;
+                        businessObjectInspection.DisplayName = @event.DisplayName;
+                        businessObjectInspection.Text = @event.Text;
+                        businessObjectInspection.ActivatedGlobally = @event.Activated;
 
-                        if (bussinesObjectInspection.AuditDate != default &&
-                            bussinesObjectInspection.AuditTime != default)
+                        if (businessObjectInspection.AuditDate != default &&
+                            businessObjectInspection.AuditTime != default)
                         {
                             await _businessObjectInspectionAuditHandler.Value.ReplaceAsync(
-                                bussinesObject.UniqueName,
-                                bussinesObjectInspection.UniqueName,
-                                bussinesObjectInspection.AuditDate,
-                                bussinesObjectInspection.AuditTime,
+                                businessObject.UniqueName,
+                                businessObjectInspection.UniqueName,
+                                businessObjectInspection.AuditDate,
+                                businessObjectInspection.AuditTime,
                                 new BusinessObjectInspectionAuditRequest
                                 {
-                                    Annotation = bussinesObjectInspection.AuditAnnotation,
-                                    AuditDate = bussinesObjectInspection.AuditDate,
-                                    AuditTime = bussinesObjectInspection.AuditTime,
-                                    BusinessObjectDisplayName = bussinesObject.DisplayName,
-                                    Inspection = bussinesObjectInspection.UniqueName,
-                                    InspectionDisplayName = bussinesObjectInspection.DisplayName,
-                                    Inspector = bussinesObjectInspection.AuditInspector,
-                                    Result = bussinesObjectInspection.AuditResult
+                                    Annotation = businessObjectInspection.AuditAnnotation,
+                                    AuditDate = businessObjectInspection.AuditDate,
+                                    AuditTime = businessObjectInspection.AuditTime,
+                                    BusinessObjectDisplayName = businessObject.DisplayName,
+                                    Inspection = businessObjectInspection.UniqueName,
+                                    InspectionDisplayName = businessObjectInspection.DisplayName,
+                                    Inspector = businessObjectInspection.AuditInspector,
+                                    Result = businessObjectInspection.AuditResult
                                 });
                         }
                     }
                 }
 
-                await _businessObjectManager.UpdateAsync(bussinesObject);
+                await _businessObjectManager.UpdateAsync(businessObject);
             }
         }
     }
