@@ -39,6 +39,15 @@ namespace Super.Paula.Data
         public IQueryable<TEntity> GetQueryable()
             => _repositoryContext.Set<TEntity>().AsNoTracking();
 
+        public IQueryable<TEntity> GetQueryable(FormattableString query)
+            => _repositoryContext.Set<TEntity>()
+                .FromSqlRaw(
+                    query.Format,
+                    query.GetArguments()
+                        .Where(x => x != null)
+                        .ToArray()!)
+                .AsNoTracking();
+
         public IAsyncEnumerable<TEntity> GetAsyncEnumerable()
             => GetQueryable().AsAsyncEnumerable();
 
