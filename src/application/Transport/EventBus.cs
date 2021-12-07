@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Super.Paula.Application.Auditing;
 using Super.Paula.Application.Inventory;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Super.Paula.Application
@@ -9,6 +11,11 @@ namespace Super.Paula.Application
     {
         private readonly IServiceProvider _serviceProvider;
 
+        private readonly IDictionary<string, Type> _eventHandlerTypes = new Dictionary<string, Type>
+        {
+            [EventCategories.BusinessObject] = typeof(IBusinessObjectEventHandler),
+        };
+
         public EventBus(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
@@ -16,16 +23,14 @@ namespace Super.Paula.Application
 
         public async Task PublishAsync<TEvent>(string category, string key, TEvent @event)
         {
-            switch(category)
+            if (_eventHandlerTypes.ContainsKey(category))
             {
-                case EventCategories.BusinessObject:
-                    var eventHandler = _serviceProvider.GetRequiredService<IBusinessObjectEventHandler>();
-                    if (eventHandler is IEventHandler<TEvent> typedEventHandler )
-                    {
-                        await typedEventHandler.ProcessAsync(key, @event);
-                    }
-
-                    break;
+                var eventHandlerType = _eventHandlerTypes[category];
+                var eventHandler = _serviceProvider.GetRequiredService(eventHandlerType);
+                if (eventHandler is IEventHandler<TEvent> typedEventHandler)
+                {
+                    await typedEventHandler.ProcessAsync(key, @event);
+                }
             }
         }
     }
