@@ -25,6 +25,9 @@ namespace Super.Paula.Data
         IQueryable<TEntity> GetQueryable();
 
         [ErrorMessage("Could not query entity list")]
+        IQueryable<TEntity> GetQueryable(FormattableString query);
+
+        [ErrorMessage("Could not query entity list")]
         IAsyncEnumerable<TEntity> GetAsyncEnumerable();
 
         [ErrorMessage("Could not query entity list")]
