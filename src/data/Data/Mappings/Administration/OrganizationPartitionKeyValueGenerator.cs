@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace Super.Paula.Data.Mappings.Administration
 {
-    internal class OrganizationPartitionKeyValueGenerator : ValueGenerator<string>, IPartitionKeyValueGenerator<Organization>
+    public class OrganizationPartitionKeyValueGenerator : ValueGenerator<string>, IPartitionKeyValueGenerator<Organization>
     {
         public override bool GeneratesTemporaryValues => false;
 

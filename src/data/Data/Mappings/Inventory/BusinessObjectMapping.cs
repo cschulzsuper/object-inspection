@@ -6,7 +6,7 @@ namespace Super.Paula.Data.Mappings.Inventory
 {
     public class BusinessObjectMapping : IEntityTypeConfiguration<BusinessObject>
     {
-        public string PartitionKey = $"Organization";
+        public string PartitionKey = "Organization";
 
         public void Configure(EntityTypeBuilder<BusinessObject> builder)
         {

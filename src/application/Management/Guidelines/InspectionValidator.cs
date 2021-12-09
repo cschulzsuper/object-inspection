@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Linq;
 using Super.Paula.Validation;
 
-namespace Super.Paula.Application.Guidlines
+namespace Super.Paula.Application.Guidelines
 {
     public static class InspectionValidator
     {

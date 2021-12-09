@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Super.Paula.Validation;
 
-namespace Super.Paula.Application.Guidlines.Requests
+namespace Super.Paula.Application.Guidelines.Requests
 {
     public class InspectionRequest
     {

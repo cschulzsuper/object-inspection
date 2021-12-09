@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Super.Paula.Application.Guidlines
+namespace Super.Paula.Application.Guidelines
 {
     public class  InspectionManager : IInspectionManager
     {
@@ -68,7 +68,7 @@ namespace Super.Paula.Application.Guidlines
 
         public async ValueTask DeleteAsync(Inspection inspection)
         {
-            EnsureDeleteable(inspection);
+            EnsureDeletable(inspection);
 
             try
             {
@@ -106,7 +106,7 @@ namespace Super.Paula.Application.Guidlines
                 InspectionValidator.TextIsNotNull(inspection.Text),
                 InspectionValidator.TextIsNotTooLong(inspection.Text));
 
-        private static void EnsureDeleteable(Inspection inspection)
+        private static void EnsureDeletable(Inspection inspection)
             => Validator.Ensure($"inspection with unique name '{inspection.UniqueName}'",
                 InspectionValidator.UniqueNameIsNotEmpty(inspection.UniqueName),
                 InspectionValidator.UniqueNameHasKebabCase(inspection.UniqueName),

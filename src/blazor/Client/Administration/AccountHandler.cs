@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Super.Paula.Application.Administration;
@@ -10,7 +9,7 @@ using Super.Paula.Environment;
 
 namespace Super.Paula.Client.Administration
 {
-    internal class AccountHandler : IAccountHandler
+    public class AccountHandler : IAccountHandler
     {
         private readonly IAccountHandler _accountHandler;
 

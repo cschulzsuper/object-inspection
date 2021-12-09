@@ -1,6 +1,5 @@
 ﻿using Super.Paula.Validation;
 using System;
-using System.Linq;
 
 namespace Super.Paula.Application.Administration
 {

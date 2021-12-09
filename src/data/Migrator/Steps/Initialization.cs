@@ -1,6 +1,4 @@
-﻿using Migrator;
-using Super.Paula.Data;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace Super.Paula.Data.Steps
 {

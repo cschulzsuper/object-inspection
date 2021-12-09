@@ -2,7 +2,7 @@
 using Super.Paula.Data.Mappings.Administration;
 using Super.Paula.Data.Mappings.Auditing;
 using Super.Paula.Data.Mappings.Communication;
-using Super.Paula.Data.Mappings.Guidlines;
+using Super.Paula.Data.Mappings.Guidelines;
 using Super.Paula.Data.Mappings.Inventory;
 using Super.Paula.Environment;
 

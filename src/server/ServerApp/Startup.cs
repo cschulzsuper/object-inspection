@@ -8,9 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
-using Super.Paula.Application.Administration;
 using Super.Paula.Application.Runtime;
-using Super.Paula.Data;
 using Super.Paula.Swagger;
 using Super.Paula.Validation;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -84,7 +82,7 @@ namespace Super.Paula
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapPaulaServer();
-                endpoints.MapGet("", () => $"It works!");
+                endpoints.MapGet("", () => "It works!");
             });
         }
 

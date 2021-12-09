@@ -1,21 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Components.Authorization;
 using Super.Paula.Application.Administration;
 using Super.Paula.Application.Administration.Requests;
 using Super.Paula.Application.Administration.Responses;
-using Super.Paula.Client.Authentication;
 using Super.Paula.Client.ErrorHandling;
 using Super.Paula.Environment;
 
 namespace Super.Paula.Client.Administration
 {
-    internal class OrganizationHandler : IOrganizationHandler
+    public class OrganizationHandler : IOrganizationHandler
     {
         private readonly HttpClient _httpClient;
 
@@ -76,9 +73,9 @@ namespace Super.Paula.Client.Administration
                     DefaultBufferSize = 128
                 });
 
-            await foreach(var reponseItem in response)
+            await foreach(var responseItem in response)
             {
-                yield return reponseItem!;
+                yield return responseItem!;
             }
         }
 

@@ -1,7 +1,6 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace Super.Paula.Application.Administration.Requests
+namespace Super.Paula.Application.Guidelines.Events
 {
     public class InspectionEvent
     {

@@ -1,6 +1,4 @@
-﻿using System.Text.RegularExpressions;
-
-namespace Super.Paula.Validation
+﻿namespace Super.Paula.Validation
 {
     public static class DayNumberValidator
     {

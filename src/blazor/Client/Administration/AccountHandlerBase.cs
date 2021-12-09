@@ -10,7 +10,7 @@ using Super.Paula.Environment;
 
 namespace Super.Paula.Client.Administration
 {
-    internal class AccountHandlerBase : IAccountHandler
+    public class AccountHandlerBase : IAccountHandler
     {
         private readonly HttpClient _httpClient;
 

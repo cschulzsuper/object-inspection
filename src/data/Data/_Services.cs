@@ -7,13 +7,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Super.Paula.Application.Administration;
 using Super.Paula.Application.Auditing;
 using Super.Paula.Application.Communication;
-using Super.Paula.Application.Guidlines;
+using Super.Paula.Application.Guidelines;
 using Super.Paula.Application.Inventory;
 using Super.Paula.Data.Mappings;
 using Super.Paula.Data.Mappings.Administration;
 using Super.Paula.Data.Mappings.Auditing;
 using Super.Paula.Data.Mappings.Communication;
-using Super.Paula.Data.Mappings.Guidlines;
+using Super.Paula.Data.Mappings.Guidelines;
 using Super.Paula.Data.Mappings.Inventory;
 using Super.Paula.Environment;
 
@@ -38,7 +38,7 @@ namespace Super.Paula.Data
                         {
                             options.HttpClientFactory(() =>
                             {
-                                HttpMessageHandler httpMessageHandler = new HttpClientHandler()
+                                HttpMessageHandler httpMessageHandler = new HttpClientHandler
                                 {
                                     ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
                                 };

@@ -1,9 +1,8 @@
-﻿using Super.Paula.Application.Administration.Requests;
-using Super.Paula.Application.Auditing;
+﻿using Super.Paula.Application.Auditing;
 using Super.Paula.Application.Auditing.Requests;
 using Super.Paula.Application.Communication;
 using Super.Paula.Application.Communication.Requests;
-using Super.Paula.Application.Guidlines;
+using Super.Paula.Application.Guidelines;
 using Super.Paula.Application.Inventory.Requests;
 using Super.Paula.Application.Inventory.Responses;
 using Super.Paula.Environment;
@@ -11,10 +10,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Super.Paula.Application.Guidelines.Events;
 
 namespace Super.Paula.Application.Inventory
 {
-    internal class BusinessObjectHandler : IBusinessObjectHandler, IBusinessObjectEventHandler
+    public class BusinessObjectHandler : IBusinessObjectHandler, IBusinessObjectEventHandler
     {
         private readonly IBusinessObjectManager _businessObjectManager;
         private readonly Lazy<IInspectionHandler> _inspectionHandler;
@@ -173,7 +173,7 @@ namespace Super.Paula.Application.Inventory
 
                 UniqueName = inspection.UniqueName,
                 DisplayName = inspection.DisplayName,
-                Text = inspection.Text,
+                Text = inspection.Text
             });
 
             await _businessObjectManager.UpdateAsync(entity);

@@ -3,11 +3,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Migrator;
 using Super.Paula.Data.Steps;
 using Super.Paula.Environment;
 
-namespace Super.Playground.Data.Migrator
+namespace Super.Paula.Data
 {
     public class HostedService : IHostedService
     {

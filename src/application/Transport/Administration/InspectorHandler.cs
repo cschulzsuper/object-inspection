@@ -4,12 +4,11 @@ using Super.Paula.Environment;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Super.Paula.Application.Administration
 {
-    internal class InspectorHandler : IInspectorHandler
+    public class InspectorHandler : IInspectorHandler
     {
         private readonly IInspectorManager _inspectorManager;
         private readonly Lazy<IOrganizationHandler> _organizationHandler;

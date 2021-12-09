@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Linq;
-using Super.Paula.Application.Communication;
 using Super.Paula.Validation;
 
-namespace Super.Paula.Application.Guidlines
+namespace Super.Paula.Application.Communication
 {
     public static class NotificationValidator
     {

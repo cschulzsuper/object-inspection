@@ -1,4 +1,4 @@
-﻿namespace Super.Paula.Application.Guidlines.Responses
+﻿namespace Super.Paula.Application.Guidelines.Responses
 {
     public class InspectionResponse
     {

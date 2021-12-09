@@ -6,7 +6,6 @@ using Super.Paula.Client.Authentication;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -16,9 +15,9 @@ namespace Super.Paula.Client.Communication
     {
         private readonly INotificationHandler _notificationHandler;
 
-        private readonly ISet<NotificationResponse> _notificationResponsCache;
-        private readonly SemaphoreSlim _notificationResponsCacheSemaphore;
-        private bool _notificationResponsCached;
+        private readonly ISet<NotificationResponse> _notificationResponseCache;
+        private readonly SemaphoreSlim _notificationResponseCacheSemaphore;
+        private bool _notificationResponseCached;
 
         private readonly AuthenticationStateManager _authenticationStateManager;
 
@@ -34,9 +33,9 @@ namespace Super.Paula.Client.Communication
             _notificationHandler.OnCreatedAsync(InternalOnCreatedAsync);
             _notificationHandler.OnDeletedAsync(InternalOnDeletedAsync);
 
-            _notificationResponsCache = new HashSet<NotificationResponse>();
-            _notificationResponsCached = false;
-            _notificationResponsCacheSemaphore = new SemaphoreSlim(1, 1);
+            _notificationResponseCache = new HashSet<NotificationResponse>();
+            _notificationResponseCached = false;
+            _notificationResponseCacheSemaphore = new SemaphoreSlim(1, 1);
         }
 
         private void AuthenticationStateChanged(Task<AuthenticationState> task)
@@ -44,13 +43,13 @@ namespace Super.Paula.Client.Communication
             {
                 try
                 {
-                    await _notificationResponsCacheSemaphore.WaitAsync();
-                    _notificationResponsCache.Clear();
-                    _notificationResponsCached = false;
+                    await _notificationResponseCacheSemaphore.WaitAsync();
+                    _notificationResponseCache.Clear();
+                    _notificationResponseCached = false;
                 }
                 finally
                 {
-                    _notificationResponsCacheSemaphore.Release();
+                    _notificationResponseCacheSemaphore.Release();
                 }
             });
 
@@ -64,11 +63,11 @@ namespace Super.Paula.Client.Communication
         {
             try
             {
-                await _notificationResponsCacheSemaphore.WaitAsync();
+                await _notificationResponseCacheSemaphore.WaitAsync();
 
-                if (_notificationResponsCached)
+                if (_notificationResponseCached)
                 {
-                    foreach (var response in _notificationResponsCache)
+                    foreach (var response in _notificationResponseCache)
                     {
                         yield return response;
                     }
@@ -78,16 +77,16 @@ namespace Super.Paula.Client.Communication
                     var responses = _notificationHandler.GetAllForInspector(inspector);
                     await foreach (var response in responses)
                     {
-                        _notificationResponsCache.Add(response);
+                        _notificationResponseCache.Add(response);
                         yield return response;
                     }
 
-                    _notificationResponsCached = true;
+                    _notificationResponseCached = true;
                 }
             }
             finally
             {
-                _notificationResponsCacheSemaphore.Release();
+                _notificationResponseCacheSemaphore.Release();
             }
         }
 
@@ -101,16 +100,16 @@ namespace Super.Paula.Client.Communication
         {
             try
             {
-                await _notificationResponsCacheSemaphore.WaitAsync();
+                await _notificationResponseCacheSemaphore.WaitAsync();
 
-                if (_notificationResponsCached)
+                if (_notificationResponseCached)
                 {
-                    _notificationResponsCache.Add(response);
+                    _notificationResponseCache.Add(response);
                 }
             }
             finally
             {
-                _notificationResponsCacheSemaphore.Release();
+                _notificationResponseCacheSemaphore.Release();
             }
         }
 
@@ -129,12 +128,12 @@ namespace Super.Paula.Client.Communication
         {
             try
             {
-                await _notificationResponsCacheSemaphore.WaitAsync();
+                await _notificationResponseCacheSemaphore.WaitAsync();
 
-                if (_notificationResponsCached)
+                if (_notificationResponseCached)
                 {
-                    _notificationResponsCache.Remove(
-                        _notificationResponsCache.Single(x =>
+                    _notificationResponseCache.Remove(
+                        _notificationResponseCache.Single(x =>
                             x.Date == date &&
                             x.Time == time &&
                             x.Inspector == inspector));
@@ -142,7 +141,7 @@ namespace Super.Paula.Client.Communication
             }
             finally
             {
-                _notificationResponsCacheSemaphore.Release();
+                _notificationResponseCacheSemaphore.Release();
             }
         }
     }

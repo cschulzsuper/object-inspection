@@ -1,8 +1,4 @@
-﻿using Super.Paula.Application.Administration.Requests;
-using Super.Paula.Application.Inventory.Requests;
-using Super.Paula.Application.Inventory.Responses;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using Super.Paula.Application.Guidelines.Events;
 
 namespace Super.Paula.Application.Inventory
 {

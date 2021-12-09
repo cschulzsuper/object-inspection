@@ -23,7 +23,7 @@ namespace Super.Paula.Application.Administration
                 () => (nameof(mailAddress), $"Mail address can not be null"));
 
         public static (bool, Func<(string, FormattableString)>) MailAddressIsMailAddress(string mailAddress)
-            => (mailAddress == null || MailAddress.TryCreate(mailAddress, out var _),
+            => (mailAddress == null || MailAddress.TryCreate(mailAddress, out _),
                 () => (nameof(mailAddress), $"Mail address '{mailAddress}' is not a mail address"));
 
         public static (bool, Func<(string, FormattableString)>) MailAddressIsNotTooLong(string mailAddress)

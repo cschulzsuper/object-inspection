@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Super.Paula.ErrorHandling;
 
 namespace Super.Paula.Validation
 {

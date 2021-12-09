@@ -1,6 +1,4 @@
-﻿using System.Linq;
-
-namespace Super.Paula.Validation
+﻿namespace Super.Paula.Validation
 {
     public static class AuditResultValidator
     {

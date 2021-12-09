@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Super.Paula.Application.Administration
+﻿namespace Super.Paula.Application.Administration
 {
     public class Identity
     {

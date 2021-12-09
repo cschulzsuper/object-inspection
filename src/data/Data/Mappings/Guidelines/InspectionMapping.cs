@@ -1,12 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Super.Paula.Application.Guidlines;
+using Super.Paula.Application.Guidelines;
 
-namespace Super.Paula.Data.Mappings.Guidlines
+namespace Super.Paula.Data.Mappings.Guidelines
 {
     public class InspectionMapping : IEntityTypeConfiguration<Inspection>
     {
-        public string PartitionKey = $"Organization";
+        public string PartitionKey = "Organization";
 
         public void Configure(EntityTypeBuilder<Inspection> builder)
         {

@@ -1,16 +1,13 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Super.Paula.Application.Administration.Requests;
 using Super.Paula.Application.Administration.Responses;
-using Super.Paula.Environment;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Super.Paula.Application.Administration
 {
-    internal class IdentityHandler : IIdentityHandler
+    public class IdentityHandler : IIdentityHandler
     {
         private readonly IIdentityManager _identityManager;
         private readonly IPasswordHasher<Identity> _passwordHasher;

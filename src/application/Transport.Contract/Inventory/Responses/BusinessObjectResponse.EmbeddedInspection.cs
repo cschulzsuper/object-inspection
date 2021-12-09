@@ -2,7 +2,7 @@
 {
     public partial class BusinessObjectResponse
     {
-        public record EmbeddedInspection()
+        public record EmbeddedInspection
         {
             public bool Activated { get; set; } = false;
             public bool ActivatedGlobally { get; set; } = false;

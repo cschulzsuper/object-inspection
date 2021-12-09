@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using Super.Paula.Validation;
 
 namespace Super.Paula.Application.Auditing
@@ -58,13 +57,13 @@ namespace Super.Paula.Application.Auditing
             => (string.IsNullOrWhiteSpace(inspectionDisplayName) || inspectionDisplayName.Length <= 140,
                 () => (nameof(inspectionDisplayName), $"Inspection display name '{inspectionDisplayName}' can not have more than 140 characters"));
 
-        public static (bool, Func<(string, FormattableString)>) BussinesObjectDisplayNameIsNotEmpty(string bussinesObjectDisplayName)
+        public static (bool, Func<(string, FormattableString)>) BusinessObjectDisplayNameIsNotEmpty(string bussinesObjectDisplayName)
             => (!string.IsNullOrWhiteSpace(bussinesObjectDisplayName),
-                () => (nameof(bussinesObjectDisplayName), $"Bussines object display name can not be empty"));
+                () => (nameof(bussinesObjectDisplayName), $"Business object display name can not be empty"));
 
-        public static (bool, Func<(string, FormattableString)>) BussinesObjectDisplayNameIsNotTooLong(string bussinesObjectDisplayName)
+        public static (bool, Func<(string, FormattableString)>) BusinessObjectDisplayNameIsNotTooLong(string bussinesObjectDisplayName)
             => (string.IsNullOrWhiteSpace(bussinesObjectDisplayName) || bussinesObjectDisplayName.Length <= 140,
-                () => (nameof(bussinesObjectDisplayName), $"Bussines object display name '{bussinesObjectDisplayName}' can not have more than 140 characters"));
+                () => (nameof(bussinesObjectDisplayName), $"Business object display name '{bussinesObjectDisplayName}' can not have more than 140 characters"));
 
         public static (bool, Func<(string, FormattableString)>) ResultIsNotNull(string result)
             => (result != null,

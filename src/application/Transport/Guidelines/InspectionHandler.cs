@@ -1,15 +1,13 @@
-﻿using Super.Paula.Application.Administration.Requests;
-using Super.Paula.Application.Guidlines.Requests;
-using Super.Paula.Application.Guidlines.Responses;
-using Super.Paula.Application.Inventory;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Super.Paula.Application.Guidelines.Events;
+using Super.Paula.Application.Guidelines.Requests;
+using Super.Paula.Application.Guidelines.Responses;
 
-namespace Super.Paula.Application.Guidlines
+namespace Super.Paula.Application.Guidelines
 {
-    internal class InspectionHandler : IInspectionHandler
+    public class InspectionHandler : IInspectionHandler
     {
         private readonly IInspectionManager _inspectionManager;
         private readonly IEventBus _eventBus;

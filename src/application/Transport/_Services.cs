@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Super.Paula.Application.Administration;
 using Super.Paula.Application.Auditing;
 using Super.Paula.Application.Communication;
-using Super.Paula.Application.Guidlines;
+using Super.Paula.Application.Guidelines;
 using Super.Paula.Application.Inventory;
 
 namespace Super.Paula.Application
@@ -45,7 +45,7 @@ namespace Super.Paula.Application
         }
 
         private static readonly Func<IServiceProvider, NotificationHandler> InspectionHandlerFactory = 
-            (IServiceProvider services) =>
+            services =>
             {
                 var notificationManager = services.GetRequiredService<INotificationManager>();
                 var notificationHandler = new NotificationHandler(notificationManager);

@@ -1,9 +1,9 @@
-﻿using Super.Paula.Application.Guidlines.Requests;
-using Super.Paula.Application.Guidlines.Responses;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Super.Paula.Application.Guidelines.Requests;
+using Super.Paula.Application.Guidelines.Responses;
 
-namespace Super.Paula.Application.Guidlines
+namespace Super.Paula.Application.Guidelines
 {
     public interface IInspectionHandler
     {

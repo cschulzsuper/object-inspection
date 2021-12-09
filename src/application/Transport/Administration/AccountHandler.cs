@@ -11,7 +11,7 @@ using Super.Paula.Environment;
 
 namespace Super.Paula.Application.Administration
 {
-    internal class AccountHandler : IAccountHandler
+    public class AccountHandler : IAccountHandler
     {
         private readonly IInspectorManager _inspectorManager;
         private readonly IIdentityManager _identityManager;
@@ -48,8 +48,8 @@ namespace Super.Paula.Application.Administration
 
             var identity = await _identityManager.GetAsync(inspector.Identity);
 
-            var oldSecretVerfication = _passwordHasher.VerifyHashedPassword(identity, identity.Secret, request.OldSecret);
-            if(oldSecretVerfication == PasswordVerificationResult.Failed)
+            var oldSecretVerification = _passwordHasher.VerifyHashedPassword(identity, identity.Secret, request.OldSecret);
+            if(oldSecretVerification == PasswordVerificationResult.Failed)
             {
                 throw new TransportException($"The old secret does not match");
             }
@@ -143,7 +143,7 @@ namespace Super.Paula.Application.Administration
                 ChiefInspector = request.ChiefInspector,
                 UniqueName = request.UniqueName,
                 DisplayName = request.DisplayName,
-                Activated = true,
+                Activated = true
             });
 
             await _inspectorManager.InsertAsync(new Inspector
@@ -178,8 +178,8 @@ namespace Super.Paula.Application.Administration
 
             var identity = await _identityManager.GetAsync(inspector.Identity);
 
-            var secretVerfication = _passwordHasher.VerifyHashedPassword(identity, identity.Secret, request.Secret);
-            switch (secretVerfication)
+            var secretVerification = _passwordHasher.VerifyHashedPassword(identity, identity.Secret, request.Secret);
+            switch (secretVerification)
             {
                 case PasswordVerificationResult.Success:
                     break;
@@ -266,7 +266,7 @@ namespace Super.Paula.Application.Administration
 
             return new AssessChiefInspectorDefectivenessResponse
             {
-                Defective = inspector == null,
+                Defective = inspector == null
             };
         }
 

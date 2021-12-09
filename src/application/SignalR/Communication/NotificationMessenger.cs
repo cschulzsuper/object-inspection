@@ -1,11 +1,6 @@
 ﻿using Microsoft.AspNetCore.SignalR;
-using Super.Paula.Application.Communication;
 using Super.Paula.Application.Communication.Responses;
 using Super.Paula.Environment;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Super.Paula.Application.Communication

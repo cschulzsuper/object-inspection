@@ -37,6 +37,6 @@ namespace Super.Paula.ErrorHandling
         public IDictionary<string, object>? Extensions { get; init; } = null;
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public IDictionary<string, string[]>? Errors { get; } = null;
+        public IDictionary<string, string[]>? Errors { get; }
     }
 }

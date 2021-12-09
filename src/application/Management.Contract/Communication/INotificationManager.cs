@@ -1,10 +1,9 @@
-﻿using Super.Paula.Application.Communication;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Super.Paula.Application.Administration
+namespace Super.Paula.Application.Communication
 {
     public interface INotificationManager
     {

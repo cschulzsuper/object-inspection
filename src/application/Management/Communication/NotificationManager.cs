@@ -1,14 +1,11 @@
-﻿using Super.Paula.Application.Administration;
-using Super.Paula.Application.Communication;
-using Super.Paula.Application.Guidlines;
-using Super.Paula.Data;
-using Super.Paula.Validation;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Super.Paula.Data;
+using Super.Paula.Validation;
 
-namespace Super.Paula.Application
+namespace Super.Paula.Application.Communication
 {
     public class NotificationManager : INotificationManager
     {
@@ -74,7 +71,7 @@ namespace Super.Paula.Application
 
         public async ValueTask UpdateAsync(Notification notification)
         {
-            EnsureUpdatable(notification);
+            EnsureUpdateable(notification);
 
             try
             {
@@ -127,7 +124,7 @@ namespace Super.Paula.Application
                 NotificationValidator.TextHasValue(notification.Text),
                 NotificationValidator.TextIsNotTooLong(notification.Text));
 
-        private static void EnsureUpdatable(Notification notification)
+        private static void EnsureUpdateable(Notification notification)
             => Validator.Ensure($"notification with id '{notification.Inspector}/{notification.Date}/{notification.Time}'",
                 NotificationValidator.DateIsPositive(notification.Date),
                 NotificationValidator.TimeIsInDayTimeRange(notification.Time),

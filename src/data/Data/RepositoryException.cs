@@ -1,5 +1,4 @@
-﻿using Super.Paula.ErrorHandling;
-using System;
+﻿using System;
 
 namespace Super.Paula.Data
 {

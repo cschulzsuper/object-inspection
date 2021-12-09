@@ -1,4 +1,4 @@
-﻿namespace Super.Paula.Application.Guidlines
+﻿namespace Super.Paula.Application.Guidelines
 {
     public class Inspection
     {

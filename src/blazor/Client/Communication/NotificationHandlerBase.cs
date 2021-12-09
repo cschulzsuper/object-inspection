@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -18,7 +17,7 @@ using Super.Paula.Environment;
 
 namespace Super.Paula.Client.Communication
 {
-    internal class NotificationHandlerBase : INotificationHandler, IAsyncDisposable
+    public class NotificationHandlerBase : INotificationHandler, IAsyncDisposable
     {
         private readonly AuthenticationStateManager _authenticationStateManager;
         private readonly AppAuthentication _appAuthentication;
@@ -130,9 +129,9 @@ namespace Super.Paula.Client.Communication
                     DefaultBufferSize = 128
                 });
 
-            await foreach (var reponseItem in response)
+            await foreach (var responseItem in response)
             {
-                yield return reponseItem!;
+                yield return responseItem!;
             }
         }
 
@@ -151,9 +150,9 @@ namespace Super.Paula.Client.Communication
                     DefaultBufferSize = 128
                 });
 
-            await foreach (var reponseItem in response)
+            await foreach (var responseItem in response)
             {
-                yield return reponseItem!;
+                yield return responseItem!;
             }
         }
 

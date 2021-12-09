@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Super.Paula.Application.Auditing;
 using Super.Paula.Application.Inventory;
 using System;
 using System.Collections.Generic;
@@ -13,7 +12,7 @@ namespace Super.Paula.Application
 
         private readonly IDictionary<string, Type> _eventHandlerTypes = new Dictionary<string, Type>
         {
-            [EventCategories.BusinessObject] = typeof(IBusinessObjectEventHandler),
+            [EventCategories.BusinessObject] = typeof(IBusinessObjectEventHandler)
         };
 
         public EventBus(IServiceProvider serviceProvider)

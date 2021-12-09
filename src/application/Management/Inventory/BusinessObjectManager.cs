@@ -72,7 +72,7 @@ namespace Super.Paula.Application.Inventory
 
         public async ValueTask DeleteAsync(BusinessObject businessObject)
         {
-            EnsureDeleteable(businessObject);
+            EnsureDeletable(businessObject);
 
             try
             {
@@ -121,8 +121,8 @@ namespace Super.Paula.Application.Inventory
                     yield return BusinessObjectValidator.InspectionAuditResultHasValidValue(inspection.AuditAnnotation);
                     yield return BusinessObjectValidator.InspectionAuditDateIsPositive(inspection.AuditDate);
                     yield return BusinessObjectValidator.InspectionAuditTimeIsInDayTimeRange(inspection.AuditTime);
-                };
-            };
+                }
+            }
 
             Validator.Ensure($"business object with unique name '{businessObject.UniqueName}'", Ensurences());
         }
@@ -158,13 +158,13 @@ namespace Super.Paula.Application.Inventory
                     yield return BusinessObjectValidator.InspectionAuditResultHasValidValue(inspection.AuditResult);
                     yield return BusinessObjectValidator.InspectionAuditDateIsPositive(inspection.AuditDate);
                     yield return BusinessObjectValidator.InspectionAuditTimeIsInDayTimeRange(inspection.AuditTime);
-                };
-            };
+                }
+            }
 
             Validator.Ensure($"business object with unique name '{businessObject.UniqueName}'", Ensurences());
         }
 
-        private static void EnsureDeleteable(BusinessObject businessObject)
+        private static void EnsureDeletable(BusinessObject businessObject)
             => Validator.Ensure($"business object with unique name '{businessObject.UniqueName}'",
                 BusinessObjectValidator.UniqueNameIsNotEmpty(businessObject.UniqueName),
                 BusinessObjectValidator.UniqueNameHasKebabCase(businessObject.UniqueName),

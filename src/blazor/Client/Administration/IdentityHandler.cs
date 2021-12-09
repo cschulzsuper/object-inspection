@@ -12,7 +12,7 @@ using Super.Paula.Environment;
 
 namespace Super.Paula.Client.Administration
 {
-    internal class IdentityHandler : IIdentityHandler
+    public class IdentityHandler : IIdentityHandler
     {
         private readonly HttpClient _httpClient;
 
@@ -57,9 +57,9 @@ namespace Super.Paula.Client.Administration
                     DefaultBufferSize = 128
                 });
 
-            await foreach (var reponseItem in response)
+            await foreach (var responseItem in response)
             {
-                yield return reponseItem!;
+                yield return responseItem!;
             }
         }
 

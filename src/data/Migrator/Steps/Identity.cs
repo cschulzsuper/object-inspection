@@ -1,7 +1,5 @@
 ﻿using Microsoft.Azure.Cosmos;
 using Microsoft.EntityFrameworkCore;
-using Migrator;
-using Super.Paula.Data;
 using Super.Paula.Environment;
 using System.Threading.Tasks;
 using administration = Super.Paula.Application.Administration;

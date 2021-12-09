@@ -68,7 +68,7 @@ namespace Super.Paula.Application.Administration
 
         public async ValueTask DeleteAsync(Inspector inspector)
         {
-            EnsureDeleteable(inspector);
+            EnsureDeletable(inspector);
 
             try
             {
@@ -112,7 +112,7 @@ namespace Super.Paula.Application.Administration
                 InspectorValidator.OrganizationDisplayNameIsNotEmpty(inspector.OrganizationDisplayName),
                 InspectorValidator.OrganizationDisplayNameIsNotTooLong(inspector.OrganizationDisplayName));
 
-        private static void EnsureDeleteable(Inspector inspector)
+        private static void EnsureDeletable(Inspector inspector)
             => Validator.Ensure($"inspector with unique name '{inspector.UniqueName}'",
                 InspectorValidator.UniqueNameIsNotEmpty(inspector.UniqueName),
                 InspectorValidator.UniqueNameHasKebabCase(inspector.UniqueName),

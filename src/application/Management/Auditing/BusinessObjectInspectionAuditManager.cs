@@ -85,7 +85,7 @@ namespace Super.Paula.Application.Auditing
 
         public async ValueTask DeleteAsync(BusinessObjectInspectionAudit audit)
         {
-            EnsureDeleteable(audit);
+            EnsureDeletable(audit);
 
             try
             {
@@ -122,8 +122,8 @@ namespace Super.Paula.Application.Auditing
                 BusinessObjectInspectionAuditValidator.InspectionHasKebabCase(audit.Inspection),
                 BusinessObjectInspectionAuditValidator.AuditDateIsPositive(audit.AuditDate),
                 BusinessObjectInspectionAuditValidator.AuditTimeIsInDayTimeRange(audit.AuditTime),
-                BusinessObjectInspectionAuditValidator.BussinesObjectDisplayNameIsNotEmpty(audit.BusinessObjectDisplayName),
-                BusinessObjectInspectionAuditValidator.BussinesObjectDisplayNameIsNotTooLong(audit.BusinessObjectDisplayName),
+                BusinessObjectInspectionAuditValidator.BusinessObjectDisplayNameIsNotEmpty(audit.BusinessObjectDisplayName),
+                BusinessObjectInspectionAuditValidator.BusinessObjectDisplayNameIsNotTooLong(audit.BusinessObjectDisplayName),
                 BusinessObjectInspectionAuditValidator.InspectionDisplayNameIsNotEmpty(audit.InspectionDisplayName),
                 BusinessObjectInspectionAuditValidator.InspectionDisplayNameIsNotTooLong(audit.InspectionDisplayName),
                 BusinessObjectInspectionAuditValidator.InspectorIsNotEmpty(audit.Inspector),
@@ -144,8 +144,8 @@ namespace Super.Paula.Application.Auditing
                 BusinessObjectInspectionAuditValidator.InspectionHasKebabCase(audit.Inspection),
                 BusinessObjectInspectionAuditValidator.AuditDateIsPositive(audit.AuditDate),
                 BusinessObjectInspectionAuditValidator.AuditTimeIsInDayTimeRange(audit.AuditTime),
-                BusinessObjectInspectionAuditValidator.BussinesObjectDisplayNameIsNotEmpty(audit.BusinessObjectDisplayName),
-                BusinessObjectInspectionAuditValidator.BussinesObjectDisplayNameIsNotTooLong(audit.BusinessObjectDisplayName),
+                BusinessObjectInspectionAuditValidator.BusinessObjectDisplayNameIsNotEmpty(audit.BusinessObjectDisplayName),
+                BusinessObjectInspectionAuditValidator.BusinessObjectDisplayNameIsNotTooLong(audit.BusinessObjectDisplayName),
                 BusinessObjectInspectionAuditValidator.InspectionDisplayNameIsNotEmpty(audit.InspectionDisplayName),
                 BusinessObjectInspectionAuditValidator.InspectionDisplayNameIsNotTooLong(audit.InspectionDisplayName),
                 BusinessObjectInspectionAuditValidator.InspectorIsNotEmpty(audit.Inspector),
@@ -156,7 +156,7 @@ namespace Super.Paula.Application.Auditing
                 BusinessObjectInspectionAuditValidator.AnnotationIsNotNull(audit.Annotation),
                 BusinessObjectInspectionAuditValidator.AnnotationIsNotTooLong(audit.Annotation));
 
-        private static void EnsureDeleteable(BusinessObjectInspectionAudit audit)
+        private static void EnsureDeletable(BusinessObjectInspectionAudit audit)
             => Validator.Ensure($"business object inspection audit with id '{audit.AuditDate}/{audit.BusinessObject}/{audit.Inspection}/{audit.AuditTime}'",
                 BusinessObjectInspectionAuditValidator.BusinessObjectIsNotEmpty(audit.BusinessObject),
                 BusinessObjectInspectionAuditValidator.BusinessObjectIsNotTooLong(audit.BusinessObject),

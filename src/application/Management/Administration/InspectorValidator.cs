@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net.Mail;
 using Super.Paula.Validation;
 
 namespace Super.Paula.Application.Administration

@@ -1,21 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Components.Authorization;
-using Super.Paula.Application.Guidlines;
-using Super.Paula.Application.Guidlines.Requests;
-using Super.Paula.Application.Guidlines.Responses;
-using Super.Paula.Client.Authentication;
+using Super.Paula.Application.Guidelines;
+using Super.Paula.Application.Guidelines.Requests;
+using Super.Paula.Application.Guidelines.Responses;
 using Super.Paula.Client.ErrorHandling;
 using Super.Paula.Environment;
 
-namespace Super.Paula.Client.Guidlines
+namespace Super.Paula.Client.Guidelines
 {
-    internal class InspectionHandler : IInspectionHandler
+    public class InspectionHandler : IInspectionHandler
     {
         private readonly HttpClient _httpClient;
 
@@ -77,9 +74,9 @@ namespace Super.Paula.Client.Guidlines
                     DefaultBufferSize = 128
                 });
 
-            await foreach (var reponseItem in response)
+            await foreach (var responseItem in response)
             {
-                yield return reponseItem!;
+                yield return responseItem!;
             }
         }
 

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Super.Paula.Application.Auditing
 {
-    internal class BusinessObjectInspectionAuditHandler : IBusinessObjectInspectionAuditHandler
+    public class BusinessObjectInspectionAuditHandler : IBusinessObjectInspectionAuditHandler
     {
         private readonly IBusinessObjectInspectionAuditManager _businessObjectInspectionAuditManager;
         private readonly AppState _appState;

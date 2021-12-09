@@ -2,22 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Components.Authorization;
-using Super.Paula.Application.Administration.Requests;
 using Super.Paula.Application.Inventory;
 using Super.Paula.Application.Inventory.Requests;
 using Super.Paula.Application.Inventory.Responses;
-using Super.Paula.Client.Authentication;
 using Super.Paula.Client.ErrorHandling;
 using Super.Paula.Environment;
 
 namespace Super.Paula.Client.Inventory
 {
-    internal class BusinessObjectHandler : IBusinessObjectHandler
+    public class BusinessObjectHandler : IBusinessObjectHandler
     {
         private readonly HttpClient _httpClient;
 
@@ -102,9 +98,9 @@ namespace Super.Paula.Client.Inventory
                     DefaultBufferSize = 128
                 });
 
-            await foreach (var reponseItem in response)
+            await foreach (var responseItem in response)
             {
-                yield return reponseItem!;
+                yield return responseItem!;
             }
         }
 
@@ -123,9 +119,9 @@ namespace Super.Paula.Client.Inventory
                     DefaultBufferSize = 128
                 });
 
-            await foreach (var reponseItem in response)
+            await foreach (var responseItem in response)
             {
-                yield return reponseItem!;
+                yield return responseItem!;
             }
         }
 
@@ -170,9 +166,9 @@ namespace Super.Paula.Client.Inventory
                     DefaultBufferSize = 128
                 });
 
-            await foreach (var reponseItem in response)
+            await foreach (var responseItem in response)
             {
-                yield return reponseItem!;
+                yield return responseItem!;
             }
         }
     }

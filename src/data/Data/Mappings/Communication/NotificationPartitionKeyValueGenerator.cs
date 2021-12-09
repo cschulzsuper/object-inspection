@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace Super.Paula.Data.Mappings.Communication
 {
-    internal class NotificationPartitionKeyValueGenerator : ValueGenerator<string>, IPartitionKeyValueGenerator<Notification>
+    public class NotificationPartitionKeyValueGenerator : ValueGenerator<string>, IPartitionKeyValueGenerator<Notification>
     {
         public override bool GeneratesTemporaryValues => false;
 

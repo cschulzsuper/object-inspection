@@ -1,10 +1,7 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Net.Http;
+﻿using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.DependencyInjection;
-using Super.Paula.RuntimeData;
 
-namespace Super.Paula.Data
+namespace Super.Paula.RuntimeData
 {
     [SuppressMessage("Style", "IDE1006")]
     public static class _Services

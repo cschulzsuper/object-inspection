@@ -6,7 +6,7 @@ namespace Super.Paula.Data.Mappings.Administration
 {
     public class InspectorMapping : IEntityTypeConfiguration<Inspector>
     {
-        public string PartitionKey = $"Organization";
+        public string PartitionKey = "Organization";
 
         public void Configure(EntityTypeBuilder<Inspector> builder)
         {

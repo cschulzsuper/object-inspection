@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Super.Paula.Application.Administration
 {
-    internal class OrganizationHandler : IOrganizationHandler
+    public class OrganizationHandler : IOrganizationHandler
     {
         private readonly IOrganizationManager _organizationManager;
         private readonly IInspectorHandler _inspectorHandler;
@@ -42,8 +42,8 @@ namespace Super.Paula.Application.Administration
 
         public async ValueTask DeleteAsync(string organization)
         {
-            var entitiy = await _organizationManager.GetAsync(organization);
-            await _organizationManager.DeleteAsync(entitiy);
+            var entity = await _organizationManager.GetAsync(organization);
+            await _organizationManager.DeleteAsync(entity);
         }
 
         public IAsyncEnumerable<OrganizationResponse> GetAll()

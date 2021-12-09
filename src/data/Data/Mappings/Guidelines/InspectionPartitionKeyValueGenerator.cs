@@ -1,12 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.ValueGeneration;
-using Super.Paula.Application.Guidlines;
+using Super.Paula.Application.Guidelines;
 using Super.Paula.Environment;
 using System.Collections.Generic;
 
-namespace Super.Paula.Data.Mappings.Guidlines
+namespace Super.Paula.Data.Mappings.Guidelines
 {
-    internal class InspectionPartitionKeyValueGenerator : ValueGenerator<string>, IPartitionKeyValueGenerator<Inspection>
+    public class InspectionPartitionKeyValueGenerator : ValueGenerator<string>, IPartitionKeyValueGenerator<Inspection>
     {
         public override bool GeneratesTemporaryValues => false;
 

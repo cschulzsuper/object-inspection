@@ -68,7 +68,7 @@ namespace Super.Paula.Application.Administration
 
         public async ValueTask DeleteAsync(Identity identity)
         {
-            EnsureDeleteable(identity);
+            EnsureDeletable(identity);
 
             try
             {
@@ -108,7 +108,7 @@ namespace Super.Paula.Application.Administration
                 IdentityValidator.SecretHasValue(identity.Secret),
                 IdentityValidator.SecretIsNotTooLong(identity.Secret));
 
-        private static void EnsureDeleteable(Identity identity)
+        private static void EnsureDeletable(Identity identity)
             => Validator.Ensure($"identity with unique name '{identity.UniqueName}'",
                 IdentityValidator.UniqueNameIsNotEmpty(identity.UniqueName),
                 IdentityValidator.UniqueNameHasKebabCase(identity.UniqueName),

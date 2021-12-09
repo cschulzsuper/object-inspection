@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace Super.Paula.Data.Mappings.Auditing
 {
-    internal class BusinessObjectInspectionAuditPartitionKeyValueGenerator : ValueGenerator<string>, IPartitionKeyValueGenerator<BusinessObjectInspectionAudit>
+    public class BusinessObjectInspectionAuditPartitionKeyValueGenerator : ValueGenerator<string>, IPartitionKeyValueGenerator<BusinessObjectInspectionAudit>
     {
         public override bool GeneratesTemporaryValues => false;
 

@@ -59,7 +59,7 @@ namespace Super.Paula.Application.Administration
 
         public async ValueTask DeleteAsync(Organization organization)
         {
-            EnsureDeleteable(organization);
+            EnsureDeletable(organization);
 
             try
             {
@@ -108,7 +108,7 @@ namespace Super.Paula.Application.Administration
                 OrganizationValidator.ChiefInspectorHasKebabCase(organization.ChiefInspector),
                 OrganizationValidator.ChiefInspectorIsNotTooLong(organization.ChiefInspector));
 
-        private static void EnsureDeleteable(Organization organization)
+        private static void EnsureDeletable(Organization organization)
             => Validator.Ensure($"organization with unique name '{organization.UniqueName}'",
                 OrganizationValidator.UniqueNameIsNotEmpty(organization.UniqueName),
                 OrganizationValidator.UniqueNameHasKebabCase(organization.UniqueName),

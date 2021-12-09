@@ -1,8 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Super.Paula.Application.Communication;
-using Super.Paula.Environment;
 
 namespace Super.Paula.Application
 {
