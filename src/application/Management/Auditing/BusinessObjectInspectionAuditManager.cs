@@ -28,6 +28,13 @@ namespace Super.Paula.Application.Auditing
             return entity;
         }
 
+        public async ValueTask<BusinessObjectInspectionAudit?> GetOrDefaultAsync(string businessObject, string inspection, int date, int time)
+        {
+            EnsureGetable(businessObject, inspection, date, time);
+
+            return await _businessObjectInspectionAuditRepository.GetByIdsOrDefaultAsync(date, businessObject, inspection, time);
+        }
+
         public IQueryable<BusinessObjectInspectionAudit> GetQueryable()
             => _businessObjectInspectionAuditRepository.GetQueryable();
 

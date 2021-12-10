@@ -9,6 +9,8 @@ namespace Super.Paula.Application.Auditing
     {
         ValueTask<BusinessObjectInspectionAudit> GetAsync(string businessObject, string inspection, int date, int time);
 
+        ValueTask<BusinessObjectInspectionAudit?> GetOrDefaultAsync(string businessObject, string inspection, int date, int time);
+
         IQueryable<BusinessObjectInspectionAudit> GetQueryable();
         IAsyncEnumerable<BusinessObjectInspectionAudit> GetAsyncEnumerable();
         IAsyncEnumerable<TResult> GetAsyncEnumerable<TResult>(Func<IQueryable<BusinessObjectInspectionAudit>, IQueryable<TResult>> query);

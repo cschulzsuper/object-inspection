@@ -24,13 +24,14 @@ namespace Super.Paula.Application.Guidelines
         {
             var entity = await _inspectionManager.GetAsync(inspection);
 
-            var required = entity.Activated != true;
+            var required = !entity.Activated;
             if (required)
             {
                 entity.Activated = true;
 
                 await _inspectionManager.UpdateAsync(entity);
-                await NotifyAsync(entity);
+
+                await PublishInspectionAsync(entity);
             }
         }
 
@@ -38,13 +39,14 @@ namespace Super.Paula.Application.Guidelines
         {
             var entity = await _inspectionManager.GetAsync(inspection);
 
-            var required = entity.Activated != false;
+            var required = entity.Activated;
             if (required)
             {
                 entity.Activated = false;
 
                 await _inspectionManager.UpdateAsync(entity);
-                await NotifyAsync(entity);
+
+                await PublishInspectionAsync(entity);
             }
         }
 
@@ -117,11 +119,12 @@ namespace Super.Paula.Application.Guidelines
                 entity.UniqueName = request.UniqueName;
 
                 await _inspectionManager.UpdateAsync(entity);
-                await NotifyAsync(entity);
+
+                await PublishInspectionAsync(entity);
             }
         }
 
-        private async ValueTask NotifyAsync(Inspection inspection)
+        private async ValueTask PublishInspectionAsync(Inspection inspection)
         {
             var @event = new InspectionEvent
             {

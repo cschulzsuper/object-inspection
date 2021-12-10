@@ -29,7 +29,9 @@ namespace Super.Paula.Application
                 .AddScoped<IBusinessObjectHandler>(x => x.GetRequiredService<BusinessObjectHandler>())
                 .AddScoped<IBusinessObjectEventHandler>(x => x.GetRequiredService<BusinessObjectHandler>())
 
-                .AddScoped<IBusinessObjectInspectionAuditHandler, BusinessObjectInspectionAuditHandler>()
+                .AddScoped<BusinessObjectInspectionAuditHandler>()
+                .AddScoped<IBusinessObjectInspectionAuditHandler>(x => x.GetRequiredService<BusinessObjectInspectionAuditHandler>())
+                .AddScoped<IBusinessObjectInspectionAuditEventHandler>(x => x.GetRequiredService<BusinessObjectInspectionAuditHandler>())
                 .AddScoped<IInspectorHandler, InspectorHandler>()
                 .AddScoped<IInspectionHandler, InspectionHandler>()
                 .AddScoped<INotificationHandler, NotificationHandler>(InspectionHandlerFactory)
