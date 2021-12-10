@@ -1,6 +1,4 @@
-﻿using Super.Paula.Application.Communication;
-using Super.Paula.Application.Communication.Requests;
-using Super.Paula.Application.Guidelines;
+﻿using Super.Paula.Application.Guidelines;
 using Super.Paula.Application.Inventory.Requests;
 using Super.Paula.Application.Inventory.Responses;
 using Super.Paula.Environment;
@@ -8,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Super.Paula.Application.Communication;
 using Super.Paula.Application.Guidelines.Events;
 using Super.Paula.Application.Inventory.Events;
 
@@ -17,20 +16,17 @@ namespace Super.Paula.Application.Inventory
     {
         private readonly IBusinessObjectManager _businessObjectManager;
         private readonly Lazy<IInspectionHandler> _inspectionHandler;
-        private readonly Lazy<INotificationHandler> _notificationHandler;
         private readonly AppState _appState;
         private readonly IEventBus _eventBus;
 
         public BusinessObjectHandler(
             IBusinessObjectManager businessObjectManager,
             Lazy<IInspectionHandler> inspectionHandler,
-            Lazy<INotificationHandler> notificationHandler,
             AppState appState,
             IEventBus eventBus)
         {
             _businessObjectManager = businessObjectManager;
             _inspectionHandler = inspectionHandler;
-            _notificationHandler = notificationHandler;
             _appState = appState;
             _eventBus = eventBus;
         }
@@ -70,15 +66,7 @@ namespace Super.Paula.Application.Inventory
 
             await _businessObjectManager.InsertAsync(entity);
 
-            var (date, time) = DateTime.UtcNow.ToNumbers();
-
-            await _notificationHandler.Value.CreateAsync(request.Inspector, new NotificationRequest
-            {
-                Date = date,
-                Time = time,
-                Target = $"business-objects/{request.UniqueName}",
-                Text = $"You are now the inspector for {request.DisplayName}!"
-            });
+            await PublishBusinessObjectInspectorAsync(entity);
 
             return new BusinessObjectResponse
             {
@@ -93,7 +81,7 @@ namespace Super.Paula.Application.Inventory
         {
             var entity = await _businessObjectManager.GetAsync(businessObject);
 
-            var oldEntityInspector = entity.Inspector;
+            var oldInspector = entity.Inspector;
 
             var required =
                 entity.DisplayName != request.DisplayName ||
@@ -108,27 +96,7 @@ namespace Super.Paula.Application.Inventory
                 await _businessObjectManager.UpdateAsync(entity);
 
                 await PublishBusinessObjectAsync(entity);
-            }
-
-            if (oldEntityInspector != request.Inspector)
-            {
-                var (date, time) = DateTime.UtcNow.ToNumbers();
-
-                await _notificationHandler.Value.CreateAsync(oldEntityInspector, new NotificationRequest
-                {
-                    Date = date,
-                    Time = time,
-                    Target = $"business-objects/{request.UniqueName}",
-                    Text = $"You are not longer the inspector for {request.DisplayName}!"
-                });
-
-                await _notificationHandler.Value.CreateAsync(request.Inspector, new NotificationRequest
-                {
-                    Date = date,
-                    Time = time,
-                    Target = $"business-objects/{request.UniqueName}",
-                    Text = $"You are now the inspector for {request.DisplayName}!"
-                });
+                await PublishBusinessObjectInspectorAsync(entity, oldInspector);
             }
         }
 
@@ -253,7 +221,7 @@ namespace Super.Paula.Application.Inventory
 
         public async ValueTask ProcessAsync(string inspection, InspectionEvent @event)
         {
-            var businessObjects = _businessObjectManager.GetQueryableWithInspection(inspection)
+            var businessObjects = _businessObjectManager.GetQueryableWhereInspection(inspection)
                 .AsEnumerable();
 
             foreach (var businessObject in businessObjects)
@@ -288,6 +256,23 @@ namespace Super.Paula.Application.Inventory
             };
 
             await _eventBus.PublishAsync(EventCategories.BusinessObjectInspectionAudit, businessObject.UniqueName, @event);
+        }
+
+        private async ValueTask PublishBusinessObjectInspectorAsync(BusinessObject businessObject, string? oldInspector = null)
+        {
+            if (businessObject.Inspector == oldInspector)
+            {
+                return;
+            }
+
+            var @event = new BusinessObjectInspectorEvent
+            {
+                BusinessObjectDisplayName = businessObject.DisplayName,
+                NewInspector = businessObject.Inspector,
+                OldInspector = oldInspector
+            };
+
+            await _eventBus.PublishAsync(EventCategories.Notification, businessObject.UniqueName, @event);
         }
 
         private async ValueTask PublishBusinessObjectInspectionAsync(BusinessObject businessObject, BusinessObject.EmbeddedInspection inspection)

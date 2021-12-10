@@ -32,16 +32,18 @@ namespace Super.Paula.Application
                 .AddScoped<BusinessObjectInspectionAuditHandler>()
                 .AddScoped<IBusinessObjectInspectionAuditHandler>(x => x.GetRequiredService<BusinessObjectInspectionAuditHandler>())
                 .AddScoped<IBusinessObjectInspectionAuditEventHandler>(x => x.GetRequiredService<BusinessObjectInspectionAuditHandler>())
+
+                .AddScoped<NotificationHandler>(InspectionHandlerFactory)
+                .AddScoped<INotificationHandler>(x => x.GetRequiredService<NotificationHandler>())
+                .AddScoped<INotificationEventHandler>(x => x.GetRequiredService<NotificationHandler>())
+
                 .AddScoped<IInspectorHandler, InspectorHandler>()
                 .AddScoped<IInspectionHandler, InspectionHandler>()
-                .AddScoped<INotificationHandler, NotificationHandler>(InspectionHandlerFactory)
                 .AddScoped<IOrganizationHandler, OrganizationHandler>();
 
             services
-                .AddTransient(provider => new Lazy<IBusinessObjectInspectionAuditHandler>(() => provider.GetRequiredService<IBusinessObjectInspectionAuditHandler>()))
-                .AddTransient(provider => new Lazy<IInspectionHandler>(() => provider.GetRequiredService<IInspectionHandler>()))
-                .AddTransient(provider => new Lazy<INotificationHandler>(() => provider.GetRequiredService<INotificationHandler>()))
-                .AddTransient(provider => new Lazy<IOrganizationHandler>(() => provider.GetRequiredService<IOrganizationHandler>()));
+                .AddTransient(provider => new Lazy<IInspectionHandler>(provider.GetRequiredService<IInspectionHandler>))
+                .AddTransient(provider => new Lazy<IOrganizationHandler>(provider.GetRequiredService<IOrganizationHandler>));
 
             return services;
         }

@@ -9,7 +9,7 @@ namespace Super.Paula.Application.Inventory
     {
         ValueTask<BusinessObject> GetAsync(string businessObject);
         IQueryable<BusinessObject> GetQueryable();
-        IQueryable<BusinessObject> GetQueryableWithInspection(string inspection);
+        IQueryable<BusinessObject> GetQueryableWhereInspection(string inspection);
 
         IAsyncEnumerable<BusinessObject> GetAsyncEnumerable();
         IAsyncEnumerable<TResult> GetAsyncEnumerable<TResult>(Func<IQueryable<BusinessObject>, IQueryable<TResult>> query);

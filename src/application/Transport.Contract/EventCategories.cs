@@ -5,5 +5,7 @@
         public const string BusinessObject = "business-object";
 
         public const string BusinessObjectInspectionAudit = "business-object-inspection-audit";
+
+        public const string Notification = "notification";
     }
 }

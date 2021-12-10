@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Super.Paula.Application.Auditing;
+using Super.Paula.Application.Communication;
 
 namespace Super.Paula.Application
 {
@@ -13,8 +14,9 @@ namespace Super.Paula.Application
 
         private readonly IDictionary<string, Type> _eventHandlerTypes = new Dictionary<string, Type>
         {
-            [EventCategories.BusinessObject] = typeof(IBusinessObjectEventHandler),
-            [EventCategories.BusinessObjectInspectionAudit] = typeof(IBusinessObjectInspectionAuditEventHandler)
+            [EventCategories.BusinessObject] = typeof(INotificationEventHandler),
+            [EventCategories.BusinessObjectInspectionAudit] = typeof(IBusinessObjectInspectionAuditEventHandler),
+            [EventCategories.Notification] = typeof(INotificationEventHandler)
         };
 
         public EventBus(IServiceProvider serviceProvider)

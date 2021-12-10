@@ -4,10 +4,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Super.Paula.Application.Inventory.Events;
 
 namespace Super.Paula.Application.Communication
 {
-    public class NotificationHandler : INotificationHandler
+    public class NotificationHandler : INotificationHandler, INotificationEventHandler
     {
         private readonly INotificationManager _notificationManager;
         
@@ -118,6 +119,37 @@ namespace Super.Paula.Application.Communication
             entity.Text = request.Text; 
 
             await _notificationManager.UpdateAsync(entity);
+        }
+
+        public async ValueTask ProcessAsync(string businessObject, BusinessObjectInspectorEvent @event)
+        {
+            var (date, time) = DateTime.UtcNow.ToNumbers();
+
+            if (@event.OldInspector != null &&
+                @event.OldInspector != @event.NewInspector)
+            {
+
+                await CreateAsync(@event.OldInspector, new NotificationRequest
+                {
+                    Date = date,
+                    Time = time,
+                    Target = $"business-objects/{businessObject}",
+                    Text = $"You are not longer the inspector for {@event.BusinessObjectDisplayName}!"
+                });
+            }
+
+            if (@event.NewInspector != null &&
+                @event.NewInspector != @event.OldInspector)
+            {
+
+                await CreateAsync(@event.NewInspector, new NotificationRequest
+                {
+                    Date = date,
+                    Time = time,
+                    Target = $"business-objects/{businessObject}",
+                    Text = $"You are now the inspector for {@event.BusinessObjectDisplayName}!"
+                });
+            }
         }
     }
 }
