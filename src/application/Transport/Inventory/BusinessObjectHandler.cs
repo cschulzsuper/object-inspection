@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Super.Paula.Application.Communication;
 using Super.Paula.Application.Guidelines.Events;
 using Super.Paula.Application.Inventory.Events;
 
@@ -15,18 +14,18 @@ namespace Super.Paula.Application.Inventory
     public class BusinessObjectHandler : IBusinessObjectHandler, IBusinessObjectEventHandler
     {
         private readonly IBusinessObjectManager _businessObjectManager;
-        private readonly Lazy<IInspectionHandler> _inspectionHandler;
+        private readonly IInspectionProvider _inspectionProvider;
         private readonly AppState _appState;
         private readonly IEventBus _eventBus;
 
         public BusinessObjectHandler(
             IBusinessObjectManager businessObjectManager,
-            Lazy<IInspectionHandler> inspectionHandler,
+            IInspectionProvider inspectionProvider,
             AppState appState,
             IEventBus eventBus)
         {
             _businessObjectManager = businessObjectManager;
-            _inspectionHandler = inspectionHandler;
+            _inspectionProvider = inspectionProvider;
             _appState = appState;
             _eventBus = eventBus;
         }
@@ -110,7 +109,7 @@ namespace Super.Paula.Application.Inventory
         public async ValueTask AssignInspectionAsync(string businessObject, AssignInspectionRequest request)
         {
             var entity = await _businessObjectManager.GetAsync(businessObject);
-            var inspection = await _inspectionHandler.Value.GetAsync(request.UniqueName);
+            var inspection = await _inspectionProvider.GetAsync(request.UniqueName);
 
             entity.Inspections.Add(new BusinessObject.EmbeddedInspection
             {

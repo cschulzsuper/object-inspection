@@ -33,22 +33,26 @@ namespace Super.Paula.Application
                 .AddScoped<IBusinessObjectInspectionAuditHandler>(x => x.GetRequiredService<BusinessObjectInspectionAuditHandler>())
                 .AddScoped<IBusinessObjectInspectionAuditEventHandler>(x => x.GetRequiredService<BusinessObjectInspectionAuditHandler>())
 
-                .AddScoped<NotificationHandler>(InspectionHandlerFactory)
+                .AddScoped<NotificationHandler>(NotificationHandlerFactory)
                 .AddScoped<INotificationHandler>(x => x.GetRequiredService<NotificationHandler>())
                 .AddScoped<INotificationEventHandler>(x => x.GetRequiredService<NotificationHandler>())
 
-                .AddScoped<IInspectorHandler, InspectorHandler>()
-                .AddScoped<IInspectionHandler, InspectionHandler>()
-                .AddScoped<IOrganizationHandler, OrganizationHandler>();
+                .AddScoped<InspectorHandler>()
+                .AddScoped<IInspectorHandler>(x => x.GetRequiredService<InspectorHandler>())
+                .AddScoped<IInspectorEventHandler>(x => x.GetRequiredService<InspectorHandler>())
 
-            services
-                .AddTransient(provider => new Lazy<IInspectionHandler>(provider.GetRequiredService<IInspectionHandler>))
-                .AddTransient(provider => new Lazy<IOrganizationHandler>(provider.GetRequiredService<IOrganizationHandler>));
+                .AddScoped<InspectionHandler>()
+                .AddScoped<IInspectionHandler>(x => x.GetRequiredService<InspectionHandler>())
+                .AddScoped<IInspectionProvider>(x => x.GetRequiredService<InspectionHandler>())
+
+                .AddScoped<OrganizationHandler>()
+                .AddScoped<IOrganizationHandler>(x => x.GetRequiredService<OrganizationHandler>())
+                .AddScoped<IOrganizationProvider>(x => x.GetRequiredService<OrganizationHandler>());
 
             return services;
         }
 
-        private static readonly Func<IServiceProvider, NotificationHandler> InspectionHandlerFactory = 
+        private static readonly Func<IServiceProvider, NotificationHandler> NotificationHandlerFactory = 
             services =>
             {
                 var notificationManager = services.GetRequiredService<INotificationManager>();

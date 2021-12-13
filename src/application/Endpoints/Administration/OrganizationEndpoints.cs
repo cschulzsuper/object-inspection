@@ -43,6 +43,7 @@ namespace Super.Paula.Application.Administration
 
         private static Delegate Replace =>
             [Authorize("Maintainer")]
+            [IgnoreCurrentOrganization]
             (IOrganizationHandler handler, string organization, OrganizationRequest request)
                 => handler.ReplaceAsync(organization, request);
 

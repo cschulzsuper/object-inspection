@@ -3,6 +3,7 @@ using Super.Paula.Application.Inventory;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Super.Paula.Application.Administration;
 using Super.Paula.Application.Auditing;
 using Super.Paula.Application.Communication;
 
@@ -16,7 +17,8 @@ namespace Super.Paula.Application
         {
             [EventCategories.BusinessObject] = typeof(INotificationEventHandler),
             [EventCategories.BusinessObjectInspectionAudit] = typeof(IBusinessObjectInspectionAuditEventHandler),
-            [EventCategories.Notification] = typeof(INotificationEventHandler)
+            [EventCategories.Notification] = typeof(INotificationEventHandler),
+            [EventCategories.Inspector] = typeof(IInspectorEventHandler)
         };
 
         public EventBus(IServiceProvider serviceProvider)

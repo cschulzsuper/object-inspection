@@ -17,7 +17,5 @@ namespace Super.Paula.Application.Administration
 
         ValueTask ActivateAsync(string inspector);
         ValueTask DeactivateAsync(string inspector);
-
-        ValueTask RefreshOrganizationAsync(string organization, RefreshOrganizationRequest request);
     }
 }

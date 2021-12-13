@@ -1,32 +1,34 @@
 ﻿using Super.Paula.Application.Administration.Requests;
 using Super.Paula.Application.Administration.Responses;
 using Super.Paula.Environment;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Super.Paula.Application.Administration.Events;
 
 namespace Super.Paula.Application.Administration
 {
-    public class InspectorHandler : IInspectorHandler
+    public class InspectorHandler : 
+        IInspectorHandler,
+        IInspectorEventHandler
     {
         private readonly IInspectorManager _inspectorManager;
-        private readonly Lazy<IOrganizationHandler> _organizationHandler;
+        private readonly IOrganizationProvider _organizationProvider;
         private readonly AppState _appState;
 
         public InspectorHandler(
             IInspectorManager inspectorManager,
-            Lazy<IOrganizationHandler> organizationHandler,
+            IOrganizationProvider organizationProvider,
             AppState appState) 
         {
             _inspectorManager = inspectorManager;
-            _organizationHandler = organizationHandler;
+            _organizationProvider = organizationProvider;
             _appState = appState;
         }
 
         public async ValueTask<InspectorResponse> CreateAsync(InspectorRequest request)
         {
-            var organization = await _organizationHandler.Value.GetAsync(_appState.CurrentOrganization);
+            var organization = await _organizationProvider.GetAsync(_appState.CurrentOrganization);
 
             var entity = new Inspector
             {
@@ -119,16 +121,16 @@ namespace Super.Paula.Application.Administration
                    }));
         }
 
-        public async ValueTask RefreshOrganizationAsync(string organization, RefreshOrganizationRequest request)
+        public async ValueTask ProcessAsync(string organization, OrganizationEvent @event)
         {
             var inspectors = _inspectorManager.GetQueryable()
                 .Where(x => x.Organization == organization)
                 .ToList();
 
-            foreach(var inspector in inspectors)
+            foreach (var inspector in inspectors)
             {
-                inspector.OrganizationActivated = request.Activated;
-                inspector.OrganizationDisplayName = request.DisplayName;
+                inspector.OrganizationActivated =  @event.Activated ?? inspector.OrganizationActivated;
+                inspector.OrganizationDisplayName =  @event.DisplayName ?? inspector.OrganizationDisplayName;
 
                 await _inspectorManager.UpdateAsync(inspector);
             }

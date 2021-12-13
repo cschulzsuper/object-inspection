@@ -70,7 +70,9 @@ else
                         <button class="btn btn-outline-secondary btn-block text-left" 
                                 @onclick="() => ToggleAnnotationVisibility(inspectionAudit)">@inspectionAudit.InspectionDisplayName</button>
 
-                        @if (_inspectionAuditAnnotationVisibile?[inspectionAudit] == true && !string.IsNullOrWhiteSpace(inspectionAudit.Annotation))
+                        @if (_inspectionAuditAnnotationVisibile?.ContainsKey(inspectionAudit) == true &&
+                             _inspectionAuditAnnotationVisibile?[inspectionAudit] == true && 
+                             !string.IsNullOrWhiteSpace(inspectionAudit.Annotation))
                         {
                             <div class="card card-body text-wrap">
                                 @inspectionAudit.Annotation

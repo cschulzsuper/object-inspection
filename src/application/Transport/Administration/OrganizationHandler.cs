@@ -3,20 +3,21 @@ using Super.Paula.Application.Administration.Responses;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Super.Paula.Application.Administration.Events;
 
 namespace Super.Paula.Application.Administration
 {
     public class OrganizationHandler : IOrganizationHandler
     {
         private readonly IOrganizationManager _organizationManager;
-        private readonly IInspectorHandler _inspectorHandler;
+        private readonly IEventBus _eventBus;
 
         public OrganizationHandler(
             IOrganizationManager organizationManager,
-            IInspectorHandler inspectorHandler)
+            IEventBus eventBus)
         {
             _organizationManager = organizationManager;
-            _inspectorHandler = inspectorHandler;
+            _eventBus = eventBus;
         }
 
         public async ValueTask<OrganizationResponse> CreateAsync(OrganizationRequest request)
@@ -75,26 +76,22 @@ namespace Super.Paula.Application.Administration
         {
             var entity = await _organizationManager.GetAsync(organization);
 
-            var refreshOrganization =
+            var required =
                 entity.Activated != request.Activated ||
-                entity.DisplayName != request.DisplayName;
+                entity.DisplayName != request.DisplayName ||
+                entity.ChiefInspector != request.ChiefInspector ||
+                entity.UniqueName != request.UniqueName;
 
-            entity.ChiefInspector = request.ChiefInspector;
-            entity.DisplayName = request.DisplayName;
-            entity.UniqueName = request.UniqueName;
-            entity.Activated = request.Activated;
-
-            await _organizationManager.UpdateAsync(entity);
-
-            if (refreshOrganization)
+            if (required)
             {
-                await _inspectorHandler.RefreshOrganizationAsync(
-                    entity.UniqueName,
-                    new RefreshOrganizationRequest
-                    {
-                        DisplayName = entity.DisplayName,
-                        Activated = entity.Activated
-                    });
+                entity.Activated = request.Activated;
+                entity.DisplayName = request.DisplayName;
+                entity.ChiefInspector = request.ChiefInspector;
+                entity.UniqueName = request.UniqueName;
+
+                await _organizationManager.UpdateAsync(entity);
+
+                await PublishOrganizationAsync(entity);
             }
         }
 
@@ -102,45 +99,41 @@ namespace Super.Paula.Application.Administration
         {
             var entity = await _organizationManager.GetAsync(organization);
 
-            var refreshOrganization = entity.Activated != true;
-
-            entity.Activated = true;
-
-            await _organizationManager.UpdateAsync(entity);
-
-            if (refreshOrganization)
+            var required = !entity.Activated;
+            if (required)
             {
-                await _inspectorHandler.RefreshOrganizationAsync(
-                    entity.UniqueName,
-                    new RefreshOrganizationRequest
-                    {
-                        DisplayName = entity.DisplayName,
-                        Activated = entity.Activated
-                    });
+                entity.Activated = true;
+
+                await _organizationManager.UpdateAsync(entity);
+
+                await PublishOrganizationAsync(entity);
             }
         }
 
         public async ValueTask DeactivateAsync(string organization)
-
         {
             var entity = await _organizationManager.GetAsync(organization);
 
-            var refreshOrganization = entity.Activated != false;
-
-            entity.Activated = false;
-
-            await _organizationManager.UpdateAsync(entity);
-
-            if (refreshOrganization)
+            var required = entity.Activated;
+            if (required)
             {
-                await _inspectorHandler.RefreshOrganizationAsync(
-                    entity.UniqueName,
-                    new RefreshOrganizationRequest
-                    {
-                        DisplayName = entity.DisplayName,
-                        Activated = entity.Activated
-                    });
+                entity.Activated = false;
+
+                await _organizationManager.UpdateAsync(entity);
+
+                await PublishOrganizationAsync(entity);
             }
+        }
+
+        private async ValueTask PublishOrganizationAsync(Organization entity)
+        {
+            var @event = new OrganizationEvent
+            {
+                DisplayName = entity.DisplayName,
+                Activated = entity.Activated
+            };
+
+            await _eventBus.PublishAsync(EventCategories.Inspector, entity.UniqueName, @event);
         }
     }
 }

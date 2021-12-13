@@ -110,9 +110,6 @@ namespace Super.Paula.Client.Administration
             return (await responseMessage.Content.ReadFromJsonAsync<InspectorResponse>())!;
         }
 
-        public ValueTask RefreshOrganizationAsync(string organization, RefreshOrganizationRequest request)
-            => throw new NotSupportedException("This operation is not supported on the client side");
-
         public async ValueTask ReplaceAsync(string inspector, InspectorRequest request)
         {
             var responseMessage = await _httpClient.PutAsJsonAsync($"inspectors/{inspector}", request);
