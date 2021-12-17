@@ -23,7 +23,9 @@
     </Authorized>
 </AuthorizeView>
 
-<div class="container mt-2 mt-md-3">
+<div class="container mt-2 mt-md-3 
+            ml-n4      mr-n4      w-auto 
+            ml-sm-auto mr-sm-auto w-sm-100">
 
 @if (RelevantInspections == null)
 {
@@ -34,12 +36,11 @@ else
     <table class="table">
         <thead>
             <tr>
-                <th>@Translator["Unique name"]</th>
-                <th>@Translator["Display name"]</th>
+                <th class="col-2 d-none d-lg-table-cell">@Translator["Unique name"]</th>
+                <th class="col-8">@Translator["Display name"]</th>
                 <AuthorizeView Policy="ChiefInspector">
                     <Authorized>
-                        <th></th>
-                        <th></th>
+                        <th class="col-1"></th>
                     </Authorized>
                 </AuthorizeView>
             </tr>
@@ -48,29 +49,25 @@ else
             @foreach (var inspection in RelevantInspections)
             {
                 <tr>
-                    <td class="col-2">@inspection.UniqueName</td>
+                    <td class="col-2 d-none d-lg-table-cell">@inspection.UniqueName</td>
                     <td class="col-8">
-                        <button class="btn btn-outline-secondary btn-block text-left" 
-                                @onclick="() => ToggleTextVisibility(inspection.UniqueName)">@inspection.DisplayName</button>
-
-                        @if (_inspectionsTextVisibile?[inspection.UniqueName] == true && !string.IsNullOrWhiteSpace(inspection.Text))
-                        {
-                            <div class="card card-body text-wrap">
-                                @inspection.Text
-                            </div>
-                        }
+                        <BusinessObjectInspectionResponseToggle Inspection="inspection"/>
                     </td>
                     <AuthorizeView Policy="ChiefInspector">
                         <Authorized>
                             @if(_inspectionBusinessObjects!.ContainsKey(inspection.UniqueName)) {
                                 <td class="col-1">
-                                    <button class="btn btn-primary btn-block" 
-                                        @onclick="() => UnassignAsync(inspection.UniqueName)">@Translator["Unassign"]</button>
+                                    <div class="d-sm-inline-flex">
+                                        <button class="btn btn-primary mr-sm-2 mb-2 mb-sm-0 w-auto"
+                                                @onclick="() => UnassignAsync(inspection)"><span class="oi oi-minus"/></button>
+                                        <button class="btn btn-outline-primary btn-block w-auto"
+                                                @onclick="() => Schedule(inspection)"><span class="oi oi-clock"/></button>
+                                    </div>
                                 </td>
                             } else {
                                 <td class="col-1">
-                                    <button class="btn btn-outline-primary btn-block" 
-                                        @onclick="() => AssignAsync(inspection.UniqueName)">@Translator["Assign"]</button>
+                                    <button class="btn btn-outline-primary w-auto" 
+                                            @onclick="() => AssignAsync(inspection)"><span class="oi oi-plus"/></button>
                                 </td>
                             }
                         </Authorized>
@@ -88,22 +85,27 @@ else
     [Parameter]
     public string BusinessObject { get; set; } = null!;
 
-    private IDictionary<string,InspectionResponse>? _inspectionBusinessObjects;
+    private IDictionary<string, BusinessObjectInspectionResponse>? _inspectionBusinessObjects;
 
-    private IDictionary<string,InspectionResponse>? _inspections;
-
-    private IDictionary<string,bool>? _inspectionsTextVisibile;
+    private IDictionary<string, BusinessObjectInspectionResponse>? _inspections;
 
     private bool _onlyAssigned = true;
 
-    public IEnumerable<InspectionResponse>? RelevantInspections
+    public IEnumerable<BusinessObjectInspectionResponse>? RelevantInspections
         => _onlyAssigned
-            ? _inspectionBusinessObjects?.Values
-            : _inspections?.Values;
+            ? _inspectionBusinessObjects?
+                .OrderBy(x => x.Key)
+                .Select(x => x.Value)
+
+            : _inspectionBusinessObjects?
+                .Concat(_inspections!
+                    .Where(x => !_inspectionBusinessObjects.ContainsKey(x.Key)))
+                .OrderBy(x => x.Key)
+                .Select(x => x.Value);
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if(firstRender)
+        if (firstRender)
         {
             await QueryAsync();
             StateHasChanged();
@@ -114,15 +116,21 @@ else
     {
         var authorizations = (await AccountHandler.QueryAuthorizationsAsync()).Values;
 
-        _inspections = new Dictionary<string,InspectionResponse>();
+        _inspections = new Dictionary<string, BusinessObjectInspectionResponse>();
 
-        if(authorizations.Contains("ChiefInspector"))
+        if (authorizations.Contains("ChiefInspector"))
         {
-            var inspectionResponse = InspectionHandler.GetAll();  
-            
+            var inspectionResponse = InspectionHandler.GetAll();
+
             await foreach (var inspection in inspectionResponse)
             {
-                _inspections!.Add(inspection.UniqueName, inspection);
+                _inspections!.Add(inspection.UniqueName, new BusinessObjectInspectionResponse
+                {
+                    Activated = false,
+                    DisplayName = inspection.DisplayName,
+                    Text = inspection.Text,
+                    UniqueName = inspection.UniqueName
+                });
                 this.StateHasChanged();
             }
         }
@@ -130,24 +138,14 @@ else
 
         var response = await BusinessObjectHandler.GetAsync(BusinessObject);
 
-        _inspectionBusinessObjects = new Dictionary<string,InspectionResponse>();
+        _inspectionBusinessObjects = new Dictionary<string, BusinessObjectInspectionResponse>();
 
         foreach (var inspection in response.Inspections)
         {
-            _inspectionBusinessObjects!.Add(inspection.UniqueName, new InspectionResponse
-            {
-                Activated = false,
-                DisplayName = inspection.DisplayName,
-                Text = inspection.Text,
-                UniqueName = inspection.UniqueName
-            });
+            _inspectionBusinessObjects!.Add(inspection.UniqueName, inspection);
 
             this.StateHasChanged();
         }
-
-        _inspectionsTextVisibile = authorizations.Contains("ChiefInspector")
-            ? _inspections.Keys.ToDictionary(key => key, _ => false)
-            : _inspectionBusinessObjects.Keys.ToDictionary(key => key, _ => false);
     }
 
     public Task OnlyAssignedChangedAsync(ChangeEventArgs e)
@@ -156,36 +154,31 @@ else
         return Task.CompletedTask;
     }
 
-    public async Task AssignAsync(string inspection)
+    public async Task AssignAsync(BusinessObjectInspectionResponse inspection)
     {
         await BusinessObjectHandler.AssignInspectionAsync(
             BusinessObject!,
             new AssignInspectionRequest
             {
                 Activated = true,
-                UniqueName = inspection
+                UniqueName = inspection.UniqueName
             });
 
-        _inspectionBusinessObjects!.Add(inspection, _inspections![inspection]);
+        _inspectionBusinessObjects!.Add(inspection.UniqueName, _inspections![inspection.UniqueName]);
     }
 
-    public async Task UnassignAsync(string inspection)
+    public async Task UnassignAsync(BusinessObjectInspectionResponse inspection)
     {
         await BusinessObjectHandler.CancelInspectionAsync(
             BusinessObject!,
             new CancelInspectionRequest
             {
-                UniqueName = inspection
+                UniqueName = inspection.UniqueName
             });
 
-        _inspectionBusinessObjects!.Remove(inspection);
+        _inspectionBusinessObjects!.Remove(inspection.UniqueName);
     }
 
-    private void ToggleTextVisibility(string inspection)
-    {
-        if (_inspectionsTextVisibile != null)
-        {
-            _inspectionsTextVisibile[inspection] = !_inspectionsTextVisibile[inspection];
-        }
-    }
+    public void Schedule(BusinessObjectInspectionResponse inspection)
+        => NavigationManager.NavigateTo($"/business-objects/{BusinessObject}/inspections/{inspection.UniqueName}/schedule");
 }

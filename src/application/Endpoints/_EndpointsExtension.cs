@@ -17,6 +17,7 @@ namespace Super.Paula.Application
             Delegate replace,
             Delegate delete)
         {
+
             endpoints.MapGet(collectionResource, get);
             endpoints.MapGet(collection, getAll);
             endpoints.MapPost(collection, create);

@@ -2,7 +2,7 @@
 {
     public static class MillisecondsValidator
     {
-        public static bool IsValid(int milliseconds)
-            => milliseconds >= 0 && milliseconds < 86400000;
+        public static bool IsValid(object milliseconds)
+            => milliseconds is >= 0 and < 86400000;
     }
 }

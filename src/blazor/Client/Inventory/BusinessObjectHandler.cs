@@ -41,6 +41,14 @@ namespace Super.Paula.Client.Inventory
             responseMessage.EnsureSuccessStatusCode();
         }
 
+        public async ValueTask ScheduleInspectionAsync(string businessObject, string inspection, ScheduleInspectionRequest request)
+        {
+            var responseMessage = await _httpClient.PostAsJsonAsync($"business-objects/{businessObject}/schedule-inspection/{inspection}", request);
+
+            responseMessage.RuleOutProblems();
+            responseMessage.EnsureSuccessStatusCode();
+        }
+
         public async ValueTask ChangeInspectionAuditAsync(string businessObject, string inspection, ChangeInspectionAuditRequest request)
         {
             var responseMessage = await _httpClient.PostAsJsonAsync($"business-objects/{businessObject}/change-inspection-audit/{inspection}", request);

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 
 namespace Super.Paula
 {
@@ -25,6 +26,6 @@ namespace Super.Paula
             => numbers
                 .ToDateTime()
                 .ToLocalTime()
-                .ToString();
+                .ToString("g", CultureInfo.CurrentCulture);
     }
 }

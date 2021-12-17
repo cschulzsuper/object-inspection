@@ -11,7 +11,9 @@
     <h1>@Translator["Inspections"]</h1>
 </div>
 
-<div class="container mt-2 mt-md-3">
+<div class="container mt-2 mt-md-3 
+            ml-n4      mr-n4      w-auto 
+            ml-sm-auto mr-sm-auto w-sm-100">
 
 @if (_businessObject == null)
 {
@@ -22,51 +24,52 @@ else
     <table class="table">
         <thead>
             <tr>
-                <th>@Translator["Inspection"]</th>
-                <th>@Translator["Result"]</th>
-                <th></th>
+                <th class="col-11">@Translator["Inspection"]</th>
+                <th class="col-1">@Translator["Result"]</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var inspection in _businessObject.Inspections.Where(x => x.Activated && x.ActivatedGlobally))
             {
                 <tr>
-                    <td class="col-8">
-                        <button class="btn btn-outline-secondary btn-block text-left" 
-                                @onclick="() => ToggleTextVisibility(inspection.UniqueName)">@inspection.DisplayName</button>
-
-                        @if (_inspectionsTextVisibile?[inspection.UniqueName] == true && !string.IsNullOrWhiteSpace(inspection.Text))
-                        {
-                            <div class="card card-body text-wrap">
-                                @inspection.Text
-                            </div>
-                        }
+                    <td class="col-11">
+                        <BusinessObjectInspectionResponseToggle Inspection="inspection"/>
                     </td>
-                    <td class="col-2">
-                    @switch(inspection.AuditResult) 
-                    {
-                        case "satisfying":
-                            <button class="btn btn-success btn-block" 
-                                @onclick="() => ToggleAsync(inspection)">@Translator["Satisfying"]</button>
-                             break;
-                        case "insufficient": 
-                            <button class="btn btn-warning btn-block" 
-                                @onclick="() => ToggleAsync(inspection)">@Translator["Insufficient"]</button>
-                            break;
-                        case "failed": 
-                            <button class="btn btn-danger btn-block" 
-                                @onclick="() => ToggleAsync(inspection)">@Translator["Failed"]</button>
-                            break;
-                        default: 
-                            <button class="btn btn-secondary btn-block" 
-                                @onclick="() => ToggleAsync(inspection)">@Translator["Unset"]</button>
-                            break;
-                    } 
+                    <td class="col-1">
+                        <div class="d-sm-inline-flex">
+                            @switch (inspection.AuditResult)
+                            {
+                                case "satisfying":
+                                    <button class="btn btn-success mr-sm-2 mb-2 mb-sm-0 w-auto"
+                                            @onclick="() => ToggleAsync(inspection)" title="@Translator["Satisfying"]">
+                                        <span class="oi oi-star"></span>
+                                    </button>
+                                    break;
+                                case "insufficient":
+                                    <button class="btn btn-warning mr-sm-2 mb-2 mb-sm-0 w-auto"
+                                            @onclick="() => ToggleAsync(inspection)" title="@Translator["Insufficient"]">
+                                        <span class="oi oi-warning"></span>
+                                    </button>
+                                    break;
+                                case "failed":
+                                    <button class="btn btn-danger mr-sm-2 mb-2 mb-sm-0 w-auto"
+                                            @onclick="() => ToggleAsync(inspection)" title="@Translator["Failed"]">
+                                        <span class="oi oi-x"></span>
+                                    </button>
+                                    break;
+                                default:
+                                    <button class="btn btn-secondary mr-sm-2 mb-2 mb-sm-0 w-auto"
+                                            @onclick="() => ToggleAsync(inspection)" title="@Translator["Unset"]">
+                                        <span class="oi oi-ellipses"></span>
+                                    </button>
+                                    break;
+                            }
+                            <button class="btn btn-outline-primary btn-block w-auto"
+                                    @onclick="() => NavigateToAnnotationAsync(inspection)">
+                                <span class="oi oi-copywriting"/>
+                            </button>
+                        </div>
                     </td>                   
-                    <td class="col-2">
-                        <button class="btn btn-outline-primary btn-block" 
-                            @onclick="() => NavigateToAnnotationAsync(inspection)">@Translator["Annotation"]</button>
-                    </td>
                 </tr>
             }
         </tbody>
@@ -76,8 +79,6 @@ else
 </div>
 
 @code {
-
-    private IDictionary<string,bool>? _inspectionsTextVisibile;
 
     private BusinessObjectResponse? _businessObject;
 
@@ -96,23 +97,16 @@ else
     public async Task QueryAsync()
     {
         _businessObject = await BusinessObjectHandler.GetAsync(BusinessObject);
-
-        _inspectionsTextVisibile = _businessObject.Inspections
-            .ToDictionary(x => x.UniqueName, _ => false);
     }
 
-    private void ToggleTextVisibility(string inspection)
-    {
-        if (_inspectionsTextVisibile != null)
-        {
-            _inspectionsTextVisibile[inspection] = !_inspectionsTextVisibile[inspection];
-        }
-    }
-
-    private async Task ToggleAsync(BusinessObjectResponse.EmbeddedInspection inspection)
+    private async Task ToggleAsync(BusinessObjectInspectionResponse inspection)
     {
         var utcNow = DateTime.UtcNow;
-        var inspectionToOld = inspection.AuditDate < (DateOnly.FromDateTime(utcNow).DayNumber - 1);
+
+        var audit = (inspection.AuditDate, inspection.AuditTime)
+            .ToDateTime();
+
+        var inspectionToOld = audit < utcNow.AddMinutes(-1);
 
         var nextResult = new Dictionary<string,string>
         {
@@ -149,10 +143,12 @@ else
 
             inspection.AuditDate = request.AuditDate;
             inspection.AuditTime = request.AuditTime;
+            inspection.PlannedAuditDate = default;
+            inspection.PlannedAuditTime = default;
             inspection.AuditResult = request.Result;
         }
     }
 
-    private void NavigateToAnnotationAsync(BusinessObjectResponse.EmbeddedInspection inspection)
+    private void NavigateToAnnotationAsync(BusinessObjectInspectionResponse inspection)
         => NavigationManager.NavigateTo($"/business-objects/{_businessObject!.UniqueName}/audit/{inspection.UniqueName}/{inspection.AuditDate}/{inspection.AuditTime}/annotation");
 }

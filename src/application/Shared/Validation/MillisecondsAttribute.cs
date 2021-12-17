@@ -11,12 +11,7 @@ namespace Super.Paula.Validation
                 return true;
             }
 
-            if (value is not int)
-            {
-                return false;
-            }
-
-            return MillisecondsValidator.IsValid((int)value);
+            return MillisecondsValidator.IsValid(value);
         }
     }
 }

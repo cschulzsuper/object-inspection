@@ -50,6 +50,14 @@ namespace Super.Paula.Data.Mappings.Inventory
                 .IsRequired();
 
             inspectionsBuilder
+                .Property(x => x.AssignmentDate)
+                .IsRequired();
+
+            inspectionsBuilder
+                .Property(x => x.AssignmentTime)
+                .IsRequired();
+
+            inspectionsBuilder
                 .Property(x => x.AuditDate)
                 .IsRequired();
 
@@ -78,12 +86,31 @@ namespace Super.Paula.Data.Mappings.Inventory
 
             inspectionsBuilder
                 .Property(x => x.DisplayName)
+                .HasMaxLength(140)
                 .IsRequired();
 
             inspectionsBuilder
                 .Property(x => x.Text)
                 .HasMaxLength(4000)
                 .IsRequired();
+
+            inspectionsBuilder
+                .Property(x => x.AuditDelayThreshold)
+                .IsRequired();
+
+            inspectionsBuilder
+                .Property(x => x.AuditThreshold)
+                .IsRequired();
+
+
+            var auditSchedulesBuilder = inspectionsBuilder
+                .OwnsMany(x => x.AuditSchedules);
+
+            auditSchedulesBuilder
+                .Property(x => x.CronExpression)
+                .HasMaxLength(140)
+                .IsRequired();
+
         }
     }
 }

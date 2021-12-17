@@ -1,0 +1,123 @@
+﻿@inject ITranslator Translator
+
+<button class="btn btn-block text-left @(
+                IsOverdue() 
+                    ? "btn-outline-danger" 
+                    : IsCurrent() 
+                        ? "btn-outline-warning" 
+                        : IsUpcomming() 
+                            ? "btn-outline-success"
+                            : "btn-outline-secondary")"
+
+        @onclick="() => Toggle()">@Inspection.DisplayName</button>
+
+@if (_isExpanded)
+{
+    <div class="card card-body text-wrap">
+        @if (HasTimestamps())
+        {
+            <ul class="list-unstyled">
+                @if (IsAuditted())
+                {
+                    <li>
+                        <small class="text-nowrap">@GetAuditString()</small>
+                    </li>
+                }
+                @if (IsScheduled())
+                {
+                    <li>
+                        <small class="text-nowrap @(
+                                        IsOverdue() 
+                                            ? "text-danger font-weight-bold" 
+                                            : IsCurrent() 
+                                                ? "text-warning" 
+                                                : IsUpcomming() 
+                                                    ? "text-success"
+                                                    : "")">@GetScheduledString()</small>
+                    </li>
+                }
+            </ul>
+        }
+        <span>
+            @Inspection.Text
+        </span>
+    </div>
+}
+
+@code {
+
+    [Parameter]
+    public BusinessObjectInspectionResponse Inspection { get; set; } = null!;
+
+    private bool _isExpanded = false;
+
+    private void Toggle()
+    {
+        if (CanToggle())
+        {
+            _isExpanded =!_isExpanded;
+        }
+    }
+    
+    private bool IsAuditted()
+        => Inspection.AuditDate != default;
+
+    private bool IsOverdue()
+    {
+        if (Inspection.PlannedAuditDate != default)
+        {
+            var auditDelay = (Inspection.PlannedAuditDate, Inspection.PlannedAuditTime)
+                .ToDateTime()
+                .AddMilliseconds(Inspection.AuditDelayThreshold);
+
+            return auditDelay < DateTime.UtcNow;
+        }
+        return false;
+    }
+
+    private bool IsScheduled()
+        => Inspection.PlannedAuditDate != default;
+
+    private bool IsCurrent()
+    {
+        if (Inspection.PlannedAuditDate != default)
+        {
+            var plannedAudit = (Inspection.PlannedAuditDate, Inspection.PlannedAuditTime)
+                .ToDateTime();
+
+            return plannedAudit < DateTime.UtcNow;
+        }
+        return false;
+    }
+
+    private bool IsUpcomming()
+    {
+        if (Inspection.PlannedAuditDate != default)
+        {
+            var upcomingAudit = (Inspection.PlannedAuditDate, Inspection.PlannedAuditTime)
+                .ToDateTime()
+                .AddMilliseconds(-Inspection.AuditThreshold);
+
+            return upcomingAudit < DateTime.UtcNow;
+        }
+        return false;
+    }
+
+    private bool HasTimestamps()
+        => IsScheduled() || IsAuditted();
+
+    private bool CanToggle()
+        => HasTimestamps() || !string.IsNullOrWhiteSpace(Inspection.Text);
+
+    private string GetAuditString()
+    {
+        var audit = (Inspection.AuditDate, Inspection.AuditTime).ToLocalTimeString();
+        return string.Format(@Translator["{0} (last audit)"], audit);
+    }
+
+    private string GetScheduledString()
+    {
+        var plannedAudit = (Inspection.PlannedAuditDate, Inspection.PlannedAuditTime).ToLocalTimeString();
+        return string.Format(@Translator["{0} (next audit)"], plannedAudit);
+    }
+}

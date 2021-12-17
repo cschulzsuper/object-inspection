@@ -66,7 +66,7 @@ else
     [Parameter]
     public int AuditTime { get; set; }
 
-    private BusinessObjectResponse.EmbeddedInspection? _inspection = null;
+    private BusinessObjectInspectionResponse? _inspection = null;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {

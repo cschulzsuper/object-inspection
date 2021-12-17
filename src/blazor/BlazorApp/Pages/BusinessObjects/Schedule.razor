@@ -1,0 +1,90 @@
+﻿@page "/business-objects/{businessObject}/inspections/{inspection}/schedule"
+
+@inject ITranslator Translator
+@inject NavigationManager NavigationManager
+@inject IBusinessObjectHandler BusinessObjectHandler
+
+@attribute [Authorize("ChiefInspector")]
+
+<div class="container mt-2 mt-md-3">
+    <h1>@Translator["Schedule inspection"]</h1>
+</div>
+
+@if (_request == null)
+{
+    <p><em>Loading...</em></p>
+}
+else 
+{
+    <EditForm Model="@_request" OnValidSubmit="@OnValidSubmitAsync">
+        <DataAnnotationsValidator />
+
+        <div class="container mt-2 mt-md-3">
+            <div class="form-group">
+                <label>@Translator["Audit schedule"]</label>
+                <InputText class="form-control" id="AuditSchedule" @bind-Value="_request.AuditSchedule"/>
+            </div>
+            <div class="form-group">
+                <label>@Translator["Audit delay threshold"] (@TimeSpan.FromMilliseconds(_request.AuditDelayThreshold).ToString("c"))</label>
+                <InputMilliseconds class="form-control" id="AuditDelayThreshold" @bind-Value="_request.AuditDelayThreshold" step="1"/>
+            </div>
+            <div class="form-group">
+                <label>@Translator["Upcoming audit threshold"] (@TimeSpan.FromMilliseconds(_request.AuditThreshold).ToString("c"))</label>
+                <InputMilliseconds class="form-control" id="AuditThreshold"  @bind-Value="_request.AuditThreshold" step="1"/>
+            </div>
+        </div>
+
+        @if(context.GetValidationMessages().Any())
+        {
+            <div class="container mt-2 mt-md-3">
+                <div class="card card-body tex-wrap">
+                    <ValidationSummary />    
+                </div>
+            </div>
+        } 
+        else 
+        {
+            <div class="container mt-2 mt-md-3">
+                <button type="submit" class="btn btn-primary">@Translator["Submit"]</button>
+            </div>
+        }
+
+    </EditForm>
+}
+
+@code {
+
+    [Parameter]
+    public string BusinessObject { get; set; } = string.Empty;
+
+    [Parameter]
+    public string Inspection { get; set; } = string.Empty;
+
+    private ScheduleInspectionRequest? _request = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var response = await BusinessObjectHandler.GetAsync(BusinessObject);
+
+        var responseInspection = response.Inspections
+            .SingleOrDefault(x => x.UniqueName == Inspection);
+
+        if (responseInspection != null)
+        {
+            var auditSchedule = responseInspection.AuditSchedules.FirstOrDefault();
+
+            _request = new ScheduleInspectionRequest
+            {
+                AuditThreshold = responseInspection.AuditThreshold,
+                AuditDelayThreshold = responseInspection.AuditDelayThreshold,
+                AuditSchedule = auditSchedule?.CronExpression ?? string.Empty
+            };
+        }
+    }
+
+    private async Task OnValidSubmitAsync()
+    {
+        await BusinessObjectHandler.ScheduleInspectionAsync(BusinessObject, Inspection, _request!);
+        NavigationManager.NavigateTo($"/business-objects/{BusinessObject}/inspections");
+    }
+}

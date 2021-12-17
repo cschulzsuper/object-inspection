@@ -11,12 +11,7 @@ namespace Super.Paula.Validation
                 return true;
             }
 
-            if (value is not string )
-            {
-                return false;
-            }
-
-            return KebabCaseValidator.IsValid((string)value);
+            return KebabCaseValidator.IsValid(value);
         }
     }
 }

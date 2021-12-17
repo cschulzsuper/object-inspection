@@ -11,12 +11,7 @@ namespace Super.Paula.Validation
                 return true;
             }
 
-            if (value is not int )
-            {
-                return false;
-            }
-
-            return DayNumberValidator.IsValid((int)value);
+            return DayNumberValidator.IsValid(value);
         }
     }
 }

@@ -36,7 +36,7 @@ namespace Super.Paula.Application.Inventory
 
             return new BusinessObjectResponse
             {
-                Inspections = entity.Inspections.ToEmbeddedResponses(),
+                Inspections = entity.Inspections.ToResponse(),
                 Inspector = entity.Inspector,
                 DisplayName = entity.DisplayName,
                 UniqueName = entity.UniqueName
@@ -48,7 +48,7 @@ namespace Super.Paula.Application.Inventory
                 .GetAsyncEnumerable(query => query
                 .Select(entity => new BusinessObjectResponse
                 {
-                    Inspections = entity.Inspections.ToEmbeddedResponses(),
+                    Inspections = entity.Inspections.ToResponse(),
                     Inspector = entity.Inspector,
                     DisplayName = entity.DisplayName,
                     UniqueName = entity.UniqueName
@@ -69,7 +69,7 @@ namespace Super.Paula.Application.Inventory
 
             return new BusinessObjectResponse
             {
-                Inspections = entity.Inspections.ToEmbeddedResponses(),
+                Inspections = entity.Inspections.ToResponse(),
                 Inspector = entity.Inspector,
                 DisplayName = entity.DisplayName,
                 UniqueName = entity.UniqueName
@@ -104,21 +104,54 @@ namespace Super.Paula.Application.Inventory
             var entity = await _businessObjectManager.GetAsync(businessObject);
 
             await _businessObjectManager.DeleteAsync(entity);
-        }           
+        }
+
+        public async ValueTask ScheduleInspectionAsync(string businessObject, string inspection, ScheduleInspectionRequest request)
+        {
+            var entity = await _businessObjectManager.GetAsync(businessObject);
+
+            var businessObjectInspection = entity.Inspections
+                .Single(x => x.UniqueName == inspection);
+
+            businessObjectInspection.AuditDelayThreshold = request.AuditDelayThreshold;
+            businessObjectInspection.AuditThreshold = request.AuditThreshold;
+            businessObjectInspection.AuditSchedules = new HashSet<BusinessObjectInspectionAuditSchedule>
+            {
+                new BusinessObjectInspectionAuditSchedule
+                {
+                    CronExpression = request.AuditSchedule,
+                }
+            };
+
+            await _businessObjectManager.UpdateAsync(entity);
+        }
 
         public async ValueTask AssignInspectionAsync(string businessObject, AssignInspectionRequest request)
         {
             var entity = await _businessObjectManager.GetAsync(businessObject);
             var inspection = await _inspectionProvider.GetAsync(request.UniqueName);
 
-            entity.Inspections.Add(new BusinessObject.EmbeddedInspection
+            var (assignmentDate, assignmentTime) = DateTime.UtcNow.ToNumbers();
+
+            entity.Inspections.Add(new BusinessObjectInspection
             {
                 Activated = true,
                 ActivatedGlobally = inspection.Activated,
 
                 UniqueName = inspection.UniqueName,
                 DisplayName = inspection.DisplayName,
-                Text = inspection.Text
+                Text = inspection.Text,
+                AuditDelayThreshold = TimeSpan.FromHours(8).Milliseconds,
+                AuditThreshold = TimeSpan.FromHours(8).Milliseconds,
+
+                AssignmentDate = assignmentDate,
+                AssignmentTime = assignmentTime,
+
+                AuditAnnotation = string.Empty,
+                AuditInspector = string.Empty,
+                AuditResult = string.Empty,
+                AuditDate = default,
+                AuditTime = default
             });
 
             await _businessObjectManager.UpdateAsync(entity);
@@ -199,7 +232,7 @@ namespace Super.Paula.Application.Inventory
 
                     .Select(entity => new BusinessObjectResponse
                     {
-                        Inspections = entity.Inspections.ToEmbeddedResponses(),
+                        Inspections = entity.Inspections.ToResponse(),
                         Inspector = entity.Inspector,
                         DisplayName = entity.DisplayName,
                         UniqueName = entity.UniqueName
@@ -212,7 +245,7 @@ namespace Super.Paula.Application.Inventory
                 .Where(x => x.Inspector == inspector)
                 .Select(entity => new BusinessObjectResponse
                 {
-                    Inspections = entity.Inspections.ToEmbeddedResponses(),
+                    Inspections = entity.Inspections.ToResponse(),
                     Inspector = entity.Inspector,
                     DisplayName = entity.DisplayName,
                     UniqueName = entity.UniqueName
@@ -274,7 +307,7 @@ namespace Super.Paula.Application.Inventory
             await _eventBus.PublishAsync(EventCategories.Notification, businessObject.UniqueName, @event);
         }
 
-        private async ValueTask PublishBusinessObjectInspectionAsync(BusinessObject businessObject, BusinessObject.EmbeddedInspection inspection)
+        private async ValueTask PublishBusinessObjectInspectionAsync(BusinessObject businessObject, BusinessObjectInspection inspection)
         {
             if (inspection.AuditDate == default ||
                 inspection.AuditTime == default)

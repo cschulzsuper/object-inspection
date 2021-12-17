@@ -2,7 +2,7 @@
 {
     public static class DayNumberValidator
     {
-        public static bool IsValid(int dayNumber)
-            => dayNumber >= 0;
+        public static bool IsValid(object dayNumber)
+            => dayNumber is >= 0;
     }
 }

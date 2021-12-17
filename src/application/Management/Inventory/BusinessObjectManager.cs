@@ -103,24 +103,34 @@ namespace Super.Paula.Application.Inventory
                 yield return BusinessObjectValidator.InspectorHasKebabCase(businessObject.Inspector);
                 yield return BusinessObjectValidator.InspectorIsNotTooLong(businessObject.Inspector);
 
-                foreach (var inspection in businessObject.Inspections )
+                foreach (var inspection in businessObject.Inspections)
                 {
-                    yield return BusinessObjectValidator.InspectionUniqueNameIsNotEmpty(inspection.UniqueName);
-                    yield return BusinessObjectValidator.InspectionUniqueNameHasKebabCase(inspection.UniqueName);
-                    yield return BusinessObjectValidator.InspectionUniqueNameIsNotTooLong(inspection.UniqueName);
-                    yield return BusinessObjectValidator.InspectionDisplayNameIsNotEmpty(inspection.DisplayName);
-                    yield return BusinessObjectValidator.InspectionDisplayNameIsNotTooLong(inspection.DisplayName);
-                    yield return BusinessObjectValidator.InspectionTextIsNotNull(inspection.Text);
-                    yield return BusinessObjectValidator.InspectionTextIsNotTooLong(inspection.Text);
-                    yield return BusinessObjectValidator.InspectionAuditInspectorIsNotNull(inspection.AuditInspector);
-                    yield return BusinessObjectValidator.InspectionAuditInspectorHasKebabCase(inspection.AuditInspector);
-                    yield return BusinessObjectValidator.InspectionAuditInspectorIsNotTooLong(inspection.AuditInspector);
-                    yield return BusinessObjectValidator.InspectionAuditAnnotationIsNotNull(inspection.AuditAnnotation);
-                    yield return BusinessObjectValidator.InspectionAuditAnnotationIsNotTooLong(inspection.AuditAnnotation);
-                    yield return BusinessObjectValidator.InspectionAuditResultIsNotNull(inspection.AuditAnnotation);
-                    yield return BusinessObjectValidator.InspectionAuditResultHasValidValue(inspection.AuditAnnotation);
-                    yield return BusinessObjectValidator.InspectionAuditDateIsPositive(inspection.AuditDate);
-                    yield return BusinessObjectValidator.InspectionAuditTimeIsInDayTimeRange(inspection.AuditTime);
+                    yield return BusinessObjectInspectionValidator.UniqueNameIsNotEmpty(inspection.UniqueName);
+                    yield return BusinessObjectInspectionValidator.UniqueNameHasKebabCase(inspection.UniqueName);
+                    yield return BusinessObjectInspectionValidator.UniqueNameIsNotTooLong(inspection.UniqueName);
+                    yield return BusinessObjectInspectionValidator.DisplayNameIsNotEmpty(inspection.DisplayName);
+                    yield return BusinessObjectInspectionValidator.DisplayNameIsNotTooLong(inspection.DisplayName);
+                    yield return BusinessObjectInspectionValidator.TextIsNotNull(inspection.Text);
+                    yield return BusinessObjectInspectionValidator.TextIsNotTooLong(inspection.Text);
+                    yield return BusinessObjectInspectionValidator.AuditInspectorIsNotNull(inspection.AuditInspector);
+                    yield return BusinessObjectInspectionValidator.AuditInspectorHasKebabCase(inspection.AuditInspector);
+                    yield return BusinessObjectInspectionValidator.AuditInspectorIsNotTooLong(inspection.AuditInspector);
+                    yield return BusinessObjectInspectionValidator.AuditAnnotationIsNotNull(inspection.AuditAnnotation);
+                    yield return BusinessObjectInspectionValidator.AuditAnnotationIsNotTooLong(inspection.AuditAnnotation);
+                    yield return BusinessObjectInspectionValidator.AuditResultIsNotNull(inspection.AuditAnnotation);
+                    yield return BusinessObjectInspectionValidator.AuditResultHasValidValue(inspection.AuditAnnotation);
+                    yield return BusinessObjectInspectionValidator.AuditDateIsPositive(inspection.AuditDate);
+                    yield return BusinessObjectInspectionValidator.AuditTimeIsInDayTimeRange(inspection.AuditTime);
+                    yield return BusinessObjectInspectionValidator.AssignmentDateIsPositive(inspection.AssignmentDate);
+                    yield return BusinessObjectInspectionValidator.AssignmentTimeIsInDayTimeRange(inspection.AssignmentTime);
+                    yield return BusinessObjectInspectionValidator.AuditDelayThresholdIsInDayTimeRange(inspection.AuditDelayThreshold);
+                    yield return BusinessObjectInspectionValidator.AuditThresholdIsInDayTimeRange(inspection.AuditThreshold);
+
+                    foreach (var auditSchedule in inspection.AuditSchedules)
+                    {
+                        yield return BusinessObjectInspectionAuditScheduleValidator.CronExpressionIsNotNull(auditSchedule.CronExpression);
+                        yield return BusinessObjectInspectionAuditScheduleValidator.CronExpressionIsCronExpression(auditSchedule.CronExpression);
+                    }
                 }
             }
 
@@ -142,22 +152,32 @@ namespace Super.Paula.Application.Inventory
 
                 foreach (var inspection in businessObject.Inspections)
                 {
-                    yield return BusinessObjectValidator.InspectionUniqueNameIsNotEmpty(inspection.UniqueName);
-                    yield return BusinessObjectValidator.InspectionUniqueNameHasKebabCase(inspection.UniqueName);
-                    yield return BusinessObjectValidator.InspectionUniqueNameIsNotTooLong(inspection.UniqueName);
-                    yield return BusinessObjectValidator.InspectionDisplayNameIsNotEmpty(inspection.DisplayName);
-                    yield return BusinessObjectValidator.InspectionDisplayNameIsNotTooLong(inspection.DisplayName);
-                    yield return BusinessObjectValidator.InspectionTextIsNotNull(inspection.Text);
-                    yield return BusinessObjectValidator.InspectionTextIsNotTooLong(inspection.Text);
-                    yield return BusinessObjectValidator.InspectionAuditInspectorIsNotNull(inspection.AuditInspector);
-                    yield return BusinessObjectValidator.InspectionAuditInspectorHasKebabCase(inspection.AuditInspector);
-                    yield return BusinessObjectValidator.InspectionAuditInspectorIsNotTooLong(inspection.AuditInspector);
-                    yield return BusinessObjectValidator.InspectionAuditAnnotationIsNotNull(inspection.AuditAnnotation);
-                    yield return BusinessObjectValidator.InspectionAuditAnnotationIsNotTooLong(inspection.AuditAnnotation);
-                    yield return BusinessObjectValidator.InspectionAuditResultIsNotNull(inspection.AuditResult);
-                    yield return BusinessObjectValidator.InspectionAuditResultHasValidValue(inspection.AuditResult);
-                    yield return BusinessObjectValidator.InspectionAuditDateIsPositive(inspection.AuditDate);
-                    yield return BusinessObjectValidator.InspectionAuditTimeIsInDayTimeRange(inspection.AuditTime);
+                    yield return BusinessObjectInspectionValidator.UniqueNameIsNotEmpty(inspection.UniqueName);
+                    yield return BusinessObjectInspectionValidator.UniqueNameHasKebabCase(inspection.UniqueName);
+                    yield return BusinessObjectInspectionValidator.UniqueNameIsNotTooLong(inspection.UniqueName);
+                    yield return BusinessObjectInspectionValidator.DisplayNameIsNotEmpty(inspection.DisplayName);
+                    yield return BusinessObjectInspectionValidator.DisplayNameIsNotTooLong(inspection.DisplayName);
+                    yield return BusinessObjectInspectionValidator.TextIsNotNull(inspection.Text);
+                    yield return BusinessObjectInspectionValidator.TextIsNotTooLong(inspection.Text);
+                    yield return BusinessObjectInspectionValidator.AuditInspectorIsNotNull(inspection.AuditInspector);
+                    yield return BusinessObjectInspectionValidator.AuditInspectorHasKebabCase(inspection.AuditInspector);
+                    yield return BusinessObjectInspectionValidator.AuditInspectorIsNotTooLong(inspection.AuditInspector);
+                    yield return BusinessObjectInspectionValidator.AuditAnnotationIsNotNull(inspection.AuditAnnotation);
+                    yield return BusinessObjectInspectionValidator.AuditAnnotationIsNotTooLong(inspection.AuditAnnotation);
+                    yield return BusinessObjectInspectionValidator.AuditResultIsNotNull(inspection.AuditResult);
+                    yield return BusinessObjectInspectionValidator.AuditResultHasValidValue(inspection.AuditResult);
+                    yield return BusinessObjectInspectionValidator.AuditDateIsPositive(inspection.AuditDate);
+                    yield return BusinessObjectInspectionValidator.AuditTimeIsInDayTimeRange(inspection.AuditTime);
+                    yield return BusinessObjectInspectionValidator.AssignmentDateIsPositive(inspection.AssignmentDate);
+                    yield return BusinessObjectInspectionValidator.AssignmentTimeIsInDayTimeRange(inspection.AssignmentTime);
+                    yield return BusinessObjectInspectionValidator.AuditDelayThresholdIsInDayTimeRange(inspection.AuditDelayThreshold);
+                    yield return BusinessObjectInspectionValidator.AuditThresholdIsInDayTimeRange(inspection.AuditThreshold);
+
+                    foreach (var auditSchedule in inspection.AuditSchedules)
+                    {
+                        yield return BusinessObjectInspectionAuditScheduleValidator.CronExpressionIsNotNull(auditSchedule.CronExpression);
+                        yield return BusinessObjectInspectionAuditScheduleValidator.CronExpressionIsCronExpression(auditSchedule.CronExpression);
+                    }
                 }
             }
 

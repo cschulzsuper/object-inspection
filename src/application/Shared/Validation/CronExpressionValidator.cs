@@ -1,0 +1,26 @@
+﻿using System;
+using Cronos;
+
+namespace Super.Paula.Validation
+{
+    public static class CronExpressionValidator
+    {
+        public static bool IsValid(object value)
+        {
+            if (value is not string cronExpression)
+            {
+                return false;
+            }
+            try
+            {
+                CronExpression.Parse(cronExpression, CronFormat.Standard);
+            }
+            catch (FormatException)
+            {
+                return false;
+            }
+
+            return true;
+        }
+    }
+}
