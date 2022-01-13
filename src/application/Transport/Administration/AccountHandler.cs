@@ -69,10 +69,18 @@ namespace Super.Paula.Application.Administration
                     x.UniqueName == request.UniqueName &&
                     x.Organization == request.Organization);
 
+            var bearer = new Bearer
+            {
+                Inspector = request.UniqueName,
+                Organization = request.Organization,
+                Proof = _appAuthentication.Proof,
+                ImpersonatorInspector = _appAuthentication.Inspector,
+                ImpersonatorOrganization = _appAuthentication.Organization
+            };
+
             var response = new StartImpersonationResponse
             {
-                Bearer = Convert.ToBase64String(
-                    Encoding.UTF8.GetBytes($"{request.Organization}:{request.UniqueName}:{_appAuthentication.Bearer}"))
+                Bearer = bearer.ToBase64String()
             };
 
             return ValueTask.FromResult(response);
@@ -201,10 +209,16 @@ namespace Super.Paula.Application.Administration
                 request.UniqueName,
                 connectionProof);
 
+            var bearer = new Bearer
+            {
+                Inspector = inspector.UniqueName,
+                Organization = inspector.Organization,
+                Proof = connectionProof
+            };
+
             var response = new SignInInspectorResponse
             {
-                Bearer = Convert.ToBase64String(
-                    Encoding.UTF8.GetBytes($"{inspector.Organization}:{inspector.UniqueName}:{connectionProof}"))
+                Bearer = bearer.ToBase64String()
             };
 
             return response;

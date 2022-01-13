@@ -12,6 +12,8 @@ namespace Super.Paula.Environment
 
         public virtual string Organization { get; set; } = string.Empty;
 
+        public virtual string Proof { get; set; } = string.Empty;
+
         public virtual string ImpersonatorBearer { get; set; } = string.Empty;
 
         public virtual string ImpersonatorInspector { get; set; } = string.Empty;
@@ -21,5 +23,6 @@ namespace Super.Paula.Environment
         public virtual string[] Authorizations { get; set; } = Array.Empty<string>();
 
         public virtual string[] AuthorizationsFilter { get; set; } = Array.Empty<string>();
+
     }
 }

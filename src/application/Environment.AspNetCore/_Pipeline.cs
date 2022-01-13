@@ -32,6 +32,7 @@ namespace Super.Paula
                         {
                             appAuthentication.Organization = subjectValues[0];
                             appAuthentication.Inspector = subjectValues[1];
+                            appAuthentication.Proof = subjectValues[2];
                             appAuthentication.Bearer = bearer;
 
                             var accountHandler = context.RequestServices.GetRequiredService<IAccountHandler>();
@@ -49,7 +50,10 @@ namespace Super.Paula
 
                                     appAuthentication.ImpersonatorOrganization = fallbackSubjectValues[0];
                                     appAuthentication.ImpersonatorInspector = fallbackSubjectValues[1];
+                                    appAuthentication.Proof = fallbackSubjectValues[2];
+
                                     appAuthentication.ImpersonatorBearer = subjectValues[2];
+
                                 }
                             }
                         }
