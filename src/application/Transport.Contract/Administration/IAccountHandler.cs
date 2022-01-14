@@ -8,14 +8,14 @@ namespace Super.Paula.Application.Administration
     {
         ValueTask RegisterIdentityAsync(RegisterIdentityRequest request);
         ValueTask RegisterOrganizationAsync(RegisterOrganizationRequest request);
-        ValueTask<SignInInspectorResponse> SignInInspectorAsync(SignInInspectorRequest request);
+        ValueTask<string> SignInInspectorAsync(SignInInspectorRequest request);
         
         ValueTask VerifyAsync();
         ValueTask SignOutInspectorAsync();
         ValueTask ChangeSecretAsync(ChangeSecretRequest request);
         ValueTask<QueryAuthorizationsResponse> QueryAuthorizationsAsync();
 
-        ValueTask<StartImpersonationResponse> StartImpersonationAsync(StartImpersonationRequest request);
+        ValueTask<string> StartImpersonationAsync(StartImpersonationRequest request);
         ValueTask StopImpersonationAsync();
         ValueTask RepairChiefInspectorAsync(RepairChiefInspectorRequest request);
         ValueTask<AssessChiefInspectorDefectivenessResponse> AssessChiefInspectorDefectivenessAsync(AssessChiefInspectorDefectivenessRequest request);

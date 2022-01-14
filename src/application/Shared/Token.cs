@@ -2,7 +2,7 @@
 
 namespace Super.Paula
 {
-    public class Bearer
+    public class Token
     {
         public string? Organization { get; set; }
         public string? Inspector { get; set; }

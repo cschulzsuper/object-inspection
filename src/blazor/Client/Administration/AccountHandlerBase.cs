@@ -74,14 +74,14 @@ namespace Super.Paula.Client.Administration
             return (await responseMessage.Content.ReadFromJsonAsync<AssessChiefInspectorDefectivenessResponse>())!;
         }
 
-        public async ValueTask<SignInInspectorResponse> SignInInspectorAsync(SignInInspectorRequest request)
+        public async ValueTask<string> SignInInspectorAsync(SignInInspectorRequest request)
         {
             var responseMessage = await _httpClient.PostAsJsonAsync("account/sign-in-inspector", request);
             
             responseMessage.RuleOutProblems();
             responseMessage.EnsureSuccessStatusCode();
 
-            return (await responseMessage.Content.ReadFromJsonAsync<SignInInspectorResponse>())!;
+            return (await responseMessage.Content.ReadAsStringAsync())!;
         }
 
         public async ValueTask SignOutInspectorAsync()
@@ -92,14 +92,14 @@ namespace Super.Paula.Client.Administration
             responseMessage.EnsureSuccessStatusCode();
         }
 
-        public async ValueTask<StartImpersonationResponse> StartImpersonationAsync(StartImpersonationRequest request)
+        public async ValueTask<string> StartImpersonationAsync(StartImpersonationRequest request)
         {
             var responseMessage = await _httpClient.PostAsJsonAsync("account/start-impersonation", request);
             
             responseMessage.RuleOutProblems();
             responseMessage.EnsureSuccessStatusCode();
 
-            return (await responseMessage.Content.ReadFromJsonAsync<StartImpersonationResponse>())!;
+            return (await responseMessage.Content.ReadAsStringAsync())!;
         }
 
         public ValueTask StopImpersonationAsync()

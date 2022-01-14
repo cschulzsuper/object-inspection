@@ -59,7 +59,7 @@ namespace Super.Paula.Application.Administration
             await _identityManager.UpdateAsync(identity);
         }
 
-        public ValueTask<StartImpersonationResponse> StartImpersonationAsync(StartImpersonationRequest request)
+        public ValueTask<string> StartImpersonationAsync(StartImpersonationRequest request)
         {
 
             var inspector = _inspectorManager.GetQueryable()
@@ -69,7 +69,7 @@ namespace Super.Paula.Application.Administration
                     x.UniqueName == request.UniqueName &&
                     x.Organization == request.Organization);
 
-            var bearer = new Bearer
+            var bearer = new Token
             {
                 Inspector = request.UniqueName,
                 Organization = request.Organization,
@@ -78,12 +78,7 @@ namespace Super.Paula.Application.Administration
                 ImpersonatorOrganization = _appAuthentication.Organization
             };
 
-            var response = new StartImpersonationResponse
-            {
-                Bearer = bearer.ToBase64String()
-            };
-
-            return ValueTask.FromResult(response);
+            return ValueTask.FromResult(bearer.ToBase64String());
         }
 
         public ValueTask<QueryAuthorizationsResponse> QueryAuthorizationsAsync()
@@ -175,7 +170,7 @@ namespace Super.Paula.Application.Administration
             await _identityManager.InsertAsync(identity);
         }
 
-        public async ValueTask<SignInInspectorResponse> SignInInspectorAsync(SignInInspectorRequest request)
+        public async ValueTask<string> SignInInspectorAsync(SignInInspectorRequest request)
         {
             var inspector = _inspectorManager.GetQueryable()
                 .Single(x =>
@@ -209,19 +204,14 @@ namespace Super.Paula.Application.Administration
                 request.UniqueName,
                 connectionProof);
 
-            var bearer = new Bearer
+            var bearer = new Token
             {
                 Inspector = inspector.UniqueName,
                 Organization = inspector.Organization,
                 Proof = connectionProof
             };
 
-            var response = new SignInInspectorResponse
-            {
-                Bearer = bearer.ToBase64String()
-            };
-
-            return response;
+            return bearer.ToBase64String();
         }
 
         public async ValueTask SignOutInspectorAsync()

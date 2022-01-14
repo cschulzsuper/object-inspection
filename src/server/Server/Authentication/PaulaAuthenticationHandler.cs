@@ -41,67 +41,60 @@ namespace Super.Paula.Authentication
             if (authorizationHeader != null &&
                 authorizationHeader.StartsWith("Bearer "))
             {
-                var bearer = authorizationHeader.Replace("Bearer ", string.Empty);
+                var encodedAuthorizationToken = authorizationHeader.Replace("Bearer ", string.Empty);
 
-                var subject = GetSubject(bearer);
-                if (subject == null)
+                var token = DecodeToken(encodedAuthorizationToken);
+                if (token == null)
                 {
                     return Task.FromResult(AuthenticateResult.Fail("Authentication failed"));
                 }
-                var claims = new[]
-                {
-                    new Claim("Bearer", bearer),
-                    new Claim(ClaimTypes.NameIdentifier, subject)
-                };
 
-                var identity = new ClaimsIdentity(claims, _scheme!.Name);
-                var principal = new ClaimsPrincipal(identity);
-                var ticket = new AuthenticationTicket(principal, _scheme.Name);
+                var claims = token.ToClaims();
+                var claimsIdentity = new ClaimsIdentity(claims, _scheme!.Name);
+                var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+
+                var ticket = new AuthenticationTicket(claimsPrincipal, _scheme.Name);
                 return Task.FromResult(AuthenticateResult.Success(ticket));
             }
 
             return Task.FromResult(AuthenticateResult.Fail("Authentication failed"));
         }
 
-        private string? GetSubject(string bearer)
+        private Token? DecodeToken(string encodedAuthorizationToken)
         {
-            var subject = Convert.FromBase64String(bearer);
-            var subjectValue = Encoding.UTF8.GetString(subject);
-            var subjectValues = subjectValue.Split(':', 3);
+            var token = encodedAuthorizationToken.ToToken();
 
-            if (subjectValues.Length != 3)
+            if (token == null ||
+                token.Organization == null ||
+                token.Inspector == null ||
+                token.Proof == null)
             {
                 return null;
             }
 
             var validInspector = _connectionManager!.Verify(
-                subjectValues[0],
-                subjectValues[1],
-                subjectValues[2]);
+                token.Organization,
+                token.Inspector,
+                token.Proof);
 
             if (validInspector)
             {
-                return $"{subjectValues[0]}:{subjectValues[1]}";
+                return token;
             }
 
-            var fallbackSubject = Convert.FromBase64String(subjectValues[2]);
-            var fallbackSubjectValue = Encoding.UTF8.GetString(fallbackSubject);
-            var fallbackSubjectValues = fallbackSubjectValue.Split(':', 3);
-
-            if (fallbackSubjectValues.Length != 3 ||
-                _appSettings!.Maintainer != fallbackSubjectValues[1] ||
-                _appSettings!.MaintainerOrganization != fallbackSubjectValues[0])
+            if (_appSettings!.Maintainer != token.ImpersonatorInspector ||
+                _appSettings!.MaintainerOrganization != token.ImpersonatorOrganization)
             {
                 return null;
             }
 
             var validMaintainer = _connectionManager!.Verify(
-                fallbackSubjectValues[0],
-                fallbackSubjectValues[1],
-                fallbackSubjectValues[2]);
+                token.ImpersonatorOrganization,
+                token.ImpersonatorInspector,
+                token.Proof);
 
             return validMaintainer
-                ? $"{subjectValues[0]}:{subjectValues[1]}"
+                ? token
                 : null;
         }
 

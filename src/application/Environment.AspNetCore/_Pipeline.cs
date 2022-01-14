@@ -1,11 +1,7 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
+﻿using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
-using Super.Paula.Application.Administration;
 using Super.Paula.Environment;
 
 namespace Super.Paula
@@ -20,44 +16,22 @@ namespace Super.Paula
 
                 if (context.User.Identity?.IsAuthenticated == true)
                 {
-                    var bearer = context.User.FindFirst("Bearer")?.Value;
+                    var claim = (string type) => context.User.FindFirst(type)?.Value;
 
-                    if (bearer != null)
-                    {
-                        var subject = Convert.FromBase64String(bearer);
-                        var subjectValue = Encoding.UTF8.GetString(subject);
-                        var subjectValues = subjectValue.Split(':', 3);
+                    appAuthentication.Organization 
+                        = claim("organization") ?? appAuthentication.Organization;
 
-                        if (subjectValues?.Length == 3)
-                        {
-                            appAuthentication.Organization = subjectValues[0];
-                            appAuthentication.Inspector = subjectValues[1];
-                            appAuthentication.Proof = subjectValues[2];
-                            appAuthentication.Bearer = bearer;
+                    appAuthentication.Inspector 
+                        = claim("inspector") ?? appAuthentication.Inspector;
 
-                            var accountHandler = context.RequestServices.GetRequiredService<IAccountHandler>();
-                            appAuthentication.Authorizations = (await accountHandler.QueryAuthorizationsAsync())
-                                .Values.ToArray();
+                    appAuthentication.Proof 
+                        = claim("proof") ?? appAuthentication.Proof;
 
-                            var fallbackSubject = new byte[256];
+                    appAuthentication.ImpersonatorOrganization 
+                        = claim("impersonatorOrganization") ?? appAuthentication.ImpersonatorOrganization;
 
-                            if (Convert.TryFromBase64String(subjectValues[2], fallbackSubject, out var bytesWritten))
-                            {
-                                var fallbackSubjectValue = Encoding.UTF8.GetString(fallbackSubject);
-                                if (fallbackSubjectValue.Count(x => x == ':') == 2)
-                                {
-                                    var fallbackSubjectValues = subjectValue.Split(':', 3);
-
-                                    appAuthentication.ImpersonatorOrganization = fallbackSubjectValues[0];
-                                    appAuthentication.ImpersonatorInspector = fallbackSubjectValues[1];
-                                    appAuthentication.Proof = fallbackSubjectValues[2];
-
-                                    appAuthentication.ImpersonatorBearer = subjectValues[2];
-
-                                }
-                            }
-                        }
-                    }
+                    appAuthentication.ImpersonatorInspector 
+                        = claim("impersonatorInspector") ?? appAuthentication.ImpersonatorInspector;
                 }
 
                 await next();

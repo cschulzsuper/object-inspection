@@ -53,11 +53,11 @@ namespace Super.Paula.Client.Administration
         public ValueTask<AssessChiefInspectorDefectivenessResponse> AssessChiefInspectorDefectivenessAsync(AssessChiefInspectorDefectivenessRequest request)
             => _accountHandler.AssessChiefInspectorDefectivenessAsync(request);
 
-        public async ValueTask<SignInInspectorResponse> SignInInspectorAsync(SignInInspectorRequest request)
+        public async ValueTask<string> SignInInspectorAsync(SignInInspectorRequest request)
         {
             var response = await _accountHandler.SignInInspectorAsync(request);
 
-            _appAuthentication.Bearer = response.Bearer;
+            _appAuthentication.Bearer = response;
             _appAuthentication.Inspector = request.UniqueName;
             _appAuthentication.Organization = request.Organization;
 
@@ -93,7 +93,7 @@ namespace Super.Paula.Client.Administration
             await _authenticationStateManager.Value.PersistAuthenticationStateAsync();
         }
 
-        public async ValueTask<StartImpersonationResponse> StartImpersonationAsync(StartImpersonationRequest request)
+        public async ValueTask<string> StartImpersonationAsync(StartImpersonationRequest request)
         {
             var response = await _accountHandler.StartImpersonationAsync(request);
 
@@ -101,7 +101,7 @@ namespace Super.Paula.Client.Administration
             _appAuthentication.ImpersonatorInspector = _appAuthentication.Inspector;
             _appAuthentication.ImpersonatorOrganization = _appAuthentication.Organization;
 
-            _appAuthentication.Bearer = response.Bearer;
+            _appAuthentication.Bearer = response;
             _appAuthentication.Inspector = request.UniqueName;
             _appAuthentication.Organization = request.Organization;
 
