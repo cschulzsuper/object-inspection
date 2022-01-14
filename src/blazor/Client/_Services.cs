@@ -87,7 +87,7 @@ namespace Super.Paula.Client
                 new AccountHandler(
                     provider.GetRequiredService<AccountHandlerBase>(),
                     provider.GetRequiredService<AppAuthentication>(),
-                    new Lazy<AuthenticationStateManager>(() => provider.GetRequiredService<AuthenticationStateManager>())));
+                    provider.GetRequiredService<AuthenticationStateManager>()));
 
             services.AddScoped<INotificationHandler>(provider => 
                 new NotificationHandler(
@@ -108,8 +108,10 @@ namespace Super.Paula.Client
                 var clientFactory = sp.GetRequiredService<ITypedHttpClientFactory<THandler>>();
 
                 var factoryHandler = messageHandlerFactory.CreateHandler();
-                var fullHandler = new AuthenticationMessageHandler(sp.GetRequiredService<ILocalStorage>());
-                fullHandler.InnerHandler = factoryHandler;
+                var fullHandler = new AuthenticationMessageHandler(sp.GetRequiredService<ILocalStorage>())
+                {
+                    InnerHandler = factoryHandler
+                };
 
                 var httpClient = new HttpClient(fullHandler, disposeHandler: true);
                 return clientFactory.CreateClient(httpClient);
@@ -126,8 +128,10 @@ namespace Super.Paula.Client
                 var clientFactory = sp.GetRequiredService<ITypedHttpClientFactory<THandler>>();
 
                 var factoryHandler = messageHandlerFactory.CreateHandler();
-                var fullHandler = new AuthenticationMessageHandler(sp.GetRequiredService<ILocalStorage>());
-                fullHandler.InnerHandler = factoryHandler;
+                var fullHandler = new AuthenticationMessageHandler(sp.GetRequiredService<ILocalStorage>())
+                {
+                    InnerHandler = factoryHandler
+                };
 
                 var httpClient = new HttpClient(fullHandler, disposeHandler: true);
                 return clientFactory.CreateClient(httpClient);

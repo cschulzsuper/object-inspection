@@ -17,7 +17,7 @@ using Super.Paula.Environment;
 
 namespace Super.Paula.Client.Communication
 {
-    public class NotificationHandlerBase : INotificationHandler, IAsyncDisposable
+    public sealed class NotificationHandlerBase : INotificationHandler, IAsyncDisposable
     {
         private readonly AuthenticationStateManager _authenticationStateManager;
         private readonly AppAuthentication _appAuthentication;
@@ -48,7 +48,7 @@ namespace Super.Paula.Client.Communication
                 .WithUrl(
                     new Uri(_httpClient.BaseAddress, "/notifications/signalr"),
                     c => {
-                        c.AccessTokenProvider = () => Task.FromResult(_appAuthentication.Bearer)!;
+                        c.AccessTokenProvider = () => Task.FromResult(_appAuthentication.Token)!;
                     })
                 .Build();
         }

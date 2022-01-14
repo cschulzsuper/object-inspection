@@ -152,7 +152,8 @@ else
         _inspectors!.Remove(inspector);
     }
 
-    public async Task ActivateAsync(string inspector) {
+    public async Task ActivateAsync(string inspector)
+    {
         await InspectorHandler.ActivateAsync(inspector);
         _inspectors![inspector].Activated = true;
     }

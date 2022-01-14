@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Linq;
 using System.Security.Claims;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Super.Paula
+namespace Super.Paula.Application
 {
     public static class TokenExtensions
     {
@@ -17,16 +18,25 @@ namespace Super.Paula
                         }));
 
         public static Claim[] ToClaims(this Token token)
-            => token
+        {
+            var claims = token
                 .GetType()
                 .GetProperties()
                 .Select(x => (x.Name, x.GetValue(token)))
                 .Where(x => x.Item2 != null)
                 .Select(x => new Claim(x.Name, $"{x.Item2}"))
-                .ToArray();
+                .ToList();
+
+            claims.Add(new Claim(ClaimTypes.NameIdentifier, $"{token.Organization}:{token.Inspector}"));
+
+            return claims.ToArray();
+        }
 
         public static Token? ToToken(this string token)
-            => JsonSerializer.Deserialize<Token>(
-                    Convert.FromBase64String(token));
+            => string.IsNullOrWhiteSpace(token) 
+                    ? null
+                    : JsonSerializer.Deserialize<Token>(
+                            Convert.FromBase64String(token),
+                            new JsonSerializerOptions(JsonSerializerDefaults.Web));
     }
 }

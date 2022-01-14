@@ -85,8 +85,7 @@ namespace Super.Paula.Application.Administration
         {
             var authorizationValues = new HashSet<string>();
 
-            if (!string.IsNullOrWhiteSpace(_appAuthentication.Organization) &&
-                !string.IsNullOrWhiteSpace(_appAuthentication.Inspector))
+            if (!string.IsNullOrWhiteSpace(_appAuthentication.Organization))
             {
                 var organization = _organizationManager.GetQueryable()
                     .Single(x => x.UniqueName == _appAuthentication.Organization);
@@ -104,7 +103,8 @@ namespace Super.Paula.Application.Administration
                     authorizationValues.Add("Maintainer");
                 }
 
-                if (!string.IsNullOrWhiteSpace(_appAuthentication.ImpersonatorBearer))
+                if (!string.IsNullOrWhiteSpace(_appAuthentication.ImpersonatorOrganization) &&
+                    !string.IsNullOrWhiteSpace(_appAuthentication.ImpersonatorInspector))
                 {
                     authorizationValues.Add("Impersonator");
                 }
@@ -228,8 +228,24 @@ namespace Super.Paula.Application.Administration
             await _inspectorManager.UpdateAsync(inspector);
         }
 
-        public ValueTask StopImpersonationAsync()
-            => throw new NotSupportedException("As the server does not remember impersonation, an impersonation can not be stopped.");
+        public ValueTask<string> StopImpersonationAsync()
+        {
+             var inspector = _inspectorManager.GetQueryable()
+                .Single(x =>
+                    x.Activated &&
+                    x.OrganizationActivated &&
+                    x.UniqueName == _appAuthentication.ImpersonatorInspector &&
+                    x.Organization == _appAuthentication.ImpersonatorOrganization);
+
+            var bearer = new Token
+            {
+                Inspector = inspector.UniqueName,
+                Organization = inspector.Organization,
+                Proof = _appAuthentication.Proof
+            };
+
+            return ValueTask.FromResult(bearer.ToBase64String());
+        }
 
         public async ValueTask RepairChiefInspectorAsync(RepairChiefInspectorRequest request)
         {

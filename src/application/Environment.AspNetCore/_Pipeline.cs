@@ -1,7 +1,10 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using Super.Paula.Application;
+using Super.Paula.Application.Administration;
 using Super.Paula.Environment;
 
 namespace Super.Paula
@@ -13,25 +16,29 @@ namespace Super.Paula
             => app.Use(async (context, next) =>
             {
                 var appAuthentication = context.RequestServices.GetRequiredService<AppAuthentication>();
-
+                
                 if (context.User.Identity?.IsAuthenticated == true)
                 {
                     var claim = (string type) => context.User.FindFirst(type)?.Value;
 
                     appAuthentication.Organization 
-                        = claim("organization") ?? appAuthentication.Organization;
+                        = claim("Organization") ?? appAuthentication.Organization;
 
                     appAuthentication.Inspector 
-                        = claim("inspector") ?? appAuthentication.Inspector;
+                        = claim("Inspector") ?? appAuthentication.Inspector;
 
                     appAuthentication.Proof 
-                        = claim("proof") ?? appAuthentication.Proof;
+                        = claim("Proof") ?? appAuthentication.Proof;
 
                     appAuthentication.ImpersonatorOrganization 
-                        = claim("impersonatorOrganization") ?? appAuthentication.ImpersonatorOrganization;
+                        = claim("ImpersonatorOrganization") ?? appAuthentication.ImpersonatorOrganization;
 
                     appAuthentication.ImpersonatorInspector 
-                        = claim("impersonatorInspector") ?? appAuthentication.ImpersonatorInspector;
+                        = claim("ImpersonatorInspector") ?? appAuthentication.ImpersonatorInspector;
+
+                    var accountHandler = context.RequestServices.GetRequiredService<IAccountHandler>();
+                    appAuthentication.Authorizations = (await accountHandler.QueryAuthorizationsAsync())
+                        .Values.ToArray();
                 }
 
                 await next();
@@ -43,11 +50,12 @@ namespace Super.Paula
                     var appState = context.RequestServices.GetRequiredService<AppState>();
                     var appAuthentication = context.RequestServices.GetRequiredService<AppAuthentication>();
 
+                    appState.CurrentOrganization = appAuthentication.Organization;
+                    appState.CurrentInspector = appAuthentication.Inspector;
+
                     var endpoint = context.GetEndpoint();
                     var ignoreCurrentOrganization = endpoint?.Metadata.GetMetadata<IgnoreCurrentOrganizationAttribute>() != null;
 
-                    appState.CurrentOrganization = appAuthentication.Organization;
-                    appState.CurrentInspector = appAuthentication.Inspector;
                     appState.IgnoreCurrentOrganization = ignoreCurrentOrganization;
 
                     return next();

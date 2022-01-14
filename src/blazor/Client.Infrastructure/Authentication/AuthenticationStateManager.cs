@@ -3,6 +3,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components.Authorization;
+using Super.Paula.Application;
 using Super.Paula.Application.Administration;
 using Super.Paula.Client.Storage;
 using Super.Paula.Environment;
@@ -13,12 +14,12 @@ namespace Super.Paula.Client.Authentication
     {
         private readonly AppAuthentication _appAuthentication;
         private readonly ILocalStorage _localStorage;
-        private readonly IAccountHandler _accountHandler;
+        private readonly Lazy<IAccountHandler> _accountHandler;
 
         public AuthenticationStateManager(
             AppAuthentication appAuthentication,
             ILocalStorage localStorage,
-            IAccountHandler accountHandler)
+            Lazy<IAccountHandler> accountHandler)
         {
             _appAuthentication = appAuthentication;
             _localStorage = localStorage;
@@ -27,12 +28,16 @@ namespace Super.Paula.Client.Authentication
 
         public async Task PersistAuthenticationStateAsync(bool notify = true)
         {
+            var token = _appAuthentication.Token.ToToken();
+
             _appAuthentication.Ticks = DateTime.Now.Ticks;
+            _appAuthentication.Organization = token?.Organization ?? string.Empty;
+            _appAuthentication.Inspector = token?.Inspector ?? string.Empty;
 
             await _localStorage.SetItemAsync("app-authentication", _appAuthentication);
             if (notify)
             {
-                NotifyAuthenticationStateChanged(CreatePrincipalAuthenticationStateAsync());
+                NotifyAuthenticationStateChanged(CreateAuthenticationStateAsync());
             }
         }
 
@@ -43,24 +48,23 @@ namespace Super.Paula.Client.Authentication
             if (_appAuthentication.Ticks < appAuthentication?.Ticks)
             {
                 _appAuthentication.Ticks = appAuthentication.Ticks;
-                _appAuthentication.Bearer = appAuthentication.Bearer;
-                _appAuthentication.Inspector = appAuthentication.Inspector;
+                
+                _appAuthentication.Token = appAuthentication.Token;
                 _appAuthentication.Organization = appAuthentication.Organization;
-                _appAuthentication.ImpersonatorBearer = appAuthentication.ImpersonatorBearer;
-                _appAuthentication.ImpersonatorInspector = appAuthentication.ImpersonatorInspector;
-                _appAuthentication.ImpersonatorOrganization = appAuthentication.ImpersonatorOrganization;
+                _appAuthentication.Inspector = appAuthentication.Inspector;
+
                 _appAuthentication.Authorizations = appAuthentication.Authorizations;
                 _appAuthentication.AuthorizationsFilter = appAuthentication.AuthorizationsFilter;
 
-                await _accountHandler.VerifyAsync();
+                await _accountHandler.Value.VerifyAsync();
             }
 
-            return await CreatePrincipalAuthenticationStateAsync();
+            return await CreateAuthenticationStateAsync();
         }
 
-        private Task<AuthenticationState> CreatePrincipalAuthenticationStateAsync()
+        private Task<AuthenticationState> CreateAuthenticationStateAsync()
         {
-            var identity = string.IsNullOrWhiteSpace(_appAuthentication.Bearer)
+            var identity = string.IsNullOrWhiteSpace(_appAuthentication.Token)
                 ? new ClaimsIdentity(Enumerable.Empty<Claim>(), "Password")
                 : new ClaimsIdentity(Enumerable.Empty<Claim>());
 

@@ -21,8 +21,8 @@ namespace Super.Paula.Client.Authentication
         {
             var appAuthentication = await _localStorage.GetItemAsync<AppAuthentication>("app-authentication");
 
-            request.Headers.Authorization = !string.IsNullOrWhiteSpace(appAuthentication?.Bearer)
-                    ? new AuthenticationHeaderValue("Bearer", appAuthentication.Bearer)
+            request.Headers.Authorization = !string.IsNullOrWhiteSpace(appAuthentication?.Token)
+                    ? new AuthenticationHeaderValue("Bearer", appAuthentication.Token)
                     : null;
 
             return await base.SendAsync(request, cancellationToken);

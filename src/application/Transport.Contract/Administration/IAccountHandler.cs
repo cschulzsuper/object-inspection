@@ -16,7 +16,7 @@ namespace Super.Paula.Application.Administration
         ValueTask<QueryAuthorizationsResponse> QueryAuthorizationsAsync();
 
         ValueTask<string> StartImpersonationAsync(StartImpersonationRequest request);
-        ValueTask StopImpersonationAsync();
+        ValueTask<string> StopImpersonationAsync();
         ValueTask RepairChiefInspectorAsync(RepairChiefInspectorRequest request);
         ValueTask<AssessChiefInspectorDefectivenessResponse> AssessChiefInspectorDefectivenessAsync(AssessChiefInspectorDefectivenessRequest request);
     }

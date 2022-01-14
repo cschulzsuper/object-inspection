@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using Super.Paula.Application;
 using Super.Paula.Application.Runtime;
 using Super.Paula.Environment;
 
@@ -31,12 +32,11 @@ namespace Super.Paula.Authentication
         {
             var authorizationHeader = _context?.Request.Headers.Authorization.ToString();
 
-
-            if (string.IsNullOrWhiteSpace(authorizationHeader) &&
-                _context?.Request.Query.ContainsKey("access_token") == true)
-            {
-                authorizationHeader = $"Bearer {_context.Request.Query["access_token"]}";
-            }
+            if (string.IsNullOrWhiteSpace(authorizationHeader))
+                if(_context?.Request.Query.ContainsKey("access_token") == true)
+                {
+                    authorizationHeader = $"Bearer {_context.Request.Query["access_token"]}";
+                }
 
             if (authorizationHeader != null &&
                 authorizationHeader.StartsWith("Bearer "))

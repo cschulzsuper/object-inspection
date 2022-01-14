@@ -102,8 +102,15 @@ namespace Super.Paula.Client.Administration
             return (await responseMessage.Content.ReadAsStringAsync())!;
         }
 
-        public ValueTask StopImpersonationAsync()
-            => ValueTask.CompletedTask;
+        public async ValueTask<string> StopImpersonationAsync()
+        {
+            var responseMessage = await _httpClient.PostAsync("account/stop-impersonation", null);
+
+            responseMessage.RuleOutProblems();
+            responseMessage.EnsureSuccessStatusCode();
+
+            return (await responseMessage.Content.ReadAsStringAsync())!;
+        }
 
         public async ValueTask VerifyAsync()
         {

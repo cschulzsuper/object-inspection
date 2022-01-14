@@ -18,6 +18,7 @@ namespace Super.Paula.Application.Administration
                 ("/register-organization", RegisterOrganization),
                 ("/change-secret", ChangeSecret),
                 ("/start-impersonation", StartImpersonation),
+                ("/stop-impersonation", StopImpersonation),
                 ("/repair-chief-inspector", RepairChiefInspector),
                 ("/assess-chief-inspector-defectiveness", AssessChiefInspectorDefectiveness),
                 ("/verify", Verify));
@@ -60,6 +61,12 @@ namespace Super.Paula.Application.Administration
             [IgnoreCurrentOrganization]
             (IAccountHandler handler, StartImpersonationRequest request)
                 => handler.StartImpersonationAsync(request);
+
+        private static Delegate StopImpersonation =>
+            [Authorize("Inspector")]
+            [IgnoreCurrentOrganization]
+            (IAccountHandler handler)
+                => handler.StopImpersonationAsync();
 
         private static Delegate RepairChiefInspector =>
             [Authorize("Maintainer")]

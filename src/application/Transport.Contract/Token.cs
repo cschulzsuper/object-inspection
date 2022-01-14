@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Super.Paula
+namespace Super.Paula.Application
 {
     public class Token
     {
