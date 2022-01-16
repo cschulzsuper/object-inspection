@@ -4,7 +4,7 @@
 @inject NavigationManager NavigationManager
 @inject IInspectionHandler InspectionHandler
 @inject IBusinessObjectHandler BusinessObjectHandler
-@inject IAccountHandler AccountHandler
+@inject AppAuthentication AppAuthentication
 
 @attribute [Authorize("Inspector")]
 
@@ -114,11 +114,9 @@ else
 
     public async Task QueryAsync()
     {
-        var authorizations = (await AccountHandler.QueryAuthorizationsAsync()).Values;
-
         _inspections = new Dictionary<string, BusinessObjectInspectionResponse>();
 
-        if (authorizations.Contains("ChiefInspector"))
+        if (AppAuthentication.Authorizations.Contains("ChiefInspector"))
         {
             var inspectionResponse = InspectionHandler.GetAll();
 

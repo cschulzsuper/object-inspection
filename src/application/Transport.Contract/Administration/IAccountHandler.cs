@@ -1,5 +1,6 @@
 ﻿using Super.Paula.Application.Administration.Requests;
 using Super.Paula.Application.Administration.Responses;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Super.Paula.Application.Administration
@@ -13,7 +14,7 @@ namespace Super.Paula.Application.Administration
         ValueTask VerifyAsync();
         ValueTask SignOutInspectorAsync();
         ValueTask ChangeSecretAsync(ChangeSecretRequest request);
-        ValueTask<QueryAuthorizationsResponse> QueryAuthorizationsAsync();
+        IAsyncEnumerable<AccountAuthorizationResponse> GetAuthorizations();
 
         ValueTask<string> StartImpersonationAsync(StartImpersonationRequest request);
         ValueTask<string> StopImpersonationAsync();

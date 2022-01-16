@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Super.Paula.Application;
@@ -14,33 +15,21 @@ namespace Super.Paula.Client.Administration
     {
         private readonly IAccountHandler _accountHandler;
 
-        private readonly AppAuthentication _appAuthentication;
         private readonly AuthenticationStateManager _authenticationStateManager;
 
         public AccountHandler(
             IAccountHandler accountHandler,
-            AppAuthentication appAuthentication,
             AuthenticationStateManager authenticationStateManager)
         {
-            _accountHandler = accountHandler;
-
-            _appAuthentication = appAuthentication;           
+            _accountHandler = accountHandler;        
             _authenticationStateManager = authenticationStateManager;
         }
 
         public ValueTask ChangeSecretAsync(ChangeSecretRequest request)
             => _accountHandler.ChangeSecretAsync(request);
 
-        public ValueTask<QueryAuthorizationsResponse> QueryAuthorizationsAsync()
-        {
-            var authorizations = _appAuthentication.Authorizations
-                .Where(x =>
-                        _appAuthentication.AuthorizationsFilter.Any() == false ||
-                        _appAuthentication.AuthorizationsFilter.Contains(x))
-                .ToHashSet();
-
-            return ValueTask.FromResult(new QueryAuthorizationsResponse { Values = authorizations } );
-        }
+        public IAsyncEnumerable<AccountAuthorizationResponse> GetAuthorizations()
+            => _accountHandler.GetAuthorizations();
 
         public ValueTask RepairChiefInspectorAsync(RepairChiefInspectorRequest request)
             => _accountHandler.RepairChiefInspectorAsync(request);

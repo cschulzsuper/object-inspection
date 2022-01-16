@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Super.Paula.Application.Administration;
 using Super.Paula.Application.Administration.Requests;
@@ -30,14 +32,25 @@ namespace Super.Paula.Client.Administration
             responseMessage.EnsureSuccessStatusCode();
         }
 
-        public async ValueTask<QueryAuthorizationsResponse> QueryAuthorizationsAsync()
+        public async IAsyncEnumerable<AccountAuthorizationResponse> GetAuthorizations()
         {
-            var responseMessage = await _httpClient.GetAsync("account/query-authorizations");
+            var responseMessage = await _httpClient.GetAsync("account/authorizations");
 
             responseMessage.RuleOutProblems();
             responseMessage.EnsureSuccessStatusCode();
 
-            return (await responseMessage.Content.ReadFromJsonAsync<QueryAuthorizationsResponse>())!;
+            var responseStream = await responseMessage.Content.ReadAsStreamAsync();
+            var response = JsonSerializer.DeserializeAsyncEnumerable<AccountAuthorizationResponse>(
+                responseStream,
+                new JsonSerializerOptions(JsonSerializerDefaults.Web)
+                {
+                    DefaultBufferSize = 128
+                });
+
+            await foreach (var responseItem in response)
+            {
+                yield return responseItem!;
+            }
         }
 
         public async ValueTask RepairChiefInspectorAsync(RepairChiefInspectorRequest request)

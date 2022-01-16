@@ -3,8 +3,6 @@ using System.Linq;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
-using Super.Paula.Application;
-using Super.Paula.Application.Administration;
 using Super.Paula.Environment;
 
 namespace Super.Paula
@@ -36,9 +34,12 @@ namespace Super.Paula
                     appAuthentication.ImpersonatorInspector 
                         = claim("ImpersonatorInspector") ?? appAuthentication.ImpersonatorInspector;
 
-                    var accountHandler = context.RequestServices.GetRequiredService<IAccountHandler>();
-                    appAuthentication.Authorizations = (await accountHandler.QueryAuthorizationsAsync())
-                        .Values.ToArray();
+                    var claims = (string type) => context.User.FindAll(type)
+                        .Select(x => x.Value)
+                        .ToArray();
+
+                    appAuthentication.Authorizations
+                        = claims("Authorization") ?? appAuthentication.Authorizations;
                 }
 
                 await next();

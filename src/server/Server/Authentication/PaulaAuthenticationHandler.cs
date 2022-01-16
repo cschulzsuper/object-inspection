@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Super.Paula.Application;
+using Super.Paula.Application.Administration;
 using Super.Paula.Application.Runtime;
 using Super.Paula.Environment;
 
@@ -17,6 +18,7 @@ namespace Super.Paula.Authentication
         private AuthenticationScheme? _scheme;
         private HttpContext? _context;
         private AppSettings? _appSettings;
+        private ITokenAuthorizationFilter? _tokenAuthorizationFilter;
 
         public Task InitializeAsync(AuthenticationScheme scheme, HttpContext context)
         {
@@ -24,6 +26,7 @@ namespace Super.Paula.Authentication
             _context = context;
             _connectionManager = context.RequestServices.GetRequiredService<IConnectionManager>();
             _appSettings = context.RequestServices.GetRequiredService<AppSettings>();
+            _tokenAuthorizationFilter = context.RequestServices.GetRequiredService<ITokenAuthorizationFilter>();
 
             return Task.CompletedTask;
         }
@@ -76,6 +79,8 @@ namespace Super.Paula.Authentication
                 token.Organization,
                 token.Inspector,
                 token.Proof);
+
+            _tokenAuthorizationFilter?.Apply(token);
 
             if (validInspector)
             {

@@ -1,6 +1,5 @@
 ﻿@inject INotificationHandler NotificationHandler
 @inject AppAuthentication AppAuthentication
-@inject IAccountHandler AccountHandler
 @inject AppEnvironment AppEnvironment
 
 @implements IAsyncDisposable
@@ -131,7 +130,7 @@
     {
         _notificationCount = 0;
 
-        if ((await AccountHandler.QueryAuthorizationsAsync()).Values.Any())
+        if (AppAuthentication.Authorizations.Any())
         {
             await foreach (var _ in NotificationHandler.GetAllForInspector(AppAuthentication.Inspector))
             {

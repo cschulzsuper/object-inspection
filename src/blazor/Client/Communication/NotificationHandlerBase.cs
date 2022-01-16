@@ -22,7 +22,6 @@ namespace Super.Paula.Client.Communication
         private readonly AuthenticationStateManager _authenticationStateManager;
         private readonly AppAuthentication _appAuthentication;
         private readonly AppSettings _appSettings;
-        private readonly IAccountHandler _accountHandler;
 
         private readonly HttpClient _httpClient;      
         private readonly HubConnection _hubConnection;
@@ -31,10 +30,8 @@ namespace Super.Paula.Client.Communication
             HttpClient httpClient,
             AuthenticationStateManager authenticationStateManager,
             AppAuthentication appAuthentication,
-            AppSettings appSettings,
-            IAccountHandler accountHandler)
+            AppSettings appSettings)
         {
-            _accountHandler = accountHandler;
             _appSettings = appSettings;
 
             _authenticationStateManager = authenticationStateManager;
@@ -67,7 +64,7 @@ namespace Super.Paula.Client.Communication
         {
             if (_hubConnection.State == HubConnectionState.Disconnected)
             {
-                if ((await _accountHandler.QueryAuthorizationsAsync()).Values.Any())
+                if (_appAuthentication.Authorizations.Any())
                 {
                     await _hubConnection.StartAsync();
                 }

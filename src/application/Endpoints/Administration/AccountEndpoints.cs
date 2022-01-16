@@ -25,7 +25,7 @@ namespace Super.Paula.Application.Administration
 
             endpoints.MapQueries(
                 "/account",
-                ("/query-authorizations", QueryAuthorizations));
+                ("/authorizations", GetAuthorizations));
 
             return endpoints;
         }
@@ -52,9 +52,9 @@ namespace Super.Paula.Application.Administration
             (IAccountHandler handler, ChangeSecretRequest request)
             => handler.ChangeSecretAsync(request);
 
-        private static Delegate QueryAuthorizations =>
+        private static Delegate GetAuthorizations =>
             (IAccountHandler handler)
-                => handler.QueryAuthorizationsAsync();
+                => handler.GetAuthorizations();
 
         private static Delegate StartImpersonation =>
             [Authorize("Maintainer")]

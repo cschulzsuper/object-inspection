@@ -1,6 +1,8 @@
-﻿using Microsoft.OpenApi.Models;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Super.Paula.Swagger
 {
@@ -8,7 +10,7 @@ namespace Super.Paula.Swagger
     {
         public void Apply(OpenApiOperation operation, OperationFilterContext context)
         {
-#if false
+#if true
             var hasAuthorization = context.ApiDescription.ActionDescriptor.EndpointMetadata.Any(x => x is AuthorizeAttribute);
 
             if(!hasAuthorization)

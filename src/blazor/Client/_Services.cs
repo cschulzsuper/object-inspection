@@ -86,7 +86,6 @@ namespace Super.Paula.Client
             services.AddScoped<IAccountHandler>(provider =>
                 new AccountHandler(
                     provider.GetRequiredService<AccountHandlerBase>(),
-                    provider.GetRequiredService<AppAuthentication>(),
                     provider.GetRequiredService<AuthenticationStateManager>()));
 
             services.AddScoped<INotificationHandler>(provider => 

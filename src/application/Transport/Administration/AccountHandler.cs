@@ -86,8 +86,10 @@ namespace Super.Paula.Application.Administration
             return ValueTask.FromResult(token.ToBase64String());
         }
 
-        public ValueTask<QueryAuthorizationsResponse> QueryAuthorizationsAsync()
+        public async IAsyncEnumerable<AccountAuthorizationResponse> GetAuthorizations()
         {
+            await Task.CompletedTask;
+
             var token = new Token
             {
                 Inspector = _appAuthentication.Inspector,
@@ -99,10 +101,13 @@ namespace Super.Paula.Application.Administration
 
             _tokenAuthorizatioFilter.Apply(token);
 
-            return ValueTask.FromResult(new QueryAuthorizationsResponse
+            foreach (var authorization in token.Authorizations)
             {
-                Values = token.Authorizations.ToHashSet()
-            });
+                yield return new AccountAuthorizationResponse
+                {
+                    Value = authorization
+                };
+            }
         }
 
         public async ValueTask RegisterIdentityAsync(RegisterIdentityRequest request)
