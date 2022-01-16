@@ -8,16 +8,18 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <Compile Remove="Authentication\**" />
+	  <EmbeddedResource Remove="Authentication\**" />
+	  <None Remove="Authentication\**" />
+	</ItemGroup>
+
+	<ItemGroup>
 	  <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="6.0.1" />
 	</ItemGroup>
 
 	<ItemGroup>
 	  <ProjectReference Include="..\Environment\Environment.csproj" />
 	  <ProjectReference Include="..\Transport.Contract\Transport.Contract.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="Authentication\" />
 	</ItemGroup>
 
 </Project>

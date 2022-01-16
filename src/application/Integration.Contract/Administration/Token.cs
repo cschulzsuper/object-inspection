@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System;
+using System.Text.Json.Serialization;
 
 namespace Super.Paula.Application
 {
@@ -10,5 +11,7 @@ namespace Super.Paula.Application
 
         public string? ImpersonatorOrganization { get; set; }
         public string? ImpersonatorInspector { get; set; }
+
+        public string[] Authorizations { get; set; } = Array.Empty<string>();
     }
 }

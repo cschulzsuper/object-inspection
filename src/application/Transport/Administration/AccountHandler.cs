@@ -20,6 +20,7 @@ namespace Super.Paula.Application.Administration
         private readonly IPasswordHasher<Identity> _passwordHasher;
         private readonly AppSettings _appSettings;
         private readonly AppAuthentication _appAuthentication;
+        private readonly ITokenAuthorizationFilter _tokenAuthorizatioFilter;
 
         public AccountHandler(
             IInspectorManager inspectorManager,
@@ -28,7 +29,8 @@ namespace Super.Paula.Application.Administration
             IConnectionManager connectionManager,
             IPasswordHasher<Identity> passwordHasher,
             AppSettings appSettings,
-            AppAuthentication appAuthentication)
+            AppAuthentication appAuthentication,
+            ITokenAuthorizationFilter tokenAuthorizatioFilter)
         {
             _inspectorManager = inspectorManager;
             _identityManager = identityManager;
@@ -37,6 +39,7 @@ namespace Super.Paula.Application.Administration
             _passwordHasher = passwordHasher;
             _appSettings = appSettings;
             _appAuthentication = appAuthentication;
+            _tokenAuthorizatioFilter = tokenAuthorizatioFilter;
         }
 
         public async ValueTask ChangeSecretAsync(ChangeSecretRequest request)
@@ -69,7 +72,7 @@ namespace Super.Paula.Application.Administration
                     x.UniqueName == request.UniqueName &&
                     x.Organization == request.Organization);
 
-            var bearer = new Token
+            var token = new Token
             {
                 Inspector = request.UniqueName,
                 Organization = request.Organization,
@@ -78,41 +81,27 @@ namespace Super.Paula.Application.Administration
                 ImpersonatorOrganization = _appAuthentication.Organization
             };
 
-            return ValueTask.FromResult(bearer.ToBase64String());
+            _tokenAuthorizatioFilter.Apply(token);
+
+            return ValueTask.FromResult(token.ToBase64String());
         }
 
         public ValueTask<QueryAuthorizationsResponse> QueryAuthorizationsAsync()
         {
-            var authorizationValues = new HashSet<string>();
-
-            if (!string.IsNullOrWhiteSpace(_appAuthentication.Organization))
+            var token = new Token
             {
-                var organization = _organizationManager.GetQueryable()
-                    .Single(x => x.UniqueName == _appAuthentication.Organization);
+                Inspector = _appAuthentication.Inspector,
+                Organization = _appAuthentication.Organization,
+                Proof = _appAuthentication.Proof,
+                ImpersonatorInspector = _appAuthentication.ImpersonatorInspector,
+                ImpersonatorOrganization = _appAuthentication.ImpersonatorOrganization
+            };
 
-                authorizationValues.Add("Inspector");
-
-                if (organization.ChiefInspector == _appAuthentication.Inspector)
-                {
-                    authorizationValues.Add("ChiefInspector");
-                }
-
-                if (_appSettings.Maintainer == _appAuthentication.Inspector &&
-                    _appSettings.MaintainerOrganization == _appAuthentication.Organization)
-                {
-                    authorizationValues.Add("Maintainer");
-                }
-
-                if (!string.IsNullOrWhiteSpace(_appAuthentication.ImpersonatorOrganization) &&
-                    !string.IsNullOrWhiteSpace(_appAuthentication.ImpersonatorInspector))
-                {
-                    authorizationValues.Add("Impersonator");
-                }
-            }
+            _tokenAuthorizatioFilter.Apply(token);
 
             return ValueTask.FromResult(new QueryAuthorizationsResponse
             {
-                Values = authorizationValues
+                Values = token.Authorizations.ToHashSet()
             });
         }
 
@@ -204,14 +193,16 @@ namespace Super.Paula.Application.Administration
                 request.UniqueName,
                 connectionProof);
 
-            var bearer = new Token
+            var token = new Token
             {
                 Inspector = inspector.UniqueName,
                 Organization = inspector.Organization,
                 Proof = connectionProof
             };
 
-            return bearer.ToBase64String();
+            _tokenAuthorizatioFilter.Apply(token);
+
+            return token.ToBase64String();
         }
 
         public async ValueTask SignOutInspectorAsync()
@@ -237,14 +228,16 @@ namespace Super.Paula.Application.Administration
                     x.UniqueName == _appAuthentication.ImpersonatorInspector &&
                     x.Organization == _appAuthentication.ImpersonatorOrganization);
 
-            var bearer = new Token
+            var token = new Token
             {
                 Inspector = inspector.UniqueName,
                 Organization = inspector.Organization,
                 Proof = _appAuthentication.Proof
             };
 
-            return ValueTask.FromResult(bearer.ToBase64String());
+            _tokenAuthorizatioFilter.Apply(token);
+
+            return ValueTask.FromResult(token.ToBase64String());
         }
 
         public async ValueTask RepairChiefInspectorAsync(RepairChiefInspectorRequest request)

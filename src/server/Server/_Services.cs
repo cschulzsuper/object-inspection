@@ -22,6 +22,7 @@ namespace Super.Paula
                 .AddPaulaServerData(isDevelopment)
                 .AddPaulaServerRuntimeData()
                 .AddPaulaServerManagement()
+                .AddPaulaServerIntegration()
                 .AddPaulaServerSignalR()
                 .AddPaulaServerTransport()
                 .AddPaulaServerAuthentication()

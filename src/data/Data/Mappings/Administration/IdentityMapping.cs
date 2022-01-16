@@ -36,7 +36,6 @@ namespace Super.Paula.Data.Mappings.Administration
                 .Property(x => x.Secret)
                 .HasMaxLength(140)
                 .IsRequired();
-
         }
     }
 }

@@ -16,6 +16,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\application\Authorization\Authorization.csproj" />
     <ProjectReference Include="..\..\application\Environment\Environment.csproj" />
+    <ProjectReference Include="..\..\application\Integration.Contract\Integration.Contract.csproj" />
     <ProjectReference Include="..\..\application\Shared\Shared.csproj" />
     <ProjectReference Include="..\..\application\Transport.Contract\Transport.Contract.csproj" />
   </ItemGroup>

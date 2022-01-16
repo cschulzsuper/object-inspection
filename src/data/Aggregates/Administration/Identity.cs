@@ -1,4 +1,6 @@
-﻿namespace Super.Paula.Application.Administration
+﻿using System.Collections.Generic;
+
+namespace Super.Paula.Application.Administration
 {
     public class Identity
     {

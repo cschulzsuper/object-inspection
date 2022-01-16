@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Environment\Environment.csproj" />
+    <ProjectReference Include="..\Integration.Contract\Integration.Contract.csproj" />
     <ProjectReference Include="..\Management.Contract\Management.Contract.csproj" />
     <ProjectReference Include="..\SignalR.Contract\SignalR.Contract.csproj" />
     <ProjectReference Include="..\Transport.Contract\Transport.Contract.csproj" />
