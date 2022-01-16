@@ -58,12 +58,7 @@ namespace Super.Paula.Client.Administration
         {
             var response = await _accountHandler.SignInInspectorAsync(request);
 
-            _appAuthentication.Token = response;
-            await _authenticationStateManager.PersistAuthenticationStateAsync(notify: false);
-
-            _appAuthentication.Authorizations = (await _accountHandler.QueryAuthorizationsAsync()).Values.ToArray();
-            _appAuthentication.AuthorizationsFilter = Array.Empty<string>();
-            await _authenticationStateManager.PersistAuthenticationStateAsync();
+            await _authenticationStateManager.PersistAuthenticationStateAsync(response);
 
             return response;
         }
@@ -71,24 +66,14 @@ namespace Super.Paula.Client.Administration
         public async ValueTask SignOutInspectorAsync()
         {
             await _accountHandler.SignOutInspectorAsync();
-
-            _appAuthentication.Token = string.Empty;
-            _appAuthentication.Authorizations = Array.Empty<string>();
-            _appAuthentication.AuthorizationsFilter = Array.Empty<string>();
-
-            await _authenticationStateManager.PersistAuthenticationStateAsync();
+            await _authenticationStateManager.PersistAuthenticationStateAsync(string.Empty);
         }
 
         public async ValueTask<string> StartImpersonationAsync(StartImpersonationRequest request)
         {
             var response = await _accountHandler.StartImpersonationAsync(request);
 
-            _appAuthentication.Token = response;
-            await _authenticationStateManager.PersistAuthenticationStateAsync(notify: false);
-
-            _appAuthentication.Authorizations = (await _accountHandler.QueryAuthorizationsAsync()).Values.ToArray();
-            _appAuthentication.AuthorizationsFilter = Array.Empty<string>();
-            await _authenticationStateManager.PersistAuthenticationStateAsync();
+            await _authenticationStateManager.PersistAuthenticationStateAsync(response);
 
             return response;
         }
@@ -97,31 +82,12 @@ namespace Super.Paula.Client.Administration
         {
             var response = await _accountHandler.StopImpersonationAsync();
 
-            _appAuthentication.Token = response;
-            await _authenticationStateManager.PersistAuthenticationStateAsync(notify: false);
-
-            _appAuthentication.Authorizations = (await _accountHandler.QueryAuthorizationsAsync()).Values.ToArray();
-            _appAuthentication.AuthorizationsFilter = Array.Empty<string>();
-            await _authenticationStateManager.PersistAuthenticationStateAsync();
+            await _authenticationStateManager.PersistAuthenticationStateAsync(response);
 
             return response;
         }
 
         public async ValueTask VerifyAsync()
-        {
-            try
-            {
-                await _accountHandler.VerifyAsync();
-            }
-            catch
-            {
-                _appAuthentication.Ticks = DateTime.Now.Ticks;
-                _appAuthentication.Token = string.Empty;
-                _appAuthentication.Organization = string.Empty;
-                _appAuthentication.Inspector = string.Empty;
-                _appAuthentication.Authorizations = Array.Empty<string>();
-                _appAuthentication.AuthorizationsFilter = Array.Empty<string>();
-            }
-        }
+            => await _accountHandler.VerifyAsync();        
     }
 }

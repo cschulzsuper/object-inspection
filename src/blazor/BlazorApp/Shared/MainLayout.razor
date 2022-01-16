@@ -3,7 +3,6 @@
 @inject IAccountHandler AccountHandler
 @inject NavigationManager NavigationManager   
 @inject AppEnvironment AppEnvironment
-@inject AppAuthentication AppAuthentication
 @inject AuthenticationStateManager AuthenticationStateManager
 
 <div class="page">
@@ -98,7 +97,6 @@
             .Where(x => !string.IsNullOrWhiteSpace(x))
             .ToArray();
 
-        AppAuthentication.AuthorizationsFilter = authorizationFilter;  
-        await AuthenticationStateManager.PersistAuthenticationStateAsync();
+        await AuthenticationStateManager.FilterAuthorizationAsync(authorizationFilter);
     }
 }

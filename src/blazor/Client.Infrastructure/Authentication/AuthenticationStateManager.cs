@@ -26,19 +26,28 @@ namespace Super.Paula.Client.Authentication
             _accountHandler = accountHandler;
         }
 
-        public async Task PersistAuthenticationStateAsync(bool notify = true)
+        public async Task PersistAuthenticationStateAsync(string encodedToken)
         {
-            var token = _appAuthentication.Token.ToToken();
+            var token = encodedToken.ToToken();
 
+            _appAuthentication.Token = encodedToken;
             _appAuthentication.Ticks = DateTime.Now.Ticks;
             _appAuthentication.Organization = token?.Organization ?? string.Empty;
             _appAuthentication.Inspector = token?.Inspector ?? string.Empty;
+            _appAuthentication.Authorizations = token?.Authorizations ?? Array.Empty<string>();
 
             await _localStorage.SetItemAsync("app-authentication", _appAuthentication);
-            if (notify)
-            {
-                NotifyAuthenticationStateChanged(CreateAuthenticationStateAsync());
-            }
+
+            NotifyAuthenticationStateChanged(CreateAuthenticationStateAsync());
+        }
+
+        public async Task FilterAuthorizationAsync(string[] authorizationFilter)
+        {
+            _appAuthentication.AuthorizationsFilter = authorizationFilter;
+
+            await _localStorage.SetItemAsync("app-authentication", _appAuthentication);
+
+            NotifyAuthenticationStateChanged(CreateAuthenticationStateAsync());
         }
 
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
@@ -56,7 +65,21 @@ namespace Super.Paula.Client.Authentication
                 _appAuthentication.Authorizations = appAuthentication.Authorizations;
                 _appAuthentication.AuthorizationsFilter = appAuthentication.AuthorizationsFilter;
 
-                await _accountHandler.Value.VerifyAsync();
+                try
+                {
+                    await _accountHandler.Value.VerifyAsync();
+                }
+                catch
+                {
+                    _appAuthentication.Ticks = DateTime.Now.Ticks;
+                    _appAuthentication.Token = string.Empty;
+                    _appAuthentication.Organization = string.Empty;
+                    _appAuthentication.Inspector = string.Empty;
+                    _appAuthentication.Authorizations = Array.Empty<string>();
+                    _appAuthentication.AuthorizationsFilter = Array.Empty<string>();
+
+                    await _localStorage.SetItemAsync("app-authentication", _appAuthentication);
+                }
             }
 
             return await CreateAuthenticationStateAsync();
