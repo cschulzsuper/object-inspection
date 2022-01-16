@@ -10,12 +10,12 @@ using Super.Paula.Environment;
 
 namespace Super.Paula.Data.Steps
 {
-    public class InspectionSchedule : IStep
+    public class AuditAdjustment : IStep
     {
         private readonly PaulaContext _paulaContext;
         private readonly AppSettings _appSettings;
 
-        public InspectionSchedule(
+        public AuditAdjustment(
             PaulaContext paulaContext,
             AppSettings appSettings)
         {
@@ -41,33 +41,13 @@ namespace Super.Paula.Data.Steps
                     {
                         var needsUpdate = false;
 
-                        // ReSharper disable once ConditionIsAlwaysTrueOrFalse
-                        if (inspection.AuditSchedules == null || !inspection.AuditSchedules.Any())
+                        foreach (var auditSchedules in inspection.AuditSchedules)
                         {
-                            var eightHours = TimeSpan.FromHours(8).Milliseconds;
-
-                            inspection.AuditSchedules = new HashSet<BusinessObjectInspectionAuditSchedule>();
-
-                            if (inspection.AuditDelayThreshold == default)
+                            if (auditSchedules.Adjustments == null ||
+                                !auditSchedules.Adjustments.Any())
                             {
-                                inspection.AuditDelayThreshold = eightHours;
+                                auditSchedules.Adjustments = new HashSet<BusinessObjectInspectionAuditScheduleAdjustment>();
                             }
-
-                            if (inspection.AuditThreshold == default)
-                            {
-                                inspection.AuditThreshold = eightHours;
-                            }
-
-                            needsUpdate = true;
-                        }
-
-                        if (inspection.AssignmentDate == default)
-                        {
-                            var (date, time) = new DateTime(2021, 9, 1, 0, 0, 0, DateTimeKind.Utc)
-                                .ToNumbers();
-
-                            inspection.AssignmentDate = date;
-                            inspection.AssignmentTime = time;
 
                             needsUpdate = true;
                         }

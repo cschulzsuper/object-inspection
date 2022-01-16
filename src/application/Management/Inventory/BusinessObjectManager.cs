@@ -130,6 +130,15 @@ namespace Super.Paula.Application.Inventory
                     {
                         yield return BusinessObjectInspectionAuditScheduleValidator.CronExpressionIsNotNull(auditSchedule.CronExpression);
                         yield return BusinessObjectInspectionAuditScheduleValidator.CronExpressionIsCronExpression(auditSchedule.CronExpression);
+                        yield return BusinessObjectInspectionAuditScheduleValidator.AdjustmentsUnique(auditSchedule.Adjustments);
+
+                        foreach (var adjustment in auditSchedule.Adjustments)
+                        {
+                            yield return BusinessObjectInspectionAuditScheduleAdjustmentValidator.PostponedAuditDateIsPositive(adjustment.PostponedAuditDate);
+                            yield return BusinessObjectInspectionAuditScheduleAdjustmentValidator.PostponedAuditTimeIsInDayTimeRange(adjustment.PostponedAuditTime);
+                            yield return BusinessObjectInspectionAuditScheduleAdjustmentValidator.PlannedAuditDateIsPositive(adjustment.PlannedAuditDate);
+                            yield return BusinessObjectInspectionAuditScheduleAdjustmentValidator.PlannedAuditTimeIsInDayTimeRange(adjustment.PlannedAuditTime);
+                        }
                     }
                 }
             }
