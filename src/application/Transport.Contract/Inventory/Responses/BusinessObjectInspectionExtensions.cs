@@ -38,15 +38,32 @@ namespace Super.Paula.Application.Inventory.Responses
         private static BusinessObjectInspectionResponse ScheduleAudit(BusinessObjectInspectionResponse response, BusinessObjectInspection inspection)
         {
             var auditSchedule = inspection.AuditSchedules
-                .FirstOrDefault()?.CronExpression;
+                .FirstOrDefault();
 
-            if (!string.IsNullOrWhiteSpace(auditSchedule))
+            var cronExpression = auditSchedule?.CronExpression;
+
+            if (!string.IsNullOrWhiteSpace(cronExpression))
             {
-                var schedule = CronExpression.Parse(auditSchedule);
+                var schedule = CronExpression.Parse(cronExpression);
                 SchedulePlannedAudit(response, schedule, inspection);
+                PostponePlannedAudit(response, auditSchedule!);
             }
 
             return response;
+        }
+
+        private static void PostponePlannedAudit(BusinessObjectInspectionResponse response, BusinessObjectInspectionAuditSchedule auditSchedule)
+        {
+            var adjustment = auditSchedule.Adjustments?
+                .SingleOrDefault(x =>
+                    x.PostponedAuditDate == response.PlannedAuditDate &&
+                    x.PostponedAuditTime == response.PlannedAuditTime);
+
+            if (adjustment != null)
+            {
+                response.PlannedAuditDate = adjustment.PlannedAuditDate;
+                response.PlannedAuditTime = adjustment.PlannedAuditTime;
+            }
         }
 
         private static void SchedulePlannedAudit(BusinessObjectInspectionResponse response, CronExpression schedule, BusinessObjectInspection inspection)
