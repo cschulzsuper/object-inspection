@@ -22,15 +22,15 @@ else
         <div class="container mt-2 mt-md-3">
             <div class="form-group">
                 <label>@Translator["Audit schedule"]</label>
-                <InputText class="form-control" id="AuditSchedule" @bind-Value="_request.AuditSchedule"/>
+                <InputText class="form-control" id="Schedule" @bind-Value="_request.Schedule"/>
             </div>
             <div class="form-group">
-                <label>@Translator["Audit delay threshold"] (@TimeSpan.FromMilliseconds(_request.AuditDelayThreshold).ToString("c"))</label>
-                <InputMilliseconds class="form-control" id="AuditDelayThreshold" @bind-Value="_request.AuditDelayThreshold" step="1"/>
+                <label>@Translator["Audit delay threshold"] (@TimeSpan.FromMilliseconds(_request.DelayThreshold).ToString("c"))</label>
+                <InputMilliseconds class="form-control" id="DelayThreshold" @bind-Value="_request.DelayThreshold" step="1"/>
             </div>
             <div class="form-group">
-                <label>@Translator["Upcoming audit threshold"] (@TimeSpan.FromMilliseconds(_request.AuditThreshold).ToString("c"))</label>
-                <InputMilliseconds class="form-control" id="AuditThreshold"  @bind-Value="_request.AuditThreshold" step="1"/>
+                <label>@Translator["Upcoming audit threshold"] (@TimeSpan.FromMilliseconds(_request.Threshold).ToString("c"))</label>
+                <InputMilliseconds class="form-control" id="Threshold"  @bind-Value="_request.Threshold" step="1"/>
             </div>
         </div>
 
@@ -60,7 +60,7 @@ else
     [Parameter]
     public string Inspection { get; set; } = string.Empty;
 
-    private ScheduleInspectionRequest? _request = null;
+    private ScheduleInspectionAuditRequest? _request = null;
 
     protected override async Task OnInitializedAsync()
     {
@@ -73,18 +73,18 @@ else
         {
             var auditSchedule = responseInspection.AuditSchedules.FirstOrDefault();
 
-            _request = new ScheduleInspectionRequest
+            _request = new ScheduleInspectionAuditRequest
             {
-                AuditThreshold = responseInspection.AuditThreshold,
-                AuditDelayThreshold = responseInspection.AuditDelayThreshold,
-                AuditSchedule = auditSchedule?.CronExpression ?? string.Empty
+                Threshold = responseInspection.AuditThreshold,
+                DelayThreshold = responseInspection.AuditDelayThreshold,
+                Schedule = auditSchedule?.CronExpression ?? string.Empty
             };
         }
     }
 
     private async Task OnValidSubmitAsync()
     {
-        await BusinessObjectHandler.ScheduleInspectionAsync(BusinessObject, Inspection, _request!);
+        await BusinessObjectHandler.ScheduleInspectionAuditAsync(BusinessObject, Inspection, _request!);
         NavigationManager.NavigateTo($"/business-objects/{BusinessObject}/inspections");
     }
 }

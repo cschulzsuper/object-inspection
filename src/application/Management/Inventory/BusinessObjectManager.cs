@@ -128,17 +128,18 @@ namespace Super.Paula.Application.Inventory
 
                     foreach (var auditSchedule in inspection.AuditSchedules)
                     {
-                        yield return BusinessObjectInspectionAuditScheduleValidator.CronExpressionIsNotNull(auditSchedule.CronExpression);
+                        yield return BusinessObjectInspectionAuditScheduleValidator.CronExpressionIsNotEmpty(auditSchedule.CronExpression);
                         yield return BusinessObjectInspectionAuditScheduleValidator.CronExpressionIsCronExpression(auditSchedule.CronExpression);
-                        yield return BusinessObjectInspectionAuditScheduleValidator.AdjustmentsUnique(auditSchedule.Adjustments);
+                    }
 
-                        foreach (var adjustment in auditSchedule.Adjustments)
-                        {
-                            yield return BusinessObjectInspectionAuditScheduleAdjustmentValidator.PostponedAuditDateIsPositive(adjustment.PostponedAuditDate);
-                            yield return BusinessObjectInspectionAuditScheduleAdjustmentValidator.PostponedAuditTimeIsInDayTimeRange(adjustment.PostponedAuditTime);
-                            yield return BusinessObjectInspectionAuditScheduleAdjustmentValidator.PlannedAuditDateIsPositive(adjustment.PlannedAuditDate);
-                            yield return BusinessObjectInspectionAuditScheduleAdjustmentValidator.PlannedAuditTimeIsInDayTimeRange(adjustment.PlannedAuditTime);
-                        }
+                    yield return BusinessObjectInspectionValidator.AuditScheduleAdjustmentsUnique(inspection.AuditScheduleAdjustments);
+
+                    foreach (var auditScheduleAdjustments in inspection.AuditScheduleAdjustments)
+                    {
+                        yield return BusinessObjectInspectionAuditScheduleAdjustmentValidator.PostponedAuditDateIsPositive(auditScheduleAdjustments.PostponedAuditDate);
+                        yield return BusinessObjectInspectionAuditScheduleAdjustmentValidator.PostponedAuditTimeIsInDayTimeRange(auditScheduleAdjustments.PostponedAuditTime);
+                        yield return BusinessObjectInspectionAuditScheduleAdjustmentValidator.PlannedAuditDateIsPositive(auditScheduleAdjustments.PlannedAuditDate);
+                        yield return BusinessObjectInspectionAuditScheduleAdjustmentValidator.PlannedAuditTimeIsInDayTimeRange(auditScheduleAdjustments.PlannedAuditTime);
                     }
                 }
             }
@@ -184,8 +185,18 @@ namespace Super.Paula.Application.Inventory
 
                     foreach (var auditSchedule in inspection.AuditSchedules)
                     {
-                        yield return BusinessObjectInspectionAuditScheduleValidator.CronExpressionIsNotNull(auditSchedule.CronExpression);
+                        yield return BusinessObjectInspectionAuditScheduleValidator.CronExpressionIsNotEmpty(auditSchedule.CronExpression);
                         yield return BusinessObjectInspectionAuditScheduleValidator.CronExpressionIsCronExpression(auditSchedule.CronExpression);
+                    }
+
+                    yield return BusinessObjectInspectionValidator.AuditScheduleAdjustmentsUnique(inspection.AuditScheduleAdjustments);
+
+                    foreach (var auditScheduleAdjustments in inspection.AuditScheduleAdjustments)
+                    {
+                        yield return BusinessObjectInspectionAuditScheduleAdjustmentValidator.PostponedAuditDateIsPositive(auditScheduleAdjustments.PostponedAuditDate);
+                        yield return BusinessObjectInspectionAuditScheduleAdjustmentValidator.PostponedAuditTimeIsInDayTimeRange(auditScheduleAdjustments.PostponedAuditTime);
+                        yield return BusinessObjectInspectionAuditScheduleAdjustmentValidator.PlannedAuditDateIsPositive(auditScheduleAdjustments.PlannedAuditDate);
+                        yield return BusinessObjectInspectionAuditScheduleAdjustmentValidator.PlannedAuditTimeIsInDayTimeRange(auditScheduleAdjustments.PlannedAuditTime);
                     }
                 }
             }

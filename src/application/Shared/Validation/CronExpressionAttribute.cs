@@ -4,9 +4,6 @@ namespace Super.Paula.Validation
 {
     public class CronExpressionAttribute : ValidationAttribute
     {
-
-        public bool AllowEmptyStrings = false;
-
         public override bool IsValid(object? value)
         {
             if (value == null)
@@ -14,7 +11,7 @@ namespace Super.Paula.Validation
                 return true;
             }
 
-            if (AllowEmptyStrings && value is "")
+            if (value as string == string.Empty)
             {
                 return true;
             }

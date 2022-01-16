@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Super.Paula.Validation;
 
 namespace Super.Paula.Application.Inventory
@@ -84,5 +86,9 @@ namespace Super.Paula.Application.Inventory
         public static (bool, Func<(string, FormattableString)>) AuditThresholdIsInDayTimeRange(int auditThreshold)
             => (MillisecondsValidator.IsValid(auditThreshold),
                 () => (nameof(auditThreshold), $"Audit threshold '{auditThreshold}' of inspection must be positive and less than 86400000"));
+
+        internal static (bool, Func<(string, FormattableString)>) AuditScheduleAdjustmentsUnique(IEnumerable<BusinessObjectInspectionAuditScheduleAdjustment> auditScheduleAdjustments)
+            => (!auditScheduleAdjustments.GroupBy(x => (x.PostponedAuditDate, x.PostponedAuditTime)).Any(x => x.Count() > 1),
+                () => (nameof(auditScheduleAdjustments), $"Audit schedule adjustment duplicates are not allowed"));
     }
 }

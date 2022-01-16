@@ -15,6 +15,8 @@ namespace Super.Paula.Application.Inventory
         public int AssignmentDate { get; set; }
 
         public ISet<BusinessObjectInspectionAuditSchedule> AuditSchedules { get; set; } = new HashSet<BusinessObjectInspectionAuditSchedule>();
+        public ISet<BusinessObjectInspectionAuditScheduleAdjustment> AuditScheduleAdjustments { get; set; } = new HashSet<BusinessObjectInspectionAuditScheduleAdjustment>();
+
         public int AuditDelayThreshold { get; set; }
         public int AuditThreshold { get; set; }
 

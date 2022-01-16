@@ -106,22 +106,28 @@ namespace Super.Paula.Application.Inventory
             await _businessObjectManager.DeleteAsync(entity);
         }
 
-        public async ValueTask ScheduleInspectionAsync(string businessObject, string inspection, ScheduleInspectionRequest request)
+        public async ValueTask ScheduleInspectionAuditAsync(string businessObject, string inspection, ScheduleInspectionAuditRequest request)
         {
             var entity = await _businessObjectManager.GetAsync(businessObject);
 
             var businessObjectInspection = entity.Inspections
                 .Single(x => x.UniqueName == inspection);
 
-            businessObjectInspection.AuditDelayThreshold = request.AuditDelayThreshold;
-            businessObjectInspection.AuditThreshold = request.AuditThreshold;
-            businessObjectInspection.AuditSchedules = new HashSet<BusinessObjectInspectionAuditSchedule>
+            businessObjectInspection.AuditDelayThreshold = request.DelayThreshold;
+            businessObjectInspection.AuditThreshold = request.Threshold;
+
+            businessObjectInspection.AuditSchedules.Clear();
+            businessObjectInspection.AuditScheduleAdjustments.Clear();
+
+            if (!string.IsNullOrWhiteSpace(request.Schedule))
             {
-                new BusinessObjectInspectionAuditSchedule
+                var auditSchedule = new BusinessObjectInspectionAuditSchedule
                 {
-                    CronExpression = request.AuditSchedule,
-                }
-            };
+                    CronExpression = request.Schedule
+                };
+
+                businessObjectInspection.AuditSchedules.Add(auditSchedule);
+            } 
 
             await _businessObjectManager.UpdateAsync(entity);
         }
@@ -328,6 +334,40 @@ namespace Super.Paula.Application.Inventory
             };
 
             await _eventBus.PublishAsync(EventCategories.BusinessObjectInspectionAudit, businessObject.UniqueName, @event);
+        }
+
+        public async ValueTask PostponeInspectionAuditAsync(string businessObject, string inspection, PostponeInspectionAuditRequest request)
+        {
+            var entity = await _businessObjectManager.GetAsync(businessObject);
+
+            var businessObjectInspection = entity.Inspections
+                .Single(x => x.UniqueName == inspection);
+
+            var auditScheduleAdjustment = businessObjectInspection.AuditScheduleAdjustments
+                .SingleOrDefault(x => 
+                    x.PostponedAuditDate == request.PostponedAuditDate &&
+                    x.PostponedAuditTime == request.PostponedAuditTime);
+
+            if (auditScheduleAdjustment != null)
+            {
+                businessObjectInspection.AuditScheduleAdjustments.Remove(auditScheduleAdjustment);
+            }
+
+            if (request.PostponedAuditDate != request.PlannedAuditDate ||
+                request.PostponedAuditTime != request.PlannedAuditTime)
+            {
+                auditScheduleAdjustment = new BusinessObjectInspectionAuditScheduleAdjustment
+                {
+                    PlannedAuditDate = request.PlannedAuditDate,
+                    PlannedAuditTime = request.PlannedAuditTime,
+                    PostponedAuditDate = request.PostponedAuditDate,
+                    PostponedAuditTime = request.PostponedAuditTime
+                };
+
+                businessObjectInspection.AuditScheduleAdjustments.Add(auditScheduleAdjustment);
+            }
+
+            await _businessObjectManager.UpdateAsync(entity);
         }
     }
 }

@@ -41,9 +41,9 @@ namespace Super.Paula.Client.Inventory
             responseMessage.EnsureSuccessStatusCode();
         }
 
-        public async ValueTask ScheduleInspectionAsync(string businessObject, string inspection, ScheduleInspectionRequest request)
+        public async ValueTask ScheduleInspectionAuditAsync(string businessObject, string inspection, ScheduleInspectionAuditRequest request)
         {
-            var responseMessage = await _httpClient.PostAsJsonAsync($"business-objects/{businessObject}/schedule-inspection/{inspection}", request);
+            var responseMessage = await _httpClient.PostAsJsonAsync($"business-objects/{businessObject}/schedule-inspection-audit/{inspection}", request);
 
             responseMessage.RuleOutProblems();
             responseMessage.EnsureSuccessStatusCode();
@@ -178,6 +178,14 @@ namespace Super.Paula.Client.Inventory
             {
                 yield return responseItem!;
             }
+        }
+
+        public async ValueTask PostponeInspectionAuditAsync(string businessObject, string inspection, PostponeInspectionAuditRequest request)
+        {
+            var responseMessage = await _httpClient.PostAsJsonAsync($"business-objects/{businessObject}/postpone-inspection-audit/{inspection}", request);
+
+            responseMessage.RuleOutProblems();
+            responseMessage.EnsureSuccessStatusCode();
         }
     }
 }
