@@ -6,7 +6,7 @@
 
 @attribute [Authorize("ChiefInspector")]
 
-<div class="container mt-2 mt-md-3">
+<div class="container-fluid">
     <h1>@Translator["Schedule inspection"]</h1>
 </div>
 
@@ -19,7 +19,7 @@ else
     <EditForm Model="@_request" OnValidSubmit="@OnValidSubmitAsync">
         <DataAnnotationsValidator />
 
-        <div class="container mt-2 mt-md-3">
+        <div class="container-fluid">
             <div class="form-group">
                 <label>@Translator["Audit schedule"]</label>
                 <InputText class="form-control" id="Schedule" @bind-Value="_request.Schedule"/>
@@ -36,7 +36,7 @@ else
 
         @if(context.GetValidationMessages().Any())
         {
-            <div class="container mt-2 mt-md-3">
+            <div class="container-fluid">
                 <div class="card card-body tex-wrap">
                     <ValidationSummary />    
                 </div>
@@ -44,7 +44,7 @@ else
         } 
         else 
         {
-            <div class="container mt-2 mt-md-3">
+            <div class="container-fluid">
                 <button type="submit" class="btn btn-primary">@Translator["Submit"]</button>
             </div>
         }

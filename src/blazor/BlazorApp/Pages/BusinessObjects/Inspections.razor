@@ -8,13 +8,13 @@
 
 @attribute [Authorize("Inspector")]
 
-<div class="container mt-2 mt-md-3">
+<div class="container-fluid">
     <h1>@Translator["Inspections"]</h1>
 </div>
 
 <AuthorizeView Policy="ChiefInspector">
     <Authorized>
-        <div class="container mt-2 mt-md-3">
+        <div class="container-fluid m-2">
             <button class="btn @(_mode == Mode.AssignmentMode ? "btn-primary" : "btn-outline-primary")"
                     @onclick="ToggleAssignmentMode"><span class="oi oi-list"/></button>
 
@@ -27,9 +27,7 @@
     </Authorized>
 </AuthorizeView>
 
-<div class="container mt-2 mt-md-3 
-            ml-n4      mr-n4      w-auto 
-            ml-sm-auto mr-sm-auto w-sm-100">
+<div class="container-fluid">
 
 @if (RelevantInspections == null)
 {
@@ -37,7 +35,7 @@
 }
 else
 {
-    <table class="table">
+    <table class="table table-sm">
         <thead>
             <tr>
                 <th class="col-2 d-none d-lg-table-cell">@Translator["Unique name"]</th>

@@ -7,73 +7,73 @@
 
 @attribute [Authorize("Maintainer")]
 
-<div class="container mt-2 mt-md-3">
+<div class="container-fluid">
     <h1>@Translator["Organizations"]</h1>
 </div>
 
-<div class="container mt-2 mt-md-3">
-    <button class="btn btn-primary" 
-        @onclick="() => Create()">@Translator["Create"]</button>
+<div class="container-fluid m-2">
+    <button class="btn btn-primary"
+            @onclick="Create"><span class="oi oi-plus"/></button>
 </div>
 
-<div class="container mt-2 mt-md-3">
+<div class="container-fluid">
 @if (_organizations == null)
 {
     <p><em>Loading...</em></p>
 }
 else
 {
-    <table class="table">
-        <thead class="b">
+    <table class="table table-sm">
+        <thead>
             <tr>
-                <th>@Translator["Display name"]</th>
-                <th>@Translator["Unique name"]</th>
-                <th>@Translator["Chief inspector"]</th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
+                <th class="col-2">@Translator["Unique name"]</th>
+                <th class="col-3">@Translator["Display name"]</th>
+                <th class="col-3">@Translator["Chief inspector"]</th>
+                <th class="col-1"></th>
+                <th class="col-1"></th>
+                <th class="col-1"></th>
+                <th class="col-1"></th>
             </tr>
         </thead>
         <tbody>
             @foreach (var organization in _organizations.Values)
             {
                 <tr>
-                    <td>@organization.DisplayName</td>
-                    <td>@organization.UniqueName</td>
-                    <td>@organization.ChiefInspector</td>
+                    <td class="col-2">@organization.UniqueName</td>
+                    <td class="col-3">@organization.DisplayName</td>
+                    <td class="col-3">@organization.ChiefInspector</td>
                     @if(organization.Activated) {
-                        <td>
+                        <td class="col-1">
                             @if (organization.UniqueName != AppAuthentication.Organization)
                             {
-                                <button class="btn btn-primary btn-block" 
-                                    @onclick="() => DeactivateAsync(organization.UniqueName)">@Translator["Deactivate"]</button>
+                                <button class="btn btn-success btn-block" 
+                                    @onclick="() => DeactivateAsync(organization.UniqueName)"><span class="oi oi-power-standby"/></button>
                             }
                         </td>
                     } else {
-                        <td>
+                        <td class="col-1">
                             @if (organization.UniqueName != AppAuthentication.Organization)
                             {
 
-                                <button class="btn btn-outline-primary btn-block" 
-                                    @onclick="() => ActivateAsync(organization.UniqueName)">@Translator["Activate"]</button>
+                                <button class="btn btn-outline-danger btn-block" 
+                                    @onclick="() => ActivateAsync(organization.UniqueName)"><span class="oi oi-power-standby"/></button>
                             }
                         </td>
                     }
-                    <td>
+                    <td class="col-1">
                         <button class="btn btn-outline-info btn-block" 
-                            @onclick="() => Edit(organization.UniqueName)">@Translator["Edit"]</button>
+                            @onclick="() => Edit(organization.UniqueName)"><span class="oi oi-pencil"/></button>
                     </td>
-                    <td>
+                    <td class="col-1">
                         @if (organization.UniqueName != AppAuthentication.Organization)
                         {
                             <button class="btn btn-outline-danger btn-block" 
-                                @onclick="() => DeleteAsync(organization.UniqueName)">@Translator["Delete"]</button>
+                                @onclick="() => DeleteAsync(organization.UniqueName)"><span class="oi oi-trash"/></button>
                         }
                     </td>
-                    <td>
+                    <td class="col-1">
                         <button class="btn btn-outline-danger btn-block" 
-                            @onclick="() => NavigateToInspectors(organization.UniqueName)">@Translator["Inspectors"]</button>
+                            @onclick="() => NavigateToInspectors(organization.UniqueName)"><span class="oi oi-person"/></button>
                     </td>
                     
                 </tr>

@@ -9,11 +9,11 @@
 
 @attribute [Authorize("Inspector")]
 
-<div class="container mt-2 mt-md-3">
+<div class="container-fluid">
     <h1>@Translator["Notification"]</h1>
 </div>
 
-<div class="container mt-2 mt-md-3">
+<div class="container-fluid">
 @if (_notifications == null)
 {
     <p><em>Loading...</em></p>
@@ -27,7 +27,7 @@ else
                 <h6 class="card-subtitle text-muted mb-1">@((notification.Date, notification.Time).ToLocalTimeString())</h6>
                 <p class="card-text tex-wrap">@notification.Text</p>
                 <button class="btn btn-primary"
-                    @onclick="() => RemoveAsync(notification)">Remove</button>
+                    @onclick="() => RemoveAsync(notification)"><span class="oi oi-trash"/></button>
             </div>
         </div>
     }

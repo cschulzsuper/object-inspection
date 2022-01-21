@@ -6,16 +6,16 @@
 
 @attribute [Authorize("ChiefInspector")]
 
-<div class="container mt-2 mt-md-3">
+<div class="container-fluid">
     <h1>@Translator["Inspections"]</h1>
 </div>
 
-<div class="container mt-2 mt-md-3">
+<div class="container-fluid m-2">
     <button class="btn btn-primary"
-        @onclick="() => Create()">@Translator["Create"]</button>
+            @onclick="Create"><span class="oi oi-plus"/></button>
 </div>
 
-<div class="container mt-2 mt-md-3">
+<div class="container-fluid">
 
 @if (_inspections == null)
 {
@@ -23,7 +23,7 @@
 }
 else
 {
-    <table class="table">
+    <table class="table table-sm">
         <thead>
             <tr>
                 <th>@Translator["Unique name"]</th>
@@ -52,22 +52,22 @@ else
                     
                     @if(inspection.Activated) {
                         <td class="col-1">
-                            <button class="btn btn-primary btn-block" 
-                                @onclick="() => DeactivateAsync(inspection.UniqueName)">@Translator["Deactivate"]</button>
+                            <button class="btn btn-success btn-block" 
+                                @onclick="() => DeactivateAsync(inspection.UniqueName)"><span class="oi oi-power-standby"/></button>
                         </td>
                     } else {
                         <td class="col-1">
-                            <button class="btn btn-outline-primary btn-block" 
-                                @onclick="() => ActivateAsync(inspection.UniqueName)">@Translator["Activate"]</button>
+                            <button class="btn btn-outline-danger btn-block" 
+                                @onclick="() => ActivateAsync(inspection.UniqueName)"><span class="oi oi-power-standby"/></button>
                         </td>
                     }
                     <td class="col-1">
                         <button class="btn btn-outline-info btn-block" 
-                            @onclick="() => Edit(inspection.UniqueName)">@Translator["Edit"]</button>
+                            @onclick="() => Edit(inspection.UniqueName)"><span class="oi oi-pencil"/></button>
                     </td>
                     <td class="col-1">
                         <button class="btn btn-outline-danger btn-block" 
-                            @onclick="() => DeleteAsync(inspection.UniqueName)">@Translator["Delete"]</button>
+                            @onclick="() => DeleteAsync(inspection.UniqueName)"><span class="oi oi-trash"/></button>
                     </td>
                     
                 </tr>

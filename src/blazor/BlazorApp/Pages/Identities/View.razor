@@ -6,16 +6,16 @@
 
 @attribute [Authorize("Maintainer")]
 
-<div class="container mt-2 mt-md-3">
+<div class="container-fluid">
     <h1>@Translator["Identities"]</h1>
 </div>
 
-<div class="container mt-2 mt-md-3">
+<div class="container-fluid m-2">
     <button class="btn btn-primary"
-        @onclick="() => Create()">@Translator["Create"]</button>
+            @onclick="Create"><span class="oi oi-plus"/></button>
 </div>
 
-<div class="container mt-2 mt-md-3">
+<div class="container-fluid">
 
 @if (_identities == null)
 {
@@ -23,7 +23,7 @@
 }
 else
 {
-    <table class="table">
+    <table class="table table-">
         <thead>
             <tr>
                 <th>@Translator["Unique name"]</th>
@@ -40,16 +40,16 @@ else
                     <td class="col-4">@identity.UniqueName</td>
                     <td class="col-5">@identity.MailAddress</td>
                     <td class="col-1">
-                        <button class="btn btn-outline-primary btn-block" 
-                            @onclick="() => ResetAsync(identity.UniqueName)">@Translator["Reset"]</button>
+                        <button class="btn btn-outline-warning btn-block" 
+                            @onclick="() => ResetAsync(identity.UniqueName)"><span class="oi oi-action-undo"/></button>
                     </td>
                     <td class="col-1">
                         <button class="btn btn-outline-info btn-block" 
-                            @onclick="() => Edit(identity.UniqueName)">@Translator["Edit"]</button>
+                            @onclick="() => Edit(identity.UniqueName)"><span class="oi oi-pencil"/></button>
                     </td>
                     <td class="col-1">
                         <button class="btn btn-outline-danger btn-block" 
-                            @onclick="() => DeleteAsync(identity.UniqueName)">@Translator["Delete"]</button>
+                            @onclick="() => DeleteAsync(identity.UniqueName)"><span class="oi oi-trash"/></button>
                     </td>
                     
                 </tr>

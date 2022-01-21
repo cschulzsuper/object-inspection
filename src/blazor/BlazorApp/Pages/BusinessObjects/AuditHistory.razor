@@ -6,11 +6,11 @@
 
 @attribute [Authorize("ChiefInspector")]
 
-<div class="container mt-2 mt-md-3">
+<div class="container-fluid">
     <h1>@Translator["Inspection audits"]</h1>
 </div>
 
-<div class="container d-lg-flex mt-2 mt-md-3 align-items-center">
+<div class="container-fluid d-flex align-items-center m-2">
     <div class="custom-control custom-switch mr-4">
         <input type="checkbox" class="custom-control-input" checked="@_showSatisfying" id="showSatisfying" @onchange="ShowSatisfyingChanged">
         <label class="custom-control-label" for="showSatisfying">@Translator["Show satisfying"]</label>
@@ -38,7 +38,7 @@
     </div>
 </div> 
 
-<div class="container mt-2 mt-md-3">
+<div class="container-fluid">
 
 @if (InspectionAudits == null)
 {
@@ -76,13 +76,13 @@ else
                     @switch(inspectionAudit.Result) 
                     {
                         case "satisfying":
-                            <button class="btn btn-success btn-block" disabled>@Translator["Satisfying"]</button>
+                            <button class="btn btn-success btn-block" disabled><span class="oi oi-star"/></button>
                              break;
                         case "insufficient": 
-                            <button class="btn btn-warning btn-block" disabled>@Translator["Insufficient"]</button>
+                            <button class="btn btn-warning btn-block" disabled><span class="oi oi-warning"/></button>
                             break;
                         case "failed": 
-                            <button class="btn btn-danger btn-block" disabled>@Translator["Failed"]</button>
+                            <button class="btn btn-danger btn-block" disabled><span class="oi oi-x"/></button>
                             break;
                     } 
                     </td>                   

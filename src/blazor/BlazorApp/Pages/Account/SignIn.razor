@@ -4,14 +4,14 @@
 @inject IAccountHandler AccountHandler
 @inject NavigationManager NavigationManager
 
-<div class="container mt-2 mt-md-3">
+<div class="container-fluid">
     <h1>@Translator["Sign in"]</h1>
 </div>
 
 <EditForm Model="@request" OnValidSubmit="@OnValidSubmitAsync">
     <DataAnnotationsValidator />
 
-    <div class="container mt-2 mt-md-3">
+    <div class="container-fluid">
         <div class="form-group">
             <label>@Translator["Organization"]</label>
             <InputText class="form-control" id="uniqueName" @bind-Value="request.Organization" />
@@ -28,7 +28,7 @@
 
     @if(context.GetValidationMessages().Any())
     {
-        <div class="container mt-2 mt-md-3">
+        <div class="container-fluid">
             <div class="card card-body tex-wrap">
                 <ValidationSummary />    
             </div>
@@ -36,7 +36,7 @@
     } 
     else 
     {
-        <div class="container mt-2 mt-md-3">
+        <div class="container-fluid">
             <button type="submit" class="btn btn-primary">@Translator["Submit"]</button>
         </div>
     }

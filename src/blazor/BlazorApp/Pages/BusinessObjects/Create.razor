@@ -6,14 +6,14 @@
 
 @attribute [Authorize("ChiefInspector")]
 
-<div class="container mt-2 mt-md-3">
+<div class="container-fluid">
     <h1>@Translator["Create business object"]</h1>
 </div>
 
 <EditForm Model="@_request" OnValidSubmit="@OnValidSubmitAsync">
     <DataAnnotationsValidator />
 
-    <div class="container mt-2 mt-md-3">
+    <div class="container-fluid">
         <div class="form-group">
             <label>@Translator["Display name"]</label>
             <InputText class="form-control" id="displayName" @bind-Value="_request.DisplayName" />
@@ -30,7 +30,7 @@
 
     @if(context.GetValidationMessages().Any())
     {
-        <div class="container mt-2 mt-md-3">
+        <div class="container-fluid">
             <div class="card card-body tex-wrap">
                 <ValidationSummary />    
             </div>
@@ -38,7 +38,7 @@
     } 
     else 
     {
-        <div class="container mt-2 mt-md-3">
+        <div class="container-fluid">
             <button type="submit" class="btn btn-primary">@Translator["Submit"]</button>
         </div>
     }

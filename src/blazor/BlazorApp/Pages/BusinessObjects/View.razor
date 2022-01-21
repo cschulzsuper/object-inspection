@@ -6,13 +6,13 @@
 
 @attribute [Authorize("ChiefInspector")]
 
-<div class="container mt-2 mt-md-3">
+<div class="container-fluid">
     <h1>@Translator["Business objects"]</h1>
 </div>
 
-<div class="container d-lg-flex mt-2 mt-md-3 align-items-center">
+<div class="container-fluid d-flex align-items-center m-2">
     <button class="btn btn-primary mr-4"
-        @onclick="() => Create()">@Translator["Create"]</button>
+            @onclick="Create"><span class="oi oi-plus"/></button>
     <div class="custom-control custom-switch mr-4">
         <input type="checkbox" class="custom-control-input" checked="@_onlyUnassigned" id="onlyUnassigned" @onchange="OnlyUnassignedChanged">
         <label class="custom-control-label" for="onlyUnassigned">@Translator["Unassigned"]</label>
@@ -34,7 +34,7 @@
     </div>
 </div>  
 
-<div class="container mt-2 mt-md-3">
+<div class="container-fluid">
 
 @if (RelevantBusinessObjects == null)
 {
@@ -42,7 +42,7 @@
 }
 else
 {
-    <table class="table">
+    <table class="table table-sm">
         <thead>
             <tr>
                 <th>@Translator["Unique name"]</th>
@@ -63,19 +63,19 @@ else
                     <td class="col-2">@businessObject.Inspector</td>
                     <td class="col-1">
                         <button class="btn btn-outline-info btn-block" 
-                            @onclick="() => Edit(businessObject.UniqueName)">@Translator["Edit"]</button>
+                            @onclick="() => Edit(businessObject.UniqueName)"><span class="oi oi-pencil"/></button>
                     </td>
                     <td class="col-1">
                         <button class="btn btn-outline-danger btn-block" 
-                            @onclick="() => DeleteAsync(businessObject.UniqueName)">@Translator["Delete"]</button>
+                            @onclick="() => DeleteAsync(businessObject.UniqueName)"><span class="oi oi-trash"/></button>
                     </td>
                     <td class="col-1">
-                        <button class="btn btn-outline-danger btn-block" 
-                            @onclick="() => NavigateToInspections(businessObject.UniqueName)">@Translator["Inspections"]</button>
+                        <button class="btn btn-outline-info btn-block" 
+                            @onclick="() => NavigateToInspections(businessObject.UniqueName)"><span class="oi oi-list"/></button>
                     </td>
                     <td class="col-1">
-                        <button class="btn btn-outline-danger btn-block" 
-                            @onclick="() => NavigateToInspectionAuditHistory(businessObject.UniqueName)">@Translator["Audit history"]</button>
+                        <button class="btn btn-outline-info btn-block" 
+                            @onclick="() => NavigateToInspectionAuditHistory(businessObject.UniqueName)"><span class="oi oi-clipboard"/></button>
                     </td>
                 </tr>
             }

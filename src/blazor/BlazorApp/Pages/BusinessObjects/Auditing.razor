@@ -7,11 +7,11 @@
 
 @attribute [Authorize("Inspector")]
 
-<div class="container mt-2 mt-md-3">
+<div class="container-fluid">
     <h1>@Translator["Business objects"]</h1>
 </div>
 
-<div class="container mt-2 mt-md-3">
+<div class="container-fluid">
 
 @if (_businessObjects == null)
 {
@@ -19,12 +19,12 @@
 }
 else
 {
-    <table class="table">
+    <table class="table table-sm">
         <thead>
             <tr>
-                <th>@Translator["Unique name"]</th>
-                <th>@Translator["Display name"]</th>
-                <th></th>
+                <th class="col-4">@Translator["Unique name"]</th>
+                <th class="col-7">@Translator["Display name"]</th>
+                <th class="col-1"></th>
             </tr>
         </thead>
         <tbody>
@@ -32,10 +32,10 @@ else
             {
                 <tr>
                     <td class="col-4">@businessObject.UniqueName</td>
-                    <td class="col-6">@businessObject.DisplayName</td>
-                    <td class="col-2">
-                        <button class="btn btn-outline-danger btn-block" 
-                            @onclick="() => NavigateToInspectionAudit(businessObject.UniqueName)">@Translator["Audit"]</button>
+                    <td class="col-7">@businessObject.DisplayName</td>
+                    <td class="col-1">
+                        <button class="btn btn-outline-primary btn-block" 
+                            @onclick="() => NavigateToInspectionAudit(businessObject.UniqueName)"><span class="oi oi-media-play"/></button>
                     </td>
                 </tr>
             }
