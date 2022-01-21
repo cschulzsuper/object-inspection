@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Cronos;
 
@@ -53,49 +54,73 @@ namespace Super.Paula.Application.Inventory.Responses
 
         private static void SchedulePlannedAudit(BusinessObjectInspectionResponse response, CronExpression schedule, BusinessObjectInspection inspection)
         {
-            var plannedAuditOrigin = inspection.AuditDate != default
+            var plannedAuditOriginNumbers = inspection.AuditDate != default
                 ? (inspection.AuditDate, inspection.AuditTime)
                 : (inspection.AssignmentDate, inspection.AssignmentTime);
 
-            var plannedAuditThreshold = inspection.AuditThreshold;
-            var plannedAuditOriginTimestamp = plannedAuditOrigin
-                .ToDateTime()
-                .AddMilliseconds(plannedAuditThreshold);
+            var plannedAuditOriginTimestamp = plannedAuditOriginNumbers.ToDateTime();
 
-            while(true) {
+            while (true)
+            {
+                var plannedAuditTimestamp = GetNextOccurrence(schedule, inspection, plannedAuditOriginNumbers);
 
-                var plannedAuditTimestamp = schedule.GetNextOccurrence(plannedAuditOriginTimestamp, inclusive: false);
-                var (plannedAuditDate, plannedAuditTime) = plannedAuditTimestamp?.ToNumbers()
-                                           ?? (default, default);
+                var plannedAuditTimestampBegin = plannedAuditTimestamp
+                    .AddMilliseconds(-inspection.AuditThreshold);
 
-                response.PlannedAuditDate = plannedAuditDate;
-                response.PlannedAuditTime = plannedAuditTime;
+                var plannedAuditTimestampEnd = plannedAuditTimestamp
+                    .AddMilliseconds(inspection.AuditThreshold);
 
-                var adjustment = inspection.AuditScheduleAdjustments?
-                    .SingleOrDefault(x =>
-                        x.PostponedAuditDate == response.PlannedAuditDate &&
-                        x.PostponedAuditTime == response.PlannedAuditTime);
-
-                if (adjustment?.PlannedAuditDate == default(int) &&
-                    adjustment?.PlannedAuditTime == default(int) &&
-                    plannedAuditTimestamp != null)
+                if (plannedAuditOriginTimestamp < plannedAuditTimestampBegin ||
+                    plannedAuditOriginTimestamp > plannedAuditTimestampEnd)
                 {
-                    plannedAuditOriginTimestamp = plannedAuditTimestamp.Value;
-                    continue;
+                    (response.PlannedAuditDate, response.PlannedAuditTime) = plannedAuditTimestamp.ToNumbers();
+                    break;
                 }
 
-                if (adjustment is not null &&
-                    adjustment.PlannedAuditDate != default &&
-                    adjustment.PlannedAuditTime != default)
-                {
-                    // TODO: This is not accurat we need to check if the next occurence is less than the postponed occurence.
-
-                    adjustment.PostponedAuditDate = default;
-                    adjustment.PostponedAuditTime = default;
-                }
-
-                break;
+                plannedAuditOriginNumbers = plannedAuditTimestamp.ToNumbers();
             }
+        }
+
+        private static DateTime GetNextOccurrence(CronExpression schedule, BusinessObjectInspection inspection, (int Date, int Time) plannedAuditOriginNumbers)
+        {
+            var plannedAuditOriginTimestamp = plannedAuditOriginNumbers.ToDateTime();
+
+            var plannedAuditTimestamp = schedule.GetNextOccurrence(plannedAuditOriginTimestamp, inclusive: false)
+                ?? plannedAuditOriginTimestamp;
+
+            while (plannedAuditTimestamp != plannedAuditOriginTimestamp) 
+            {
+                var plannedAuditNumbers = plannedAuditTimestamp.ToNumbers();
+
+                var ignorePlannedAudit = inspection.AuditScheduleDrops
+                    .Any(x =>
+                        x.PlannedAuditDate == plannedAuditNumbers.day &&
+                        x.PlannedAuditTime == plannedAuditNumbers.milliseconds);
+
+                if(!ignorePlannedAudit)
+                {
+                    break;
+                }
+
+                plannedAuditTimestamp = schedule.GetNextOccurrence(plannedAuditTimestamp, inclusive: false) ?? plannedAuditOriginTimestamp;
+            }
+
+            var plannedAuditAdjusment = inspection.AuditScheduleSupplements
+                .OrderBy(x => x.PlannedAuditDate)
+                .ThenBy(x => x.PlannedAuditTime)
+                .FirstOrDefault(x =>
+                    x.PlannedAuditDate > plannedAuditOriginNumbers.Date &&
+                    x.PlannedAuditTime > plannedAuditOriginNumbers.Time);
+
+            if (plannedAuditAdjusment != null) {
+                var plannedAuditAdjusmentTimestamp = (plannedAuditAdjusment.PlannedAuditDate, plannedAuditAdjusment.PlannedAuditTime).ToDateTime();
+                if (plannedAuditAdjusmentTimestamp < plannedAuditTimestamp)
+                {
+                    return plannedAuditAdjusmentTimestamp;
+                }
+            }
+
+            return plannedAuditTimestamp;
         }
     }
 }

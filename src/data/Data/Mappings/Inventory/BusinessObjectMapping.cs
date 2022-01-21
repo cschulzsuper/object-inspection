@@ -111,6 +111,28 @@ namespace Super.Paula.Data.Mappings.Inventory
                 .HasMaxLength(140)
                 .IsRequired();
 
+            var auditScheduleDropsBuilder = inspectionsBuilder
+                .OwnsMany(x => x.AuditScheduleDrops);
+
+            auditScheduleDropsBuilder
+                .Property(x => x.PlannedAuditDate)
+                .IsRequired();
+
+            auditScheduleDropsBuilder
+                .Property(x => x.PlannedAuditTime)
+                .IsRequired();
+
+            var auditScheduleDropsSupplements = inspectionsBuilder
+                .OwnsMany(x => x.AuditScheduleSupplements);
+
+            auditScheduleDropsSupplements
+                .Property(x => x.PlannedAuditDate)
+                .IsRequired();
+
+            auditScheduleDropsSupplements
+                .Property(x => x.PlannedAuditTime)
+                .IsRequired();
+
         }
     }
 }

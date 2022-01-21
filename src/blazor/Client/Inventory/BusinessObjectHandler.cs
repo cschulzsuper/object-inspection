@@ -180,9 +180,9 @@ namespace Super.Paula.Client.Inventory
             }
         }
 
-        public async ValueTask PostponeInspectionAuditAsync(string businessObject, string inspection, PostponeInspectionAuditRequest request)
+        public async ValueTask DropInspectionAuditAsync(string businessObject, string inspection, DropInspectionAuditRequest request)
         {
-            var responseMessage = await _httpClient.PostAsJsonAsync($"business-objects/{businessObject}/postpone-inspection-audit/{inspection}", request);
+            var responseMessage = await _httpClient.PostAsJsonAsync($"business-objects/{businessObject}/drop-inspection-audit/{inspection}", request);
 
             responseMessage.RuleOutProblems();
             responseMessage.EnsureSuccessStatusCode();

@@ -117,7 +117,7 @@ namespace Super.Paula.Application.Inventory
             businessObjectInspection.AuditThreshold = request.Threshold;
 
             businessObjectInspection.AuditSchedules.Clear();
-            businessObjectInspection.AuditScheduleAdjustments.Clear();
+            businessObjectInspection.AuditScheduleDrops.Clear();
 
             if (!string.IsNullOrWhiteSpace(request.Schedule))
             {
@@ -336,36 +336,20 @@ namespace Super.Paula.Application.Inventory
             await _eventBus.PublishAsync(EventCategories.BusinessObjectInspectionAudit, businessObject.UniqueName, @event);
         }
 
-        public async ValueTask PostponeInspectionAuditAsync(string businessObject, string inspection, PostponeInspectionAuditRequest request)
+        public async ValueTask DropInspectionAuditAsync(string businessObject, string inspection, DropInspectionAuditRequest request)
         {
             var entity = await _businessObjectManager.GetAsync(businessObject);
 
             var businessObjectInspection = entity.Inspections
                 .Single(x => x.UniqueName == inspection);
 
-            var auditScheduleAdjustment = businessObjectInspection.AuditScheduleAdjustments
-                .SingleOrDefault(x => 
-                    x.PostponedAuditDate == request.PostponedAuditDate &&
-                    x.PostponedAuditTime == request.PostponedAuditTime);
-
-            if (auditScheduleAdjustment != null)
+            var auditScheduleDrop = new BusinessObjectInspectionAuditScheduleDrop
             {
-                businessObjectInspection.AuditScheduleAdjustments.Remove(auditScheduleAdjustment);
-            }
+                PlannedAuditDate = request.PlannedAuditDate,
+                PlannedAuditTime = request.PlannedAuditTime,
+            };
 
-            if (request.PostponedAuditDate != request.PlannedAuditDate ||
-                request.PostponedAuditTime != request.PlannedAuditTime)
-            {
-                auditScheduleAdjustment = new BusinessObjectInspectionAuditScheduleAdjustment
-                {
-                    PlannedAuditDate = request.PlannedAuditDate,
-                    PlannedAuditTime = request.PlannedAuditTime,
-                    PostponedAuditDate = request.PostponedAuditDate,
-                    PostponedAuditTime = request.PostponedAuditTime
-                };
-
-                businessObjectInspection.AuditScheduleAdjustments.Add(auditScheduleAdjustment);
-            }
+            businessObjectInspection.AuditScheduleDrops.Add(auditScheduleDrop);
 
             await _businessObjectManager.UpdateAsync(entity);
         }

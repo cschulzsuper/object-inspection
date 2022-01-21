@@ -20,7 +20,7 @@ namespace Super.Paula.Application.Inventory
         ValueTask AssignInspectionAsync(string businessObject, AssignInspectionRequest request);
         ValueTask CancelInspectionAsync(string businessObject, CancelInspectionRequest request);
         ValueTask ScheduleInspectionAuditAsync(string businessObject, string inspection, ScheduleInspectionAuditRequest request);
-        ValueTask PostponeInspectionAuditAsync(string businessObject, string inspection, PostponeInspectionAuditRequest request);
+        ValueTask DropInspectionAuditAsync(string businessObject, string inspection, DropInspectionAuditRequest request);
 
         ValueTask CreateInspectionAuditAsync(string businessObject, CreateInspectionAuditRequest request);
         ValueTask ChangeInspectionAuditAsync(string businessObject, string inspection, ChangeInspectionAuditRequest request);

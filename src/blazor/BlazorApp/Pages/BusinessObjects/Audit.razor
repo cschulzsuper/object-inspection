@@ -147,6 +147,17 @@ else
             inspection.PlannedAuditTime = default;
             inspection.AuditResult = request.Result;
         }
+
+        var response = await BusinessObjectHandler.GetAsync(BusinessObject);
+
+        var inspectionResponse = response.Inspections
+            .SingleOrDefault(x => x.UniqueName == inspection.UniqueName);
+
+        if (inspectionResponse != null)
+        {
+            inspection.PlannedAuditDate = inspectionResponse.PlannedAuditDate;
+            inspection.PlannedAuditTime = inspectionResponse.PlannedAuditTime;
+        }
     }
 
     private void NavigateToAnnotationAsync(BusinessObjectInspectionResponse inspection)

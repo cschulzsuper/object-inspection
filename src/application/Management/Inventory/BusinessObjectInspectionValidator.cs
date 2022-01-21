@@ -87,8 +87,12 @@ namespace Super.Paula.Application.Inventory
             => (MillisecondsValidator.IsValid(auditThreshold),
                 () => (nameof(auditThreshold), $"Audit threshold '{auditThreshold}' of inspection must be positive and less than 86400000"));
 
-        internal static (bool, Func<(string, FormattableString)>) AuditScheduleAdjustmentsUnique(IEnumerable<BusinessObjectInspectionAuditScheduleAdjustment> auditScheduleAdjustments)
-            => (!auditScheduleAdjustments.GroupBy(x => (x.PostponedAuditDate, x.PostponedAuditTime)).Any(x => x.Count() > 1),
-                () => (nameof(auditScheduleAdjustments), $"Audit schedule adjustment duplicates are not allowed"));
+        public static (bool, Func<(string, FormattableString)>) AuditScheduleDropsUnique(ICollection<BusinessObjectInspectionAuditScheduleDrop> auditScheduleDrops)
+            => (!auditScheduleDrops.GroupBy(x => (x.PlannedAuditDate, x.PlannedAuditTime)).Any(x => x.Count() > 1),
+                () => (nameof(auditScheduleDrops), $"Audit schedule drop duplicates are not allowed"));
+
+        public static (bool, Func<(string, FormattableString)>) AuditScheduleSupplementsUnique(ICollection<BusinessObjectInspectionAuditScheduleSupplement> auditScheduleSupplements)
+            => (!auditScheduleSupplements.GroupBy(x => (x.PlannedAuditDate, x.PlannedAuditTime)).Any(x => x.Count() > 1),
+                () => (nameof(auditScheduleSupplements), $"Audit schedule supplement duplicates are not allowed"));
     }
 }

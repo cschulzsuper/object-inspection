@@ -132,14 +132,20 @@ namespace Super.Paula.Application.Inventory
                         yield return BusinessObjectInspectionAuditScheduleValidator.CronExpressionIsCronExpression(auditSchedule.CronExpression);
                     }
 
-                    yield return BusinessObjectInspectionValidator.AuditScheduleAdjustmentsUnique(inspection.AuditScheduleAdjustments);
+                    yield return BusinessObjectInspectionValidator.AuditScheduleDropsUnique(inspection.AuditScheduleDrops);
 
-                    foreach (var auditScheduleAdjustments in inspection.AuditScheduleAdjustments)
+                    foreach (var auditScheduleDrops in inspection.AuditScheduleDrops)
                     {
-                        yield return BusinessObjectInspectionAuditScheduleAdjustmentValidator.PostponedAuditDateIsPositive(auditScheduleAdjustments.PostponedAuditDate);
-                        yield return BusinessObjectInspectionAuditScheduleAdjustmentValidator.PostponedAuditTimeIsInDayTimeRange(auditScheduleAdjustments.PostponedAuditTime);
-                        yield return BusinessObjectInspectionAuditScheduleAdjustmentValidator.PlannedAuditDateIsPositive(auditScheduleAdjustments.PlannedAuditDate);
-                        yield return BusinessObjectInspectionAuditScheduleAdjustmentValidator.PlannedAuditTimeIsInDayTimeRange(auditScheduleAdjustments.PlannedAuditTime);
+                        yield return BusinessObjectInspectionAuditScheduleDropValidator.PlannedAuditDateIsPositive(auditScheduleDrops.PlannedAuditDate);
+                        yield return BusinessObjectInspectionAuditScheduleDropValidator.PlannedAuditTimeIsInDayTimeRange(auditScheduleDrops.PlannedAuditTime);
+                    }
+
+                    yield return BusinessObjectInspectionValidator.AuditScheduleSupplementsUnique(inspection.AuditScheduleSupplements);
+
+                    foreach (var auditScheduleSupplements in inspection.AuditScheduleSupplements)
+                    {
+                        yield return BusinessObjectInspectionAuditScheduleDropValidator.PlannedAuditDateIsPositive(auditScheduleSupplements.PlannedAuditDate);
+                        yield return BusinessObjectInspectionAuditScheduleDropValidator.PlannedAuditTimeIsInDayTimeRange(auditScheduleSupplements.PlannedAuditTime);
                     }
                 }
             }
@@ -189,14 +195,20 @@ namespace Super.Paula.Application.Inventory
                         yield return BusinessObjectInspectionAuditScheduleValidator.CronExpressionIsCronExpression(auditSchedule.CronExpression);
                     }
 
-                    yield return BusinessObjectInspectionValidator.AuditScheduleAdjustmentsUnique(inspection.AuditScheduleAdjustments);
+                    yield return BusinessObjectInspectionValidator.AuditScheduleDropsUnique(inspection.AuditScheduleDrops);
 
-                    foreach (var auditScheduleAdjustments in inspection.AuditScheduleAdjustments)
+                    foreach (var auditScheduleDrops in inspection.AuditScheduleDrops)
                     {
-                        yield return BusinessObjectInspectionAuditScheduleAdjustmentValidator.PostponedAuditDateIsPositive(auditScheduleAdjustments.PostponedAuditDate);
-                        yield return BusinessObjectInspectionAuditScheduleAdjustmentValidator.PostponedAuditTimeIsInDayTimeRange(auditScheduleAdjustments.PostponedAuditTime);
-                        yield return BusinessObjectInspectionAuditScheduleAdjustmentValidator.PlannedAuditDateIsPositive(auditScheduleAdjustments.PlannedAuditDate);
-                        yield return BusinessObjectInspectionAuditScheduleAdjustmentValidator.PlannedAuditTimeIsInDayTimeRange(auditScheduleAdjustments.PlannedAuditTime);
+                        yield return BusinessObjectInspectionAuditScheduleDropValidator.PlannedAuditDateIsPositive(auditScheduleDrops.PlannedAuditDate);
+                        yield return BusinessObjectInspectionAuditScheduleDropValidator.PlannedAuditTimeIsInDayTimeRange(auditScheduleDrops.PlannedAuditTime);
+                    }
+
+                    yield return BusinessObjectInspectionValidator.AuditScheduleSupplementsUnique(inspection.AuditScheduleSupplements);
+
+                    foreach (var auditScheduleSupplements in inspection.AuditScheduleSupplements)
+                    {
+                        yield return BusinessObjectInspectionAuditScheduleDropValidator.PlannedAuditDateIsPositive(auditScheduleSupplements.PlannedAuditDate);
+                        yield return BusinessObjectInspectionAuditScheduleDropValidator.PlannedAuditTimeIsInDayTimeRange(auditScheduleSupplements.PlannedAuditTime);
                     }
                 }
             }

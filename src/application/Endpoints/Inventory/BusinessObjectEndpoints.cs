@@ -24,7 +24,7 @@ namespace Super.Paula.Application.Inventory
                 ("/assign-inspection", AssignInspection),
                 ("/cancel-inspection", CancelInspection),
                 ("/schedule-inspection-audit/{inspection}", ScheduleInspectionAudit),
-                ("/postpone-inspection-audit/{inspection}", PostponeInspectionAudit),
+                ("/drop-inspection-audit/{inspection}", DropInspectionAudit),
                 ("/create-inspection-audit", CreateInspectionAudit),
                 ("/change-inspection-audit/{inspection}", ChangeInspectionAudit),
                 ("/annotate-inspection-audit/{inspection}", AnnotateInspectionAudit));
@@ -80,10 +80,10 @@ namespace Super.Paula.Application.Inventory
             (IBusinessObjectHandler handler, string businessObject, string inspection, ScheduleInspectionAuditRequest request)
                 => handler.ScheduleInspectionAuditAsync(businessObject, inspection, request);
 
-        private static Delegate PostponeInspectionAudit =>
+        private static Delegate DropInspectionAudit =>
             [Authorize("ChiefInspector")]
-            (IBusinessObjectHandler handler, string businessObject, string inspection, PostponeInspectionAuditRequest request)
-            => handler.PostponeInspectionAuditAsync(businessObject, inspection, request);
+            (IBusinessObjectHandler handler, string businessObject, string inspection, DropInspectionAuditRequest request)
+            => handler.DropInspectionAuditAsync(businessObject, inspection, request);
 
         private static Delegate Search =>
             [Authorize("ChiefInspector")]

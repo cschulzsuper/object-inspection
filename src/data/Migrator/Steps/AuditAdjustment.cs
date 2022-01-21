@@ -41,13 +41,22 @@ namespace Super.Paula.Data.Steps
                     {
                         var needsUpdate = false;
 
-                        if (inspection.AuditScheduleAdjustments == null ||
-                            !inspection.AuditScheduleAdjustments.Any())
+                        if (inspection.AuditScheduleDrops == null ||
+                            !inspection.AuditScheduleDrops.Any())
                         {
-                            inspection.AuditScheduleAdjustments = new HashSet<BusinessObjectInspectionAuditScheduleAdjustment>();
+                            inspection.AuditScheduleDrops = new HashSet<BusinessObjectInspectionAuditScheduleDrop>();
 
                             needsUpdate = true;
-                        }                         
+                        }
+
+
+                        if (inspection.AuditScheduleSupplements == null ||
+                            !inspection.AuditScheduleSupplements.Any())
+                        {
+                            inspection.AuditScheduleSupplements = new HashSet<BusinessObjectInspectionAuditScheduleSupplement>();
+
+                            needsUpdate = true;
+                        }
 
                         if (needsUpdate)
                         {

@@ -228,15 +228,13 @@ else
 
     public async Task PostponeAsync(BusinessObjectInspectionResponse inspection)
     {
-        await BusinessObjectHandler.PostponeInspectionAuditAsync(
+        await BusinessObjectHandler.DropInspectionAuditAsync(
             BusinessObject!,
             inspection.UniqueName,
-            new PostponeInspectionAuditRequest
+            new DropInspectionAuditRequest
             {
-                PostponedAuditDate = inspection.PlannedAuditDate,
-                PostponedAuditTime = inspection.PlannedAuditTime,
-                PlannedAuditDate = default,
-                PlannedAuditTime = default                 
+                PlannedAuditDate = inspection.PlannedAuditDate,
+                PlannedAuditTime = inspection.PlannedAuditTime                 
             });
 
         var response = await BusinessObjectHandler.GetAsync(BusinessObject);
