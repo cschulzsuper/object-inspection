@@ -16,12 +16,15 @@
     <Authorized>
         <div class="container-fluid m-2">
             <button class="btn @(_mode == Mode.AssignmentMode ? "btn-primary" : "btn-outline-primary")"
+                    title="@Translator["Assigment mode"]"
                     @onclick="ToggleAssignmentMode"><span class="oi oi-list"/></button>
 
-            <button class="btn @(_mode == Mode.PostponeMode ? "btn-primary" : "btn-outline-primary")" checked="@(_mode == Mode.PostponeMode)" 
-                    @onclick="TogglePostponeMode"><span class="oi oi-media-skip-forward"/></button>
+            <button class="btn @(_mode == Mode.DropMode ? "btn-primary" : "btn-outline-primary")"
+                    title="@Translator["Drop mode"]"
+                    @onclick="ToggleDropMode"><span class="oi oi-media-skip-forward"/></button>
 
-            <button class="btn @(_mode == Mode.ScheduleMode ? "btn-primary" : "btn-outline-primary")" checked="@(_mode == Mode.ScheduleMode)" 
+            <button class="btn @(_mode == Mode.ScheduleMode ? "btn-primary" : "btn-outline-primary")" 
+                    title="@Translator["Schedule mode"]"
                     @onclick="ToggleScheduleMode"><span class="oi oi-clock"/></button>
         </div>
     </Authorized>
@@ -36,14 +39,14 @@
 else
 {
     <table class="table table-sm">
-        <thead>
+        <thead class="table-light table-borderless">
             <tr>
                 <th class="col-2 d-none d-lg-table-cell">@Translator["Unique name"]</th>
-                <th class="col-8">@Translator["Display name"]</th>
+                <th class="col-10">@Translator["Display name"]</th>
 
                 <AuthorizeView Policy="ChiefInspector">
                     <Authorized>
-                        <th class="col-1"></th>
+                        <th></th>
                     </Authorized>
                 </AuthorizeView>
 
@@ -53,38 +56,38 @@ else
             @foreach (var inspection in RelevantInspections)
             {
                 <tr>
-                    <td class="col-2 d-none d-lg-table-cell">@inspection.UniqueName</td>
-                    <td class="col-8">
+                    <td class="d-none d-lg-table-cell">@inspection.UniqueName</td>
+                    <td>
                         <BusinessObjectInspectionResponseToggle Inspection="inspection"/>
                     </td>
 
                     <AuthorizeView Policy="ChiefInspector">
                         <Authorized>
-                            <td class="col-1">
+                            <td>
                             @if (_mode == Mode.AssignmentMode)
                             {
                                 @if (_inspectionBusinessObjects!.ContainsKey(inspection.UniqueName))
                                 {
-                                    <button class="btn btn-primary w-auto"
+                                    <button class="btn btn-primary btn-block" title="@Translator["Unassign"]"
                                             @onclick="() => UnassignAsync(inspection)"><span class="oi oi-minus"/></button>
                                 }
                                 else
                                 {
-                                    <button class="btn btn-outline-primary w-auto" 
+                                    <button class="btn btn-outline-primary btn-block" title="@Translator["Assign"]"
                                             @onclick="() => AssignAsync(inspection)"><span class="oi oi-plus"/></button>
                                 }
                             }
 
                             @if (_mode == Mode.ScheduleMode)
                             {
-                                    <button class="btn btn-outline-primary btn-block w-auto"
+                                    <button class="btn btn-outline-primary btn-block" title="@Translator["Schedule"]"
                                             @onclick="() => Schedule(inspection)"><span class="oi oi-clock"/></button>
                             }
 
-                            @if (_mode == Mode.PostponeMode)
+                            @if (_mode == Mode.DropMode)
                             {
-                                    <button class="btn btn-outline-primary btn-block w-auto"
-                                            @onclick="() => PostponeAsync(inspection)"><span class="oi oi-media-skip-forward"></span></button>
+                                    <button class="btn btn-outline-primary btn-block" title="@Translator["Drop"]"
+                                            @onclick="() => DropAsync(inspection)"><span class="oi oi-media-skip-forward"></span></button>
                             }
 
                             </td>
@@ -105,7 +108,7 @@ else
     {
         AssignmentMode,
         ScheduleMode,
-        PostponeMode
+        DropMode
     }
 
     [Parameter]
@@ -187,11 +190,11 @@ else
         return Task.CompletedTask;
     }
 
-    public Task TogglePostponeMode()
+    public Task ToggleDropMode()
     {
-        _mode = _mode == Mode.PostponeMode
+        _mode = _mode == Mode.DropMode
             ? Mode.ScheduleMode
-            : Mode.PostponeMode;
+            : Mode.DropMode;
 
         return Task.CompletedTask;
     }
@@ -224,7 +227,7 @@ else
     public void Schedule(BusinessObjectInspectionResponse inspection)
         => NavigationManager.NavigateTo($"/business-objects/{BusinessObject}/inspections/{inspection.UniqueName}/schedule");
 
-    public async Task PostponeAsync(BusinessObjectInspectionResponse inspection)
+    public async Task DropAsync(BusinessObjectInspectionResponse inspection)
     {
         await BusinessObjectHandler.DropInspectionAuditAsync(
             BusinessObject!,

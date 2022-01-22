@@ -20,54 +20,44 @@
 else
 {
     <table class="table table-sm">
-        <thead>
+        <thead class="table-light table-borderless">
             <tr>
-                <th class="col-11">@Translator["Inspection"]</th>
-                <th class="col-1">@Translator["Result"]</th>
+                <th class="col-12">@Translator["Inspection"]</th>
+                <th colspan="2">@Translator["Result"]</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var inspection in _businessObject.Inspections.Where(x => x.Activated && x.ActivatedGlobally))
             {
                 <tr>
-                    <td class="col-11">
+                    <td>
                         <BusinessObjectInspectionResponseToggle Inspection="inspection"/>
                     </td>
-                    <td class="col-1">
-                        <div class="d-sm-inline-flex">
-                            @switch (inspection.AuditResult)
-                            {
-                                case "satisfying":
-                                    <button class="btn btn-success mr-sm-2 mb-2 mb-sm-0 w-auto"
-                                            @onclick="() => ToggleAsync(inspection)" title="@Translator["Satisfying"]">
-                                        <span class="oi oi-star"/>
-                                    </button>
-                                    break;
-                                case "insufficient":
-                                    <button class="btn btn-warning mr-sm-2 mb-2 mb-sm-0 w-auto"
-                                            @onclick="() => ToggleAsync(inspection)" title="@Translator["Insufficient"]">
-                                        <span class="oi oi-warning"/>
-                                    </button>
-                                    break;
-                                case "failed":
-                                    <button class="btn btn-danger mr-sm-2 mb-2 mb-sm-0 w-auto"
-                                            @onclick="() => ToggleAsync(inspection)" title="@Translator["Failed"]">
-                                        <span class="oi oi-x"/>
-                                    </button>
-                                    break;
-                                default:
-                                    <button class="btn btn-secondary mr-sm-2 mb-2 mb-sm-0 w-auto"
-                                            @onclick="() => ToggleAsync(inspection)" title="@Translator["Unset"]">
-                                        <span class="oi oi-ellipses"></span>
-                                    </button>
-                                    break;
-                            }
-                            <button class="btn btn-outline-primary btn-block w-auto"
-                                    @onclick="() => NavigateToAnnotationAsync(inspection)">
-                                <span class="oi oi-copywriting"/>
-                            </button>
-                        </div>
-                    </td>                   
+                    <td>
+                        @switch (inspection.AuditResult)
+                        {
+                            case "satisfying":
+                                <button class="btn btn-success btn-block" title="@Translator["Satisfying"]"
+                                        @onclick="() => ToggleAsync(inspection)"><span class="oi oi-star"/></button>
+                                break;
+                            case "insufficient":
+                                <button class="btn btn-warning btn-block" title="@Translator["Insufficient"]"
+                                        @onclick="() => ToggleAsync(inspection)"><span class="oi oi-warning"/></button>
+                                break;
+                            case "failed":
+                                <button class="btn btn-danger btn-block" title="@Translator["Failed"]"
+                                        @onclick="() => ToggleAsync(inspection)"><span class="oi oi-x"/></button>
+                                break;
+                            default:
+                                <button class="btn btn-secondary btn-block" title="@Translator["Unset"]"
+                                        @onclick="() => ToggleAsync(inspection)"><span class="oi oi-ellipses"></span></button>
+                                break;
+                        }
+                    </td> 
+                    <td>
+                        <button class="btn btn-outline-primary btn-block" title="@Translator["Annotate"]"
+                                @onclick="() => NavigateToAnnotationAsync(inspection)"><span class="oi oi-copywriting"/></button>
+                    </td>
                 </tr>
             }
         </tbody>

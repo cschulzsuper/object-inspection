@@ -26,7 +26,7 @@ else
             <div class="card-body">
                 <h6 class="card-subtitle text-muted mb-1">@((notification.Date, notification.Time).ToLocalTimeString())</h6>
                 <p class="card-text tex-wrap">@notification.Text</p>
-                <button class="btn btn-primary"
+                <button class="btn btn-primary" title="@Translator["Delete"]"
                     @onclick="() => RemoveAsync(notification)"><span class="oi oi-trash"/></button>
             </div>
         </div>

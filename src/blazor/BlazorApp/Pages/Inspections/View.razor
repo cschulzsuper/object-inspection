@@ -11,7 +11,7 @@
 </div>
 
 <div class="container-fluid m-2">
-    <button class="btn btn-primary"
+    <button class="btn btn-primary" title="@Translator["Create"]"
             @onclick="Create"><span class="oi oi-plus"/></button>
 </div>
 
@@ -24,10 +24,10 @@
 else
 {
     <table class="table table-sm">
-        <thead>
+        <thead class="table-light table-borderless">
             <tr>
-                <th>@Translator["Unique name"]</th>
-                <th>@Translator["Display name"]</th>
+                <th class="col-4 d-none d-lg-table-cell">@Translator["Unique name"]</th>
+                <th class="col-8">@Translator["Display name"]</th>
                 <th></th>
                 <th></th>
                 <th></th>
@@ -37,8 +37,8 @@ else
             @foreach (var inspection in _inspections.Values)
             {
                 <tr>
-                    <td class="col-2">@inspection.UniqueName</td>
-                    <td class="col-7">
+                    <td class="d-none d-lg-table-cell">@inspection.UniqueName</td>
+                    <td>
                         <button class="btn btn-outline-secondary btn-block text-left" 
                                 @onclick="() => ToggleTextVisibility(inspection.UniqueName)">@inspection.DisplayName</button>
 
@@ -51,25 +51,24 @@ else
                     </td>
                     
                     @if(inspection.Activated) {
-                        <td class="col-1">
-                            <button class="btn btn-success btn-block" 
+                        <td>
+                            <button class="btn btn-success btn-block" title="@Translator["Deactivate"]" 
                                 @onclick="() => DeactivateAsync(inspection.UniqueName)"><span class="oi oi-power-standby"/></button>
                         </td>
                     } else {
-                        <td class="col-1">
-                            <button class="btn btn-outline-danger btn-block" 
+                        <td>
+                            <button class="btn btn-outline-danger btn-block" title="@Translator["Activate"]"
                                 @onclick="() => ActivateAsync(inspection.UniqueName)"><span class="oi oi-power-standby"/></button>
                         </td>
                     }
-                    <td class="col-1">
-                        <button class="btn btn-outline-info btn-block" 
+                    <td>
+                        <button class="btn btn-outline-info btn-block"  title="@Translator["Edit"]"
                             @onclick="() => Edit(inspection.UniqueName)"><span class="oi oi-pencil"/></button>
                     </td>
-                    <td class="col-1">
-                        <button class="btn btn-outline-danger btn-block" 
+                    <td >
+                        <button class="btn btn-outline-danger btn-block"  title="@Translator["Delete"]"
                             @onclick="() => DeleteAsync(inspection.UniqueName)"><span class="oi oi-trash"/></button>
-                    </td>
-                    
+                    </td>             
                 </tr>
             }
         </tbody>

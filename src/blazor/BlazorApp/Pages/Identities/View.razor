@@ -11,7 +11,7 @@
 </div>
 
 <div class="container-fluid m-2">
-    <button class="btn btn-primary"
+    <button class="btn btn-primary" title="@Translator["Create"]"
             @onclick="Create"><span class="oi oi-plus"/></button>
 </div>
 
@@ -23,11 +23,11 @@
 }
 else
 {
-    <table class="table table-">
-        <thead>
+    <table class="table table-sm">
+        <thead class="table-light table-borderless">
             <tr>
-                <th>@Translator["Unique name"]</th>
-                <th>@Translator["Mail address"]</th>
+                <th class="col-6">@Translator["Unique name"]</th>
+                <th class="col-6">@Translator["Mail address"]</th>
                 <th></th>
                 <th></th>
                 <th></th>
@@ -37,18 +37,18 @@ else
             @foreach (var identity in _identities.Values)
             {
                 <tr>
-                    <td class="col-4">@identity.UniqueName</td>
-                    <td class="col-5">@identity.MailAddress</td>
-                    <td class="col-1">
-                        <button class="btn btn-outline-warning btn-block" 
+                    <td>@identity.UniqueName</td>
+                    <td>@identity.MailAddress</td>
+                    <td>
+                        <button class="btn btn-outline-warning btn-block" title="@Translator["Reset"]"
                             @onclick="() => ResetAsync(identity.UniqueName)"><span class="oi oi-action-undo"/></button>
                     </td>
-                    <td class="col-1">
-                        <button class="btn btn-outline-info btn-block" 
+                    <td>
+                        <button class="btn btn-outline-info btn-block" title="@Translator["Edit"]"
                             @onclick="() => Edit(identity.UniqueName)"><span class="oi oi-pencil"/></button>
                     </td>
-                    <td class="col-1">
-                        <button class="btn btn-outline-danger btn-block" 
+                    <td>
+                        <button class="btn btn-outline-danger btn-block" title="@Translator["Delete"]"
                             @onclick="() => DeleteAsync(identity.UniqueName)"><span class="oi oi-trash"/></button>
                     </td>
                     

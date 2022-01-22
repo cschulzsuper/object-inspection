@@ -4,6 +4,7 @@
 @inject NavigationManager NavigationManager   
 @inject AppEnvironment AppEnvironment
 @inject AuthenticationStateManager AuthenticationStateManager
+@inject ITranslator Translator
 
 <div class="page">
     <div class="sidebar text-nowrap">
@@ -13,9 +14,9 @@
         <div class="top-row px-4">
             <AuthorizeView Policy="Impersonator">
                 <Authorized>
-                    <button type="button" class="nav-link btn btn-secondary ml-3" @onclick="() => StopImpersonationAsync()">
-                        <span class="oi oi-power-standby" aria-hidden="true"></span>
-                    </button>
+                    <button type="button" class="nav-link btn btn-secondary ml-3" title="@Translator["Stop impersonation"]"
+                        @onclick="() => StopImpersonationAsync()">
+                        <span class="oi oi-power-standby" aria-hidden="true"/></button>
                 </Authorized>
             </AuthorizeView>
 
@@ -32,11 +33,12 @@
                     }
 
                     <NavLink class="nav-link" Match="NavLinkMatch.All" href="account/change-secret">
-                        <span class="oi oi-person" aria-hidden="true"></span> Change Password
-                    </NavLink>
-                    <button type="button" class="nav-link btn" @onclick="() => SignOutAsync()">
-                        <span class="oi oi-account-logout" aria-hidden="true"></span>
-                    </button>
+                        <span class="oi oi-person" aria-hidden="true"/>@Translator["Change Password"]</NavLink>
+
+                    <button type="button" class="nav-link btn" title="@Translator["Sign out"]"
+                            @onclick="() => SignOutAsync()">
+                        <span class="oi oi-account-logout" aria-hidden="true"/></button>
+
                 </Authorized>
             </AuthorizeView>
         </div>

@@ -16,7 +16,7 @@
 </div>
 
 <div class="container-fluid m-2">
-    <button class="btn btn-primary"
+    <button class="btn btn-primary" title="@Translator["Create"]" 
             @onclick="Create"><span class="oi oi-plus"/></button>
 </div>
 
@@ -29,19 +29,19 @@
 else
 {
     <table class="table table-sm">
-        <thead>
+        <thead class="table-light table-borderless">
             <tr>
-                <th class="col-4">@Translator["Unique name"]</th>
-                <th class="col-4">@Translator["Identity"]</th>
+                <th class="col-6">@Translator["Unique name"]</th>
+                <th class="col-6">@Translator["Identity"]</th>
                 @if (Organization == null)
                 {
-                    <th class="col-1"></th>
-                    <th class="col-1"></th>
-                    <th class="col-1"></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
                 }
                 <AuthorizeView Policy="Maintainer">
                     <Authorized>
-                        <th class="col-1"></th>
+                        <th></th>
                     </Authorized>
                 </AuthorizeView>
             </tr>
@@ -50,48 +50,48 @@ else
             @foreach (var inspector in _inspectors.Values)
             {
                 <tr>
-                    <td class="col-4">@inspector.UniqueName</td>
-                    <td class="col-4">@inspector.Identity</td>
+                    <td>@inspector.UniqueName</td>
+                    <td>@inspector.Identity</td>
                     @if(Organization == null)
                     {
                         @if(inspector.Activated)
                         {
-                            <td class="col-1">
+                            <td>
                                 @if (inspector.UniqueName != AppAuthentication.Inspector)
                                 {
-                                    <button class="btn btn-success btn-block" 
+                                    <button class="btn btn-success btn-block" title="@Translator["Deactivate"]" 
                                         @onclick="() => DeactivateAsync(inspector.UniqueName)"><span class="oi oi-power-standby"/></button>
                                 }
                             </td>
                         } else {
-                            <td class="col-1">
+                            <td>
                                 @if (inspector.UniqueName != AppAuthentication.Inspector)
                                 {
-                                    <button class="btn btn-outline-danger btn-block" 
+                                    <button class="btn btn-outline-danger btn-block" title="@Translator["Activate"]" 
                                         @onclick="() => ActivateAsync(inspector.UniqueName)"><span class="oi oi-power-standby"/></button>
                                 }
                             </td>
                         }
-                        <td class="col-1">
-                            <button class="btn btn-outline-info btn-block" 
+                        <td>
+                            <button class="btn btn-outline-info btn-block" title="@Translator["Edit"]" 
                                 @onclick="() => Edit(inspector.UniqueName)"><span class="oi oi-pencil"/></button>
                         </td>
-                        <td class="col-1">
+                        <td>
                             @if (inspector.UniqueName != AppAuthentication.Inspector)
                             {
-                                <button class="btn btn-outline-danger btn-block" 
+                                <button class="btn btn-outline-danger btn-block" title="@Translator["Delete"]" 
                                     @onclick="() => DeleteAsync(inspector.UniqueName)"><span class="oi oi-trash"/></button>
                             }
                         </td>
                     }
                     <AuthorizeView Policy="Maintainer">
                         <Authorized>
-                            <td class="col-1">
+                            <td>
                                 @if (inspector.Activated &&
                                      _organization?.Activated == true &&
                                      inspector.UniqueName != AppAuthentication.Inspector)
                                 {
-                                    <button class="btn btn-outline-danger btn-block" 
+                                    <button class="btn btn-outline-danger btn-block" title="@Translator["Impersonate"]"
                                     @onclick="() => ImpersonateAsync(inspector.UniqueName)"><span class="oi oi-eye"/></button>
                                 }
                             </td>

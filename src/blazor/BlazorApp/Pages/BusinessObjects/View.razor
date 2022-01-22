@@ -11,7 +11,7 @@
 </div>
 
 <div class="container-fluid d-flex align-items-center m-2">
-    <button class="btn btn-primary mr-4"
+    <button class="btn btn-primary mr-4" title="@Translator["Create"]"
             @onclick="Create"><span class="oi oi-plus"/></button>
     <div class="custom-control custom-switch mr-4">
         <input type="checkbox" class="custom-control-input" checked="@_onlyUnassigned" id="onlyUnassigned" @onchange="OnlyUnassignedChanged">
@@ -43,11 +43,11 @@
 else
 {
     <table class="table table-sm">
-        <thead>
+        <thead class="table-light table-borderless">
             <tr>
-                <th>@Translator["Unique name"]</th>
-                <th>@Translator["Display name"]</th>
-                <th>@Translator["Inspector"]</th>
+                <th class="col-3 d-none d-lg-table-cell">@Translator["Unique name"]</th>
+                <th class="col-6">@Translator["Display name"]</th>
+                <th class="col-3 d-none d-lg-table-cell">@Translator["Inspector"]</th>
                 <th></th>
                 <th></th>
                 <th></th>
@@ -58,23 +58,23 @@ else
             @foreach (var businessObject in RelevantBusinessObjects)
             {
                 <tr>
-                    <td class="col-2">@businessObject.UniqueName</td>
-                    <td class="col-4">@businessObject.DisplayName</td>
-                    <td class="col-2">@businessObject.Inspector</td>
-                    <td class="col-1">
-                        <button class="btn btn-outline-info btn-block" 
+                    <td class="d-none d-lg-table-cell">@businessObject.UniqueName</td>
+                    <td>@businessObject.DisplayName</td>
+                    <td class="d-none d-lg-table-cell">@businessObject.Inspector</td>
+                    <td>
+                        <button class="btn btn-outline-info btn-block" title="@Translator["Edit"]"
                             @onclick="() => Edit(businessObject.UniqueName)"><span class="oi oi-pencil"/></button>
                     </td>
-                    <td class="col-1">
-                        <button class="btn btn-outline-danger btn-block" 
+                    <td>
+                        <button class="btn btn-outline-danger btn-block" title="@Translator["Delete"]"
                             @onclick="() => DeleteAsync(businessObject.UniqueName)"><span class="oi oi-trash"/></button>
                     </td>
-                    <td class="col-1">
-                        <button class="btn btn-outline-info btn-block" 
+                    <td>
+                        <button class="btn btn-outline-info btn-block" title="@Translator["Inspections"]"
                             @onclick="() => NavigateToInspections(businessObject.UniqueName)"><span class="oi oi-list"/></button>
                     </td>
-                    <td class="col-1">
-                        <button class="btn btn-outline-info btn-block" 
+                    <td>
+                        <button class="btn btn-outline-info btn-block" title="@Translator["Audit history"]"
                             @onclick="() => NavigateToInspectionAuditHistory(businessObject.UniqueName)"><span class="oi oi-clipboard"/></button>
                     </td>
                 </tr>

@@ -8,7 +8,7 @@
 @attribute [Authorize("Inspector")]
 
 <div class="container-fluid">
-    <h1>@Translator["Business objects"]</h1>
+    <h1>@Translator["Auditing"]</h1>
 </div>
 
 <div class="container-fluid">
@@ -20,22 +20,22 @@
 else
 {
     <table class="table table-sm">
-        <thead>
+        <thead class="table-light table-borderless">
             <tr>
-                <th class="col-4">@Translator["Unique name"]</th>
-                <th class="col-7">@Translator["Display name"]</th>
-                <th class="col-1"></th>
+                <th class="col-4 d-none d-lg-table-cell">@Translator["Unique name"]</th>
+                <th class="col-8">@Translator["Display name"]</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
             @foreach (var businessObject in _businessObjects)
             {
                 <tr>
-                    <td class="col-4">@businessObject.UniqueName</td>
-                    <td class="col-7">@businessObject.DisplayName</td>
-                    <td class="col-1">
-                        <button class="btn btn-outline-primary btn-block" 
-                            @onclick="() => NavigateToInspectionAudit(businessObject.UniqueName)"><span class="oi oi-media-play"/></button>
+                    <td class="d-none d-lg-table-cell">@businessObject.UniqueName</td>
+                    <td>@businessObject.DisplayName</td>
+                    <td>
+                        <button class="btn btn-outline-primary btn-block" title="@Translator["Audit"]"
+                                @onclick="() => NavigateToInspectionAudit(businessObject.UniqueName)"><span class="oi oi-media-play"/></button>
                     </td>
                 </tr>
             }

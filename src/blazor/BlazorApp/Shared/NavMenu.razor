@@ -1,6 +1,7 @@
 ﻿@inject INotificationHandler NotificationHandler
 @inject AppAuthentication AppAuthentication
 @inject AppEnvironment AppEnvironment
+@inject ITranslator Translator
 
 @implements IAsyncDisposable
 
@@ -17,14 +18,14 @@
             <NotAuthorized>
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" Match="NavLinkMatch.All" href="account/sign-in">
-                        <span class="oi oi-account-login" aria-hidden="true"></span> Sign in
+                        <span class="oi oi-account-login" aria-hidden="true"/>@Translator["Sign in"]
                     </NavLink>
                 </div>
                 @if (AppEnvironment.IsDevelopment)
                 {
                     <div class="nav-item px-3">
                         <NavLink class="nav-link" Match="NavLinkMatch.All" href="account/register">
-                            <span class="oi oi-person" aria-hidden="true"></span> Sign up
+                            <span class="oi oi-person" aria-hidden="true"/>@Translator["Sign up"]
                         </NavLink>
                     </div>
                 }
@@ -34,12 +35,12 @@
             <Authorized >
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" Match="NavLinkMatch.All" href="organizations">
-                        <span class="oi oi-people" aria-hidden="true"></span> Organizations
+                        <span class="oi oi-people" aria-hidden="true"/>@Translator["Organizations"]
                     </NavLink>
                 </div>
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" Match="NavLinkMatch.All" href="identities">
-                        <span class="oi oi-credit-card" aria-hidden="true"></span> Identities
+                        <span class="oi oi-credit-card" aria-hidden="true"/>@Translator["Identities"]
                     </NavLink>
                 </div>
                 <hr/>
@@ -49,12 +50,12 @@
             <Authorized>
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" Match="NavLinkMatch.All" href="inspectors">
-                        <span class="oi oi-person" aria-hidden="true"></span> Inspectors
+                        <span class="oi oi-person" aria-hidden="true"/>@Translator["Inspectors"]
                     </NavLink>
                 </div>
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" Match="NavLinkMatch.All" href="business-objects">
-                        <span class="oi oi-briefcase" aria-hidden="true"></span> Business Objects
+                        <span class="oi oi-briefcase" aria-hidden="true"/>@Translator["Business Objects"]
                     </NavLink>
                 </div>
             </Authorized>
@@ -63,12 +64,12 @@
             <Authorized>
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" Match="NavLinkMatch.All" href="business-objects/auditing">
-                        <span class="oi oi-clipboard" aria-hidden="true"></span> Auditing
+                        <span class="oi oi-clipboard" aria-hidden="true"/>@Translator["Auditing"]
                     </NavLink>
                 </div>
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" Match="NavLinkMatch.All" href="notifications">
-                        <span class="oi oi-bell" aria-hidden="true"></span> Notifications
+                        <span class="oi oi-bell" aria-hidden="true"/>@Translator["Notifications"]
                         @if (_notificationCount > 0)
                         {
                             <span class="badge badge-danger ml-2">@_notificationCount</span>
@@ -81,12 +82,12 @@
             <Authorized>
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" Match="NavLinkMatch.All" href="inspections">
-                        <span class="oi oi-list" aria-hidden="true"></span> Inspections
+                        <span class="oi oi-list" aria-hidden="true"/>@Translator["Inspections"]
                     </NavLink>
                 </div>
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" Match="NavLinkMatch.All" href="audit-history">
-                        <span class="oi oi-clipboard" aria-hidden="true"></span> Audit History
+                        <span class="oi oi-clipboard" aria-hidden="true"/>@Translator["Audit History"] 
                     </NavLink>
                 </div>
                 <hr/>
