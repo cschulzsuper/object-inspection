@@ -51,6 +51,34 @@ namespace Super.Paula.Data.Mappings.Administration
                 .Property(x => x.Activated)
                 .IsRequired();
 
+            var businessObjectsBuilder = builder
+                .OwnsMany(x => x.BusinessObjects);
+
+            businessObjectsBuilder
+                .Property(x => x.UniqueName)
+                .HasMaxLength(140)
+                .IsRequired();
+
+            businessObjectsBuilder
+                .Property(x => x.DisplayName)
+                .HasMaxLength(140)
+                .IsRequired();
+
+            businessObjectsBuilder
+                .Property(x => x.AuditSchedulePlannedAuditDate)
+                .IsRequired();
+
+            businessObjectsBuilder
+                .Property(x => x.AuditSchedulePlannedAuditTime)
+                .IsRequired();
+
+            businessObjectsBuilder
+                .Property(x => x.AuditScheduleDelayed)
+                .IsRequired();
+
+            businessObjectsBuilder
+                .Property(x => x.AuditSchedulePending)
+                .IsRequired();
         }
     }
 }

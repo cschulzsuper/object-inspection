@@ -1,10 +1,11 @@
 ﻿using System;
-using System.Text.Json.Serialization;
 
 namespace Super.Paula.Application
 {
     public class Token
     {
+        public string? StreamerSecret { get; set; }
+
         public string? Organization { get; set; }
         public string? Inspector { get; set; }
         public string? Proof { get; set; }

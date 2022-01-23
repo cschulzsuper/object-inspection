@@ -12,9 +12,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\Environment.AspNetCore\Environment.AspNetCore.csproj" />
-	  <ProjectReference Include="..\SignalR.Contract\SignalR.Contract.csproj" />
-	  <ProjectReference Include="..\Transport.Contract\Transport.Contract.csproj" />
+		<ProjectReference Include="..\Environment.AspNetCore\Environment.AspNetCore.csproj" />
+		<ProjectReference Include="..\Streaming.Contract\Streaming.Contract.csproj" />
+		<ProjectReference Include="..\Transport.Contract\Transport.Contract.csproj" />
 	</ItemGroup>
-	
+
 </Project>

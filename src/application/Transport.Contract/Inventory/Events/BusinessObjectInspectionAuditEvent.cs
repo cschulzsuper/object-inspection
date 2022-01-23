@@ -3,7 +3,7 @@ using Super.Paula.Validation;
 
 namespace Super.Paula.Application.Inventory.Events
 {
-    public class BusinessObjectInspectionEvent
+    public class BusinessObjectInspectionAuditEvent
     {
         [StringLength(140)]
         public string? BusinessObjectDisplayName { get; set; }
@@ -25,9 +25,10 @@ namespace Super.Paula.Application.Inventory.Events
         [AuditResult]
         public string? AuditResult { get; set; }
 
+        [DayNumber]
         public int AuditDate { get; set; }
 
+        [Milliseconds]
         public int AuditTime { get; set; }
-
     }
 }

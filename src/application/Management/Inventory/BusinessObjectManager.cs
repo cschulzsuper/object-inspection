@@ -142,14 +142,6 @@ namespace Super.Paula.Application.Inventory
 
                     yield return BusinessObjectInspectionAuditScheduleValidator.AdditionalsUnique(inspection.AuditSchedule.Additionals);
 
-                    foreach (var delay in inspection.AuditSchedule.Delays)
-                    {
-                        yield return BusinessObjectInspectionAuditScheduleTimestampValidator.PlannedAuditDateIsPositive(delay.PlannedAuditDate);
-                        yield return BusinessObjectInspectionAuditScheduleTimestampValidator.PlannedAuditTimeIsInDayTimeRange(delay.PlannedAuditTime);
-                    }
-
-                    yield return BusinessObjectInspectionAuditScheduleValidator.AdditionalsUnique(inspection.AuditSchedule.Additionals);
-
                     foreach (var additional in inspection.AuditSchedule.Additionals)
                     {
                         yield return BusinessObjectInspectionAuditScheduleTimestampValidator.PlannedAuditDateIsPositive(additional.PlannedAuditDate);
@@ -218,14 +210,6 @@ namespace Super.Paula.Application.Inventory
                     {
                         yield return BusinessObjectInspectionAuditScheduleTimestampValidator.PlannedAuditDateIsPositive(omission.PlannedAuditDate);
                         yield return BusinessObjectInspectionAuditScheduleTimestampValidator.PlannedAuditTimeIsInDayTimeRange(omission.PlannedAuditTime);
-                    }
-
-                    yield return BusinessObjectInspectionAuditScheduleValidator.AdditionalsUnique(inspection.AuditSchedule.Additionals);
-
-                    foreach (var delay in inspection.AuditSchedule.Delays)
-                    {
-                        yield return BusinessObjectInspectionAuditScheduleTimestampValidator.PlannedAuditDateIsPositive(delay.PlannedAuditDate);
-                        yield return BusinessObjectInspectionAuditScheduleTimestampValidator.PlannedAuditTimeIsInDayTimeRange(delay.PlannedAuditTime);
                     }
 
                     yield return BusinessObjectInspectionAuditScheduleValidator.AdditionalsUnique(inspection.AuditSchedule.Additionals);

@@ -75,12 +75,14 @@ namespace Super.Paula.Client.Inventory
             return (await responseMessage.Content.ReadFromJsonAsync<BusinessObjectResponse>())!;
         }
 
-        public async ValueTask CreateInspectionAuditAsync(string businessObject, CreateInspectionAuditRequest request)
+        public async ValueTask<CreateInspectionAuditResponse> CreateInspectionAuditAsync(string businessObject, CreateInspectionAuditRequest request)
         {
             var responseMessage = await _httpClient.PostAsJsonAsync($"business-objects/{businessObject}/create-inspection-audit", request);
             
             responseMessage.RuleOutProblems();
             responseMessage.EnsureSuccessStatusCode();
+
+            return (await responseMessage.Content.ReadFromJsonAsync<CreateInspectionAuditResponse>())!;
         }
 
         public async ValueTask DeleteAsync(string businessObject)
@@ -180,12 +182,17 @@ namespace Super.Paula.Client.Inventory
             }
         }
 
-        public async ValueTask DropInspectionAuditAsync(string businessObject, string inspection, DropInspectionAuditRequest request)
+        public async ValueTask<DropInspectionAuditResponse> DropInspectionAuditAsync(string businessObject, string inspection, DropInspectionAuditRequest request)
         {
             var responseMessage = await _httpClient.PostAsJsonAsync($"business-objects/{businessObject}/drop-inspection-audit/{inspection}", request);
 
             responseMessage.RuleOutProblems();
             responseMessage.EnsureSuccessStatusCode();
+
+            return (await responseMessage.Content.ReadFromJsonAsync<DropInspectionAuditResponse>())!;
         }
+
+        public ValueTask TimeInspectionAuditAsync(string businessObject)
+            => throw new NotSupportedException("Clients can not time the business object inspection audit");
     }
 }

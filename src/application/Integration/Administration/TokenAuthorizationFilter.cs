@@ -1,5 +1,4 @@
 ﻿using Super.Paula.Environment;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -27,7 +26,10 @@ namespace Super.Paula.Application.Administration
                 var organization = _organizationManager.GetQueryable()
                     .Single(x => x.UniqueName == token.Organization);
 
-                authorizations.Add("Inspector");
+                if (!string.IsNullOrWhiteSpace(token.Inspector))
+                {
+                    authorizations.Add("Inspector");
+                }
 
                 if (organization.ChiefInspector == token.Inspector)
                 {
@@ -45,6 +47,12 @@ namespace Super.Paula.Application.Administration
                 {
                     authorizations.Add("Impersonator");
                 }
+            }
+
+            if (!string.IsNullOrWhiteSpace(_appSettings.StreamerSecret) &&
+                _appSettings.StreamerSecret == token.StreamerSecret)
+            {
+                authorizations.Add("Streamer");
             }
 
             token.Authorizations = authorizations.ToArray();

@@ -8,9 +8,14 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <PackageReference Include="Cronos" Version="0.7.1" />
+	</ItemGroup>
+
+	<ItemGroup>
 	  <ProjectReference Include="..\Environment\Environment.csproj" />
 	  <ProjectReference Include="..\Integration.Contract\Integration.Contract.csproj" />
 	  <ProjectReference Include="..\Management.Contract\Management.Contract.csproj" />
+	  <ProjectReference Include="..\Shared\Shared.csproj" />
 	</ItemGroup>
 
 </Project>

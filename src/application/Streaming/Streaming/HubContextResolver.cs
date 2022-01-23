@@ -3,7 +3,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 
-namespace Super.Paula.Application
+namespace Super.Paula.Application.Streaming
 {
     public class HubContextResolver
     {

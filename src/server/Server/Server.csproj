@@ -1,26 +1,26 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <LangVersion>Preview</LangVersion>
-    <RootNamespace>Super.Paula</RootNamespace>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<LangVersion>Preview</LangVersion>
+		<RootNamespace>Super.Paula</RootNamespace>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <FrameworkReference Include="Microsoft.AspNetCore.App" />
-  </ItemGroup>
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\application\Authorization\Authorization.csproj" />
-    <ProjectReference Include="..\..\application\Endpoints\Endpoints.csproj" />
-    <ProjectReference Include="..\..\application\Environment.AspNetCore\Environment.AspNetCore.csproj" />
-    <ProjectReference Include="..\..\application\Integration\Integration.csproj" />
-    <ProjectReference Include="..\..\application\Management\Management.csproj" />
-    <ProjectReference Include="..\..\application\SignalR\SignalR.csproj" />
-    <ProjectReference Include="..\..\application\Transport\Transport.csproj" />
-    <ProjectReference Include="..\..\data\Data\Data.csproj" />
-    <ProjectReference Include="..\..\data\RuntimeData\RuntimeData.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\application\Authorization\Authorization.csproj" />
+		<ProjectReference Include="..\..\application\Endpoints\Endpoints.csproj" />
+		<ProjectReference Include="..\..\application\Environment.AspNetCore\Environment.AspNetCore.csproj" />
+		<ProjectReference Include="..\..\application\Integration\Integration.csproj" />
+		<ProjectReference Include="..\..\application\Management\Management.csproj" />
+		<ProjectReference Include="..\..\application\Streaming\Streaming.csproj" />
+		<ProjectReference Include="..\..\application\Transport\Transport.csproj" />
+		<ProjectReference Include="..\..\data\Data\Data.csproj" />
+		<ProjectReference Include="..\..\data\RuntimeData\RuntimeData.csproj" />
+	</ItemGroup>
 
 </Project>

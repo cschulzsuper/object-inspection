@@ -112,6 +112,14 @@ namespace Super.Paula.Data.Mappings.Inventory
             var auditScheduleOmissionsBuilder = auditScheduleBuilder
                 .OwnsMany(x => x.Omissions);
 
+            // HINT: https://github.com/dotnet/efcore/issues/24828
+            auditScheduleOmissionsBuilder
+                .HasKey(item => item.Id);
+
+            auditScheduleOmissionsBuilder
+                .Property(item => item.Id)
+                .ValueGeneratedNever();
+
             auditScheduleOmissionsBuilder
                 .Property(x => x.PlannedAuditDate)
                 .IsRequired();
@@ -122,6 +130,14 @@ namespace Super.Paula.Data.Mappings.Inventory
 
             var auditScheduleAdditionalsBuilder = auditScheduleBuilder
                 .OwnsMany(x => x.Additionals);
+
+            // HINT: https://github.com/dotnet/efcore/issues/24828
+            auditScheduleAdditionalsBuilder
+                .HasKey(item => item.Id);
+
+            auditScheduleAdditionalsBuilder
+                .Property(item => item.Id)
+                .ValueGeneratedNever();
 
             auditScheduleAdditionalsBuilder
                 .Property(x => x.PlannedAuditDate)
@@ -134,6 +150,14 @@ namespace Super.Paula.Data.Mappings.Inventory
             var auditScheduleAppointmentsBuilder = auditScheduleBuilder
                 .OwnsMany(x => x.Appointments);
 
+            // HINT: https://github.com/dotnet/efcore/issues/24828
+            auditScheduleAppointmentsBuilder
+                .HasKey(item => item.Id);
+
+            auditScheduleAppointmentsBuilder
+                .Property(item => item.Id)
+                .ValueGeneratedNever();
+
             auditScheduleAppointmentsBuilder
                 .Property(x => x.PlannedAuditDate)
                 .IsRequired();
@@ -141,18 +165,6 @@ namespace Super.Paula.Data.Mappings.Inventory
             auditScheduleAppointmentsBuilder
                 .Property(x => x.PlannedAuditTime)
                 .IsRequired();
-
-            var auditScheduleDelaysBuilder = auditScheduleBuilder
-                .OwnsMany(x => x.Delays);
-
-            auditScheduleDelaysBuilder
-                .Property(x => x.PlannedAuditDate)
-                .IsRequired();
-
-            auditScheduleDelaysBuilder
-                .Property(x => x.PlannedAuditTime)
-                .IsRequired();
-
         }
     }
 }

@@ -4,7 +4,7 @@ namespace Super.Paula.Application.Auditing
 {
     public interface IBusinessObjectInspectionAuditEventHandler :
         IEventHandler<BusinessObjectEvent>,
-        IEventHandler<BusinessObjectInspectionEvent>
+        IEventHandler<BusinessObjectInspectionAuditEvent>
     {
 
     }

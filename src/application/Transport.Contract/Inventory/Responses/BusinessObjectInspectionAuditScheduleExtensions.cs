@@ -1,5 +1,4 @@
-﻿using Cronos;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace Super.Paula.Application.Inventory.Responses
@@ -13,7 +12,6 @@ namespace Super.Paula.Application.Inventory.Responses
                 Expressions = auditSchedule.Expressions.ToResponse(),
                 Threshold = auditSchedule.Threshold,
                 Omissions = auditSchedule.Omissions.ToResponse(),
-                Delays = auditSchedule.Delays.ToResponse(),
                 Additionals = auditSchedule.Additionals.ToResponse(),
                 Appointments = auditSchedule.Appointments.ToResponse()
             };

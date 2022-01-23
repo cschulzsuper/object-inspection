@@ -38,8 +38,10 @@ namespace Super.Paula
                         .Select(x => x.Value)
                         .ToArray();
 
+                    var authorizations = claims("Authorization");
+
                     appAuthentication.Authorizations
-                        = claims("Authorization") ?? appAuthentication.Authorizations;
+                        = authorizations ?? appAuthentication.Authorizations;
                 }
 
                 await next();

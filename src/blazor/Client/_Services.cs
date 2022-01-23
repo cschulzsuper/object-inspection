@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Http;
@@ -16,7 +15,6 @@ using Super.Paula.Client.Guidelines;
 using Super.Paula.Client.Inventory;
 using Super.Paula.Client.Localization;
 using Super.Paula.Client.Storage;
-using Super.Paula.Environment;
 
 namespace Super.Paula.Client
 {

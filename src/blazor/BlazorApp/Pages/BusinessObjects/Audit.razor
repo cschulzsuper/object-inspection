@@ -126,23 +126,14 @@ else
                 Result = nextResult[inspection.AuditResult]
             };
 
-             await BusinessObjectHandler.CreateInspectionAuditAsync(
+            var response = await BusinessObjectHandler.CreateInspectionAuditAsync(
                 _businessObject!.UniqueName, request);
 
             inspection.AuditDate = request.AuditDate;
             inspection.AuditTime = request.AuditTime;
             inspection.AuditResult = request.Result;
-        }
 
-        var response = await BusinessObjectHandler.GetAsync(BusinessObject);
-
-        var inspectionResponse = response.Inspections
-            .SingleOrDefault(x => x.UniqueName == inspection.UniqueName);
-
-        if (inspectionResponse != null)
-        {
-            inspection.AuditSchedule.Appointments.First().PlannedAuditDate = inspectionResponse.AuditSchedule.Appointments.First().PlannedAuditDate;
-            inspection.AuditSchedule.Appointments.First().PlannedAuditTime = inspectionResponse.AuditSchedule.Appointments.First().PlannedAuditTime;
+            inspection.AuditSchedule.Appointments = response.Appointments;
         }
     }
 

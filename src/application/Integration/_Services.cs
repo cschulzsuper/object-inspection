@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Super.Paula.Application.Administration;
+using Super.Paula.Application.Inventory;
 
 namespace Super.Paula.Application
 {
@@ -10,7 +10,8 @@ namespace Super.Paula.Application
     {
         public static IServiceCollection AddPaulaServerIntegration(this IServiceCollection services)
              => services
-                 .AddScoped<ITokenAuthorizationFilter, TokenAuthorizationFilter>();
+                 .AddScoped<ITokenAuthorizationFilter, TokenAuthorizationFilter>()
+                 .AddScoped<IBusinessObjectInspectionAuditScheduleFilter, BusinessObjectInspectionAuditScheduleFilter>();
 
     }
 }

@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Super.Paula.Validation;
 
 namespace Super.Paula.Application.Inventory.Events
 {

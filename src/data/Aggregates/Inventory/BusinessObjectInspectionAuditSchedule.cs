@@ -13,8 +13,5 @@ namespace Super.Paula.Application.Inventory
         public ISet<BusinessObjectInspectionAuditScheduleTimestamp> Omissions { get; set; } = new HashSet<BusinessObjectInspectionAuditScheduleTimestamp>();
 
         public ISet<BusinessObjectInspectionAuditScheduleTimestamp> Appointments { get; set; } = new HashSet<BusinessObjectInspectionAuditScheduleTimestamp>();
-
-        public ISet<BusinessObjectInspectionAuditScheduleTimestamp> Delays { get; set; } = new HashSet<BusinessObjectInspectionAuditScheduleTimestamp>();
-
     }
 }

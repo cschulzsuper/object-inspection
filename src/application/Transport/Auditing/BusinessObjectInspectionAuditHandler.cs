@@ -199,7 +199,7 @@ namespace Super.Paula.Application.Auditing
             }
         }
 
-        public async ValueTask ProcessAsync(string businessObject, BusinessObjectInspectionEvent @event)
+        public async ValueTask ProcessAsync(string businessObject, BusinessObjectInspectionAuditEvent @event)
         {
             var businessObjectInspectionAudit = await _businessObjectInspectionAuditManager.GetOrDefaultAsync(
                     businessObject, 

@@ -229,24 +229,22 @@ else
 
     public async Task DropAsync(BusinessObjectInspectionResponse inspection)
     {
-        await BusinessObjectHandler.DropInspectionAuditAsync(
+        var appointment = inspection.AuditSchedule.Appointments.FirstOrDefault();
+
+        if(appointment == null)
+        {
+            return;
+        }
+
+        var response = await BusinessObjectHandler.DropInspectionAuditAsync(
             BusinessObject!,
             inspection.UniqueName,
             new DropInspectionAuditRequest
             {
-                PlannedAuditDate = inspection.AuditSchedule.Appointments.First().PlannedAuditDate,
-                PlannedAuditTime = inspection.AuditSchedule.Appointments.First().PlannedAuditTime                 
+                PlannedAuditDate = appointment.PlannedAuditDate,
+                PlannedAuditTime = appointment.PlannedAuditTime                 
             });
 
-        var response = await BusinessObjectHandler.GetAsync(BusinessObject);
-
-        var inspectionResponse = response.Inspections
-            .SingleOrDefault(x => x.UniqueName == inspection.UniqueName);
-
-        if (inspectionResponse != null)
-        {
-            inspection.AuditSchedule.Appointments.First().PlannedAuditDate = inspectionResponse.AuditSchedule.Appointments.First().PlannedAuditDate;
-            inspection.AuditSchedule.Appointments.First().PlannedAuditTime = inspectionResponse.AuditSchedule.Appointments.First().PlannedAuditTime;
-        }
+        inspection.AuditSchedule.Appointments = response.Appointments;
     }
 }

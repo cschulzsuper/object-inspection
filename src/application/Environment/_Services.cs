@@ -28,6 +28,7 @@ namespace Super.Paula
 
                     return new AppSettings
                     {
+                        StreamerSecret = configuration["StreamerSecret"],
                         CosmosEndpoint = configuration["CosmosEndpoint"],
                         CosmosKey = configuration["CosmosKey"],
                         CosmosDatabase = configuration["CosmosDatabase"],

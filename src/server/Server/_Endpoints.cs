@@ -20,6 +20,7 @@ namespace Super.Paula
                 .MapInspection()
                 .MapInspector()
                 .MapNotification()
-                .MapOrganization();
+                .MapOrganization()
+                .MapStreaming();
     }
 }

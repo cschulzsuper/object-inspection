@@ -7,7 +7,6 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.SignalR.Client;
-using Super.Paula.Application.Administration;
 using Super.Paula.Application.Communication;
 using Super.Paula.Application.Communication.Requests;
 using Super.Paula.Application.Communication.Responses;
@@ -43,7 +42,7 @@ namespace Super.Paula.Client.Communication
 
             _hubConnection = new HubConnectionBuilder()
                 .WithUrl(
-                    new Uri(_httpClient.BaseAddress, "/notifications/signalr"),
+                    new Uri(_httpClient.BaseAddress, "/stream"),
                     c => {
                         c.AccessTokenProvider = () => Task.FromResult(_appAuthentication.Token)!;
                     })
@@ -91,14 +90,14 @@ namespace Super.Paula.Client.Communication
 
         public async Task<IDisposable> OnCreatedAsync(Func<NotificationResponse, Task> handler)
         {
-            var onCreated = _hubConnection.On("OnCreated", handler);
+            var onCreated = _hubConnection.On("NotificationCreation", handler);
             await StartHubAsync();
             return onCreated;
         }
 
         public async Task<IDisposable> OnDeletedAsync(Func<string, int, int, Task> handler)
         {
-            var onDeleted = _hubConnection.On("OnDeleted", handler);
+            var onDeleted = _hubConnection.On("NotificationDeletion", handler);
             await StartHubAsync();
             return onDeleted;
         }

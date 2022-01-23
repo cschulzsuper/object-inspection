@@ -3,7 +3,8 @@
 namespace Super.Paula.Application.Communication
 {
     public interface INotificationEventHandler : 
-        IEventHandler<BusinessObjectInspectorEvent>
+        IEventHandler<BusinessObjectInspectorEvent>,
+        IEventHandler<InspectorBusinessObjectEvent>
     {
     }
 }

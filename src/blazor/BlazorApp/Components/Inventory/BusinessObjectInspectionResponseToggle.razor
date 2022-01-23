@@ -66,8 +66,13 @@
     {
         if (IsScheduled())
         {
-            var appointment = Inspection.AuditSchedule.Appointments.First();
-            var auditDelay = (appointment.PlannedAuditDate, appointment.PlannedAuditTime)
+            var appointments = Inspection.AuditSchedule.Appointments.FirstOrDefault();
+            if (appointments == null)
+            {
+                return false;
+            }
+
+            var auditDelay = (appointments.PlannedAuditDate, appointments.PlannedAuditTime)
                 .ToDateTime()
                 .AddMilliseconds(Inspection.AuditSchedule.Threshold);
 
@@ -83,7 +88,12 @@
     {
         if (IsScheduled())
         {
-            var appointment = Inspection.AuditSchedule.Appointments.First();
+            var appointment = Inspection.AuditSchedule.Appointments.FirstOrDefault();
+            if (appointment == null)
+            {
+                return false;
+            }
+
             var plannedAudit = (appointment.PlannedAuditDate, appointment.PlannedAuditTime)
                 .ToDateTime();
 
@@ -96,7 +106,12 @@
     {
         if (IsScheduled())
         {
-            var appointment = Inspection.AuditSchedule.Appointments.First();
+            var appointment = Inspection.AuditSchedule.Appointments.FirstOrDefault();
+            if (appointment == null)
+            {
+                return false;
+            }
+
             var upcomingAudit = (appointment.PlannedAuditDate, appointment.PlannedAuditTime)
                 .ToDateTime()
                 .AddMilliseconds(-Inspection.AuditSchedule.Threshold);
@@ -120,7 +135,13 @@
 
     private string GetScheduledString()
     {
-        var appointment = Inspection.AuditSchedule.Appointments.First();
+        var appointment = Inspection.AuditSchedule.Appointments.FirstOrDefault();
+
+        if(appointment == null)
+        {
+            return string.Empty;
+        }
+
         var plannedAudit = (appointment.PlannedAuditDate, appointment.PlannedAuditTime).ToLocalTimeString();
         return string.Format(@Translator["{0} (next audit)"], plannedAudit);
     }

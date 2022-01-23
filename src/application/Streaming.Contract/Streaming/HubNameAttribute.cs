@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Super.Paula.Application
+namespace Super.Paula.Application.Streaming
 {
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
     public class HubNameAttribute : Attribute

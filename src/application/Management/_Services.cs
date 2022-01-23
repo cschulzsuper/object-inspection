@@ -16,11 +16,13 @@ namespace Super.Paula.Application
             => services
                 .AddScoped<IBusinessObjectInspectionAuditManager, BusinessObjectInspectionAuditManager>()
                 .AddScoped<IBusinessObjectManager, BusinessObjectManager>()
+                .AddScoped<IBusinessObjects, BusinessObjects>()
                 .AddScoped<IIdentityManager, IdentityManager>()
                 .AddScoped<IInspectionManager, InspectionManager>()
                 .AddScoped<IInspectorManager, InspectorManager>()
                 .AddScoped<INotificationManager, NotificationManager>()
                 .AddScoped<IOrganizationManager, OrganizationManager>()
+                .AddScoped<IOrganizations, Organizations>()
                 .AddScoped<IConnectionManager, ConnectionManager>()
                 .AddScoped<IConnectionViolationManager, ConnectionViolationManager>();
     }

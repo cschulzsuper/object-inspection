@@ -151,5 +151,40 @@ namespace Super.Paula.Application.Communication
                 });
             }
         }
+
+        public async ValueTask ProcessAsync(string inspector, InspectorBusinessObjectEvent @event)
+        {
+            if (@event.NewPending == true &&
+                @event.NewPending != @event.OldPending &&
+                @event.NewDelayed == false &&
+                @event.OldDelayed == false)
+            {
+
+                var (date, time) = DateTime.UtcNow.ToNumbers();
+
+                await CreateAsync(inspector, new NotificationRequest
+                {
+                    Date = date,
+                    Time = time,
+                    Target = $"business-objects/{@event.BusinessObject}",
+                    Text = $"An inspection audit for {@event.BusinessObjectDisplayName} imminent!"
+                });
+            }
+
+            if (@event.NewDelayed == true &&
+                @event.NewDelayed != @event.OldDelayed)
+            {
+
+                var (date, time) = DateTime.UtcNow.ToNumbers();
+
+                await CreateAsync(inspector, new NotificationRequest
+                {
+                    Date = date,
+                    Time = time,
+                    Target = $"business-objects/{@event.BusinessObject}",
+                    Text = $"An inspection audit for {@event.BusinessObjectDisplayName} overdue!"
+                });
+            }
+        }
     }
 }

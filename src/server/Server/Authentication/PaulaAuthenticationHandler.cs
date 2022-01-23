@@ -1,6 +1,4 @@
-﻿using System;
-using System.Security.Claims;
-using System.Text;
+﻿using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
@@ -67,8 +65,19 @@ namespace Super.Paula.Authentication
         {
             var token = encodedAuthorizationToken.ToToken();
 
-            if (token == null ||
-                token.Organization == null ||
+            if (token == null)
+            {
+                return null;
+            }
+
+            if (token.StreamerSecret != null)
+            {
+                _tokenAuthorizationFilter?.Apply(token);
+                return token;
+            }
+
+
+            if (token.Organization == null ||
                 token.Inspector == null ||
                 token.Proof == null)
             {

@@ -1,4 +1,6 @@
-﻿namespace Super.Paula.Application.Administration
+﻿using System.Collections.Generic;
+
+namespace Super.Paula.Application.Administration
 {
     public class Inspector
     {
@@ -9,5 +11,7 @@
         public string Organization { get; set; } = string.Empty;
         public string OrganizationDisplayName { get; set; } = string.Empty;
         public bool OrganizationActivated { get; set; }
+
+        public ISet<InspectorBusinessObject> BusinessObjects { get; set; } = new HashSet<InspectorBusinessObject>();
     }
 }

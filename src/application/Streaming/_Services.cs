@@ -1,16 +1,16 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.DependencyInjection;
-using Super.Paula.Application.Communication;
+using Super.Paula.Application.Streaming;
 
 namespace Super.Paula.Application
 {
     [SuppressMessage("Style", "IDE1006")]
     public static class _Services
     {
-        public static IServiceCollection AddPaulaServerSignalR(this IServiceCollection services)
+        public static IServiceCollection AddPaulaServerStreaming(this IServiceCollection services)
             => services
                 .AddScoped<HubContextResolver>()
-                .AddScoped<INotificationMessenger, NotificationMessenger>();
+                .AddScoped<IStreamer, Streamer>();
 
     }
 }

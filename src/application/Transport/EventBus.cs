@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Super.Paula.Application.Inventory;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;

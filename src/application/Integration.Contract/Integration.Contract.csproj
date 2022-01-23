@@ -7,4 +7,8 @@
 		<RootNamespace>Super.Paula.Application</RootNamespace>
 	</PropertyGroup>
 
+	<ItemGroup>
+	  <ProjectReference Include="..\..\data\Aggregates\Aggregates.csproj" />
+	</ItemGroup>
+
 </Project>

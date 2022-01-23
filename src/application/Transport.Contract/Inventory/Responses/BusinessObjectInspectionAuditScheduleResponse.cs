@@ -9,7 +9,6 @@ namespace Super.Paula.Application.Inventory.Responses
         public int Threshold { get; set; }
 
         public ISet<BusinessObjectInspectionAuditScheduleTimestampResponse> Omissions { get; set; } = ImmutableHashSet.Create<BusinessObjectInspectionAuditScheduleTimestampResponse>();
-        public ISet<BusinessObjectInspectionAuditScheduleTimestampResponse> Delays { get; set; } = ImmutableHashSet.Create<BusinessObjectInspectionAuditScheduleTimestampResponse>();
         public ISet<BusinessObjectInspectionAuditScheduleTimestampResponse> Additionals { get; set; } = ImmutableHashSet.Create<BusinessObjectInspectionAuditScheduleTimestampResponse>();
         public ISet<BusinessObjectInspectionAuditScheduleTimestampResponse> Appointments { get; set; } = ImmutableHashSet.Create<BusinessObjectInspectionAuditScheduleTimestampResponse>();
     }

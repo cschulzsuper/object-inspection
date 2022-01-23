@@ -19,6 +19,7 @@ namespace Super.Paula.Authorization
                     "Inspector" => _Policies.IsInspectorPolicy,
                     "Maintainer" => _Policies.IsMaintainerPolicy,
                     "Impersonator" => _Policies.IsImpersonatorPolicy,
+                    "Streamer" => _Policies.IsStreamerPolicy,
                     _ => null
                 });
     }

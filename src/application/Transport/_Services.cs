@@ -7,6 +7,7 @@ using Super.Paula.Application.Auditing;
 using Super.Paula.Application.Communication;
 using Super.Paula.Application.Guidelines;
 using Super.Paula.Application.Inventory;
+using Super.Paula.Application.Streaming;
 
 namespace Super.Paula.Application
 {
@@ -58,10 +59,10 @@ namespace Super.Paula.Application
                 var notificationManager = services.GetRequiredService<INotificationManager>();
                 var notificationHandler = new NotificationHandler(notificationManager);
 
-                var notificationMessenger = services.GetRequiredService<INotificationMessenger>();
+                var notificationMessenger = services.GetRequiredService<IStreamer>();
 
-                notificationHandler.OnCreatedAsync(notificationMessenger.OnCreatedAsync);
-                notificationHandler.OnDeletedAsync(notificationMessenger.OnDeletedAsync);
+                notificationHandler.OnCreatedAsync(notificationMessenger.StreamNotificationCreationAsync);
+                notificationHandler.OnDeletedAsync(notificationMessenger.StreamNotificationDeletionAsync);
 
                 return notificationHandler;
             };

@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Super.Paula.Application.Inventory
+﻿namespace Super.Paula.Application.Inventory
 {
     public class BusinessObjectInspection
     {

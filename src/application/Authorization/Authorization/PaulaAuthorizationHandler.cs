@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Super.Paula.Environment;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -21,6 +22,15 @@ namespace Super.Paula.Authorization
                         _appAuthentication.AuthorizationsFilter.Any() == false ||
                         _appAuthentication.AuthorizationsFilter.Contains(x))
                 .ToArray();
+
+            if (!authorizations.Any())
+            {
+                var claims = (string type) => context.User.FindAll(type)
+                    .Select(x => x.Value)
+                    .ToArray();
+
+                authorizations = claims("Authorization");
+            }
 
             if (string.IsNullOrWhiteSpace(requirement.Value) &&
                 authorizations.Any())

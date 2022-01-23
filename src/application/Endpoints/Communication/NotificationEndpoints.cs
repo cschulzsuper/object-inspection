@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Super.Paula.Application.Communication.Requests;
 using System;
@@ -22,9 +21,6 @@ namespace Super.Paula.Application.Communication
             endpoints.MapQueries(
                 "/notifications",
                 ("", GetAll));
-
-            endpoints.MapHub<NotificationHub>(
-                "/notifications/signalr");
 
             return endpoints;
         }

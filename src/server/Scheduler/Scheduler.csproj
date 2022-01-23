@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net6.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<LangVersion>Preview</LangVersion>
+		<RootNamespace>Super.Paula</RootNamespace>
+		<UserSecretsId>0093716c-5bb9-44d4-9a62-b033e0548fd0</UserSecretsId>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="6.0.1" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="6.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="6.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\..\application\Integration\Integration.csproj" />
+	  <ProjectReference Include="..\..\application\Management\Management.csproj" />
+	  <ProjectReference Include="..\..\application\Streaming.Remote\Streaming.Remote.csproj" />
+	  <ProjectReference Include="..\..\application\Transport\Transport.csproj" />
+	  <ProjectReference Include="..\..\data\Data\Data.csproj" />
+	</ItemGroup>
+
+</Project>
