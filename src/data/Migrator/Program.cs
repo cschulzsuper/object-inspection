@@ -25,7 +25,7 @@ namespace Super.Paula.Data
 
                     services
                         .AddScoped<Initialization>()
-                        .AddScoped<AuditAdjustment>();
+                        .AddScoped<AuditOmissions>();
 
                 })
                 .ConfigureAppConfiguration((context, builder) =>

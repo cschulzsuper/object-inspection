@@ -19,12 +19,6 @@ namespace Super.Paula.Application.Inventory.Responses
         public string AuditResult { get; set; } = string.Empty;
         public string AuditAnnotation { get; set; } = string.Empty;
 
-        public ISet<BusinessObjectInspectionAuditScheduleResponse> AuditSchedules { get; set; } = ImmutableHashSet.Create<BusinessObjectInspectionAuditScheduleResponse>();
-        public int AuditDelayThreshold { get; set; }
-        public int AuditThreshold { get; set; }
-
-        public int PlannedAuditDate { get; set; }
-        public int PlannedAuditTime { get;  set; }
-       
+        public BusinessObjectInspectionAuditScheduleResponse AuditSchedule { get; set; } = new BusinessObjectInspectionAuditScheduleResponse();   
     }
 }

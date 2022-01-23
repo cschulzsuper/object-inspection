@@ -58,17 +58,18 @@
             _isExpanded =!_isExpanded;
         }
     }
-    
+
     private bool IsAuditted()
         => Inspection.AuditDate != default;
 
     private bool IsOverdue()
     {
-        if (Inspection.PlannedAuditDate != default)
+        if (IsScheduled())
         {
-            var auditDelay = (Inspection.PlannedAuditDate, Inspection.PlannedAuditTime)
+            var appointment = Inspection.AuditSchedule.Appointments.First();
+            var auditDelay = (appointment.PlannedAuditDate, appointment.PlannedAuditTime)
                 .ToDateTime()
-                .AddMilliseconds(Inspection.AuditDelayThreshold);
+                .AddMilliseconds(Inspection.AuditSchedule.Threshold);
 
             return auditDelay < DateTime.UtcNow;
         }
@@ -76,13 +77,14 @@
     }
 
     private bool IsScheduled()
-        => Inspection.PlannedAuditDate != default;
+        => Inspection.AuditSchedule.Appointments.Any();
 
     private bool IsCurrent()
     {
-        if (Inspection.PlannedAuditDate != default)
+        if (IsScheduled())
         {
-            var plannedAudit = (Inspection.PlannedAuditDate, Inspection.PlannedAuditTime)
+            var appointment = Inspection.AuditSchedule.Appointments.First();
+            var plannedAudit = (appointment.PlannedAuditDate, appointment.PlannedAuditTime)
                 .ToDateTime();
 
             return plannedAudit < DateTime.UtcNow;
@@ -92,11 +94,12 @@
 
     private bool IsUpcomming()
     {
-        if (Inspection.PlannedAuditDate != default)
+        if (IsScheduled())
         {
-            var upcomingAudit = (Inspection.PlannedAuditDate, Inspection.PlannedAuditTime)
+            var appointment = Inspection.AuditSchedule.Appointments.First();
+            var upcomingAudit = (appointment.PlannedAuditDate, appointment.PlannedAuditTime)
                 .ToDateTime()
-                .AddMilliseconds(-Inspection.AuditThreshold);
+                .AddMilliseconds(-Inspection.AuditSchedule.Threshold);
 
             return upcomingAudit < DateTime.UtcNow;
         }
@@ -117,7 +120,8 @@
 
     private string GetScheduledString()
     {
-        var plannedAudit = (Inspection.PlannedAuditDate, Inspection.PlannedAuditTime).ToLocalTimeString();
+        var appointment = Inspection.AuditSchedule.Appointments.First();
+        var plannedAudit = (appointment.PlannedAuditDate, appointment.PlannedAuditTime).ToLocalTimeString();
         return string.Format(@Translator["{0} (next audit)"], plannedAudit);
     }
 }

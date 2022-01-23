@@ -78,21 +78,5 @@ namespace Super.Paula.Application.Inventory
         public static (bool, Func<(string, FormattableString)>) AssignmentTimeIsInDayTimeRange(int assignmentTime)
             => (MillisecondsValidator.IsValid(assignmentTime),
                 () => (nameof(assignmentTime), $"Assignment time '{assignmentTime}' of inspection must be positive and less than 86400000"));
-
-        public static (bool, Func<(string, FormattableString)>) AuditDelayThresholdIsInDayTimeRange(int auditDelayThreshold)
-            => (MillisecondsValidator.IsValid(auditDelayThreshold),
-                () => (nameof(auditDelayThreshold), $"Audit delay threshold '{auditDelayThreshold}' of inspection must be positive and less than 86400000"));
-
-        public static (bool, Func<(string, FormattableString)>) AuditThresholdIsInDayTimeRange(int auditThreshold)
-            => (MillisecondsValidator.IsValid(auditThreshold),
-                () => (nameof(auditThreshold), $"Audit threshold '{auditThreshold}' of inspection must be positive and less than 86400000"));
-
-        public static (bool, Func<(string, FormattableString)>) AuditScheduleDropsUnique(ICollection<BusinessObjectInspectionAuditScheduleDrop> auditScheduleDrops)
-            => (!auditScheduleDrops.GroupBy(x => (x.PlannedAuditDate, x.PlannedAuditTime)).Any(x => x.Count() > 1),
-                () => (nameof(auditScheduleDrops), $"Audit schedule drop duplicates are not allowed"));
-
-        public static (bool, Func<(string, FormattableString)>) AuditScheduleSupplementsUnique(ICollection<BusinessObjectInspectionAuditScheduleSupplement> auditScheduleSupplements)
-            => (!auditScheduleSupplements.GroupBy(x => (x.PlannedAuditDate, x.PlannedAuditTime)).Any(x => x.Count() > 1),
-                () => (nameof(auditScheduleSupplements), $"Audit schedule supplement duplicates are not allowed"));
     }
 }

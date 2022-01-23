@@ -14,17 +14,12 @@ namespace Super.Paula.Application.Inventory
         public int AssignmentTime { get; set; }
         public int AssignmentDate { get; set; }
 
-        public ISet<BusinessObjectInspectionAuditSchedule> AuditSchedules { get; set; } = new HashSet<BusinessObjectInspectionAuditSchedule>();
-        public ISet<BusinessObjectInspectionAuditScheduleDrop> AuditScheduleDrops { get; set; } = new HashSet<BusinessObjectInspectionAuditScheduleDrop>();
-        public ISet<BusinessObjectInspectionAuditScheduleSupplement> AuditScheduleSupplements { get; set; } = new HashSet<BusinessObjectInspectionAuditScheduleSupplement>();
-
-        public int AuditDelayThreshold { get; set; }
-        public int AuditThreshold { get; set; }
-
         public int AuditTime { get; set; }
         public int AuditDate { get; set; }
         public string AuditInspector { get; set; } = string.Empty;
         public string AuditResult { get; set; } = string.Empty;
         public string AuditAnnotation { get; set; } = string.Empty;
+
+        public BusinessObjectInspectionAuditSchedule AuditSchedule { get; set; } = new BusinessObjectInspectionAuditSchedule();
     }
 }

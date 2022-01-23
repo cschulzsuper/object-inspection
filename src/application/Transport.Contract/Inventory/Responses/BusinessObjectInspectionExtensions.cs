@@ -21,12 +21,10 @@ namespace Super.Paula.Application.Inventory.Responses
                 ActivatedGlobally = inspection.ActivatedGlobally,
                 DisplayName = inspection.DisplayName,
                 Text = inspection.Text,
-                AuditDelayThreshold = inspection.AuditDelayThreshold,
-                AuditThreshold = inspection.AuditThreshold,
-                AuditSchedules = inspection.AuditSchedules.ToResponse()
+                AuditSchedule = inspection.AuditSchedule.ToResponse()
             };
 
-            response = ScheduleAudit(response, inspection);
+            response = Schedule(response, inspection);
 
             return response;
         }
@@ -36,23 +34,25 @@ namespace Super.Paula.Application.Inventory.Responses
                 .Select(ToResponse)
                 .ToHashSet();
 
-        private static BusinessObjectInspectionResponse ScheduleAudit(BusinessObjectInspectionResponse response, BusinessObjectInspection inspection)
+
+
+        private static BusinessObjectInspectionResponse Schedule(BusinessObjectInspectionResponse response, BusinessObjectInspection inspection)
         {
-            var auditSchedule = inspection.AuditSchedules
+            var expression = inspection.AuditSchedule.Expressions
                 .FirstOrDefault();
 
-            var cronExpression = auditSchedule?.CronExpression;
+            var cronExpression = expression?.CronExpression;
 
             if (!string.IsNullOrWhiteSpace(cronExpression))
             {
                 var schedule = CronExpression.Parse(cronExpression);
-                SchedulePlannedAudit(response, schedule, inspection);
+                ScheduleAppointment(response, schedule, inspection);
             }
 
             return response;
         }
 
-        private static void SchedulePlannedAudit(BusinessObjectInspectionResponse response, CronExpression schedule, BusinessObjectInspection inspection)
+        private static void ScheduleAppointment(BusinessObjectInspectionResponse response, CronExpression schedule, BusinessObjectInspection inspection)
         {
             var plannedAuditOriginNumbers = inspection.AuditDate != default
                 ? (inspection.AuditDate, inspection.AuditTime)
@@ -65,15 +65,22 @@ namespace Super.Paula.Application.Inventory.Responses
                 var plannedAuditTimestamp = GetNextOccurrence(schedule, inspection, plannedAuditOriginNumbers);
 
                 var plannedAuditTimestampBegin = plannedAuditTimestamp
-                    .AddMilliseconds(-inspection.AuditThreshold);
+                    .AddMilliseconds(-inspection.AuditSchedule.Threshold);
 
                 var plannedAuditTimestampEnd = plannedAuditTimestamp
-                    .AddMilliseconds(inspection.AuditThreshold);
+                    .AddMilliseconds(inspection.AuditSchedule.Threshold);
 
                 if (plannedAuditOriginTimestamp < plannedAuditTimestampBegin ||
                     plannedAuditOriginTimestamp > plannedAuditTimestampEnd)
                 {
-                    (response.PlannedAuditDate, response.PlannedAuditTime) = plannedAuditTimestamp.ToNumbers();
+                    (int plannedAuditDate, int plannedAuditTime) = plannedAuditTimestamp.ToNumbers();
+
+                    response.AuditSchedule.Appointments.Add(new BusinessObjectInspectionAuditScheduleTimestampResponse
+                    {
+                        PlannedAuditDate = plannedAuditDate,
+                        PlannedAuditTime = plannedAuditTime
+                    });
+                    
                     break;
                 }
 
@@ -88,16 +95,16 @@ namespace Super.Paula.Application.Inventory.Responses
             var plannedAuditTimestamp = schedule.GetNextOccurrence(plannedAuditOriginTimestamp, inclusive: false)
                 ?? plannedAuditOriginTimestamp;
 
-            while (plannedAuditTimestamp != plannedAuditOriginTimestamp) 
+            while (plannedAuditTimestamp != plannedAuditOriginTimestamp)
             {
                 var plannedAuditNumbers = plannedAuditTimestamp.ToNumbers();
 
-                var ignorePlannedAudit = inspection.AuditScheduleDrops
+                var ignorePlannedAudit = inspection.AuditSchedule.Omissions
                     .Any(x =>
                         x.PlannedAuditDate == plannedAuditNumbers.day &&
                         x.PlannedAuditTime == plannedAuditNumbers.milliseconds);
 
-                if(!ignorePlannedAudit)
+                if (!ignorePlannedAudit)
                 {
                     break;
                 }
@@ -105,14 +112,15 @@ namespace Super.Paula.Application.Inventory.Responses
                 plannedAuditTimestamp = schedule.GetNextOccurrence(plannedAuditTimestamp, inclusive: false) ?? plannedAuditOriginTimestamp;
             }
 
-            var plannedAuditAdjusment = inspection.AuditScheduleSupplements
+            var plannedAuditAdjusment = inspection.AuditSchedule.Additionals
                 .OrderBy(x => x.PlannedAuditDate)
                 .ThenBy(x => x.PlannedAuditTime)
                 .FirstOrDefault(x =>
                     x.PlannedAuditDate > plannedAuditOriginNumbers.Date &&
                     x.PlannedAuditTime > plannedAuditOriginNumbers.Time);
 
-            if (plannedAuditAdjusment != null) {
+            if (plannedAuditAdjusment != null)
+            {
                 var plannedAuditAdjusmentTimestamp = (plannedAuditAdjusment.PlannedAuditDate, plannedAuditAdjusment.PlannedAuditTime).ToDateTime();
                 if (plannedAuditAdjusmentTimestamp < plannedAuditTimestamp)
                 {
@@ -122,5 +130,6 @@ namespace Super.Paula.Application.Inventory.Responses
 
             return plannedAuditTimestamp;
         }
+
     }
 }

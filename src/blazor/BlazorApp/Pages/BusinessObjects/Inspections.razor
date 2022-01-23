@@ -234,8 +234,8 @@ else
             inspection.UniqueName,
             new DropInspectionAuditRequest
             {
-                PlannedAuditDate = inspection.PlannedAuditDate,
-                PlannedAuditTime = inspection.PlannedAuditTime                 
+                PlannedAuditDate = inspection.AuditSchedule.Appointments.First().PlannedAuditDate,
+                PlannedAuditTime = inspection.AuditSchedule.Appointments.First().PlannedAuditTime                 
             });
 
         var response = await BusinessObjectHandler.GetAsync(BusinessObject);
@@ -245,8 +245,8 @@ else
 
         if (inspectionResponse != null)
         {
-            inspection.PlannedAuditDate = inspectionResponse.PlannedAuditDate;
-            inspection.PlannedAuditTime = inspectionResponse.PlannedAuditTime;
+            inspection.AuditSchedule.Appointments.First().PlannedAuditDate = inspectionResponse.AuditSchedule.Appointments.First().PlannedAuditDate;
+            inspection.AuditSchedule.Appointments.First().PlannedAuditTime = inspectionResponse.AuditSchedule.Appointments.First().PlannedAuditTime;
         }
     }
 }

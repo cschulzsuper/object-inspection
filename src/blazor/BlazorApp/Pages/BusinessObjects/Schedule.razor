@@ -25,10 +25,6 @@ else
                 <InputText class="form-control" id="Schedule" @bind-Value="_request.Schedule"/>
             </div>
             <div class="form-group">
-                <label>@Translator["Audit delay threshold"] (@TimeSpan.FromMilliseconds(_request.DelayThreshold).ToString("c"))</label>
-                <InputMilliseconds class="form-control" id="DelayThreshold" @bind-Value="_request.DelayThreshold" step="1"/>
-            </div>
-            <div class="form-group">
                 <label>@Translator["Upcoming audit threshold"] (@TimeSpan.FromMilliseconds(_request.Threshold).ToString("c"))</label>
                 <InputMilliseconds class="form-control" id="Threshold"  @bind-Value="_request.Threshold" step="1"/>
             </div>
@@ -71,13 +67,12 @@ else
 
         if (responseInspection != null)
         {
-            var auditSchedule = responseInspection.AuditSchedules.FirstOrDefault();
+            var expression = responseInspection.AuditSchedule.Expressions.FirstOrDefault();
 
             _request = new ScheduleInspectionAuditRequest
             {
-                Threshold = responseInspection.AuditThreshold,
-                DelayThreshold = responseInspection.AuditDelayThreshold,
-                Schedule = auditSchedule?.CronExpression ?? string.Empty
+                Threshold = responseInspection.AuditSchedule.Threshold,
+                Schedule = expression?.CronExpression ?? string.Empty
             };
         }
     }

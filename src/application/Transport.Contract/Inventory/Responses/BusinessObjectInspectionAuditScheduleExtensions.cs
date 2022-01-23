@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Cronos;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Super.Paula.Application.Inventory.Responses
@@ -9,7 +10,12 @@ namespace Super.Paula.Application.Inventory.Responses
         {
             var response = new BusinessObjectInspectionAuditScheduleResponse
             {
-                CronExpression = auditSchedule.CronExpression,
+                Expressions = auditSchedule.Expressions.ToResponse(),
+                Threshold = auditSchedule.Threshold,
+                Omissions = auditSchedule.Omissions.ToResponse(),
+                Delays = auditSchedule.Delays.ToResponse(),
+                Additionals = auditSchedule.Additionals.ToResponse(),
+                Appointments = auditSchedule.Appointments.ToResponse()
             };
 
             return response;

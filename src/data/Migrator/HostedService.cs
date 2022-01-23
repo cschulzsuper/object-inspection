@@ -34,7 +34,7 @@ namespace Super.Paula.Data
             _appSettings.CosmosDatabase = _configuration["CosmosDatabase"];
 
             await IStep.ExecuteAsync<Initialization>(_serviceProvider);
-            await IStep.ExecuteAsync<AuditAdjustment>(_serviceProvider);
+            await IStep.ExecuteAsync<AuditOmissions>(_serviceProvider);
 
             _applicationLifetime.StopApplication();
         }

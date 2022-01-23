@@ -113,20 +113,20 @@ namespace Super.Paula.Application.Inventory
             var businessObjectInspection = entity.Inspections
                 .Single(x => x.UniqueName == inspection);
 
-            businessObjectInspection.AuditDelayThreshold = request.DelayThreshold;
-            businessObjectInspection.AuditThreshold = request.Threshold;
+            businessObjectInspection.AuditSchedule.Threshold = request.Threshold;
 
-            businessObjectInspection.AuditSchedules.Clear();
-            businessObjectInspection.AuditScheduleDrops.Clear();
+            businessObjectInspection.AuditSchedule.Expressions.Clear();
+            businessObjectInspection.AuditSchedule.Omissions.Clear();
+            businessObjectInspection.AuditSchedule.Additionals.Clear();
 
             if (!string.IsNullOrWhiteSpace(request.Schedule))
             {
-                var auditSchedule = new BusinessObjectInspectionAuditSchedule
+                var auditSchedule = new BusinessObjectInspectionAuditScheduleExpression
                 {
                     CronExpression = request.Schedule
                 };
 
-                businessObjectInspection.AuditSchedules.Add(auditSchedule);
+                businessObjectInspection.AuditSchedule.Expressions.Add(auditSchedule);
             } 
 
             await _businessObjectManager.UpdateAsync(entity);
@@ -147,8 +147,6 @@ namespace Super.Paula.Application.Inventory
                 UniqueName = inspection.UniqueName,
                 DisplayName = inspection.DisplayName,
                 Text = inspection.Text,
-                AuditDelayThreshold = TimeSpan.FromHours(8).Milliseconds,
-                AuditThreshold = TimeSpan.FromHours(8).Milliseconds,
 
                 AssignmentDate = assignmentDate,
                 AssignmentTime = assignmentTime,
@@ -157,7 +155,16 @@ namespace Super.Paula.Application.Inventory
                 AuditInspector = string.Empty,
                 AuditResult = string.Empty,
                 AuditDate = default,
-                AuditTime = default
+                AuditTime = default,
+
+                AuditSchedule = new BusinessObjectInspectionAuditSchedule
+                {
+                    Expressions = new HashSet<BusinessObjectInspectionAuditScheduleExpression>
+                    {
+                        new BusinessObjectInspectionAuditScheduleExpression()
+                    },
+                    Threshold = TimeSpan.FromHours(8).Milliseconds,
+                }
             });
 
             await _businessObjectManager.UpdateAsync(entity);
@@ -343,13 +350,13 @@ namespace Super.Paula.Application.Inventory
             var businessObjectInspection = entity.Inspections
                 .Single(x => x.UniqueName == inspection);
 
-            var auditScheduleDrop = new BusinessObjectInspectionAuditScheduleDrop
+            var omission = new BusinessObjectInspectionAuditScheduleTimestamp
             {
                 PlannedAuditDate = request.PlannedAuditDate,
                 PlannedAuditTime = request.PlannedAuditTime,
             };
 
-            businessObjectInspection.AuditScheduleDrops.Add(auditScheduleDrop);
+            businessObjectInspection.AuditSchedule.Omissions.Add(omission);
 
             await _businessObjectManager.UpdateAsync(entity);
         }

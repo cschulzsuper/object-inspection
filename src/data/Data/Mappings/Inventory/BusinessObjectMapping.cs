@@ -94,42 +94,62 @@ namespace Super.Paula.Data.Mappings.Inventory
                 .HasMaxLength(4000)
                 .IsRequired();
 
-            inspectionsBuilder
-                .Property(x => x.AuditDelayThreshold)
+            var auditScheduleBuilder = inspectionsBuilder
+                .OwnsOne(x => x.AuditSchedule);
+
+            auditScheduleBuilder
+                .Property(x => x.Threshold)
                 .IsRequired();
 
-            inspectionsBuilder
-                .Property(x => x.AuditThreshold)
-                .IsRequired();
+            var auditScheduleExpressionsBuilder = auditScheduleBuilder
+                .OwnsMany(x => x.Expressions);
 
-
-            var auditSchedulesBuilder = inspectionsBuilder
-                .OwnsMany(x => x.AuditSchedules);
-
-            auditSchedulesBuilder
+            auditScheduleExpressionsBuilder
                 .Property(x => x.CronExpression)
                 .HasMaxLength(140)
                 .IsRequired();
 
-            var auditScheduleDropsBuilder = inspectionsBuilder
-                .OwnsMany(x => x.AuditScheduleDrops);
+            var auditScheduleOmissionsBuilder = auditScheduleBuilder
+                .OwnsMany(x => x.Omissions);
 
-            auditScheduleDropsBuilder
+            auditScheduleOmissionsBuilder
                 .Property(x => x.PlannedAuditDate)
                 .IsRequired();
 
-            auditScheduleDropsBuilder
+            auditScheduleOmissionsBuilder
                 .Property(x => x.PlannedAuditTime)
                 .IsRequired();
 
-            var auditScheduleDropsSupplements = inspectionsBuilder
-                .OwnsMany(x => x.AuditScheduleSupplements);
+            var auditScheduleAdditionalsBuilder = auditScheduleBuilder
+                .OwnsMany(x => x.Additionals);
 
-            auditScheduleDropsSupplements
+            auditScheduleAdditionalsBuilder
                 .Property(x => x.PlannedAuditDate)
                 .IsRequired();
 
-            auditScheduleDropsSupplements
+            auditScheduleAdditionalsBuilder
+                .Property(x => x.PlannedAuditTime)
+                .IsRequired();
+
+            var auditScheduleAppointmentsBuilder = auditScheduleBuilder
+                .OwnsMany(x => x.Appointments);
+
+            auditScheduleAppointmentsBuilder
+                .Property(x => x.PlannedAuditDate)
+                .IsRequired();
+
+            auditScheduleAppointmentsBuilder
+                .Property(x => x.PlannedAuditTime)
+                .IsRequired();
+
+            var auditScheduleDelaysBuilder = auditScheduleBuilder
+                .OwnsMany(x => x.Delays);
+
+            auditScheduleDelaysBuilder
+                .Property(x => x.PlannedAuditDate)
+                .IsRequired();
+
+            auditScheduleDelaysBuilder
                 .Property(x => x.PlannedAuditTime)
                 .IsRequired();
 

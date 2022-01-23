@@ -131,8 +131,6 @@ else
 
             inspection.AuditDate = request.AuditDate;
             inspection.AuditTime = request.AuditTime;
-            inspection.PlannedAuditDate = default;
-            inspection.PlannedAuditTime = default;
             inspection.AuditResult = request.Result;
         }
 
@@ -143,8 +141,8 @@ else
 
         if (inspectionResponse != null)
         {
-            inspection.PlannedAuditDate = inspectionResponse.PlannedAuditDate;
-            inspection.PlannedAuditTime = inspectionResponse.PlannedAuditTime;
+            inspection.AuditSchedule.Appointments.First().PlannedAuditDate = inspectionResponse.AuditSchedule.Appointments.First().PlannedAuditDate;
+            inspection.AuditSchedule.Appointments.First().PlannedAuditTime = inspectionResponse.AuditSchedule.Appointments.First().PlannedAuditTime;
         }
     }
 

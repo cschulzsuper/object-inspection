@@ -8,9 +8,6 @@ namespace Super.Paula.Application.Inventory.Requests
         public string Schedule { get; set; } = string.Empty;
 
         [Milliseconds]
-        public int DelayThreshold { get; set; }
-
-        [Milliseconds]
         public int Threshold { get; set; }
     }
 }

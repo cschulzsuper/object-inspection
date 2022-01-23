@@ -10,12 +10,12 @@ using Super.Paula.Environment;
 
 namespace Super.Paula.Data.Steps
 {
-    public class AuditAdjustment : IStep
+    public class AuditOmissions : IStep
     {
         private readonly PaulaContext _paulaContext;
         private readonly AppSettings _appSettings;
 
-        public AuditAdjustment(
+        public AuditOmissions(
             PaulaContext paulaContext,
             AppSettings appSettings)
         {
@@ -41,19 +41,37 @@ namespace Super.Paula.Data.Steps
                     {
                         var needsUpdate = false;
 
-                        if (inspection.AuditScheduleDrops == null ||
-                            !inspection.AuditScheduleDrops.Any())
+                        if (inspection.AuditSchedule.Omissions?.Any() != true)
                         {
-                            inspection.AuditScheduleDrops = new HashSet<BusinessObjectInspectionAuditScheduleDrop>();
+                            inspection.AuditSchedule.Omissions = new HashSet<BusinessObjectInspectionAuditScheduleTimestamp>();
 
                             needsUpdate = true;
                         }
 
-
-                        if (inspection.AuditScheduleSupplements == null ||
-                            !inspection.AuditScheduleSupplements.Any())
+                        if (inspection.AuditSchedule.Appointments?.Any() != true)
                         {
-                            inspection.AuditScheduleSupplements = new HashSet<BusinessObjectInspectionAuditScheduleSupplement>();
+                            inspection.AuditSchedule.Appointments = new HashSet<BusinessObjectInspectionAuditScheduleTimestamp>();
+
+                            needsUpdate = true;
+                        }
+
+                        if (inspection.AuditSchedule.Expressions?.Any() != true)
+                        {
+                            inspection.AuditSchedule.Expressions = new HashSet<BusinessObjectInspectionAuditScheduleExpression>();
+
+                            needsUpdate = true;
+                        }
+
+                        if (inspection.AuditSchedule.Additionals?.Any() != true)
+                        {
+                            inspection.AuditSchedule.Additionals = new HashSet<BusinessObjectInspectionAuditScheduleTimestamp>();
+
+                            needsUpdate = true;
+                        }
+
+                        if (inspection.AuditSchedule.Delays?.Any() != true)
+                        {
+                            inspection.AuditSchedule.Delays = new HashSet<BusinessObjectInspectionAuditScheduleTimestamp>();
 
                             needsUpdate = true;
                         }

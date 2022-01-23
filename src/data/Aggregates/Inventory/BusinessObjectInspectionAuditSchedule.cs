@@ -4,6 +4,17 @@ namespace Super.Paula.Application.Inventory
 {
     public class BusinessObjectInspectionAuditSchedule
     {
-        public string CronExpression { get; set; } = string.Empty;
+        public ISet<BusinessObjectInspectionAuditScheduleExpression> Expressions { get; set; } = new HashSet<BusinessObjectInspectionAuditScheduleExpression>();
+
+        public int Threshold { get; set; }
+
+        public ISet<BusinessObjectInspectionAuditScheduleTimestamp> Additionals { get; set; } = new HashSet<BusinessObjectInspectionAuditScheduleTimestamp>();
+
+        public ISet<BusinessObjectInspectionAuditScheduleTimestamp> Omissions { get; set; } = new HashSet<BusinessObjectInspectionAuditScheduleTimestamp>();
+
+        public ISet<BusinessObjectInspectionAuditScheduleTimestamp> Appointments { get; set; } = new HashSet<BusinessObjectInspectionAuditScheduleTimestamp>();
+
+        public ISet<BusinessObjectInspectionAuditScheduleTimestamp> Delays { get; set; } = new HashSet<BusinessObjectInspectionAuditScheduleTimestamp>();
+
     }
 }
