@@ -41,12 +41,12 @@ namespace Super.Paula.Application.Inventory
         }
 
         private static Delegate Get =>
-            [Authorize("RequiresInspectability")]
+            [Authorize("RequiresWeekInspectability")]
             (IBusinessObjectHandler handler, string businessObject)
                 => handler.GetAsync(businessObject);
 
         private static Delegate GetAll =>
-            [Authorize("RequiresObservability")]
+            [Authorize("RequiresWeekManageability")]
             (IBusinessObjectHandler handler)
                 => handler.GetAll();
 
@@ -86,12 +86,12 @@ namespace Super.Paula.Application.Inventory
             => handler.DropInspectionAuditAsync(businessObject, inspection, request);
 
         private static Delegate Search =>
-            [Authorize("RequiresObservability")]
+            [Authorize("RequiresWeekManageability")]
             (IBusinessObjectHandler handler, [FromQuery(Name = "business-object")] string? businessObject, string? inspector)
                 => handler.Search(businessObject, inspector);
 
         private static Delegate GetAllForInspector =>
-            [Authorize("RequiresInspectability")]
+            [Authorize("RequiresWeekInspectability")]
             (IBusinessObjectHandler handler, string inspector)
                 => handler.GetAllForInspector(inspector);
 

@@ -26,17 +26,17 @@ namespace Super.Paula.Application.Communication
         }
 
         private static Delegate Get =>
-            [Authorize("RequiresInspectability")]
+            [Authorize("RequiresWeekInspectability")]
             (INotificationHandler handler, string inspector, int date, int time)
                 => handler.GetAsync(inspector, date, time);
 
         private static Delegate GetAll =>
-            [Authorize("RequiresMaintainability")]
+            [Authorize("RequiresWeekInspectability")]
             (INotificationHandler handler)
                 => handler.GetAll();
 
         private static Delegate GetAllForInspector =>
-            [Authorize("RequiresInspectability")]
+            [Authorize("RequiresWeekInspectability")]
             (INotificationHandler handler, string inspector)
                 => handler.GetAllForInspector(inspector);
 

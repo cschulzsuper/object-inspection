@@ -9,11 +9,11 @@ namespace Super.Paula.Client.Components.Forms
 {
     public class InputDayNumber : InputBase<int>
     {
-        private string _typeAttributeValue = "date";
+        private readonly string _typeAttributeValue = "date";
 
-        private string _format = "yyyy-MM-dd";
+        private readonly string _format = "yyyy-MM-dd";
 
-        private string _parsingErrorMessage = "The {{0}} field must be an int.";
+        private readonly string _parsingErrorMessage = "The {{0}} field must be an int.";
 
         /// <summary>
         /// Gets or sets the error message used when displaying an a parsing error.

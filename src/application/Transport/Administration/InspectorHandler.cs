@@ -37,7 +37,7 @@ namespace Super.Paula.Application.Administration
 
             var entity = new Inspector
             {
-                Identity = request.UniqueName,
+                Identity = request.Identity,
                 UniqueName = request.UniqueName,
                 Activated = request.Activated,
                 Organization = organization.UniqueName,

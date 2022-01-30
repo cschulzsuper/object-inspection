@@ -32,17 +32,17 @@ namespace Super.Paula.Application.Administration
         }
 
         private static Delegate Get =>
-            [Authorize("RequiresObservability")]
+            [Authorize("RequiresWeekManageability")]
             (IInspectorHandler handler, string inspector)
                 => handler.GetAsync(inspector);
 
         private static Delegate GetAll =>
-            [Authorize("RequiresObservability")]
+            [Authorize("RequiresWeekManageability")]
             (IInspectorHandler handler)
                 => handler.GetAll();
 
         private static Delegate GetAllForOrganization =>
-            [Authorize("RequiresObservability")]
+            [Authorize("RequiresWeekManageability")]
             [IgnoreCurrentOrganization]
             (IInspectorHandler handler, string organization)
                 => handler.GetAllForOrganization(organization);

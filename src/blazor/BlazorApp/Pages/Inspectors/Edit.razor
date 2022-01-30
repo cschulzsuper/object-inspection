@@ -5,7 +5,7 @@
 @inject IInspectorHandler InspectorHandler
 @inject AppAuthentication AppAuthentication
 
-@attribute [Authorize("RequiresObservability")]
+@attribute [Authorize("RequiresWeekManageability")]
 
 <div class="container-fluid">
     <h1>@Translator["Edit inspectors"]</h1>
@@ -47,7 +47,7 @@ else
         else 
         {
             <div class="container-fluid">
-                <button type="submit" class="btn btn-primary">@Translator["Submit"]</button>
+                <AuthorizedButton Policy="RequiresManageability" type="submit" class="btn btn-primary">@Translator["Submit"]</AuthorizedButton>
             </div>
         }
 

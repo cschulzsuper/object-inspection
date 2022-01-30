@@ -35,7 +35,7 @@ namespace Super.Paula.Application.Administration
                 => handler.SignInInspectorAsync(request);
 
         private static Delegate SignOutInspector =>
-            [Authorize("RequiresInspectability")]
+            [Authorize("RequiresWeekInspectability")]
             (IAccountHandler handler)
                 => handler.SignOutInspectorAsync();
 
@@ -63,7 +63,7 @@ namespace Super.Paula.Application.Administration
                 => handler.StartImpersonationAsync(request);
 
         private static Delegate StopImpersonation =>
-            [Authorize("RequiresInspectability")]
+            [Authorize("RequiresWeekInspectability")]
             [IgnoreCurrentOrganization]
             (IAccountHandler handler)
                 => handler.StopImpersonationAsync();
@@ -81,7 +81,7 @@ namespace Super.Paula.Application.Administration
                 => handler.AssessChiefInspectorDefectivenessAsync(request);
 
         private static Delegate Verify =>
-            [Authorize("RequiresInspectability")]
+            [Authorize("RequiresWeekInspectability")]
             (IAccountHandler handler)
                 => handler.VerifyAsync();
     }

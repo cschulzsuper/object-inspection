@@ -17,8 +17,9 @@ namespace Super.Paula.Authorization
                 {
                     "RequiresMaintainability" => _Policies.RequiresMaintainabilityPolicy,
                     "RequiresManageability" => _Policies.RequiresManageabilityPolicy,
-                    "RequiresObservability" => _Policies.RequiresObservabilityPolicy,
+                    "RequiresWeekManageability" => _Policies.RequiresWeekManageabilityPolicy,
                     "RequiresInspectability" => _Policies.RequiresInspectabilityPolicy,
+                    "RequiresWeekInspectability" => _Policies.RequiresWeekInspectabilityPolicy,
 
                     "Impersonator" => _Policies.IsImpersonatorPolicy,
                     "Streamer" => _Policies.IsStreamerPolicy,

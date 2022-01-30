@@ -4,7 +4,7 @@
 @inject NavigationManager NavigationManager
 @inject IBusinessObjectHandler BusinessObjectHandler
 
-@attribute [Authorize("RequiresInspectability")]
+@attribute [Authorize("RequiresWeekInspectability")]
 
 <div class="container-fluid">
     <h1>@Translator["Annotate audit"]</h1>
@@ -45,7 +45,7 @@ else
         else 
         {
             <div class="container-fluid">
-                <button type="submit" class="btn btn-primary">@Translator["Submit"]</button>
+                <AuthorizedButton Policy="RequiresInspectability" type="submit" class="btn btn-primary">@Translator["Submit"]</AuthorizedButton>
             </div>
         }
 

@@ -4,7 +4,7 @@
 @inject NavigationManager NavigationManager
 @inject IInspectionHandler InspectionHandler
 
-@attribute [Authorize("RequiresObservability")]
+@attribute [Authorize("RequiresWeekManageability")]
 
 <div class="container-fluid">
     <h1>@Translator["Create inspection"]</h1>
@@ -43,7 +43,7 @@
     else 
     {
         <div class="container-fluid">
-            <button type="submit" class="btn btn-primary">@Translator["Submit"]</button>
+            <AuthorizedButton Policy="RequiresManageability" type="submit" class="btn btn-primary">@Translator["Submit"]</AuthorizedButton>
         </div>
     }
 

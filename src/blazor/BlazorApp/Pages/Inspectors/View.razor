@@ -9,7 +9,7 @@
 @inject IOrganizationHandler OrganizationHandler
 
 
-@attribute [Authorize("RequiresObservability")]
+@attribute [Authorize("RequiresWeekManageability")]
 
 <div class="container-fluid">
     <h1>@Translator["Inspectors"]</h1>
@@ -59,16 +59,16 @@ else
                             <td>
                                 @if (inspector.UniqueName != AppAuthentication.Inspector)
                                 {
-                                    <button class="btn btn-success btn-block" title="@Translator["Deactivate"]" 
-                                        @onclick="() => DeactivateAsync(inspector.UniqueName)"><span class="oi oi-power-standby"/></button>
+                                    <AuthorizedButton Policy="RequiresManageability" class="btn btn-success btn-block" title="@Translator["Deactivate"]" 
+                                        @onclick="() => DeactivateAsync(inspector.UniqueName)"><span class="oi oi-power-standby"/></AuthorizedButton>
                                 }
                             </td>
                         } else {
                             <td>
                                 @if (inspector.UniqueName != AppAuthentication.Inspector)
                                 {
-                                    <button class="btn btn-outline-danger btn-block" title="@Translator["Activate"]" 
-                                        @onclick="() => ActivateAsync(inspector.UniqueName)"><span class="oi oi-power-standby"/></button>
+                                    <AuthorizedButton Policy="RequiresManageability" class="btn btn-outline-danger btn-block" title="@Translator["Activate"]" 
+                                        @onclick="() => ActivateAsync(inspector.UniqueName)"><span class="oi oi-power-standby"/></AuthorizedButton>
                                 }
                             </td>
                         }
@@ -79,8 +79,8 @@ else
                         <td>
                             @if (inspector.UniqueName != AppAuthentication.Inspector)
                             {
-                                <button class="btn btn-outline-danger btn-block" title="@Translator["Delete"]" 
-                                    @onclick="() => DeleteAsync(inspector.UniqueName)"><span class="oi oi-trash"/></button>
+                                <AuthorizedButton Policy="RequiresManageability" class="btn btn-outline-danger btn-block" title="@Translator["Delete"]" 
+                                    @onclick="() => DeleteAsync(inspector.UniqueName)"><span class="oi oi-trash"/></AuthorizedButton>
                             }
                         </td>
                     }

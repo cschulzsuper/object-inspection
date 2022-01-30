@@ -63,10 +63,7 @@ namespace Super.Paula.Data.Steps
                         }
                     }
 
-                    if (inspector.BusinessObjects.Any())
-                    {
-                        inspectorUpdateRange.Add(inspector);
-                    }
+                    inspectorUpdateRange.Add(inspector);
                 }
             }
 

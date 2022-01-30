@@ -6,13 +6,13 @@
 @inject IBusinessObjectHandler BusinessObjectHandler
 @inject AppAuthentication AppAuthentication
 
-@attribute [Authorize("RequiresInspectability")]
+@attribute [Authorize("RequiresWeekInspectability")]
 
 <div class="container-fluid">
     <h1>@Translator["Inspections"]</h1>
 </div>
 
-<AuthorizeView Policy="RequiresObservability">
+<AuthorizeView Policy="RequiresWeekManageability">
     <Authorized>
         <div class="container-fluid m-2">
             <button class="btn @(_mode == Mode.AssignmentMode ? "btn-primary" : "btn-outline-primary")"
@@ -44,7 +44,7 @@ else
                 <th class="col-2 d-none d-lg-table-cell">@Translator["Unique name"]</th>
                 <th class="col-10">@Translator["Display name"]</th>
 
-                <AuthorizeView Policy="RequiresObservability">
+                <AuthorizeView Policy="RequiresWeekManageability">
                     <Authorized>
                         <th></th>
                     </Authorized>
@@ -61,20 +61,20 @@ else
                         <BusinessObjectInspectionResponseToggle Inspection="inspection"/>
                     </td>
 
-                    <AuthorizeView Policy="RequiresObservability">
+                    <AuthorizeView Policy="RequiresWeekManageability">
                         <Authorized>
                             <td>
                             @if (_mode == Mode.AssignmentMode)
                             {
                                 @if (_inspectionBusinessObjects!.ContainsKey(inspection.UniqueName))
                                 {
-                                    <button class="btn btn-primary btn-block" title="@Translator["Unassign"]"
-                                            @onclick="() => UnassignAsync(inspection)"><span class="oi oi-minus"/></button>
+                                    <AuthorizedButton Policy="RequiresManageability" class="btn btn-primary btn-block" title="@Translator["Unassign"]"
+                                            @onclick="() => UnassignAsync(inspection)"><span class="oi oi-minus"/></AuthorizedButton>
                                 }
                                 else
                                 {
-                                    <button class="btn btn-outline-primary btn-block" title="@Translator["Assign"]"
-                                            @onclick="() => AssignAsync(inspection)"><span class="oi oi-plus"/></button>
+                                    <AuthorizedButton Policy="RequiresManageability" class="btn btn-outline-primary btn-block" title="@Translator["Assign"]"
+                                            @onclick="() => AssignAsync(inspection)"><span class="oi oi-plus"/></AuthorizedButton>
                                 }
                             }
 
@@ -86,8 +86,8 @@ else
 
                             @if (_mode == Mode.DropMode)
                             {
-                                    <button class="btn btn-outline-primary btn-block" title="@Translator["Drop"]"
-                                            @onclick="() => DropAsync(inspection)"><span class="oi oi-media-skip-forward"></span></button>
+                                    <AuthorizedButton Policy="RequiresManageability" class="btn btn-outline-primary btn-block" title="@Translator["Drop"]"
+                                            @onclick="() => DropAsync(inspection)"><span class="oi oi-media-skip-forward"></span></AuthorizedButton>
                             }
 
                             </td>

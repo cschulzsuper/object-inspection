@@ -14,7 +14,7 @@ namespace Super.Paula.Authorization
 
         public static AuthorizationPolicy IsAuthorizedPolicy =>
             new AuthorizationPolicyBuilder()
-                .AddRequirements(new PaulaAuthorizationRequirement(string.Empty))
+                .AddRequirements(new PaulaAuthorizationRequirement())
                 .Build();
 
         public static AuthorizationPolicy RequiresManageabilityPolicy =>
@@ -42,9 +42,15 @@ namespace Super.Paula.Authorization
                 .AddRequirements(new PaulaAuthorizationRequirement("Streamer"))
                 .Build();
 
-        public static AuthorizationPolicy RequiresObservabilityPolicy =>
+        public static AuthorizationPolicy RequiresWeekManageabilityPolicy =>
             new AuthorizationPolicyBuilder()
                 .AddRequirements(new PaulaAuthorizationRequirement("Chief", "Observer"))
                 .Build();
+
+        public static AuthorizationPolicy RequiresWeekInspectabilityPolicy =>
+            new AuthorizationPolicyBuilder()
+                .AddRequirements(new PaulaAuthorizationRequirement("Inspector", "Observer"))
+                .Build();
+
     }
 }
