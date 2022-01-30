@@ -4,11 +4,11 @@ namespace Super.Paula.Authorization
 {
     public class PaulaAuthorizationRequirement : IAuthorizationRequirement
     {
-        public PaulaAuthorizationRequirement(string value)
+        public PaulaAuthorizationRequirement(params string[] authorizations)
         {
-            Value = value;
+            Authorizations = authorizations;
         }
 
-        public string Value { get; }
+        public string[] Authorizations { get; }
     }
 }

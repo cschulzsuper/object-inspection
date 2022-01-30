@@ -9,7 +9,7 @@
 @inject IOrganizationHandler OrganizationHandler
 
 
-@attribute [Authorize("ChiefInspector")]
+@attribute [Authorize("RequiresObservability")]
 
 <div class="container-fluid">
     <h1>@Translator["Inspectors"]</h1>
@@ -39,7 +39,7 @@ else
                     <th></th>
                     <th></th>
                 }
-                <AuthorizeView Policy="Maintainer">
+                <AuthorizeView Policy="RequiresMaintainability">
                     <Authorized>
                         <th></th>
                     </Authorized>
@@ -84,7 +84,7 @@ else
                             }
                         </td>
                     }
-                    <AuthorizeView Policy="Maintainer">
+                    <AuthorizeView Policy="RequiresMaintainability">
                         <Authorized>
                             <td>
                                 @if (inspector.Activated &&

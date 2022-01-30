@@ -4,7 +4,7 @@
 @inject NavigationManager NavigationManager
 @inject IOrganizationHandler OrganizationHandler
 
-@attribute [Authorize("Maintainer")]
+@attribute [Authorize("RequiresMaintainability")]
 
 <div class="container-fluid">
     <h1>@Translator["Create organization"]</h1>

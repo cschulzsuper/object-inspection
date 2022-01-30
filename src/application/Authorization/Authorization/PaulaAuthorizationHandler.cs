@@ -32,13 +32,13 @@ namespace Super.Paula.Authorization
                 authorizations = claims("Authorization");
             }
 
-            if (string.IsNullOrWhiteSpace(requirement.Value) &&
+            if (!requirement.Authorizations.Any() &&
                 authorizations.Any())
             {
                 context.Succeed(requirement);
             }
 
-            if (authorizations.Contains(requirement.Value))
+            if (authorizations.Intersect(requirement.Authorizations).Any())
             {
                 context.Succeed(requirement);
             }

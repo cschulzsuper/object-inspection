@@ -5,7 +5,7 @@
 @inject IOrganizationHandler OrganizationHandler
 @inject AppAuthentication AppAuthentication
 
-@attribute [Authorize("Maintainer")]
+@attribute [Authorize("RequiresMaintainability")]
 
 <div class="container-fluid">
     <h1>@Translator["Organizations"]</h1>

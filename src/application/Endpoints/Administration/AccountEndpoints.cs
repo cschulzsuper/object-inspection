@@ -35,7 +35,7 @@ namespace Super.Paula.Application.Administration
                 => handler.SignInInspectorAsync(request);
 
         private static Delegate SignOutInspector =>
-            [Authorize("Inspector")]
+            [Authorize("RequiresInspectability")]
             (IAccountHandler handler)
                 => handler.SignOutInspectorAsync();
 
@@ -48,7 +48,7 @@ namespace Super.Paula.Application.Administration
                 => handler.RegisterOrganizationAsync(request);
 
         private static Delegate ChangeSecret =>
-            [Authorize("Inspector")]
+            [Authorize("RequiresInspectability")]
             (IAccountHandler handler, ChangeSecretRequest request)
             => handler.ChangeSecretAsync(request);
 
@@ -57,31 +57,31 @@ namespace Super.Paula.Application.Administration
                 => handler.GetAuthorizations();
 
         private static Delegate StartImpersonation =>
-            [Authorize("Maintainer")]
+            [Authorize("RequiresMaintainability")]
             [IgnoreCurrentOrganization]
             (IAccountHandler handler, StartImpersonationRequest request)
                 => handler.StartImpersonationAsync(request);
 
         private static Delegate StopImpersonation =>
-            [Authorize("Inspector")]
+            [Authorize("RequiresInspectability")]
             [IgnoreCurrentOrganization]
             (IAccountHandler handler)
                 => handler.StopImpersonationAsync();
 
         private static Delegate RepairChiefInspector =>
-            [Authorize("Maintainer")]
+            [Authorize("RequiresMaintainability")]
             [IgnoreCurrentOrganization]
             (IAccountHandler handler, RepairChiefInspectorRequest request)
                 => handler.RepairChiefInspectorAsync(request);
 
         private static Delegate AssessChiefInspectorDefectiveness =>
-            [Authorize("Maintainer")]
+            [Authorize("RequiresMaintainability")]
             [IgnoreCurrentOrganization]
             (IAccountHandler handler, AssessChiefInspectorDefectivenessRequest request)
                 => handler.AssessChiefInspectorDefectivenessAsync(request);
 
         private static Delegate Verify =>
-            [Authorize("Inspector")]
+            [Authorize("RequiresInspectability")]
             (IAccountHandler handler)
                 => handler.VerifyAsync();
     }

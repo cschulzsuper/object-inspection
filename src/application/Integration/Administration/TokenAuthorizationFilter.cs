@@ -26,14 +26,19 @@ namespace Super.Paula.Application.Administration
                 var organization = _organizationManager.GetQueryable()
                     .Single(x => x.UniqueName == token.Organization);
 
-                if (!string.IsNullOrWhiteSpace(token.Inspector))
+                if (_appSettings.DemoInspector == token.Inspector &&
+                    _appSettings.DemoOrganization == token.Organization)
+                {
+                    authorizations.Add("Observer");
+                } 
+                else if (!string.IsNullOrWhiteSpace(token.Inspector))
                 {
                     authorizations.Add("Inspector");
                 }
 
                 if (organization.ChiefInspector == token.Inspector)
                 {
-                    authorizations.Add("ChiefInspector");
+                    authorizations.Add("Chief");
                 }
 
                 if (_appSettings.Maintainer == token.Inspector &&

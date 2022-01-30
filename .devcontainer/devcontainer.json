@@ -24,13 +24,15 @@
 
 		// Url and key for the Azure CosmosDB Emulator
 		"ASPNETCORE_CosmosEndpoint": "https://cosmos:8081",
-        "ASPNETCORE_CosmosKey": "C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==",
+		"ASPNETCORE_CosmosKey": "C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==",
 
 		// Settings for paula BlazorApp
-		"ASPNETCORE_Server" : "https://localhost:5001",
+		"ASPNETCORE_Server": "https://localhost:5001",
 
 		// Settings for paula ServerApp
-		"ASPNETCORE_Maintainer": "demo",
-    "ASPNETCORE_MaintainerOrganization": "demo"
+		"ASPNETCORE_Maintainer": "main",
+		"ASPNETCORE_MaintainerOrganization": "main",
+		"ASPNETCORE_DemoInspector": "demo",
+		"ASPNETCORE_DemoOrganization": "demo"
 	}
 }

@@ -176,6 +176,7 @@ namespace Super.Paula.Application.Administration
             var identity = await _identityManager.GetAsync(inspector.Identity);
 
             var secretVerification = _passwordHasher.VerifyHashedPassword(identity, identity.Secret, request.Secret);
+
             switch (secretVerification)
             {
                 case PasswordVerificationResult.Success:

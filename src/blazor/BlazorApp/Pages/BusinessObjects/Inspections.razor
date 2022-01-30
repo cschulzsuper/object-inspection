@@ -6,13 +6,13 @@
 @inject IBusinessObjectHandler BusinessObjectHandler
 @inject AppAuthentication AppAuthentication
 
-@attribute [Authorize("Inspector")]
+@attribute [Authorize("RequiresInspectability")]
 
 <div class="container-fluid">
     <h1>@Translator["Inspections"]</h1>
 </div>
 
-<AuthorizeView Policy="ChiefInspector">
+<AuthorizeView Policy="RequiresObservability">
     <Authorized>
         <div class="container-fluid m-2">
             <button class="btn @(_mode == Mode.AssignmentMode ? "btn-primary" : "btn-outline-primary")"
@@ -44,7 +44,7 @@ else
                 <th class="col-2 d-none d-lg-table-cell">@Translator["Unique name"]</th>
                 <th class="col-10">@Translator["Display name"]</th>
 
-                <AuthorizeView Policy="ChiefInspector">
+                <AuthorizeView Policy="RequiresObservability">
                     <Authorized>
                         <th></th>
                     </Authorized>
@@ -61,7 +61,7 @@ else
                         <BusinessObjectInspectionResponseToggle Inspection="inspection"/>
                     </td>
 
-                    <AuthorizeView Policy="ChiefInspector">
+                    <AuthorizeView Policy="RequiresObservability">
                         <Authorized>
                             <td>
                             @if (_mode == Mode.AssignmentMode)
@@ -145,7 +145,7 @@ else
     {
         _inspections = new Dictionary<string, BusinessObjectInspectionResponse>();
 
-        if (AppAuthentication.Authorizations.Contains("ChiefInspector"))
+        if (AppAuthentication.Authorizations.Contains("Chief"))
         {
             var inspectionResponse = InspectionHandler.GetAll();
 

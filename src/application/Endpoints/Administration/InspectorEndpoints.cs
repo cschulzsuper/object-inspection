@@ -32,43 +32,43 @@ namespace Super.Paula.Application.Administration
         }
 
         private static Delegate Get =>
-            [Authorize("ChiefInspector")]
+            [Authorize("RequiresObservability")]
             (IInspectorHandler handler, string inspector)
                 => handler.GetAsync(inspector);
 
         private static Delegate GetAll =>
-            [Authorize("ChiefInspector")]
+            [Authorize("RequiresObservability")]
             (IInspectorHandler handler)
                 => handler.GetAll();
 
         private static Delegate GetAllForOrganization =>
-            [Authorize("Maintainer")]
+            [Authorize("RequiresObservability")]
             [IgnoreCurrentOrganization]
             (IInspectorHandler handler, string organization)
                 => handler.GetAllForOrganization(organization);
 
         private static Delegate Create =>
-            [Authorize("ChiefInspector")]
+            [Authorize("RequiresManageability")]
             (IInspectorHandler handler, InspectorRequest request)
                 => handler.CreateAsync(request);
 
         private static Delegate Replace =>
-            [Authorize("ChiefInspector")]
+            [Authorize("RequiresManageability")]
             (IInspectorHandler handler, string inspector, InspectorRequest request)
                 => handler.ReplaceAsync(inspector, request);
 
         private static Delegate Delete =>
-            [Authorize("ChiefInspector")]
+            [Authorize("RequiresManageability")]
             (IInspectorHandler handler, string inspector)
                 => handler.DeleteAsync(inspector);
 
         private static Delegate Activate =>
-            [Authorize("ChiefInspector")]
+            [Authorize("RequiresManageability")]
             (IInspectorHandler handler, string inspector)
                 => handler.ActivateAsync(inspector);
 
         private static Delegate Deactivate =>
-           [Authorize("ChiefInspector")]
+           [Authorize("RequiresManageability")]
             (IInspectorHandler handler, string inspector)
                 => handler.DeactivateAsync(inspector);
     }

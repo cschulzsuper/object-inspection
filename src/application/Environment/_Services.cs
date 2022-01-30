@@ -34,6 +34,8 @@ namespace Super.Paula
                         CosmosDatabase = configuration["CosmosDatabase"],
                         Maintainer = configuration["Maintainer"],
                         MaintainerOrganization = configuration["MaintainerOrganization"],
+                        DemoInspector = configuration["DemoInspector"],
+                        DemoOrganization = configuration["DemoOrganization"],
                         Server = configuration["Server"]
                     };
                 });

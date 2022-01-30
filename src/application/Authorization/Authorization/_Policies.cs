@@ -17,17 +17,17 @@ namespace Super.Paula.Authorization
                 .AddRequirements(new PaulaAuthorizationRequirement(string.Empty))
                 .Build();
 
-        public static AuthorizationPolicy IsChiefInspectorPolicy =>
+        public static AuthorizationPolicy RequiresManageabilityPolicy =>
             new AuthorizationPolicyBuilder()
-                .AddRequirements( new PaulaAuthorizationRequirement("ChiefInspector"))
+                .AddRequirements(new PaulaAuthorizationRequirement("Chief"))
                 .Build();
 
-        public static AuthorizationPolicy IsInspectorPolicy =>
+        public static AuthorizationPolicy RequiresInspectabilityPolicy =>
             new AuthorizationPolicyBuilder()
                 .AddRequirements(new PaulaAuthorizationRequirement("Inspector"))
                 .Build();
 
-        public static AuthorizationPolicy IsMaintainerPolicy =>
+        public static AuthorizationPolicy RequiresMaintainabilityPolicy =>
             new AuthorizationPolicyBuilder()
                 .AddRequirements(new PaulaAuthorizationRequirement("Maintainer"))
                 .Build();
@@ -42,5 +42,9 @@ namespace Super.Paula.Authorization
                 .AddRequirements(new PaulaAuthorizationRequirement("Streamer"))
                 .Build();
 
+        public static AuthorizationPolicy RequiresObservabilityPolicy =>
+            new AuthorizationPolicyBuilder()
+                .AddRequirements(new PaulaAuthorizationRequirement("Chief", "Observer"))
+                .Build();
     }
 }

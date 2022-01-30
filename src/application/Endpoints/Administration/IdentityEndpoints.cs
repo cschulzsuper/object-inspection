@@ -26,32 +26,32 @@ namespace Super.Paula.Application.Administration
         }
 
         private static Delegate Get =>
-            [Authorize("Maintainer")]
+            [Authorize("RequiresMaintainability")]
             (IIdentityHandler handler, string identity)
                 => handler.GetAsync(identity);
 
         private static Delegate GetAll =>
-            [Authorize("Maintainer")]
+            [Authorize("RequiresMaintainability")]
             (IIdentityHandler handler)
                 => handler.GetAll();
 
         private static Delegate Create =>
-            [Authorize("Maintainer")]
+            [Authorize("RequiresMaintainability")]
             (IIdentityHandler handler, IdentityRequest request)
                 => handler.CreateAsync(request);
 
         private static Delegate Replace =>
-            [Authorize("Maintainer")]
+            [Authorize("RequiresMaintainability")]
             (IIdentityHandler handler, string identity, IdentityRequest request)
                 => handler.ReplaceAsync(identity, request);
 
         private static Delegate Delete =>
-            [Authorize("Maintainer")]
+            [Authorize("RequiresMaintainability")]
             (IIdentityHandler handler, string identity)
                 => handler.DeleteAsync(identity);
 
         private static Delegate Reset =>
-            [Authorize("Maintainer")]
+            [Authorize("RequiresMaintainability")]
             (IIdentityHandler handler, string identity)
                 => handler.ResetAsync(identity);
     }

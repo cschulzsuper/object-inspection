@@ -5,7 +5,7 @@
 @inject IBusinessObjectHandler BusinessObjectHandler
 @inject AppAuthentication AppAuthentication
 
-@attribute [Authorize("Inspector")]
+@attribute [Authorize("RequiresInspectability")]
 
 <div class="container-fluid">
     <h1>@Translator["Auditing"]</h1>
