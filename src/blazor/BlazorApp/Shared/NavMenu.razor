@@ -30,42 +30,11 @@
                     </div>
                 }
             </NotAuthorized>
-        </AuthorizeView>
-        <AuthorizeView Policy="RequiresMaintainability">
-            <Authorized >
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" Match="NavLinkMatch.All" href="organizations">
-                        <span class="oi oi-people" aria-hidden="true"/>@Translator["Organizations"]
-                    </NavLink>
-                </div>
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" Match="NavLinkMatch.All" href="identities">
-                        <span class="oi oi-credit-card" aria-hidden="true"/>@Translator["Identities"]
-                    </NavLink>
-                </div>
-                <hr/>
-            </Authorized>
-        </AuthorizeView>
-        <AuthorizeView Policy="RequiresWeekManageability">
             <Authorized>
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" Match="NavLinkMatch.All" href="inspectors">
-                        <span class="oi oi-person" aria-hidden="true"/>@Translator["Inspectors"]
-                    </NavLink>
-                </div>
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" Match="NavLinkMatch.All" href="business-objects">
-                        <span class="oi oi-briefcase" aria-hidden="true"/>@Translator["Business Objects"]
-                    </NavLink>
-                </div>
-            </Authorized>
-        </AuthorizeView>
-        <AuthorizeView Policy="RequiresWeekInspectability">
-            <Authorized>
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" Match="NavLinkMatch.All" href="business-objects/auditing">
-                        <span class="oi oi-clipboard" aria-hidden="true"/>@Translator["Auditing"]
-                    </NavLink>
+                <div class="nav-item px-3 text-center">
+                    <div class="nav-link">
+                        @Translator["Information"]
+                    </div>
                 </div>
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" Match="NavLinkMatch.All" href="notifications">
@@ -78,19 +47,75 @@
                 </div>
             </Authorized>
         </AuthorizeView>
+        <AuthorizeView Policy="RequiresMaintainability">
+            <Authorized >
+                <div class="nav-item px-3 text-center">
+                    <div class="nav-link">
+                        @Translator["Administration"]
+                    </div>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" Match="NavLinkMatch.All" href="organizations">
+                        <span class="oi oi-people" aria-hidden="true"/>@Translator["Organizations"]
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" Match="NavLinkMatch.All" href="identities">
+                        <span class="oi oi-credit-card" aria-hidden="true"/>@Translator["Identities"]
+                    </NavLink>
+                </div>
+            </Authorized>
+        </AuthorizeView>
         <AuthorizeView Policy="RequiresWeekManageability">
             <Authorized>
+                <div class="nav-item px-3 text-center">
+                    <div class="nav-link">
+                        @Translator["Management"]
+                    </div>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" Match="NavLinkMatch.All" href="inspectors">
+                        <span class="oi oi-person" aria-hidden="true"/>@Translator["Inspectors"]
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" Match="NavLinkMatch.All" href="business-objects">
+                        <span class="oi oi-briefcase" aria-hidden="true"/>@Translator["Business Objects"]
+                    </NavLink>
+                </div>
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" Match="NavLinkMatch.All" href="inspections">
                         <span class="oi oi-list" aria-hidden="true"/>@Translator["Inspections"]
                     </NavLink>
+                </div>
+            </Authorized>
+        </AuthorizeView>
+        <AuthorizeView Policy="RequiresWeekManageability">
+            <Authorized>
+                <div class="nav-item px-3 text-center">
+                    <div class="nav-link">
+                        @Translator["Timeline"]
+                    </div>
                 </div>
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" Match="NavLinkMatch.All" href="audit-history">
                         <span class="oi oi-clipboard" aria-hidden="true"/>@Translator["Audit History"] 
                     </NavLink>
                 </div>
-                <hr/>
+            </Authorized>
+        </AuthorizeView>
+        <AuthorizeView Policy="RequiresWeekInspectability">
+            <Authorized>
+                <div class="nav-item px-3 text-center">
+                    <div class="nav-link">
+                        @Translator["Tasks"]
+                    </div>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" Match="NavLinkMatch.All" href="business-objects/auditing">
+                        <span class="oi oi-clipboard" aria-hidden="true"/>@Translator["Auditing"]
+                    </NavLink>
+                </div>
             </Authorized>
         </AuthorizeView>
     </nav>

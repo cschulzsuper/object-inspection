@@ -23,6 +23,12 @@
     padding-bottom: 0.5rem;
 }
 
+    .nav-item div {
+        background-color: rgba(0,0,0,0.1);
+        border-radius: 4px;
+        font-weight: bold;
+    }
+
     .nav-item:first-of-type {
         padding-top: 1rem;
     }
