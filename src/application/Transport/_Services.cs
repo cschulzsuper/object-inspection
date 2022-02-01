@@ -61,8 +61,8 @@ namespace Super.Paula.Application
 
                 var notificationMessenger = services.GetRequiredService<IStreamer>();
 
-                notificationHandler.OnCreatedAsync(notificationMessenger.StreamNotificationCreationAsync);
-                notificationHandler.OnDeletedAsync(notificationMessenger.StreamNotificationDeletionAsync);
+                notificationHandler.OnCreationAsync(notificationMessenger.StreamNotificationCreationAsync);
+                notificationHandler.OnDeletionAsync(notificationMessenger.StreamNotificationDeletionAsync);
 
                 return notificationHandler;
             };

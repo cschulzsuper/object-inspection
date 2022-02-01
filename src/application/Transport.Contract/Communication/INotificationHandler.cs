@@ -17,7 +17,7 @@ namespace Super.Paula.Application.Communication
         ValueTask DeleteAsync(string inspector, int date, int time);
 
 
-        Task<IDisposable> OnCreatedAsync(Func<NotificationResponse, Task> handler);
-        Task<IDisposable> OnDeletedAsync(Func<string, int, int, Task> handler);
+        Task<IDisposable> OnCreationAsync(Func<NotificationResponse, Task> handler);
+        Task<IDisposable> OnDeletionAsync(Func<string, int, int, Task> handler);
     }
 }

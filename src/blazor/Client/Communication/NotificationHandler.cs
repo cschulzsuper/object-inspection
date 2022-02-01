@@ -30,8 +30,8 @@ namespace Super.Paula.Client.Communication
             _authenticationStateManager.AuthenticationStateChanged += AuthenticationStateChanged;
 
             _notificationHandler = notificationHandler;
-            _notificationHandler.OnCreatedAsync(InternalOnCreatedAsync);
-            _notificationHandler.OnDeletedAsync(InternalOnDeletedAsync);
+            _notificationHandler.OnCreationAsync(InternalOnCreationAsync);
+            _notificationHandler.OnDeletionAsync(InternalOnDeletionAsync);
 
             _notificationResponseCache = new HashSet<NotificationResponse>();
             _notificationResponseCached = false;
@@ -100,10 +100,10 @@ namespace Super.Paula.Client.Communication
         public ValueTask<NotificationResponse> CreateAsync(string inspector, NotificationRequest request)
             => throw new NotImplementedException();
 
-        public Task<IDisposable> OnCreatedAsync(Func<NotificationResponse, Task> handler)
-            => _notificationHandler.OnCreatedAsync(handler);
+        public Task<IDisposable> OnCreationAsync(Func<NotificationResponse, Task> handler)
+            => _notificationHandler.OnCreationAsync(handler);
 
-        private async Task InternalOnCreatedAsync(NotificationResponse response)
+        private async Task InternalOnCreationAsync(NotificationResponse response)
         {
             try
             {
@@ -128,10 +128,10 @@ namespace Super.Paula.Client.Communication
         public ValueTask DeleteAsync(string inspector, int date, int time)
             => _notificationHandler.DeleteAsync(inspector, date, time);
 
-        public Task<IDisposable> OnDeletedAsync(Func<string, int, int, Task> handler)
-            => _notificationHandler.OnDeletedAsync(handler);
+        public Task<IDisposable> OnDeletionAsync(Func<string, int, int, Task> handler)
+            => _notificationHandler.OnDeletionAsync(handler);
 
-        private async Task InternalOnDeletedAsync(string inspector, int date, int time)
+        private async Task InternalOnDeletionAsync(string inspector, int date, int time)
         {
             try
             {

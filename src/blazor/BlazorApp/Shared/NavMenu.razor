@@ -123,8 +123,8 @@
 
 @code {
 
-    private IDisposable? _notificationHandlerOnCreated;
-    private IDisposable? _notificationHandlerOnDeleted;
+    private IDisposable? _notificationHandlerOnCreation;
+    private IDisposable? _notificationHandlerOnDeletion;
 
     private long? _notificationCount;
 
@@ -145,8 +145,8 @@
     {
         if (firstRender)
         {
-            _notificationHandlerOnCreated = await NotificationHandler.OnCreatedAsync(OnCreatedAsync);
-            _notificationHandlerOnDeleted = await NotificationHandler.OnDeletedAsync(OnDeletedAsync);
+            _notificationHandlerOnCreation = await NotificationHandler.OnCreationAsync(OnCreationAsync);
+            _notificationHandlerOnDeletion = await NotificationHandler.OnDeletionAsync(OnDeletionAsync);
         }
     }
 
@@ -164,10 +164,10 @@
         StateHasChanged();
     }
 
-    public Task OnCreatedAsync(NotificationResponse _)
+    public Task OnCreationAsync(NotificationResponse _)
         => InvokeAsync(CountAsync);
 
-    public Task OnDeletedAsync(string _, int __, int ___)
+    public Task OnDeletionAsync(string _, int __, int ___)
         => InvokeAsync(CountAsync);
 
     private void ToggleNavMenu()
@@ -177,8 +177,8 @@
 
     public async ValueTask DisposeAsync()
     {
-        _notificationHandlerOnCreated?.Dispose();
-        _notificationHandlerOnDeleted?.Dispose();
+        _notificationHandlerOnCreation?.Dispose();
+        _notificationHandlerOnDeletion?.Dispose();
 
         await ValueTask.CompletedTask;
     }

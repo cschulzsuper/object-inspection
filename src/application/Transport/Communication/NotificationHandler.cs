@@ -12,8 +12,8 @@ namespace Super.Paula.Application.Communication
     {
         private readonly INotificationManager _notificationManager;
         
-        private Func<NotificationResponse, Task>? _onCreatedHandler;
-        private Func<string, int, int, Task>? _onDeletedHandler;
+        private Func<NotificationResponse, Task>? _onCreationHandler;
+        private Func<string, int, int, Task>? _onDeletionHandler;
 
         public NotificationHandler(INotificationManager notificationManager)
         {
@@ -42,8 +42,8 @@ namespace Super.Paula.Application.Communication
                 Target = entity.Target
             };
 
-            var onCreatedTask = _onCreatedHandler?.Invoke(response);
-            if (onCreatedTask != null) await onCreatedTask;
+            var onCreationTask = _onCreationHandler?.Invoke(response);
+            if (onCreationTask != null) await onCreationTask;
 
             return response;
         }
@@ -52,8 +52,8 @@ namespace Super.Paula.Application.Communication
         {
             var entity = await _notificationManager.GetAsync(inspector, date, time);
 
-            var onDeletedTask = _onDeletedHandler?.Invoke(inspector, date, time);
-            if (onDeletedTask != null) await onDeletedTask;
+            var onDeletionTask = _onDeletionHandler?.Invoke(inspector, date, time);
+            if (onDeletionTask != null) await onDeletionTask;
 
             await _notificationManager.DeleteAsync(entity);
         }
@@ -96,15 +96,15 @@ namespace Super.Paula.Application.Communication
             };
         }
 
-        public Task<IDisposable> OnCreatedAsync(Func<NotificationResponse, Task> handler)
+        public Task<IDisposable> OnCreationAsync(Func<NotificationResponse, Task> handler)
         {
-            _onCreatedHandler = handler;
+            _onCreationHandler = handler;
             return Task.FromResult<IDisposable>(null!);
         }
 
-        public Task<IDisposable> OnDeletedAsync(Func<string, int, int, Task> handler)
+        public Task<IDisposable> OnDeletionAsync(Func<string, int, int, Task> handler)
         {
-            _onDeletedHandler = handler;
+            _onDeletionHandler = handler;
             return Task.FromResult<IDisposable>(null!);
         }
 
@@ -154,10 +154,10 @@ namespace Super.Paula.Application.Communication
 
         public async ValueTask ProcessAsync(string inspector, InspectorBusinessObjectEvent @event)
         {
-            if (@event.NewPending == true &&
-                @event.NewPending != @event.OldPending &&
-                @event.NewDelayed == false &&
-                @event.OldDelayed == false)
+            if (@event.NewAuditSchedulePending == true &&
+                @event.NewAuditSchedulePending != @event.OldAuditSchedulePending &&
+                @event.NewAuditScheduleDelayed == false &&
+                @event.OldAuditScheduleDelayed == false)
             {
 
                 var (date, time) = DateTime.UtcNow.ToNumbers();
@@ -166,13 +166,13 @@ namespace Super.Paula.Application.Communication
                 {
                     Date = date,
                     Time = time,
-                    Target = $"business-objects/{@event.BusinessObject}",
-                    Text = $"An inspection audit for {@event.BusinessObjectDisplayName} imminent!"
+                    Target = $"business-objects/{@event.UniqueName}",
+                    Text = $"An inspection audit for {@event.DisplayName} imminent!"
                 });
             }
 
-            if (@event.NewDelayed == true &&
-                @event.NewDelayed != @event.OldDelayed)
+            if (@event.NewAuditScheduleDelayed == true &&
+                @event.NewAuditScheduleDelayed != @event.OldAuditScheduleDelayed)
             {
 
                 var (date, time) = DateTime.UtcNow.ToNumbers();
@@ -181,8 +181,8 @@ namespace Super.Paula.Application.Communication
                 {
                     Date = date,
                     Time = time,
-                    Target = $"business-objects/{@event.BusinessObject}",
-                    Text = $"An inspection audit for {@event.BusinessObjectDisplayName} overdue!"
+                    Target = $"business-objects/{@event.UniqueName}",
+                    Text = $"An inspection audit for {@event.DisplayName} overdue!"
                 });
             }
         }

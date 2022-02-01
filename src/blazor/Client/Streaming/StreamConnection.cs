@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.SignalR.Client;
 using Super.Paula.Application.Communication.Responses;
+using Super.Paula.Application.Inventory.Events;
 using Super.Paula.Client.Authentication;
 using Super.Paula.Environment;
 using System;
@@ -47,11 +48,11 @@ namespace Super.Paula.Client.Streaming
         private void AuthenticationStateChanged(Task<AuthenticationState> task)
             => task.ContinueWith(async _ =>
             {
-                await StopHubAsync();
-                await StartHubAsync();
+                await EnsureStoppedAsync();
+                await EnsureStartedAsync();
             });
 
-        private async Task StartHubAsync()
+        private async Task EnsureStoppedAsync()
         {
             if (_hubConnection.State == HubConnectionState.Disconnected)
             {
@@ -62,7 +63,7 @@ namespace Super.Paula.Client.Streaming
             }
         }
 
-        private async Task StopHubAsync()
+        private async Task EnsureStartedAsync()
         {
             if (_hubConnection.State != HubConnectionState.Disconnected)
             {
@@ -72,16 +73,37 @@ namespace Super.Paula.Client.Streaming
 
         public async Task<IDisposable> OnNotificationCreationAsync(Func<NotificationResponse, Task> handler)
         {
-            var onCreated = _hubConnection.On("NotificationCreation", handler);
-            await StartHubAsync();
-            return onCreated;
+            var subscription = _hubConnection.On("NotificationCreation", handler);
+            await EnsureStartedAsync();
+            return subscription;
         }
 
         public async Task<IDisposable> OnNotificationDeletionAsync(Func<string, int, int, Task> handler)
         {
-            var onDeleted = _hubConnection.On("NotificationDeletion", handler);
-            await StartHubAsync();
-            return onDeleted;
+            var subscription = _hubConnection.On("NotificationDeletion", handler);
+            await EnsureStartedAsync();
+            return subscription;
+        }
+
+        public async Task<IDisposable> OnInspectorBusinessObjectCreationAsync(Func<string, InspectorBusinessObjectResponse, Task> handler)
+        {
+            var subscription = _hubConnection.On("InspectorBusinessObjectCreation", handler);
+            await EnsureStartedAsync();
+            return subscription;
+        }
+
+        public async Task<IDisposable> OnInspectorBusinessObjectUpdateAsync(Func<string, InspectorBusinessObjectResponse, Task> handler)
+        {
+            var subscription = _hubConnection.On("InspectorBusinessObjectUpdate", handler);
+            await EnsureStartedAsync();
+            return subscription;
+        }
+
+        public async Task<IDisposable> OnInspectorBusinessObjectDeletionAsync(Func<string, string, Task> handler)
+        {
+            var subscription = _hubConnection.On("InspectorBusinessObjectDeletion", handler);
+            await EnsureStartedAsync();
+            return subscription;
         }
     }
 }

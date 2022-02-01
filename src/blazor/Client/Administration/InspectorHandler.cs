@@ -7,7 +7,9 @@ using System.Threading.Tasks;
 using Super.Paula.Application.Administration;
 using Super.Paula.Application.Administration.Requests;
 using Super.Paula.Application.Administration.Responses;
+using Super.Paula.Application.Inventory.Events;
 using Super.Paula.Client.ErrorHandling;
+using Super.Paula.Client.Streaming;
 using Super.Paula.Environment;
 
 namespace Super.Paula.Client.Administration
@@ -16,12 +18,17 @@ namespace Super.Paula.Client.Administration
     {
         private readonly HttpClient _httpClient;
 
+        private readonly IStreamConnection _streamConnection;
+
         public InspectorHandler(
             HttpClient httpClient,
-            AppSettings appSettings)
+            AppSettings appSettings,
+            IStreamConnection streamConnection)
         {
             _httpClient = httpClient;
             _httpClient.BaseAddress = new Uri(appSettings.Server);
+
+            _streamConnection = streamConnection;
         }
 
         public async ValueTask ActivateAsync(string inspector)
@@ -109,6 +116,15 @@ namespace Super.Paula.Client.Administration
 
             return (await responseMessage.Content.ReadFromJsonAsync<InspectorResponse>())!;
         }
+
+        public Task<IDisposable> OnBusinessObjectCreationAsync(Func<string, InspectorBusinessObjectResponse, Task> handler)
+            => _streamConnection.OnInspectorBusinessObjectCreationAsync(handler);
+
+        public Task<IDisposable> OnBusinessObjectDeletionAsync(Func<string, string, Task> handler)
+            => _streamConnection.OnInspectorBusinessObjectDeletionAsync(handler);
+
+        public Task<IDisposable> OnBusinessObjectUpdateAsync(Func<string, InspectorBusinessObjectResponse, Task> handler)
+            => _streamConnection.OnInspectorBusinessObjectUpdateAsync(handler);
 
         public async ValueTask ReplaceAsync(string inspector, InspectorRequest request)
         {

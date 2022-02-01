@@ -19,6 +19,10 @@ namespace Super.Paula.Application.Administration
         private readonly AppState _appState;
         private readonly IEventBus _eventBus;
 
+        private Func<string, InspectorBusinessObjectResponse, Task>? _onBusinessObjectCreationHandler;
+        private Func<string, InspectorBusinessObjectResponse, Task>? _onBusinessObjectUpdateHandler;
+        private Func<string, string, Task>? _onBusinessObjectDeletionHandler;
+
         public InspectorHandler(
             IInspectorManager inspectorManager,
             IOrganizationProvider organizationProvider,
@@ -147,8 +151,7 @@ namespace Super.Paula.Application.Administration
                 @event.BusinessObjectDisplayName != null)
             {
                 var newInspector = await _inspectorManager.GetAsync(@event.NewInspector);
-
-                newInspector.BusinessObjects.Add(new InspectorBusinessObject
+                var newInspectorBusinessObject = new InspectorBusinessObject
                 {
                     DisplayName = @event.BusinessObjectDisplayName,
                     UniqueName = businessObject,
@@ -156,7 +159,14 @@ namespace Super.Paula.Application.Administration
                     AuditSchedulePlannedAuditTime = default,
                     AuditScheduleDelayed = false,
                     AuditSchedulePending = false
-                });
+                };
+
+                newInspector.BusinessObjects.Add(newInspectorBusinessObject);
+
+                await _inspectorManager.UpdateAsync(newInspector);
+
+                var onBusinessObjectCreationTask = _onBusinessObjectCreationHandler?.Invoke(@event.NewInspector, newInspectorBusinessObject.ToResponse());
+                if (onBusinessObjectCreationTask != null) await onBusinessObjectCreationTask;
             }
 
             if (@event.OldInspector != null)
@@ -167,6 +177,9 @@ namespace Super.Paula.Application.Administration
                 oldInspector.BusinessObjects.Remove(oldBusinessObject);
 
                 await _inspectorManager.UpdateAsync(oldInspector);
+
+                var onBusinessObjectDeletionTask = _onBusinessObjectDeletionHandler?.Invoke(@event.OldInspector, businessObject);
+                if (onBusinessObjectDeletionTask != null) await onBusinessObjectDeletionTask;
             }
         }
 
@@ -211,6 +224,9 @@ namespace Super.Paula.Application.Administration
                 inspectorBusinessObject.AuditSchedulePending = now > newPlannedAuditTimestamp.AddMilliseconds(-threshold);
 
                 await PublishInspectorBusinessObjectAsync(inspector, inspectorBusinessObject, oldDelayed, oldPending);
+
+                var onBusinessObjectUpdateTask = _onBusinessObjectUpdateHandler?.Invoke(@event.Inspector, inspectorBusinessObject.ToResponse());
+                if (onBusinessObjectUpdateTask != null) await onBusinessObjectUpdateTask;
             }
         }
 
@@ -222,15 +238,33 @@ namespace Super.Paula.Application.Administration
         {
             var @event = new InspectorBusinessObjectEvent
             {
-                BusinessObject = inspectorBusinessObject.UniqueName,
-                BusinessObjectDisplayName = inspectorBusinessObject.DisplayName,
-                NewDelayed = inspectorBusinessObject.AuditScheduleDelayed,
-                NewPending = inspectorBusinessObject.AuditSchedulePending,
-                OldDelayed = oldDelayed,
-                OldPending = pldPending
+                UniqueName = inspectorBusinessObject.UniqueName,
+                DisplayName = inspectorBusinessObject.DisplayName,
+                NewAuditScheduleDelayed = inspectorBusinessObject.AuditScheduleDelayed,
+                NewAuditSchedulePending = inspectorBusinessObject.AuditSchedulePending,
+                OldAuditScheduleDelayed = oldDelayed,
+                OldAuditSchedulePending = pldPending
             };
 
             await _eventBus.PublishAsync(EventCategories.Notification, inspector.UniqueName, @event);
+        }
+
+        public Task<IDisposable> OnBusinessObjectCreationAsync(Func<string, InspectorBusinessObjectResponse, Task> handler)
+        {
+            _onBusinessObjectCreationHandler = handler;
+            return Task.FromResult<IDisposable>(null!);
+        }
+
+        public Task<IDisposable> OnBusinessObjectUpdateAsync(Func<string, InspectorBusinessObjectResponse, Task> handler)
+        {
+            _onBusinessObjectUpdateHandler = handler;
+            return Task.FromResult<IDisposable>(null!);
+        }
+
+        public Task<IDisposable> OnBusinessObjectDeletionAsync(Func<string, string, Task> handler)
+        {
+            _onBusinessObjectDeletionHandler = handler;
+            return Task.FromResult<IDisposable>(null!);
         }
     }
 }

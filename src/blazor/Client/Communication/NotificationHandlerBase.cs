@@ -19,8 +19,6 @@ namespace Super.Paula.Client.Communication
 {
     public sealed class NotificationHandlerBase : INotificationHandler
     {
-        private readonly AppSettings _appSettings;
-
         private readonly HttpClient _httpClient;      
 
         private readonly IStreamConnection _streamConnection;
@@ -30,10 +28,8 @@ namespace Super.Paula.Client.Communication
             AppSettings appSettings, 
             IStreamConnection streamConnection)
         {
-            _appSettings = appSettings;
-
             _httpClient = httpClient;
-            _httpClient.BaseAddress = new Uri(_appSettings.Server);
+            _httpClient.BaseAddress = new Uri(appSettings.Server);
             _streamConnection = streamConnection;
         }
 
@@ -47,10 +43,10 @@ namespace Super.Paula.Client.Communication
             return (await responseMessage.Content.ReadFromJsonAsync<NotificationResponse>())!;
         }
 
-        public Task<IDisposable> OnCreatedAsync(Func<NotificationResponse, Task> handler)
+        public Task<IDisposable> OnCreationAsync(Func<NotificationResponse, Task> handler)
             => _streamConnection.OnNotificationCreationAsync(handler);
 
-        public Task<IDisposable> OnDeletedAsync(Func<string, int, int, Task> handler)
+        public Task<IDisposable> OnDeletionAsync(Func<string, int, int, Task> handler)
             => _streamConnection.OnNotificationDeletionAsync(handler);
 
         public async ValueTask DeleteAsync(string inspector, int date, int time)

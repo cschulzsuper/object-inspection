@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using Super.Paula.Application.Communication.Responses;
+using Super.Paula.Application.Inventory.Events;
 using Super.Paula.Environment;
 using System.Threading.Tasks;
 
@@ -27,6 +28,24 @@ namespace Super.Paula.Application.Streaming
         {
             var userId = $"{_appState.CurrentOrganization}:{inspector}";
             await _streamHubContext.Clients.User(userId).SendAsync("NotificationDeletion", inspector, date, time);
+        }
+
+        public async Task StreamInspectorBusinessObjectCreationAsync(string inspector, InspectorBusinessObjectResponse response)
+        {
+            var userId = $"{_appState.CurrentOrganization}:{inspector}";
+            await _streamHubContext.Clients.User(userId).SendAsync("InspectorBusinessObjectCreation", inspector, response);
+        }
+
+        public async Task StreamInspectorBusinessObjectUpdateAsync(string inspector, InspectorBusinessObjectResponse response)
+        {
+            var userId = $"{_appState.CurrentOrganization}:{inspector}";
+            await _streamHubContext.Clients.User(userId).SendAsync("InspectorBusinessObjectUpdate", inspector, response);
+        }
+
+        public async Task StreamInspectorBusinessObjectDeletionAsync(string inspector, string businessObject)
+        {
+            var userId = $"{_appState.CurrentOrganization}:{inspector}";
+            await _streamHubContext.Clients.User(userId).SendAsync("InspectorBusinessObjectDeletion", inspector, businessObject);
         }
     }
 }
