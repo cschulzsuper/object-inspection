@@ -15,6 +15,7 @@ using Super.Paula.Client.Guidelines;
 using Super.Paula.Client.Inventory;
 using Super.Paula.Client.Localization;
 using Super.Paula.Client.Storage;
+using Super.Paula.Client.Streaming;
 
 namespace Super.Paula.Client
 {
@@ -91,7 +92,8 @@ namespace Super.Paula.Client
                     provider.GetRequiredService<NotificationHandlerBase>(),
                     provider.GetRequiredService<AuthenticationStateManager>()));
 
-            services.AddSingleton<ITranslator,Translator>();
+            services.AddSingleton<ITranslator, Translator>();
+            services.AddScoped<IStreamConnection, StreamConnection>();
 
             return services;
         }

@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Super.Paula.Client.Communication
 {
-    public class NotificationHandler : INotificationHandler
+    public class NotificationHandler : INotificationHandler, IDisposable
     {
         private readonly INotificationHandler _notificationHandler;
 
@@ -36,6 +36,13 @@ namespace Super.Paula.Client.Communication
             _notificationResponseCache = new HashSet<NotificationResponse>();
             _notificationResponseCached = false;
             _notificationResponseCacheSemaphore = new SemaphoreSlim(1, 1);
+        }
+
+        public void Dispose()
+        {
+            _authenticationStateManager.AuthenticationStateChanged -= AuthenticationStateChanged;
+
+            GC.SuppressFinalize(this);
         }
 
         private void AuthenticationStateChanged(Task<AuthenticationState> task)

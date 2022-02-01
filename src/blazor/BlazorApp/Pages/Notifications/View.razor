@@ -39,40 +39,52 @@ else
     private ICollection<NotificationResponse>? _notifications;
 
     private IDisposable? _notificationHandlerOnCreated;
+    private IDisposable? _notificationHandlerOnDeleted;
+
+    protected override async Task OnParametersSetAsync()
+    {          
+        await QueryAsync();
+    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            _notifications = new List<NotificationResponse>();
-
-            await foreach (var notification in NotificationHandler.GetAllForInspector(AppAuthentication.Inspector))
-            {
-                _notifications.Add(notification);
-                StateHasChanged();
-            }
-
-            _notificationHandlerOnCreated = NotificationHandler.OnCreatedAsync(OnCreatedAsync);
-
-            StateHasChanged();
+            _notificationHandlerOnCreated = await NotificationHandler.OnCreatedAsync(OnCreatedAsync);
+            _notificationHandlerOnDeleted = await NotificationHandler.OnDeletedAsync(OnDeletedAsync);
         }
     }
 
-    public Task OnCreatedAsync(NotificationResponse notification) 
+    public async Task QueryAsync()
     {
-        _notifications!.Add(notification);
-        return InvokeAsync(StateHasChanged);
+        _notifications = new List<NotificationResponse>();
+
+        await foreach (var notification in NotificationHandler.GetAllForInspector(AppAuthentication.Inspector))
+        {
+            _notifications.Add(notification);
+        }
+
+        StateHasChanged();
     }
 
-    public ValueTask DisposeAsync()
+    public Task OnCreatedAsync(NotificationResponse notification) 
+        => InvokeAsync(QueryAsync);
+
+    public Task OnDeletedAsync(string _, int __, int ___)
+        => InvokeAsync(QueryAsync);
+
+    public async ValueTask DisposeAsync()
     {
         _notificationHandlerOnCreated?.Dispose();
-        return ValueTask.CompletedTask;
+        _notificationHandlerOnDeleted?.Dispose();
+
+        await ValueTask.CompletedTask;
     }
 
     public async Task RemoveAsync(NotificationResponse notification)
     {
         await NotificationHandler.DeleteAsync(notification.Inspector, notification.Date, notification.Time);
-        _notifications!.Remove(notification);
+
+        //_notifications!.Remove(notification);
     }
 }

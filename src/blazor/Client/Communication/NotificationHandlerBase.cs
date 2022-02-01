@@ -12,70 +12,29 @@ using Super.Paula.Application.Communication.Requests;
 using Super.Paula.Application.Communication.Responses;
 using Super.Paula.Client.Authentication;
 using Super.Paula.Client.ErrorHandling;
+using Super.Paula.Client.Streaming;
 using Super.Paula.Environment;
 
 namespace Super.Paula.Client.Communication
 {
-    public sealed class NotificationHandlerBase : INotificationHandler, IAsyncDisposable
+    public sealed class NotificationHandlerBase : INotificationHandler
     {
-        private readonly AuthenticationStateManager _authenticationStateManager;
-        private readonly AppAuthentication _appAuthentication;
         private readonly AppSettings _appSettings;
 
         private readonly HttpClient _httpClient;      
-        private readonly HubConnection _hubConnection;
+
+        private readonly IStreamConnection _streamConnection;
 
         public NotificationHandlerBase(
             HttpClient httpClient,
-            AuthenticationStateManager authenticationStateManager,
-            AppAuthentication appAuthentication,
-            AppSettings appSettings)
+            AppSettings appSettings, 
+            IStreamConnection streamConnection)
         {
             _appSettings = appSettings;
 
-            _authenticationStateManager = authenticationStateManager;
-            _appAuthentication = appAuthentication;
-            _authenticationStateManager.AuthenticationStateChanged += AuthenticationStateChanged;
-
             _httpClient = httpClient;
             _httpClient.BaseAddress = new Uri(_appSettings.Server);
-
-            _hubConnection = new HubConnectionBuilder()
-                .WithUrl(
-                    new Uri(_httpClient.BaseAddress, "/stream"),
-                    c => {
-                        c.AccessTokenProvider = () => Task.FromResult(_appAuthentication.Token)!;
-                    })
-                .Build();
-        }
-
-        public ValueTask DisposeAsync()
-            => _hubConnection.DisposeAsync();
-
-        private void AuthenticationStateChanged(Task<AuthenticationState> task)
-            => task.ContinueWith(async _ =>
-                {
-                    await StopHubAsync();
-                    await StartHubAsync();
-                });
-
-        private async Task StartHubAsync()
-        {
-            if (_hubConnection.State == HubConnectionState.Disconnected)
-            {
-                if (_appAuthentication.Authorizations.Any())
-                {
-                    await _hubConnection.StartAsync();
-                }
-            }
-        }
-
-        private async Task StopHubAsync()
-        {
-            if (_hubConnection.State != HubConnectionState.Disconnected)
-            {
-                await _hubConnection.StopAsync();
-            }
+            _streamConnection = streamConnection;
         }
 
         public async ValueTask<NotificationResponse> CreateAsync(string inspector, NotificationRequest request)
@@ -88,19 +47,11 @@ namespace Super.Paula.Client.Communication
             return (await responseMessage.Content.ReadFromJsonAsync<NotificationResponse>())!;
         }
 
-        public async Task<IDisposable> OnCreatedAsync(Func<NotificationResponse, Task> handler)
-        {
-            var onCreated = _hubConnection.On("NotificationCreation", handler);
-            await StartHubAsync();
-            return onCreated;
-        }
+        public Task<IDisposable> OnCreatedAsync(Func<NotificationResponse, Task> handler)
+            => _streamConnection.OnNotificationCreationAsync(handler);
 
-        public async Task<IDisposable> OnDeletedAsync(Func<string, int, int, Task> handler)
-        {
-            var onDeleted = _hubConnection.On("NotificationDeletion", handler);
-            await StartHubAsync();
-            return onDeleted;
-        }
+        public Task<IDisposable> OnDeletedAsync(Func<string, int, int, Task> handler)
+            => _streamConnection.OnNotificationDeletionAsync(handler);
 
         public async ValueTask DeleteAsync(string inspector, int date, int time)
         {

@@ -133,14 +133,12 @@
     private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 
     [CascadingParameter]
-    private Task<AuthenticationState>? authenticationState { get; set; }
+    private Task<AuthenticationState> authenticationState { get; set; } = null!;
 
     protected override async Task OnParametersSetAsync()
     {          
-        if (authenticationState != null) 
-            await authenticationState;
-
-        await InitializeNotificationCounter();
+        await authenticationState;
+        await CountAsync();
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -152,7 +150,7 @@
         }
     }
 
-    public async Task InitializeNotificationCounter()
+    public async Task CountAsync()
     {
         _notificationCount = 0;
 
@@ -161,37 +159,27 @@
             await foreach (var _ in NotificationHandler.GetAllForInspector(AppAuthentication.Inspector))
             {
                 _notificationCount++;
-                StateHasChanged();
             }
         }
+        StateHasChanged();
     }
 
     public Task OnCreatedAsync(NotificationResponse _)
-        => InvokeAsync(IncrementNotifications);
+        => InvokeAsync(CountAsync);
 
     public Task OnDeletedAsync(string _, int __, int ___)
-        => InvokeAsync(DecrementNotifications);
-
-    private void IncrementNotifications()
-    {
-        _notificationCount++;
-        StateHasChanged();
-    }
-
-    private void DecrementNotifications()
-    {
-        _notificationCount--;
-        StateHasChanged();
-    }
+        => InvokeAsync(CountAsync);
 
     private void ToggleNavMenu()
     {
         collapseNavMenu = !collapseNavMenu;
     }
 
-    public ValueTask DisposeAsync()
+    public async ValueTask DisposeAsync()
     {
         _notificationHandlerOnCreated?.Dispose();
-        return ValueTask.CompletedTask;
+        _notificationHandlerOnDeleted?.Dispose();
+
+        await ValueTask.CompletedTask;
     }
 }
