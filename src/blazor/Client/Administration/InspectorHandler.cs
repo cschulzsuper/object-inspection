@@ -1,137 +1,175 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Components.Authorization;
 using Super.Paula.Application.Administration;
 using Super.Paula.Application.Administration.Requests;
 using Super.Paula.Application.Administration.Responses;
 using Super.Paula.Application.Inventory.Events;
+using Super.Paula.Client.Authentication;
 using Super.Paula.Client.ErrorHandling;
 using Super.Paula.Client.Streaming;
 using Super.Paula.Environment;
 
 namespace Super.Paula.Client.Administration
 {
-    public class InspectorHandler : IInspectorHandler
+    public sealed class InspectorHandler : IInspectorHandler, IDisposable
     {
-        private readonly HttpClient _httpClient;
+        private readonly IInspectorHandler _inspectorHandler;
 
-        private readonly IStreamConnection _streamConnection;
+        private readonly SemaphoreSlim _inspectorResponseCacheSemaphore;
+        private InspectorResponse? _inspectorResponseCache;
+
+        private readonly AuthenticationStateManager _authenticationStateManager;
 
         public InspectorHandler(
-            HttpClient httpClient,
-            AppSettings appSettings,
-            IStreamConnection streamConnection)
+            IInspectorHandler inspectorHandler,
+            AuthenticationStateManager authenticationStateManager)
         {
-            _httpClient = httpClient;
-            _httpClient.BaseAddress = new Uri(appSettings.Server);
 
-            _streamConnection = streamConnection;
+            _authenticationStateManager = authenticationStateManager;
+            _authenticationStateManager.AuthenticationStateChanged += AuthenticationStateChanged;
+
+            _inspectorHandler = inspectorHandler;
+            _inspectorHandler.OnBusinessObjectCreationAsync(InternalOnBusinessObjectCreationAsync);
+            _inspectorHandler.OnBusinessObjectUpdateAsync(InternalOnBusinessObjectUpdateAsync);
+            _inspectorHandler.OnBusinessObjectDeletionAsync(InternalOnBusinessObjectDeletionAsync);
+
+            _inspectorResponseCacheSemaphore = new SemaphoreSlim(1, 1);
         }
 
-        public async ValueTask ActivateAsync(string inspector)
+        public void Dispose()
         {
-            var responseMessage = await _httpClient.PostAsync($"inspectors/{inspector}/activate", null);
-            
-            responseMessage.RuleOutProblems();
-            responseMessage.EnsureSuccessStatusCode();
+            _authenticationStateManager.AuthenticationStateChanged -= AuthenticationStateChanged;
+
+            GC.SuppressFinalize(this);
         }
 
-        public async ValueTask<InspectorResponse> CreateAsync(InspectorRequest request)
-        {
-            var responseMessage = await _httpClient.PostAsJsonAsync("inspectors", request);
-            
-            responseMessage.RuleOutProblems();
-            responseMessage.EnsureSuccessStatusCode();
-
-            return (await responseMessage.Content.ReadFromJsonAsync<InspectorResponse>())!;
-        }
-
-        public async ValueTask DeactivateAsync(string inspector)
-        {
-            var responseMessage = await _httpClient.PostAsync($"inspectors/{inspector}/deactivate", null);
-            
-            responseMessage.RuleOutProblems();
-            responseMessage.EnsureSuccessStatusCode();
-        }
-
-        public async ValueTask DeleteAsync(string inspector)
-        {
-            var responseMessage = await _httpClient.DeleteAsync($"inspectors/{inspector}");
-            
-            responseMessage.RuleOutProblems();
-            responseMessage.EnsureSuccessStatusCode();
-        }
-
-        public async IAsyncEnumerable<InspectorResponse> GetAll()
-        {
-            var responseMessage = await _httpClient.GetAsync("inspectors");
-            
-            responseMessage.RuleOutProblems();
-            responseMessage.EnsureSuccessStatusCode();
-
-            var responseStream = await responseMessage.Content.ReadAsStreamAsync();
-            var response = JsonSerializer.DeserializeAsyncEnumerable<InspectorResponse>(
-                responseStream,
-                new JsonSerializerOptions(JsonSerializerDefaults.Web)
-                {
-                    DefaultBufferSize = 128
-                });
-
-            await foreach (var responseItem in response)
+        private void AuthenticationStateChanged(Task<AuthenticationState> task)
+            => task.ContinueWith(async _ =>
             {
-                yield return responseItem!;
-            }
-        }
-
-        public async IAsyncEnumerable<InspectorResponse> GetAllForOrganization(string organization)
-        {
-            var responseMessage = await _httpClient.GetAsync($"organizations/{organization}/inspectors");
-            
-            responseMessage.RuleOutProblems();
-            responseMessage.EnsureSuccessStatusCode();
-
-            var responseStream = await responseMessage.Content.ReadAsStreamAsync();
-            var response = JsonSerializer.DeserializeAsyncEnumerable<InspectorResponse>(
-                responseStream,
-                new JsonSerializerOptions(JsonSerializerDefaults.Web)
+                try
                 {
-                    DefaultBufferSize = 128
-                });
+                    await _inspectorResponseCacheSemaphore.WaitAsync();
+                    _inspectorResponseCache = null;
+                }
+                finally
+                {
+                    _inspectorResponseCacheSemaphore.Release();
+                }
+            });
 
-            await foreach (var responseItem in response)
-            {
-                yield return responseItem!;
-            }
-        }
+        public ValueTask ActivateAsync(string inspector)
+            => _inspectorHandler.ActivateAsync(inspector);
+
+        public ValueTask<InspectorResponse> CreateAsync(InspectorRequest request)
+            => _inspectorHandler.CreateAsync(request);
+
+        public ValueTask DeactivateAsync(string inspector)
+            => _inspectorHandler.DeactivateAsync(inspector);
+
+        public ValueTask DeleteAsync(string inspector)
+            => _inspectorHandler.DeleteAsync(inspector);
+
+        public IAsyncEnumerable<InspectorResponse> GetAll()
+             => _inspectorHandler.GetAll();
+
+        public IAsyncEnumerable<InspectorResponse> GetAllForOrganization(string organization)
+            => _inspectorHandler.GetAllForOrganization(organization);
 
         public async ValueTask<InspectorResponse> GetAsync(string inspector)
         {
-            var responseMessage = await _httpClient.GetAsync($"inspectors/{inspector}");
-            
-            responseMessage.RuleOutProblems();
-            responseMessage.EnsureSuccessStatusCode();
+            try
+            {
+                await _inspectorResponseCacheSemaphore.WaitAsync();
 
-            return (await responseMessage.Content.ReadFromJsonAsync<InspectorResponse>())!;
+                if (_inspectorResponseCache == null ||
+                    _inspectorResponseCache.UniqueName != inspector)
+                { 
+                    _inspectorResponseCache = await _inspectorHandler.GetAsync(inspector);
+                }
+            }
+            finally
+            {
+                _inspectorResponseCacheSemaphore.Release();
+            }
+
+            return _inspectorResponseCache;
         }
 
         public Task<IDisposable> OnBusinessObjectCreationAsync(Func<string, InspectorBusinessObjectResponse, Task> handler)
-            => _streamConnection.OnInspectorBusinessObjectCreationAsync(handler);
+            => _inspectorHandler.OnBusinessObjectCreationAsync(handler);
 
         public Task<IDisposable> OnBusinessObjectDeletionAsync(Func<string, string, Task> handler)
-            => _streamConnection.OnInspectorBusinessObjectDeletionAsync(handler);
+            => _inspectorHandler.OnBusinessObjectDeletionAsync(handler);
 
         public Task<IDisposable> OnBusinessObjectUpdateAsync(Func<string, InspectorBusinessObjectResponse, Task> handler)
-            => _streamConnection.OnInspectorBusinessObjectUpdateAsync(handler);
+            => _inspectorHandler.OnBusinessObjectUpdateAsync(handler);
 
-        public async ValueTask ReplaceAsync(string inspector, InspectorRequest request)
+        public ValueTask ReplaceAsync(string inspector, InspectorRequest request)
+            => _inspectorHandler.ReplaceAsync(inspector, request);
+
+        private async Task InternalOnBusinessObjectDeletionAsync(string inspector, string businessObject)
         {
-            var responseMessage = await _httpClient.PutAsJsonAsync($"inspectors/{inspector}", request);
+            try
+            {
+                await _inspectorResponseCacheSemaphore.WaitAsync();
 
-            responseMessage.RuleOutProblems();
-            responseMessage.EnsureSuccessStatusCode();
+                if (_inspectorResponseCache?.UniqueName == inspector)
+                {
+                    var inspectorBusinessObject = _inspectorResponseCache.BusinessObjects
+                        .Single(x => x.UniqueName == businessObject);
+
+                    _inspectorResponseCache.BusinessObjects.Remove(inspectorBusinessObject);
+                }
+            }
+            finally
+            {
+                _inspectorResponseCacheSemaphore.Release();
+            }
+        }
+
+        private async Task InternalOnBusinessObjectUpdateAsync(string inspector, InspectorBusinessObjectResponse businessObject)
+        {
+            try
+            {
+                await _inspectorResponseCacheSemaphore.WaitAsync();
+
+                if (_inspectorResponseCache?.UniqueName == inspector)
+                {
+                    var inspectorBusinessObject = _inspectorResponseCache.BusinessObjects
+                        .Single(x => x.UniqueName == businessObject.UniqueName);
+
+                    _inspectorResponseCache.BusinessObjects.Remove(inspectorBusinessObject);
+                    _inspectorResponseCache.BusinessObjects.Add(businessObject);
+                }
+            }
+            finally
+            {
+                _inspectorResponseCacheSemaphore.Release();
+            }
+        }
+
+        private async Task InternalOnBusinessObjectCreationAsync(string inspector, InspectorBusinessObjectResponse businessObject)
+        {
+            try
+            {
+                await _inspectorResponseCacheSemaphore.WaitAsync();
+
+                if (_inspectorResponseCache?.UniqueName == inspector)
+                {
+                    _inspectorResponseCache.BusinessObjects.Add(businessObject);
+                }
+            }
+            finally
+            {
+                _inspectorResponseCacheSemaphore.Release();
+            }
         }
     }
 }

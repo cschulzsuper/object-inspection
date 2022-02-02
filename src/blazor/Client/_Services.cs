@@ -74,7 +74,7 @@ namespace Super.Paula.Client
                     .AddHttpMessageHandler<AuthenticationMessageHandler>();
 
                 services
-                    .AddHttpClient<IInspectorHandler, InspectorHandler>()
+                    .AddHttpClient<InspectorHandlerBase>()
                     .AddHttpMessageHandler<AuthenticationMessageHandler>();
 
                 services
@@ -90,6 +90,11 @@ namespace Super.Paula.Client
             services.AddScoped<INotificationHandler>(provider => 
                 new NotificationHandler(
                     provider.GetRequiredService<NotificationHandlerBase>(),
+                    provider.GetRequiredService<AuthenticationStateManager>()));
+
+            services.AddScoped<IInspectorHandler>(provider =>
+                new InspectorHandler(
+                    provider.GetRequiredService<InspectorHandlerBase>(),
                     provider.GetRequiredService<AuthenticationStateManager>()));
 
             services.AddSingleton<ITranslator, Translator>();
