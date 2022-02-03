@@ -1,4 +1,5 @@
 ﻿@inject INotificationHandler NotificationHandler
+@inject IInspectorHandler InspectorHandler
 @inject AppAuthentication AppAuthentication
 @inject AppEnvironment AppEnvironment
 @inject ITranslator Translator
@@ -114,6 +115,10 @@
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" Match="NavLinkMatch.All" href="business-objects/auditing">
                         <span class="oi oi-clipboard" aria-hidden="true"/>@Translator["Auditing"]
+                        @if (_auditingCount > 0)
+                        {
+                            <span class="badge @(_auditingDelayed ? "badge-danger" : "badge-warning") ml-2">@_notificationCount</span>
+                        }
                     </NavLink>
                 </div>
             </Authorized>
@@ -123,14 +128,22 @@
 
 @code {
 
+    private bool collapseNavMenu = true;
+    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
     private IDisposable? _notificationHandlerOnCreation;
     private IDisposable? _notificationHandlerOnDeletion;
 
-    private long? _notificationCount;
+    private IDisposable? _inspectorBusinessObjectCreation;
+    private IDisposable? _inspectorBusinessObjectUpdate;
+    private IDisposable? _inspectorBusinessObjectDeletion;
 
-    private bool collapseNavMenu = true;
+    private long _notificationCount;
 
-    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+    private long _auditingCount;
+    private bool _auditingDelayed;
+
+
 
     [CascadingParameter]
     private Task<AuthenticationState> authenticationState { get; set; } = null!;
@@ -138,19 +151,29 @@
     protected override async Task OnParametersSetAsync()
     {          
         await authenticationState;
-        await CountAsync();
+        await CountNotificationsAsync();
+        await CountInspectorBusinessObjectsAsync();
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            _notificationHandlerOnCreation = await NotificationHandler.OnCreationAsync(OnCreationAsync);
-            _notificationHandlerOnDeletion = await NotificationHandler.OnDeletionAsync(OnDeletionAsync);
+            _notificationHandlerOnCreation = await NotificationHandler.OnCreationAsync(OnNotificationCreationAsync);
+            _notificationHandlerOnDeletion = await NotificationHandler.OnDeletionAsync(OnNotificationDeletionAsync);
+
+            _inspectorBusinessObjectCreation = await InspectorHandler.OnBusinessObjectCreationAsync(OnBusinessObjectCreationAsync);
+            _inspectorBusinessObjectUpdate = await InspectorHandler.OnBusinessObjectUpdateAsync(OnBusinessObjectUpdateAsync);
+            _inspectorBusinessObjectDeletion = await InspectorHandler.OnBusinessObjectDeletionAsync(OnBusinessObjectDeletionAsync);
         }
     }
 
-    public async Task CountAsync()
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+
+    public async Task CountNotificationsAsync()
     {
         _notificationCount = 0;
 
@@ -164,16 +187,45 @@
         StateHasChanged();
     }
 
-    public Task OnCreationAsync(NotificationResponse _)
-        => InvokeAsync(CountAsync);
-
-    public Task OnDeletionAsync(string _, int __, int ___)
-        => InvokeAsync(CountAsync);
-
-    private void ToggleNavMenu()
+    public async Task CountInspectorBusinessObjectsAsync()
     {
-        collapseNavMenu = !collapseNavMenu;
+        _auditingCount = 0;
+        _auditingDelayed = false;
+
+        if (AppAuthentication.Authorizations.Any())
+        {
+            var inspector = await InspectorHandler.GetAsync(AppAuthentication.Inspector);
+
+            foreach (var businessObject in inspector.BusinessObjects)
+            {
+                if (businessObject.AuditScheduleDelayed) {
+                    _auditingDelayed = true;
+                }
+
+                if (businessObject.AuditScheduleDelayed || 
+                    businessObject.AuditSchedulePending) {
+                    _auditingCount++;
+                }
+            }
+        }
+        StateHasChanged();
     }
+
+    public Task OnNotificationCreationAsync(NotificationResponse _)
+        => InvokeAsync(CountNotificationsAsync);
+
+    public Task OnNotificationDeletionAsync(string _, int __, int ___)
+        => InvokeAsync(CountNotificationsAsync);
+
+    public Task OnBusinessObjectCreationAsync(string _, InspectorBusinessObjectResponse __)
+        => InvokeAsync(CountInspectorBusinessObjectsAsync);
+
+    public Task OnBusinessObjectUpdateAsync(string _, InspectorBusinessObjectResponse __)
+        => InvokeAsync(CountInspectorBusinessObjectsAsync);
+
+    public Task OnBusinessObjectDeletionAsync(string _, string __)
+        => InvokeAsync(CountInspectorBusinessObjectsAsync);
+
 
     public async ValueTask DisposeAsync()
     {

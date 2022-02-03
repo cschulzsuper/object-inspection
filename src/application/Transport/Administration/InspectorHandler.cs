@@ -55,7 +55,8 @@ namespace Super.Paula.Application.Administration
             {
                 Identity = entity.Identity,
                 UniqueName = entity.UniqueName,
-                Activated = entity.Activated
+                Activated = entity.Activated,
+                BusinessObjects = entity.BusinessObjects.ToResponse()
             };
         }
 
@@ -73,7 +74,8 @@ namespace Super.Paula.Application.Administration
                 {
                     Identity = entity.Identity,
                     UniqueName = entity.UniqueName,
-                    Activated = entity.Activated
+                    Activated = entity.Activated,
+                    BusinessObjects = entity.BusinessObjects.ToResponse()
                 }));
 
         public async ValueTask<InspectorResponse> GetAsync(string inspector)
@@ -84,7 +86,8 @@ namespace Super.Paula.Application.Administration
             {
                 Identity = entity.Identity,
                 UniqueName = entity.UniqueName,
-                Activated = entity.Activated
+                Activated = entity.Activated,
+                BusinessObjects = entity.BusinessObjects.ToResponse()
             };
         }
 
@@ -126,7 +129,8 @@ namespace Super.Paula.Application.Administration
                    {
                        Identity = entity.Identity,
                        UniqueName = entity.UniqueName,
-                       Activated = entity.Activated
+                       Activated = entity.Activated,
+                       BusinessObjects = entity.BusinessObjects.ToResponse()
                    }));
         }
 

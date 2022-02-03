@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.SignalR.Client;
+using Super.Paula.Application.Administration.Responses;
 using Super.Paula.Application.Communication.Responses;
-using Super.Paula.Application.Inventory.Events;
 using Super.Paula.Client.Authentication;
 using Super.Paula.Environment;
 using System;

@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Super.Paula.Application.Administration;
 using Super.Paula.Application.Administration.Requests;
 using Super.Paula.Application.Administration.Responses;
-using Super.Paula.Application.Inventory.Events;
 using Super.Paula.Client.Authentication;
 using Super.Paula.Client.ErrorHandling;
 using Super.Paula.Client.Streaming;
@@ -22,25 +21,29 @@ namespace Super.Paula.Client.Administration
     {
         private readonly IInspectorHandler _inspectorHandler;
 
-        private readonly SemaphoreSlim _inspectorResponseCacheSemaphore;
-        private InspectorResponse? _inspectorResponseCache;
+        private readonly SemaphoreSlim _currentInspectorResponseCacheSemaphore;
+        private InspectorResponse? _currentInspectorResponseCache;
 
         private readonly AuthenticationStateManager _authenticationStateManager;
+        private readonly AppAuthentication _appAuthentication;
 
         public InspectorHandler(
             IInspectorHandler inspectorHandler,
-            AuthenticationStateManager authenticationStateManager)
+            AuthenticationStateManager authenticationStateManager,
+            AppAuthentication appAuthentication)
         {
 
             _authenticationStateManager = authenticationStateManager;
             _authenticationStateManager.AuthenticationStateChanged += AuthenticationStateChanged;
+
+            _appAuthentication = appAuthentication;
 
             _inspectorHandler = inspectorHandler;
             _inspectorHandler.OnBusinessObjectCreationAsync(InternalOnBusinessObjectCreationAsync);
             _inspectorHandler.OnBusinessObjectUpdateAsync(InternalOnBusinessObjectUpdateAsync);
             _inspectorHandler.OnBusinessObjectDeletionAsync(InternalOnBusinessObjectDeletionAsync);
 
-            _inspectorResponseCacheSemaphore = new SemaphoreSlim(1, 1);
+            _currentInspectorResponseCacheSemaphore = new SemaphoreSlim(1, 1);
         }
 
         public void Dispose()
@@ -55,12 +58,12 @@ namespace Super.Paula.Client.Administration
             {
                 try
                 {
-                    await _inspectorResponseCacheSemaphore.WaitAsync();
-                    _inspectorResponseCache = null;
+                    await _currentInspectorResponseCacheSemaphore.WaitAsync();
+                    _currentInspectorResponseCache = null;
                 }
                 finally
                 {
-                    _inspectorResponseCacheSemaphore.Release();
+                    _currentInspectorResponseCacheSemaphore.Release();
                 }
             });
 
@@ -84,22 +87,27 @@ namespace Super.Paula.Client.Administration
 
         public async ValueTask<InspectorResponse> GetAsync(string inspector)
         {
+            if (_appAuthentication.Inspector != inspector)
+            {
+                await _inspectorHandler.GetAsync(inspector);
+            }
+
             try
             {
-                await _inspectorResponseCacheSemaphore.WaitAsync();
+                await _currentInspectorResponseCacheSemaphore.WaitAsync();
 
-                if (_inspectorResponseCache == null ||
-                    _inspectorResponseCache.UniqueName != inspector)
-                { 
-                    _inspectorResponseCache = await _inspectorHandler.GetAsync(inspector);
+                if (_currentInspectorResponseCache == null ||
+                    _currentInspectorResponseCache.UniqueName != inspector)
+                {
+                    _currentInspectorResponseCache = await _inspectorHandler.GetAsync(inspector);
                 }
             }
             finally
             {
-                _inspectorResponseCacheSemaphore.Release();
+                _currentInspectorResponseCacheSemaphore.Release();
             }
 
-            return _inspectorResponseCache;
+            return _currentInspectorResponseCache;
         }
 
         public Task<IDisposable> OnBusinessObjectCreationAsync(Func<string, InspectorBusinessObjectResponse, Task> handler)
@@ -116,59 +124,75 @@ namespace Super.Paula.Client.Administration
 
         private async Task InternalOnBusinessObjectDeletionAsync(string inspector, string businessObject)
         {
+            if (_appAuthentication.Inspector != inspector)
+            {
+                return;
+            }
+
+
             try
             {
-                await _inspectorResponseCacheSemaphore.WaitAsync();
+                await _currentInspectorResponseCacheSemaphore.WaitAsync();
 
-                if (_inspectorResponseCache?.UniqueName == inspector)
+                if (_currentInspectorResponseCache?.UniqueName == inspector)
                 {
-                    var inspectorBusinessObject = _inspectorResponseCache.BusinessObjects
+                    var inspectorBusinessObject = _currentInspectorResponseCache.BusinessObjects
                         .Single(x => x.UniqueName == businessObject);
 
-                    _inspectorResponseCache.BusinessObjects.Remove(inspectorBusinessObject);
+                    _currentInspectorResponseCache.BusinessObjects.Remove(inspectorBusinessObject);
                 }
             }
             finally
             {
-                _inspectorResponseCacheSemaphore.Release();
+                _currentInspectorResponseCacheSemaphore.Release();
             }
         }
 
         private async Task InternalOnBusinessObjectUpdateAsync(string inspector, InspectorBusinessObjectResponse businessObject)
         {
+            if (_appAuthentication.Inspector != inspector)
+            {
+                return;
+            }
+
             try
             {
-                await _inspectorResponseCacheSemaphore.WaitAsync();
+                await _currentInspectorResponseCacheSemaphore.WaitAsync();
 
-                if (_inspectorResponseCache?.UniqueName == inspector)
+                if (_currentInspectorResponseCache?.UniqueName == inspector)
                 {
-                    var inspectorBusinessObject = _inspectorResponseCache.BusinessObjects
+                    var inspectorBusinessObject = _currentInspectorResponseCache.BusinessObjects
                         .Single(x => x.UniqueName == businessObject.UniqueName);
 
-                    _inspectorResponseCache.BusinessObjects.Remove(inspectorBusinessObject);
-                    _inspectorResponseCache.BusinessObjects.Add(businessObject);
+                    _currentInspectorResponseCache.BusinessObjects.Remove(inspectorBusinessObject);
+                    _currentInspectorResponseCache.BusinessObjects.Add(businessObject);
                 }
             }
             finally
             {
-                _inspectorResponseCacheSemaphore.Release();
+                _currentInspectorResponseCacheSemaphore.Release();
             }
         }
 
         private async Task InternalOnBusinessObjectCreationAsync(string inspector, InspectorBusinessObjectResponse businessObject)
         {
+            if (_appAuthentication.Inspector != inspector)
+            {
+                return;
+            }
+
             try
             {
-                await _inspectorResponseCacheSemaphore.WaitAsync();
+                await _currentInspectorResponseCacheSemaphore.WaitAsync();
 
-                if (_inspectorResponseCache?.UniqueName == inspector)
+                if (_currentInspectorResponseCache?.UniqueName == inspector)
                 {
-                    _inspectorResponseCache.BusinessObjects.Add(businessObject);
+                    _currentInspectorResponseCache.BusinessObjects.Add(businessObject);
                 }
             }
             finally
             {
-                _inspectorResponseCacheSemaphore.Release();
+                _currentInspectorResponseCacheSemaphore.Release();
             }
         }
     }
