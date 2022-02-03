@@ -28,21 +28,30 @@ namespace Super.Paula.Application.Administration
                 "/organizations",
                 ("/{organization}/inspectors", GetAllForOrganization));
 
+            endpoints.MapQueries(
+                "/inspectors",
+                ("/me", GetCurrent));
+
             return endpoints;
         }
 
         private static Delegate Get =>
-            [Authorize("RequiresWeekManageability")]
+            [Authorize("RequiresInspectorViewability")]
             (IInspectorHandler handler, string inspector)
                 => handler.GetAsync(inspector);
 
+        private static Delegate GetCurrent =>
+            [Authorize("RequiresAuditingViewability")]
+            (IInspectorHandler handler)
+                => handler.GetCurrentAsync();
+
         private static Delegate GetAll =>
-            [Authorize("RequiresWeekManageability")]
+            [Authorize("RequiresManagementViewability")]
             (IInspectorHandler handler)
                 => handler.GetAll();
 
         private static Delegate GetAllForOrganization =>
-            [Authorize("RequiresWeekManageability")]
+            [Authorize("RequiresManagementViewability")]
             [IgnoreCurrentOrganization]
             (IInspectorHandler handler, string organization)
                 => handler.GetAllForOrganization(organization);

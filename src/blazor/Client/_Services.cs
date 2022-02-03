@@ -16,6 +16,7 @@ using Super.Paula.Client.Inventory;
 using Super.Paula.Client.Localization;
 using Super.Paula.Client.Storage;
 using Super.Paula.Client.Streaming;
+using Super.Paula.Environment;
 
 namespace Super.Paula.Client
 {
@@ -38,12 +39,12 @@ namespace Super.Paula.Client
                 services.AddHttpClient();
                 services.AddHttpClientHandler<AccountHandlerBase>();
                 services.AddHttpClientHandler<NotificationHandlerBase>();
+                services.AddHttpClientHandler<InspectorHandlerBase>();
 
                 services.AddHttpClientHandler<IBusinessObjectHandler, BusinessObjectHandler>();
                 services.AddHttpClientHandler<IOrganizationHandler, OrganizationHandler>();
                 services.AddHttpClientHandler<IBusinessObjectInspectionAuditHandler, BusinessObjectInspectionAuditHandler>();
                 services.AddHttpClientHandler<IInspectionHandler, InspectionHandler>();
-                services.AddHttpClientHandler<IInspectorHandler, InspectorHandler>();
                 services.AddHttpClientHandler<IIdentityHandler, IdentityHandler>();
             }
             else
@@ -95,7 +96,8 @@ namespace Super.Paula.Client
             services.AddScoped<IInspectorHandler>(provider =>
                 new InspectorHandler(
                     provider.GetRequiredService<InspectorHandlerBase>(),
-                    provider.GetRequiredService<AuthenticationStateManager>()));
+                    provider.GetRequiredService<AuthenticationStateManager>(),
+                    provider.GetRequiredService<AppAuthentication>()));
 
             services.AddSingleton<ITranslator, Translator>();
             services.AddScoped<IStreamConnection, StreamConnection>();

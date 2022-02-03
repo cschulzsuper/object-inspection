@@ -5,7 +5,7 @@
 @inject IInspectionHandler InspectionHandler
 @inject IBusinessObjectHandler BusinessObjectHandler
 
-@attribute [Authorize("RequiresWeekInspectability")]
+@attribute [Authorize("RequiresAuditingViewability")]
 
 <div class="container-fluid">
     <h1>@Translator["Inspections"]</h1>
@@ -37,19 +37,19 @@ else
                         @switch (inspection.AuditResult)
                         {
                             case "satisfying":
-                                <AuthorizedButton Policy="RequiresInspectability" class="btn btn-success btn-block" title="@Translator["Satisfying"]"
+                                <AuthorizedButton Policy="RequiresAuditability" class="btn btn-success btn-block" title="@Translator["Satisfying"]"
                                         @onclick="() => ToggleAsync(inspection)"><span class="oi oi-star"/></AuthorizedButton>
                                 break;
                             case "insufficient":
-                                <AuthorizedButton Policy="RequiresInspectability" class="btn btn-warning btn-block" title="@Translator["Insufficient"]"
+                                <AuthorizedButton Policy="RequiresAuditability" class="btn btn-warning btn-block" title="@Translator["Insufficient"]"
                                         @onclick="() => ToggleAsync(inspection)"><span class="oi oi-warning"/></AuthorizedButton>
                                 break;
                             case "failed":
-                                <AuthorizedButton Policy="RequiresInspectability" class="btn btn-danger btn-block" title="@Translator["Failed"]"
+                                <AuthorizedButton Policy="RequiresAuditability" class="btn btn-danger btn-block" title="@Translator["Failed"]"
                                         @onclick="() => ToggleAsync(inspection)"><span class="oi oi-x"/></AuthorizedButton>
                                 break;
                             default:
-                                <AuthorizedButton Policy="RequiresInspectability" class="btn btn-secondary btn-block" title="@Translator["Unset"]"
+                                <AuthorizedButton Policy="RequiresAuditability" class="btn btn-secondary btn-block" title="@Translator["Unset"]"
                                         @onclick="() => ToggleAsync(inspection)"><span class="oi oi-ellipses"></span></AuthorizedButton>
                                 break;
                         }

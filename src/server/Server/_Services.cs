@@ -46,7 +46,9 @@ namespace Super.Paula
         {
             services.AddAuthorization();
             services.AddSingleton<IAuthorizationPolicyProvider, PaulaAuthorizationPolicyProvider>();
+            services.AddScoped<IAuthorizationMiddlewareResultHandler, PaulaAuthorizationMiddlewareResultHandler>();
             services.AddScoped<IAuthorizationHandler, PaulaAuthorizationHandler>();
+            services.AddScoped<IAuthorizationHandler, InspectorAuthorizationHandler>();
 
             return services;
         }

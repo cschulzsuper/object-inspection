@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using Super.Paula.Application.Administration;
 using Super.Paula.Application.Administration.Requests;
 using Super.Paula.Application.Administration.Responses;
-using Super.Paula.Application.Inventory.Events;
 using Super.Paula.Client.ErrorHandling;
 using Super.Paula.Client.Streaming;
 using Super.Paula.Environment;
@@ -111,6 +110,16 @@ namespace Super.Paula.Client.Administration
         {
             var responseMessage = await _httpClient.GetAsync($"inspectors/{inspector}");
             
+            responseMessage.RuleOutProblems();
+            responseMessage.EnsureSuccessStatusCode();
+
+            return (await responseMessage.Content.ReadFromJsonAsync<InspectorResponse>())!;
+        }
+
+        public async ValueTask<InspectorResponse> GetCurrentAsync()
+        {
+            var responseMessage = await _httpClient.GetAsync($"inspectors/me");
+
             responseMessage.RuleOutProblems();
             responseMessage.EnsureSuccessStatusCode();
 

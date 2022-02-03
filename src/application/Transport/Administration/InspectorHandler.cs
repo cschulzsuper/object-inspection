@@ -55,7 +55,8 @@ namespace Super.Paula.Application.Administration
             {
                 Identity = entity.Identity,
                 UniqueName = entity.UniqueName,
-                Activated = entity.Activated
+                Activated = entity.Activated,
+                BusinessObjects = entity.BusinessObjects.ToResponse()
             };
         }
 
@@ -73,7 +74,8 @@ namespace Super.Paula.Application.Administration
                 {
                     Identity = entity.Identity,
                     UniqueName = entity.UniqueName,
-                    Activated = entity.Activated
+                    Activated = entity.Activated,
+                    BusinessObjects = entity.BusinessObjects.ToResponse()
                 }));
 
         public async ValueTask<InspectorResponse> GetAsync(string inspector)
@@ -84,7 +86,21 @@ namespace Super.Paula.Application.Administration
             {
                 Identity = entity.Identity,
                 UniqueName = entity.UniqueName,
-                Activated = entity.Activated
+                Activated = entity.Activated,
+                BusinessObjects = entity.BusinessObjects.ToResponse()
+            };
+        }
+
+        public async ValueTask<InspectorResponse> GetCurrentAsync()
+        {
+            var entity = await _inspectorManager.GetAsync(_appState.CurrentInspector);
+
+            return new InspectorResponse
+            {
+                Identity = entity.Identity,
+                UniqueName = entity.UniqueName,
+                Activated = entity.Activated,
+                BusinessObjects = entity.BusinessObjects.ToResponse()
             };
         }
 
@@ -126,7 +142,8 @@ namespace Super.Paula.Application.Administration
                    {
                        Identity = entity.Identity,
                        UniqueName = entity.UniqueName,
-                       Activated = entity.Activated
+                       Activated = entity.Activated,
+                       BusinessObjects = entity.BusinessObjects.ToResponse()
                    }));
         }
 
@@ -150,36 +167,51 @@ namespace Super.Paula.Application.Administration
             if (@event.NewInspector != null &&
                 @event.BusinessObjectDisplayName != null)
             {
-                var newInspector = await _inspectorManager.GetAsync(@event.NewInspector);
-                var newInspectorBusinessObject = new InspectorBusinessObject
+                var newInspector = _inspectorManager
+                    .GetQueryable()
+                    .SingleOrDefault(x => x.UniqueName == @event.NewInspector);
+
+                if (newInspector != null)
                 {
-                    DisplayName = @event.BusinessObjectDisplayName,
-                    UniqueName = businessObject,
-                    AuditSchedulePlannedAuditDate = default,
-                    AuditSchedulePlannedAuditTime = default,
-                    AuditScheduleDelayed = false,
-                    AuditSchedulePending = false
-                };
+                    var newInspectorBusinessObject = new InspectorBusinessObject
+                    {
+                        DisplayName = @event.BusinessObjectDisplayName,
+                        UniqueName = businessObject,
+                        AuditSchedulePlannedAuditDate = default,
+                        AuditSchedulePlannedAuditTime = default,
+                        AuditScheduleDelayed = false,
+                        AuditSchedulePending = false
+                    };
 
-                newInspector.BusinessObjects.Add(newInspectorBusinessObject);
+                    newInspector.BusinessObjects.Add(newInspectorBusinessObject);
 
-                await _inspectorManager.UpdateAsync(newInspector);
+                    await _inspectorManager.UpdateAsync(newInspector);
 
-                var onBusinessObjectCreationTask = _onBusinessObjectCreationHandler?.Invoke(@event.NewInspector, newInspectorBusinessObject.ToResponse());
-                if (onBusinessObjectCreationTask != null) await onBusinessObjectCreationTask;
+                    var onBusinessObjectCreationTask = _onBusinessObjectCreationHandler?.Invoke(@event.NewInspector, newInspectorBusinessObject.ToResponse());
+                    if (onBusinessObjectCreationTask != null) await onBusinessObjectCreationTask;
+                }
             }
 
             if (@event.OldInspector != null)
             {
-                var oldInspector = await _inspectorManager.GetAsync(@event.OldInspector);
-                var oldBusinessObject = oldInspector.BusinessObjects.Single(x => x.UniqueName == businessObject);
+                var oldInspector = _inspectorManager
+                    .GetQueryable()
+                    .SingleOrDefault(x => x.UniqueName == @event.OldInspector);
 
-                oldInspector.BusinessObjects.Remove(oldBusinessObject);
+                if (oldInspector != null)
+                {
+                    var oldBusinessObjects = oldInspector.BusinessObjects.Where(x => x.UniqueName == businessObject);
 
-                await _inspectorManager.UpdateAsync(oldInspector);
+                    foreach (var oldBusinessObject in oldBusinessObjects)
+                    {
+                        oldInspector.BusinessObjects.Remove(oldBusinessObject);
+                    }
 
-                var onBusinessObjectDeletionTask = _onBusinessObjectDeletionHandler?.Invoke(@event.OldInspector, businessObject);
-                if (onBusinessObjectDeletionTask != null) await onBusinessObjectDeletionTask;
+                    await _inspectorManager.UpdateAsync(oldInspector);
+
+                    var onBusinessObjectDeletionTask = _onBusinessObjectDeletionHandler?.Invoke(@event.OldInspector, businessObject);
+                    if (onBusinessObjectDeletionTask != null) await onBusinessObjectDeletionTask;
+                }
             }
         }
 
@@ -202,6 +234,8 @@ namespace Super.Paula.Application.Administration
                 inspectorBusinessObject.AuditSchedulePlannedAuditTime = default;
                 inspectorBusinessObject.AuditScheduleDelayed = false;
                 inspectorBusinessObject.AuditSchedulePending = false;
+
+                await _inspectorManager.UpdateAsync(inspector);
             } 
             else
             {
@@ -222,6 +256,8 @@ namespace Super.Paula.Application.Administration
 
                 inspectorBusinessObject.AuditScheduleDelayed = now > newPlannedAuditTimestamp.AddMilliseconds(threshold);
                 inspectorBusinessObject.AuditSchedulePending = now > newPlannedAuditTimestamp.AddMilliseconds(-threshold);
+
+                await _inspectorManager.UpdateAsync(inspector);
 
                 await PublishInspectorBusinessObjectAsync(inspector, inspectorBusinessObject, oldDelayed, oldPending);
 

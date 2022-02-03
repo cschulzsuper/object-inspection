@@ -26,17 +26,17 @@ namespace Super.Paula.Application.Communication
         }
 
         private static Delegate Get =>
-            [Authorize("RequiresWeekInspectability")]
+            [Authorize("RequiresAuditingViewability")]
             (INotificationHandler handler, string inspector, int date, int time)
                 => handler.GetAsync(inspector, date, time);
 
         private static Delegate GetAll =>
-            [Authorize("RequiresWeekInspectability")]
+            [Authorize("RequiresAuditingViewability")]
             (INotificationHandler handler)
                 => handler.GetAll();
 
         private static Delegate GetAllForInspector =>
-            [Authorize("RequiresWeekInspectability")]
+            [Authorize("RequiresAuditingViewability")]
             (INotificationHandler handler, string inspector)
                 => handler.GetAllForInspector(inspector);
 
@@ -51,7 +51,7 @@ namespace Super.Paula.Application.Communication
                 => handler.ReplaceAsync(inspector, date, time, request);
 
         private static Delegate Delete =>
-            [Authorize("RequiresInspectability")]
+            [Authorize("RequiresAuditability")]
             (INotificationHandler handler, string inspector, int date, int time)
                 => handler.DeleteAsync(inspector, date, time);
     }

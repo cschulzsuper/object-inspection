@@ -8,6 +8,7 @@ using Super.Paula.Application.Communication;
 using Super.Paula.Application.Guidelines;
 using Super.Paula.Application.Inventory;
 using Super.Paula.Application.Streaming;
+using Super.Paula.Environment;
 
 namespace Super.Paula.Application
 {
@@ -38,7 +39,7 @@ namespace Super.Paula.Application
                 .AddScoped<INotificationHandler>(x => x.GetRequiredService<NotificationHandler>())
                 .AddScoped<INotificationEventHandler>(x => x.GetRequiredService<NotificationHandler>())
 
-                .AddScoped<InspectorHandler>()
+                .AddScoped<InspectorHandler>(InspectorHandlerFactory)
                 .AddScoped<IInspectorHandler>(x => x.GetRequiredService<InspectorHandler>())
                 .AddScoped<IInspectorEventHandler>(x => x.GetRequiredService<InspectorHandler>())
 
@@ -59,12 +60,31 @@ namespace Super.Paula.Application
                 var notificationManager = services.GetRequiredService<INotificationManager>();
                 var notificationHandler = new NotificationHandler(notificationManager);
 
-                var notificationMessenger = services.GetRequiredService<IStreamer>();
+                var streamer = services.GetRequiredService<IStreamer>();
 
-                notificationHandler.OnCreationAsync(notificationMessenger.StreamNotificationCreationAsync);
-                notificationHandler.OnDeletionAsync(notificationMessenger.StreamNotificationDeletionAsync);
+                notificationHandler.OnCreationAsync(streamer.StreamNotificationCreationAsync);
+                notificationHandler.OnDeletionAsync(streamer.StreamNotificationDeletionAsync);
 
                 return notificationHandler;
+            };
+
+        private static readonly Func<IServiceProvider, InspectorHandler> InspectorHandlerFactory =
+            services =>
+            {
+                var inspectorManager = services.GetRequiredService<IInspectorManager>();
+                var organizationProvider = services.GetRequiredService<IOrganizationProvider>();
+                var appState = services.GetRequiredService<AppState>();
+                var eventBus = services.GetRequiredService<IEventBus>();
+
+                var inspectorHandler = new InspectorHandler(inspectorManager, organizationProvider, appState, eventBus);
+
+                var streamer = services.GetRequiredService<IStreamer>();
+
+                inspectorHandler.OnBusinessObjectCreationAsync(streamer.StreamInspectorBusinessObjectCreationAsync);
+                inspectorHandler.OnBusinessObjectDeletionAsync(streamer.StreamInspectorBusinessObjectDeletionAsync);
+                inspectorHandler.OnBusinessObjectUpdateAsync(streamer.StreamInspectorBusinessObjectUpdateAsync);
+
+                return inspectorHandler;
             };
     }
 }

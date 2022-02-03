@@ -95,11 +95,15 @@ namespace Super.Paula.Data
         public IAsyncEnumerable<TResult> GetPartitionAsyncEnumerable<TResult>(Func<IQueryable<TEntity>, IQueryable<TResult>> query, params object[] partitionKeyComponents)
             => query.Invoke(GetPartitionQueryable(partitionKeyComponents)).AsAsyncEnumerable();
 
-
         public async ValueTask InsertAsync(TEntity entity)
         {
             _repositoryContext.Add(entity);
+
             await _repositoryContext.SaveChangesAsync();
+
+            // HINT: https://github.com/dotnet/efcore/issues/24828
+            // Can not save changes multiple times safely 
+            _repositoryContext.ChangeTracker.Clear();
         }
 
         public async ValueTask UpdateAsync(TEntity entity)
@@ -112,14 +116,18 @@ namespace Super.Paula.Data
                 if (partitionKeyProperty != null)
                 {
                     var partitionKey = entityEntry.Properties.Single(x => x.Metadata == partitionKeyProperty);
-                    var partitionKeyValue = partitionKey.CurrentValue as string;
                     partitionKey.IsModified = true;
                 }
 
                 entityEntry.State = EntityState.Modified;
-            } 
+
+            }
 
             await _repositoryContext.SaveChangesAsync();
+
+            // HINT: https://github.com/dotnet/efcore/issues/24828
+            // Can not save changes multiple times safely 
+            _repositoryContext.ChangeTracker.Clear();
         }
 
         public async ValueTask DeleteAsync(TEntity entity)
@@ -131,7 +139,12 @@ namespace Super.Paula.Data
             }
 
             _repositoryContext.Remove(entity);
+
             await _repositoryContext.SaveChangesAsync();
+
+            // HINT: https://github.com/dotnet/efcore/issues/24828
+            // Can not save changes multiple times safely 
+            _repositoryContext.ChangeTracker.Clear();
         }
 
         private object[] AdjustForPartitionKey(params object[] ids)

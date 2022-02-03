@@ -1,6 +1,6 @@
 ﻿using Super.Paula.Application.Administration;
+using Super.Paula.Application.Administration.Responses;
 using Super.Paula.Application.Communication.Responses;
-using Super.Paula.Application.Inventory.Events;
 using System;
 using System.Threading.Tasks;
 

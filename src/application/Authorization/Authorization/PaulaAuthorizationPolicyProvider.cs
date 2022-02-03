@@ -15,11 +15,12 @@ namespace Super.Paula.Authorization
             => Task.FromResult(
                 policyName switch
                 {
+                    "RequiresInspectorViewability" => _Policies.RequiresInspectorOwnershipPolicy,
                     "RequiresMaintainability" => _Policies.RequiresMaintainabilityPolicy,
                     "RequiresManageability" => _Policies.RequiresManageabilityPolicy,
-                    "RequiresWeekManageability" => _Policies.RequiresWeekManageabilityPolicy,
-                    "RequiresInspectability" => _Policies.RequiresInspectabilityPolicy,
-                    "RequiresWeekInspectability" => _Policies.RequiresWeekInspectabilityPolicy,
+                    "RequiresManagementViewability" => _Policies.RequiresManagementViewabilityPolicy,
+                    "RequiresAuditability" => _Policies.RequiresAuditabilityPolicy,
+                    "RequiresAuditingViewability" => _Policies.RequiresAuditingViewabilityPolicy,
 
                     "Impersonator" => _Policies.IsImpersonatorPolicy,
                     "Streamer" => _Policies.IsStreamerPolicy,

@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Super.Paula.Application.Inventory.Events
+﻿namespace Super.Paula.Application.Administration.Responses
 {
     public class InspectorBusinessObjectResponse
     {

@@ -27,12 +27,12 @@ namespace Super.Paula.Application.Guidelines
         }
 
         private static Delegate Get =>
-            [Authorize("RequiresWeekInspectability")] 
+            [Authorize("RequiresAuditingViewability")] 
             (IInspectionHandler handler, string inspection)
                 => handler.GetAsync(inspection);
 
         private static Delegate GetAll =>
-            [Authorize("RequiresWeekInspectability")] 
+            [Authorize("RequiresAuditingViewability")] 
             (IInspectionHandler handler)
                 => handler.GetAll();
 

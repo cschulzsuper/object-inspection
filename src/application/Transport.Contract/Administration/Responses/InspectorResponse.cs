@@ -1,5 +1,4 @@
-﻿using Super.Paula.Application.Inventory.Events;
-using Super.Paula.Application.Inventory.Responses;
+﻿using Super.Paula.Application.Inventory.Responses;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 

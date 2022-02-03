@@ -359,6 +359,7 @@ namespace Super.Paula.Application.Inventory
             };
 
             await _eventBus.PublishAsync(EventCategories.Notification, businessObject.UniqueName, @event);
+            await _eventBus.PublishAsync(EventCategories.Inspector, businessObject.UniqueName, @event);
         }
 
         private async ValueTask PublishBusinessObjectInspectionAuditAsync(BusinessObject businessObject, BusinessObjectInspection inspection)
