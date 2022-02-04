@@ -187,10 +187,6 @@ namespace Super.Paula.Application.Inventory
 
                 AuditSchedule = new BusinessObjectInspectionAuditSchedule
                 {
-                    Expressions = new HashSet<BusinessObjectInspectionAuditScheduleExpression>
-                    {
-                        new BusinessObjectInspectionAuditScheduleExpression()
-                    },
                     Threshold = TimeSpan.FromHours(8).Milliseconds,
                 }
             });
@@ -346,11 +342,6 @@ namespace Super.Paula.Application.Inventory
 
         private async ValueTask PublishBusinessObjectInspectorAsync(BusinessObject businessObject, string? oldInspector = null)
         {
-            if (businessObject.Inspector == oldInspector)
-            {
-                return;
-            }
-
             var @event = new BusinessObjectInspectorEvent
             {
                 BusinessObjectDisplayName = businessObject.DisplayName,

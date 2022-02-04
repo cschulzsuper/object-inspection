@@ -14,7 +14,9 @@ namespace Super.Paula.Application.Administration.Responses
                 UniqueName = businessObject.UniqueName,
                 DisplayName = businessObject.DisplayName,
                 AuditScheduleDelayed = businessObject.AuditScheduleDelayed,
-                AuditSchedulePending = businessObject.AuditSchedulePending
+                AuditSchedulePending = businessObject.AuditSchedulePending,
+                AuditSchedulePlannedAuditDate = businessObject.AuditSchedulePlannedAuditDate,
+                AuditSchedulePlannedAuditTime = businessObject.AuditSchedulePlannedAuditTime
             };
 
             return response;
