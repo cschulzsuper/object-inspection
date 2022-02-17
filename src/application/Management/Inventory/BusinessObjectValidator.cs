@@ -16,6 +16,10 @@ namespace Super.Paula.Application.Inventory
         public static (bool, Func<(string, FormattableString)>) UniqueNameIsNotTooLong(string uniqueName)
             => (string.IsNullOrWhiteSpace(uniqueName) || uniqueName.Length <= 140,
                 () => (nameof(uniqueName), $"Unique name '{uniqueName}' can not have more than 140 characters"));
+        
+        public static (bool, Func<(string, FormattableString)>) UniqueNameHasValidValue(string uniqueName)
+            => (string.IsNullOrWhiteSpace(uniqueName) || UniqueNameValidator.IsValid(uniqueName),
+                () => (nameof(uniqueName), $"Unique name '{uniqueName}' has an invalid value"));
 
         public static (bool, Func<(string, FormattableString)>) DisplayNameIsNotEmpty(string displayName)
             => (!string.IsNullOrWhiteSpace(displayName),
@@ -36,5 +40,10 @@ namespace Super.Paula.Application.Inventory
         public static (bool, Func<(string, FormattableString)>) InspectorIsNotTooLong(string inspector)
             => (inspector == null || inspector.Length <= 140,
                 () => (nameof(inspector), $"Inspector '{inspector}' can not have more than 140 characters"));
+
+        public static (bool, Func<(string, FormattableString)>) InspectorHasValidValue(string inspector)
+            => (inspector == null || UniqueNameValidator.IsValid(inspector),
+                () => (nameof(inspector), $"Inspector '{inspector}' has an invalid value"));
+
     }
 }

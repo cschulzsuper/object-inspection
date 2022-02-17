@@ -9,6 +9,8 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\..\data\Aggregates\Aggregates.csproj" />
+	  <ProjectReference Include="..\Environment\Environment.csproj" />
+	  <ProjectReference Include="..\Security.Contract\Security.Contract.csproj" />
 	</ItemGroup>
 
 </Project>

@@ -84,34 +84,40 @@ namespace Super.Paula.Application.Administration
             => Validator.Ensure($"unique name '{organization}' of organization",
                 OrganizationValidator.UniqueNameIsNotEmpty(organization),
                 OrganizationValidator.UniqueNameHasKebabCase(organization),
-                OrganizationValidator.UniqueNameIsNotTooLong(organization));
+                OrganizationValidator.UniqueNameIsNotTooLong(organization),
+                OrganizationValidator.UniqueNameHasValidValue(organization));
 
         private static void EnsureInsertable(Organization organization)
             => Validator.Ensure($"organization with unique name '{organization.UniqueName}'",
                 OrganizationValidator.UniqueNameIsNotEmpty(organization.UniqueName),
                 OrganizationValidator.UniqueNameHasKebabCase(organization.UniqueName),
                 OrganizationValidator.UniqueNameIsNotTooLong(organization.UniqueName),
+                OrganizationValidator.UniqueNameHasValidValue(organization.UniqueName),
                 OrganizationValidator.DisplayNameIsNotEmpty(organization.DisplayName),
                 OrganizationValidator.DisplayNameIsNotTooLong(organization.DisplayName),
                 OrganizationValidator.ChiefInspectorIsNotEmpty(organization.ChiefInspector),
                 OrganizationValidator.ChiefInspectorHasKebabCase(organization.ChiefInspector),
-                OrganizationValidator.ChiefInspectorIsNotTooLong(organization.ChiefInspector));
+                OrganizationValidator.ChiefInspectorIsNotTooLong(organization.ChiefInspector),
+                OrganizationValidator.ChiefInspectorHasValidValue(organization.ChiefInspector));
 
         private static void EnsureUpdateable(Organization organization)
             => Validator.Ensure($"organization with unique name '{organization.UniqueName}'",
                 OrganizationValidator.UniqueNameIsNotEmpty(organization.UniqueName),
                 OrganizationValidator.UniqueNameHasKebabCase(organization.UniqueName),
                 OrganizationValidator.UniqueNameIsNotTooLong(organization.UniqueName),
+                OrganizationValidator.UniqueNameHasValidValue(organization.UniqueName),
                 OrganizationValidator.DisplayNameIsNotEmpty(organization.DisplayName),
                 OrganizationValidator.DisplayNameIsNotTooLong(organization.DisplayName),
                 OrganizationValidator.ChiefInspectorIsNotEmpty(organization.ChiefInspector),
                 OrganizationValidator.ChiefInspectorHasKebabCase(organization.ChiefInspector),
-                OrganizationValidator.ChiefInspectorIsNotTooLong(organization.ChiefInspector));
+                OrganizationValidator.ChiefInspectorIsNotTooLong(organization.ChiefInspector),
+                OrganizationValidator.ChiefInspectorHasValidValue(organization.ChiefInspector));
 
         private static void EnsureDeletable(Organization organization)
             => Validator.Ensure($"organization with unique name '{organization.UniqueName}'",
                 OrganizationValidator.UniqueNameIsNotEmpty(organization.UniqueName),
                 OrganizationValidator.UniqueNameHasKebabCase(organization.UniqueName),
-                OrganizationValidator.UniqueNameIsNotTooLong(organization.UniqueName));
+                OrganizationValidator.UniqueNameIsNotTooLong(organization.UniqueName),
+                OrganizationValidator.UniqueNameHasValidValue(organization.UniqueName));
     }
 }

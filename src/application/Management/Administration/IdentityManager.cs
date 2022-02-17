@@ -84,13 +84,15 @@ namespace Super.Paula.Application.Administration
             => Validator.Ensure($"unique name '{identity}' of identity",
                 IdentityValidator.UniqueNameIsNotEmpty(identity),
                 IdentityValidator.UniqueNameHasKebabCase(identity),
-                IdentityValidator.UniqueNameIsNotTooLong(identity));
+                IdentityValidator.UniqueNameIsNotTooLong(identity),
+                IdentityValidator.UniqueNameHasValidValue(identity));
 
         private static void EnsureInsertable(Identity identity)
             => Validator.Ensure($"identity with unique name '{identity.UniqueName}'",
                 IdentityValidator.UniqueNameIsNotEmpty(identity.UniqueName),
                 IdentityValidator.UniqueNameHasKebabCase(identity.UniqueName),
                 IdentityValidator.UniqueNameIsNotTooLong(identity.UniqueName),
+                IdentityValidator.UniqueNameHasValidValue(identity.UniqueName),
                 IdentityValidator.MailAddressIsNotNull(identity.MailAddress),
                 IdentityValidator.MailAddressIsMailAddress(identity.MailAddress),
                 IdentityValidator.MailAddressIsNotTooLong(identity.MailAddress),
@@ -102,6 +104,7 @@ namespace Super.Paula.Application.Administration
                 IdentityValidator.UniqueNameIsNotEmpty(identity.UniqueName),
                 IdentityValidator.UniqueNameHasKebabCase(identity.UniqueName),
                 IdentityValidator.UniqueNameIsNotTooLong(identity.UniqueName),
+                IdentityValidator.UniqueNameHasValidValue(identity.UniqueName),
                 IdentityValidator.MailAddressIsNotNull(identity.MailAddress),
                 IdentityValidator.MailAddressIsMailAddress(identity.MailAddress),
                 IdentityValidator.MailAddressIsNotTooLong(identity.MailAddress),
@@ -112,6 +115,7 @@ namespace Super.Paula.Application.Administration
             => Validator.Ensure($"identity with unique name '{identity.UniqueName}'",
                 IdentityValidator.UniqueNameIsNotEmpty(identity.UniqueName),
                 IdentityValidator.UniqueNameHasKebabCase(identity.UniqueName),
-                IdentityValidator.UniqueNameIsNotTooLong(identity.UniqueName));
+                IdentityValidator.UniqueNameIsNotTooLong(identity.UniqueName),
+                IdentityValidator.UniqueNameHasValidValue(identity.UniqueName));
     }
 }

@@ -32,59 +32,12 @@ namespace Super.Paula.Client.Administration
             responseMessage.EnsureSuccessStatusCode();
         }
 
-        public async IAsyncEnumerable<AccountAuthorizationResponse> GetAuthorizations()
-        {
-            var responseMessage = await _httpClient.GetAsync("account/authorizations");
-
-            responseMessage.RuleOutProblems();
-            responseMessage.EnsureSuccessStatusCode();
-
-            var responseStream = await responseMessage.Content.ReadAsStreamAsync();
-            var response = JsonSerializer.DeserializeAsyncEnumerable<AccountAuthorizationResponse>(
-                responseStream,
-                new JsonSerializerOptions(JsonSerializerDefaults.Web)
-                {
-                    DefaultBufferSize = 128
-                });
-
-            await foreach (var responseItem in response)
-            {
-                yield return responseItem!;
-            }
-        }
-
-        public async ValueTask RepairChiefInspectorAsync(RepairChiefInspectorRequest request)
-        {
-            var responseMessage = await _httpClient.PostAsJsonAsync("account/repair-chief-inspector", request);
-            
-            responseMessage.RuleOutProblems();
-            responseMessage.EnsureSuccessStatusCode();
-        }
-
-        public async ValueTask RegisterIdentityAsync(RegisterIdentityRequest request)
-        {
-            var responseMessage = await _httpClient.PostAsJsonAsync("account/register", request);
-            
-            responseMessage.RuleOutProblems();
-            responseMessage.EnsureSuccessStatusCode();
-        }
-
         public async ValueTask RegisterOrganizationAsync(RegisterOrganizationRequest request)
         {
             var responseMessage = await _httpClient.PostAsJsonAsync("account/register-organization", request);
             
             responseMessage.RuleOutProblems();
             responseMessage.EnsureSuccessStatusCode();
-        }
-
-        public async ValueTask<AssessChiefInspectorDefectivenessResponse> AssessChiefInspectorDefectivenessAsync(AssessChiefInspectorDefectivenessRequest request)
-        {
-            var responseMessage = await _httpClient.PostAsJsonAsync("account/assess-chief-inspector-defectiveness", request);
-            
-            responseMessage.RuleOutProblems();
-            responseMessage.EnsureSuccessStatusCode();
-
-            return (await responseMessage.Content.ReadFromJsonAsync<AssessChiefInspectorDefectivenessResponse>())!;
         }
 
         public async ValueTask<string> SignInInspectorAsync(SignInInspectorRequest request)
@@ -95,14 +48,6 @@ namespace Super.Paula.Client.Administration
             responseMessage.EnsureSuccessStatusCode();
 
             return (await responseMessage.Content.ReadAsStringAsync())!;
-        }
-
-        public async ValueTask SignOutInspectorAsync()
-        {
-            var responseMessage = await _httpClient.PostAsync("account/sign-out-inspector", null);
-
-            responseMessage.RuleOutProblems();
-            responseMessage.EnsureSuccessStatusCode();
         }
 
         public async ValueTask<string> StartImpersonationAsync(StartImpersonationRequest request)
@@ -123,14 +68,6 @@ namespace Super.Paula.Client.Administration
             responseMessage.EnsureSuccessStatusCode();
 
             return (await responseMessage.Content.ReadAsStringAsync())!;
-        }
-
-        public async ValueTask VerifyAsync()
-        {
-            var responseMessage = await _httpClient.PostAsync("account/verify", null);
-
-            responseMessage.RuleOutProblems();
-            responseMessage.EnsureSuccessStatusCode();
         }
     }
 }

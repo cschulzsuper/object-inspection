@@ -9,5 +9,7 @@
         public const string Notification = "notification";
 
         public const string Inspector = "inspector";
+
+        public const string Identity = "inspector";
     }
 }

@@ -2,10 +2,10 @@
 {
     public interface IConnectionManager
     {
-        void Trace(string realm, string account, string proof);
+        void Trace(string account, string proof);
 
-        void Forget(string realm, string account);
+        void Forget(string account);
 
-        bool Verify(string realm, string account, string proof);
+        bool Verify(string account, string proof);
     }
 }

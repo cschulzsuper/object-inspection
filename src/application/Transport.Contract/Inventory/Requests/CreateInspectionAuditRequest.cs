@@ -8,6 +8,7 @@ namespace Super.Paula.Application.Inventory.Requests
         [Required]
         [KebabCase]
         [StringLength(140)]
+        [UniqueName]
         public string Inspection { get; set; } = string.Empty;
 
         [Required]

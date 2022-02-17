@@ -1,10 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Super.Paula.Validation;
+using System.ComponentModel.DataAnnotations;
 
 namespace Super.Paula.Application.Inventory.Events
 {
     public class InspectorBusinessObjectEvent
     {
         [StringLength(140)]
+        [UniqueName]
         public string? UniqueName { get; set; }
 
         [StringLength(140)]

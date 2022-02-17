@@ -32,52 +32,61 @@ namespace Super.Paula.Application.Administration
                 "/inspectors",
                 ("/me", GetCurrent));
 
+            endpoints.MapQueries(
+                "/identities",
+                ("/{identity}/inspectors", GetAllForIdentity));
+
             return endpoints;
         }
 
         private static Delegate Get =>
-            [Authorize("RequiresInspectorViewability")]
+            [Authorize("InspectorRead")]
             (IInspectorHandler handler, string inspector)
                 => handler.GetAsync(inspector);
 
         private static Delegate GetCurrent =>
-            [Authorize("RequiresAuditingViewability")]
+            [Authorize("AuditingRead")]
             (IInspectorHandler handler)
                 => handler.GetCurrentAsync();
 
         private static Delegate GetAll =>
-            [Authorize("RequiresManagementViewability")]
+            [Authorize("ManagementRead")]
             (IInspectorHandler handler)
                 => handler.GetAll();
 
         private static Delegate GetAllForOrganization =>
-            [Authorize("RequiresManagementViewability")]
+            [Authorize("ManagementRead")]
             [IgnoreCurrentOrganization]
             (IInspectorHandler handler, string organization)
                 => handler.GetAllForOrganization(organization);
 
+        private static Delegate GetAllForIdentity =>
+            [Authorize("IdentityRead")]
+            (IInspectorHandler handler, string identity)
+                => handler.GetAllForIdentity(identity);
+
         private static Delegate Create =>
-            [Authorize("RequiresManageability")]
+            [Authorize("ManagementFull")]
             (IInspectorHandler handler, InspectorRequest request)
                 => handler.CreateAsync(request);
 
         private static Delegate Replace =>
-            [Authorize("RequiresManageability")]
+            [Authorize("ManagementFull")]
             (IInspectorHandler handler, string inspector, InspectorRequest request)
                 => handler.ReplaceAsync(inspector, request);
 
         private static Delegate Delete =>
-            [Authorize("RequiresManageability")]
+            [Authorize("ManagementFull")]
             (IInspectorHandler handler, string inspector)
                 => handler.DeleteAsync(inspector);
 
         private static Delegate Activate =>
-            [Authorize("RequiresManageability")]
+            [Authorize("ManagementFull")]
             (IInspectorHandler handler, string inspector)
                 => handler.ActivateAsync(inspector);
 
         private static Delegate Deactivate =>
-           [Authorize("RequiresManageability")]
+           [Authorize("ManagementFull")]
             (IInspectorHandler handler, string inspector)
                 => handler.DeactivateAsync(inspector);
     }

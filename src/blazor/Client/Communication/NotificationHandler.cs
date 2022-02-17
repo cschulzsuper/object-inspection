@@ -2,7 +2,6 @@
 using Super.Paula.Application.Communication;
 using Super.Paula.Application.Communication.Requests;
 using Super.Paula.Application.Communication.Responses;
-using Super.Paula.Client.Authentication;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,15 +18,15 @@ namespace Super.Paula.Client.Communication
         private readonly SemaphoreSlim _notificationResponseCacheSemaphore;
         private bool _notificationResponseCached;
 
-        private readonly AuthenticationStateManager _authenticationStateManager;
+        private readonly AuthenticationStateProvider _AuthenticationStateProvider;
 
         public NotificationHandler(
             INotificationHandler notificationHandler,
-            AuthenticationStateManager authenticationStateManager)
+            AuthenticationStateProvider AuthenticationStateProvider)
         {
 
-            _authenticationStateManager = authenticationStateManager;
-            _authenticationStateManager.AuthenticationStateChanged += AuthenticationStateChanged;
+            _AuthenticationStateProvider = AuthenticationStateProvider;
+            _AuthenticationStateProvider.AuthenticationStateChanged += AuthenticationStateChanged;
 
             _notificationHandler = notificationHandler;
             _notificationHandler.OnCreationAsync(InternalOnCreationAsync);
@@ -40,7 +39,7 @@ namespace Super.Paula.Client.Communication
 
         public void Dispose()
         {
-            _authenticationStateManager.AuthenticationStateChanged -= AuthenticationStateChanged;
+            _AuthenticationStateProvider.AuthenticationStateChanged -= AuthenticationStateChanged;
 
             GC.SuppressFinalize(this);
         }

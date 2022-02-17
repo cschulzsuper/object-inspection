@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<LangVersion>Preview</LangVersion>
+		<RootNamespace>Super.Paula</RootNamespace>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="6.0.2" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\Environment\Environment.csproj" />
+	  <ProjectReference Include="..\Security.Contract\Security.Contract.csproj" />
+	  <ProjectReference Include="..\Transport.Contract\Transport.Contract.csproj" />
+	</ItemGroup>
+
+</Project>

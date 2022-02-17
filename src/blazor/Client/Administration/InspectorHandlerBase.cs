@@ -85,6 +85,27 @@ namespace Super.Paula.Client.Administration
             }
         }
 
+        public async IAsyncEnumerable<IdentityInspectorResponse> GetAllForIdentity(string identity)
+        {
+            var responseMessage = await _httpClient.GetAsync($"identities/{identity}/inspectors");
+
+            responseMessage.RuleOutProblems();
+            responseMessage.EnsureSuccessStatusCode();
+
+            var responseStream = await responseMessage.Content.ReadAsStreamAsync();
+            var response = JsonSerializer.DeserializeAsyncEnumerable<IdentityInspectorResponse>(
+                responseStream,
+                new JsonSerializerOptions(JsonSerializerDefaults.Web)
+                {
+                    DefaultBufferSize = 128
+                });
+
+            await foreach (var responseItem in response)
+            {
+                yield return responseItem!;
+            }
+        }
+
         public async IAsyncEnumerable<InspectorResponse> GetAllForOrganization(string organization)
         {
             var responseMessage = await _httpClient.GetAsync($"organizations/{organization}/inspectors");

@@ -74,8 +74,6 @@ namespace Super.Paula
             app.UseCors();
 
             app.UseAuthentication();
-
-            app.UsePaulaAppAuthentication();
             app.UsePaulaAppState();
 
             app.UseAuthorization();

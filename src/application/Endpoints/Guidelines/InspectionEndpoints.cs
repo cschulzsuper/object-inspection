@@ -27,37 +27,37 @@ namespace Super.Paula.Application.Guidelines
         }
 
         private static Delegate Get =>
-            [Authorize("RequiresAuditingViewability")] 
+            [Authorize("AuditingRead")] 
             (IInspectionHandler handler, string inspection)
                 => handler.GetAsync(inspection);
 
         private static Delegate GetAll =>
-            [Authorize("RequiresAuditingViewability")] 
+            [Authorize("AuditingRead")] 
             (IInspectionHandler handler)
                 => handler.GetAll();
 
         private static Delegate Create =>
-            [Authorize("RequiresManageability")]
+            [Authorize("ManagementFull")]
             (IInspectionHandler handler, InspectionRequest request)
                 => handler.CreateAsync(request);
 
         private static Delegate Replace =>
-            [Authorize("RequiresManageability")]
+            [Authorize("ManagementFull")]
             (IInspectionHandler handler, string inspection, InspectionRequest request)
                 => handler.ReplaceAsync(inspection, request);
 
         private static Delegate Delete =>
-            [Authorize("RequiresManageability")]
+            [Authorize("ManagementFull")]
             (IInspectionHandler handler, string inspection)
                 => handler.DeleteAsync(inspection);
 
         private static Delegate Activate =>
-             [Authorize("RequiresManageability")] 
+             [Authorize("ManagementFull")] 
             (IInspectionHandler handler, string inspection)
                 => handler.ActivateAsync(inspection);
 
         private static Delegate Deactivate =>
-            [Authorize("RequiresManageability")]
+            [Authorize("ManagementFull")]
             (IInspectionHandler handler, string inspection)
                 => handler.DeactivateAsync(inspection);
     }

@@ -26,6 +26,7 @@ namespace Super.Paula.Application
 
             services
                 .AddScoped<IAccountHandler, AccountHandler>()
+                .AddScoped<IAuthenticationHandler, AuthenticationHandler>()
 
                 .AddScoped<BusinessObjectHandler>()
                 .AddScoped<IBusinessObjectHandler>(x => x.GetRequiredService<BusinessObjectHandler>())
@@ -73,10 +74,11 @@ namespace Super.Paula.Application
             {
                 var inspectorManager = services.GetRequiredService<IInspectorManager>();
                 var organizationProvider = services.GetRequiredService<IOrganizationProvider>();
+                var identityInspectorManager = services.GetRequiredService<IIdentityInspectorManager>();
                 var appState = services.GetRequiredService<AppState>();
                 var eventBus = services.GetRequiredService<IEventBus>();
 
-                var inspectorHandler = new InspectorHandler(inspectorManager, organizationProvider, appState, eventBus);
+                var inspectorHandler = new InspectorHandler(inspectorManager, organizationProvider, identityInspectorManager, appState, eventBus);
 
                 var streamer = services.GetRequiredService<IStreamer>();
 

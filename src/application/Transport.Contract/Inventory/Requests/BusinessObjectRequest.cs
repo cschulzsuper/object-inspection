@@ -8,11 +8,12 @@ namespace Super.Paula.Application.Inventory.Requests
         [Required]
         [KebabCase]
         [StringLength(140)]
-        [InvalidValues("search")]
+        [UniqueName]
         public string UniqueName { get; set; } = string.Empty;
 
         [KebabCase]
         [StringLength(140)]
+        [UniqueName]
         public string Inspector { get; set; } = string.Empty;
 
         [Required]

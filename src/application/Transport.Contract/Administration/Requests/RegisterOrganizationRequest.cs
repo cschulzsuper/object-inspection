@@ -8,23 +8,23 @@ namespace Super.Paula.Application.Administration.Requests
         [Required]
         [KebabCase]
         [StringLength(140)]
+        [UniqueName]
         public string UniqueName { get; set; } = string.Empty;
 
         [Required]
         [StringLength(140)]
         public string DisplayName { get; set; } = string.Empty;
 
-        [EmailAddress]
+        [Required]
+        [KebabCase]
         [StringLength(140)]
-        public string ChiefInspectorMail { get; set; } = string.Empty;
+        [UniqueName]
+        public string Identity { get; set; } = string.Empty;
 
         [Required]
         [KebabCase]
         [StringLength(140)]
+        [UniqueName]
         public string ChiefInspector { get; set; } = string.Empty;
-
-        [Required]
-        [StringLength(140)]
-        public string ChiefInspectorSecret { get; set; } = string.Empty;
     }
 }

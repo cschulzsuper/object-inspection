@@ -41,72 +41,72 @@ namespace Super.Paula.Application.Inventory
         }
 
         private static Delegate Get =>
-            [Authorize("RequiresAuditingViewability")]
+            [Authorize("AuditingRead")]
             (IBusinessObjectHandler handler, string businessObject)
                 => handler.GetAsync(businessObject);
 
         private static Delegate GetAll =>
-            [Authorize("RequiresManagementViewability")]
+            [Authorize("ManagementRead")]
             (IBusinessObjectHandler handler)
                 => handler.GetAll();
 
         private static Delegate Create =>
-            [Authorize("RequiresManageability")]
+            [Authorize("ManagementFull")]
             (IBusinessObjectHandler handler, BusinessObjectRequest request)
                 => handler.CreateAsync(request);
 
         private static Delegate Replace =>
-            [Authorize("RequiresManageability")]
+            [Authorize("ManagementFull")]
             (IBusinessObjectHandler handler, string businessObject, BusinessObjectRequest request)
                 => handler.ReplaceAsync(businessObject, request);
 
         private static Delegate Delete =>
-            [Authorize("RequiresManageability")]
+            [Authorize("ManagementFull")]
             (IBusinessObjectHandler handler, string businessObject)
                 => handler.DeleteAsync(businessObject);
 
         private static Delegate AssignInspection =>
-            [Authorize("RequiresManageability")]
+            [Authorize("ManagementFull")]
             (IBusinessObjectHandler handler, string businessObject, AssignInspectionRequest request)
                 => handler.AssignInspectionAsync(businessObject, request);
 
         private static Delegate CancelInspection =>
-            [Authorize("RequiresManageability")]
+            [Authorize("ManagementFull")]
             (IBusinessObjectHandler handler, string businessObject, CancelInspectionRequest request)
                 => handler.CancelInspectionAsync(businessObject, request);
 
         private static Delegate ScheduleInspectionAudit =>
-            [Authorize("RequiresManageability")]
+            [Authorize("ManagementFull")]
             (IBusinessObjectHandler handler, string businessObject, string inspection, ScheduleInspectionAuditRequest request)
                 => handler.ScheduleInspectionAuditAsync(businessObject, inspection, request);
 
         private static Delegate DropInspectionAudit =>
-            [Authorize("RequiresManageability")]
+            [Authorize("ManagementFull")]
             (IBusinessObjectHandler handler, string businessObject, string inspection, DropInspectionAuditRequest request)
             => handler.DropInspectionAuditAsync(businessObject, inspection, request);
 
         private static Delegate Search =>
-            [Authorize("RequiresManagementViewability")]
+            [Authorize("ManagementRead")]
             (IBusinessObjectHandler handler, [FromQuery(Name = "business-object")] string? businessObject, string? inspector)
                 => handler.Search(businessObject, inspector);
 
         private static Delegate GetAllForInspector =>
-            [Authorize("RequiresAuditingViewability")]
+            [Authorize("AuditingRead")]
             (IBusinessObjectHandler handler, string inspector)
                 => handler.GetAllForInspector(inspector);
 
         private static Delegate ChangeInspectionAudit =>
-            [Authorize("RequiresAuditability")]
+            [Authorize("AuditingFull")]
             (IBusinessObjectHandler handler, string businessObject, string inspection, ChangeInspectionAuditRequest request)
                 => handler.ChangeInspectionAuditAsync(businessObject, inspection, request);
 
         private static Delegate AnnotateInspectionAudit =>
-            [Authorize("RequiresAuditability")]
+            [Authorize("AuditingFull")]
             (IBusinessObjectHandler handler, string businessObject, string inspection, AnnotateInspectionAuditRequest request)
                 => handler.AnnotateInspectionAuditAsync(businessObject, inspection, request);
 
         private static Delegate CreateInspectionAudit =>
-            [Authorize("RequiresAuditability")]
+            [Authorize("AuditingFull")]
             (IBusinessObjectHandler handler, string businessObject, CreateInspectionAuditRequest request)
                 => handler.CreateInspectionAuditAsync(businessObject, request);
     }

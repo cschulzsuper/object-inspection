@@ -1,16 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.SignalR.Client;
 using Super.Paula.Application.Communication;
 using Super.Paula.Application.Communication.Requests;
 using Super.Paula.Application.Communication.Responses;
-using Super.Paula.Client.Authentication;
 using Super.Paula.Client.ErrorHandling;
 using Super.Paula.Client.Streaming;
 using Super.Paula.Environment;

@@ -7,6 +7,7 @@ namespace Super.Paula.Application.Inventory.Events
     {
         [KebabCase]
         [StringLength(140)]
+        [UniqueName]
         public string? Inspector { get; set; }
 
         [DayNumber]

@@ -88,7 +88,8 @@ namespace Super.Paula.Application.Inventory
             => Validator.Ensure($"unique name '{businessObject}' of business object",
                 BusinessObjectValidator.UniqueNameIsNotEmpty(businessObject),
                 BusinessObjectValidator.UniqueNameHasKebabCase(businessObject),
-                BusinessObjectValidator.UniqueNameIsNotTooLong(businessObject));
+                BusinessObjectValidator.UniqueNameIsNotTooLong(businessObject),
+                BusinessObjectValidator.UniqueNameHasValidValue(businessObject));
 
         private static void EnsureInsertable(BusinessObject businessObject)
         {
@@ -97,6 +98,7 @@ namespace Super.Paula.Application.Inventory
                 yield return BusinessObjectValidator.UniqueNameIsNotEmpty(businessObject.UniqueName);
                 yield return BusinessObjectValidator.UniqueNameHasKebabCase(businessObject.UniqueName);
                 yield return BusinessObjectValidator.UniqueNameIsNotTooLong(businessObject.UniqueName);
+                yield return BusinessObjectValidator.UniqueNameHasValidValue(businessObject.UniqueName);
                 yield return BusinessObjectValidator.DisplayNameIsNotEmpty(businessObject.DisplayName);
                 yield return BusinessObjectValidator.DisplayNameIsNotTooLong(businessObject.DisplayName);
                 yield return BusinessObjectValidator.InspectorIsNotNull(businessObject.Inspector);
@@ -108,6 +110,7 @@ namespace Super.Paula.Application.Inventory
                     yield return BusinessObjectInspectionValidator.UniqueNameIsNotEmpty(inspection.UniqueName);
                     yield return BusinessObjectInspectionValidator.UniqueNameHasKebabCase(inspection.UniqueName);
                     yield return BusinessObjectInspectionValidator.UniqueNameIsNotTooLong(inspection.UniqueName);
+                    yield return BusinessObjectInspectionValidator.UniqueNameHasValidValue(inspection.UniqueName);
                     yield return BusinessObjectInspectionValidator.DisplayNameIsNotEmpty(inspection.DisplayName);
                     yield return BusinessObjectInspectionValidator.DisplayNameIsNotTooLong(inspection.DisplayName);
                     yield return BusinessObjectInspectionValidator.TextIsNotNull(inspection.Text);
@@ -115,6 +118,7 @@ namespace Super.Paula.Application.Inventory
                     yield return BusinessObjectInspectionValidator.AuditInspectorIsNotNull(inspection.AuditInspector);
                     yield return BusinessObjectInspectionValidator.AuditInspectorHasKebabCase(inspection.AuditInspector);
                     yield return BusinessObjectInspectionValidator.AuditInspectorIsNotTooLong(inspection.AuditInspector);
+                    yield return BusinessObjectInspectionValidator.AuditInspectorHasValidValue(inspection.AuditInspector);
                     yield return BusinessObjectInspectionValidator.AuditAnnotationIsNotNull(inspection.AuditAnnotation);
                     yield return BusinessObjectInspectionValidator.AuditAnnotationIsNotTooLong(inspection.AuditAnnotation);
                     yield return BusinessObjectInspectionValidator.AuditResultIsNotNull(inspection.AuditAnnotation);
@@ -169,6 +173,7 @@ namespace Super.Paula.Application.Inventory
                 yield return BusinessObjectValidator.UniqueNameIsNotEmpty(businessObject.UniqueName);
                 yield return BusinessObjectValidator.UniqueNameHasKebabCase(businessObject.UniqueName);
                 yield return BusinessObjectValidator.UniqueNameIsNotTooLong(businessObject.UniqueName);
+                yield return BusinessObjectValidator.UniqueNameHasValidValue(businessObject.UniqueName);
                 yield return BusinessObjectValidator.DisplayNameIsNotEmpty(businessObject.DisplayName);
                 yield return BusinessObjectValidator.DisplayNameIsNotTooLong(businessObject.DisplayName);
                 yield return BusinessObjectValidator.InspectorIsNotNull(businessObject.Inspector);
@@ -180,6 +185,7 @@ namespace Super.Paula.Application.Inventory
                     yield return BusinessObjectInspectionValidator.UniqueNameIsNotEmpty(inspection.UniqueName);
                     yield return BusinessObjectInspectionValidator.UniqueNameHasKebabCase(inspection.UniqueName);
                     yield return BusinessObjectInspectionValidator.UniqueNameIsNotTooLong(inspection.UniqueName);
+                    yield return BusinessObjectInspectionValidator.UniqueNameHasValidValue(inspection.UniqueName);
                     yield return BusinessObjectInspectionValidator.DisplayNameIsNotEmpty(inspection.DisplayName);
                     yield return BusinessObjectInspectionValidator.DisplayNameIsNotTooLong(inspection.DisplayName);
                     yield return BusinessObjectInspectionValidator.TextIsNotNull(inspection.Text);
@@ -187,10 +193,11 @@ namespace Super.Paula.Application.Inventory
                     yield return BusinessObjectInspectionValidator.AuditInspectorIsNotNull(inspection.AuditInspector);
                     yield return BusinessObjectInspectionValidator.AuditInspectorHasKebabCase(inspection.AuditInspector);
                     yield return BusinessObjectInspectionValidator.AuditInspectorIsNotTooLong(inspection.AuditInspector);
+                    yield return BusinessObjectInspectionValidator.AuditInspectorHasValidValue(inspection.AuditInspector);
                     yield return BusinessObjectInspectionValidator.AuditAnnotationIsNotNull(inspection.AuditAnnotation);
                     yield return BusinessObjectInspectionValidator.AuditAnnotationIsNotTooLong(inspection.AuditAnnotation);
-                    yield return BusinessObjectInspectionValidator.AuditResultIsNotNull(inspection.AuditResult);
-                    yield return BusinessObjectInspectionValidator.AuditResultHasValidValue(inspection.AuditResult);
+                    yield return BusinessObjectInspectionValidator.AuditResultIsNotNull(inspection.AuditAnnotation);
+                    yield return BusinessObjectInspectionValidator.AuditResultHasValidValue(inspection.AuditAnnotation);
                     yield return BusinessObjectInspectionValidator.AuditDateIsPositive(inspection.AuditDate);
                     yield return BusinessObjectInspectionValidator.AuditTimeIsInDayTimeRange(inspection.AuditTime);
                     yield return BusinessObjectInspectionValidator.AssignmentDateIsPositive(inspection.AssignmentDate);
@@ -237,6 +244,7 @@ namespace Super.Paula.Application.Inventory
             => Validator.Ensure($"business object with unique name '{businessObject.UniqueName}'",
                 BusinessObjectValidator.UniqueNameIsNotEmpty(businessObject.UniqueName),
                 BusinessObjectValidator.UniqueNameHasKebabCase(businessObject.UniqueName),
-                BusinessObjectValidator.UniqueNameIsNotTooLong(businessObject.UniqueName));
+                BusinessObjectValidator.UniqueNameIsNotTooLong(businessObject.UniqueName),
+                BusinessObjectValidator.UniqueNameHasValidValue(businessObject.UniqueName));
     }
 }

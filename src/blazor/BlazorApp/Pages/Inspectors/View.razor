@@ -4,12 +4,11 @@
 @inject ITranslator Translator
 @inject NavigationManager NavigationManager
 @inject IAccountHandler AccountHandler
-@inject AppAuthentication AppAuthentication
 @inject IInspectorHandler InspectorHandler
 @inject IOrganizationHandler OrganizationHandler
 
 
-@attribute [Authorize("RequiresManagementViewability")]
+@attribute [Authorize("ManagementRead")]
 
 <div class="container-fluid">
     <h1>@Translator["Inspectors"]</h1>
@@ -39,7 +38,7 @@ else
                     <th></th>
                     <th></th>
                 }
-                <AuthorizeView Policy="RequiresMaintainability">
+                <AuthorizeView Policy="Maintainance">
                     <Authorized>
                         <th></th>
                     </Authorized>
@@ -57,17 +56,17 @@ else
                         @if(inspector.Activated)
                         {
                             <td>
-                                @if (inspector.UniqueName != AppAuthentication.Inspector)
+                                @if (inspector.UniqueName != _inspector)
                                 {
-                                    <AuthorizedButton Policy="RequiresManageability" class="btn btn-success btn-block" title="@Translator["Deactivate"]" 
+                                    <AuthorizedButton Policy="ManagementFull" class="btn btn-success btn-block" title="@Translator["Deactivate"]" 
                                         @onclick="() => DeactivateAsync(inspector.UniqueName)"><span class="oi oi-power-standby"/></AuthorizedButton>
                                 }
                             </td>
                         } else {
                             <td>
-                                @if (inspector.UniqueName != AppAuthentication.Inspector)
+                                @if (inspector.UniqueName != _inspector)
                                 {
-                                    <AuthorizedButton Policy="RequiresManageability" class="btn btn-outline-danger btn-block" title="@Translator["Activate"]" 
+                                    <AuthorizedButton Policy="ManagementFull" class="btn btn-outline-danger btn-block" title="@Translator["Activate"]" 
                                         @onclick="() => ActivateAsync(inspector.UniqueName)"><span class="oi oi-power-standby"/></AuthorizedButton>
                                 }
                             </td>
@@ -77,19 +76,19 @@ else
                                 @onclick="() => Edit(inspector.UniqueName)"><span class="oi oi-pencil"/></button>
                         </td>
                         <td>
-                            @if (inspector.UniqueName != AppAuthentication.Inspector)
+                            @if (inspector.UniqueName != _inspector)
                             {
-                                <AuthorizedButton Policy="RequiresManageability" class="btn btn-outline-danger btn-block" title="@Translator["Delete"]" 
+                                <AuthorizedButton Policy="ManagementFull" class="btn btn-outline-danger btn-block" title="@Translator["Delete"]" 
                                     @onclick="() => DeleteAsync(inspector.UniqueName)"><span class="oi oi-trash"/></AuthorizedButton>
                             }
                         </td>
                     }
-                    <AuthorizeView Policy="RequiresMaintainability">
+                    <AuthorizeView Policy="Maintainance">
                         <Authorized>
                             <td>
                                 @if (inspector.Activated &&
                                      _organization?.Activated == true &&
-                                     inspector.UniqueName != AppAuthentication.Inspector)
+                                     inspector.UniqueName != _inspector)
                                 {
                                     <button class="btn btn-outline-danger btn-block" title="@Translator["Impersonate"]"
                                     @onclick="() => ImpersonateAsync(inspector.UniqueName)"><span class="oi oi-eye"/></button>
@@ -114,6 +113,16 @@ else
     private OrganizationResponse? _organization;
 
     private IDictionary<string,InspectorResponse>? _inspectors;
+
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthenticationState { get; set; } = null!;
+
+    private string? _inspector;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        _inspector = (await AuthenticationState).User.GetInspector();
+    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -166,10 +175,12 @@ else
 
     public async Task ImpersonateAsync(string inspector)
     {
+        var organizatio = (await AuthenticationState).User.GetOrganization();
+
         await AccountHandler.StartImpersonationAsync(new StartImpersonationRequest
         {
             UniqueName = inspector,
-            Organization = Organization ?? AppAuthentication.Organization
+            Organization = Organization ?? organizatio
         });
 
         NavigationManager.NavigateTo("/");

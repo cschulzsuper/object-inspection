@@ -32,42 +32,42 @@ namespace Super.Paula.Application.Auditing
         }
 
         private static Delegate Get =>
-            [Authorize("RequiresAuditingViewability")] 
+            [Authorize("AuditingRead")] 
             (IBusinessObjectInspectionAuditHandler handler, string businessObject, string inspection, int date, int time)
                 => handler.GetAsync(businessObject, inspection, date, time);
 
         private static Delegate GetAll =>
-            [Authorize("RequiresAuditingViewability")]
+            [Authorize("AuditingRead")]
             (IBusinessObjectInspectionAuditHandler handler)
                 => handler.GetAll();
 
         private static Delegate GetAllForBusinessObject =>
-            [Authorize("RequiresAuditingViewability")]
+            [Authorize("AuditingRead")]
             (IBusinessObjectInspectionAuditHandler handler, string businessObject)
                 => handler.GetAllForBusinessObject(businessObject);
 
         private static Delegate Create =>
-            [Authorize("RequiresAuditability")]
+            [Authorize("AuditingFull")]
             (IBusinessObjectInspectionAuditHandler handler, string businessObject, BusinessObjectInspectionAuditRequest request)
                 => handler.CreateAsync(businessObject, request);
 
         private static Delegate Replace =>
-            [Authorize("RequiresAuditability")]
+            [Authorize("AuditingFull")]
             (IBusinessObjectInspectionAuditHandler handler, string businessObject, string inspection, int date, int time, BusinessObjectInspectionAuditRequest request)
                 => handler.ReplaceAsync(businessObject, inspection, date, time, request);
 
         private static Delegate Delete =>
-            [Authorize("RequiresAuditability")]
+            [Authorize("AuditingFull")]
             (IBusinessObjectInspectionAuditHandler handler, string businessObject, string inspection, int date, int time)
                 => handler.DeleteAsync(businessObject, inspection, date, time);
 
         private static Delegate Search =>
-            [Authorize("RequiresAuditingViewability")]
+            [Authorize("AuditingRead")]
             (IBusinessObjectInspectionAuditHandler handler, [FromQuery(Name = "business-object") ]string? businessObject, string? inspector, string? inspection)
                 => handler.Search(businessObject,inspector,inspection);
 
         private static Delegate SearchForBusinessObject =>
-            [Authorize("RequiresAuditingViewability")]
+            [Authorize("AuditingRead")]
             (IBusinessObjectInspectionAuditHandler handler, string businessObject, string? inspector, string? inspection)
                 => handler.SearchForBusinessObject(businessObject, inspector, inspection);
 

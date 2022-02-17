@@ -4,7 +4,7 @@
 @inject NavigationManager NavigationManager
 @inject IBusinessObjectInspectionAuditHandler BusinessObjectInspectionAuditHandler
 
-@attribute [Authorize("RequiresManagementViewability")]
+@attribute [Authorize("ManagementRead")]
 
 <div class="container-fluid">
     <h1>@Translator["Inspection audits"]</h1>

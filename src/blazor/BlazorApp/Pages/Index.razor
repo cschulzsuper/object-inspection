@@ -2,6 +2,51 @@
 
 @inject ITranslator Translator
 
-<div class="container-fluid">
-    <h1>@Translator["Welcome"]</h1>
-</div>
+@if(_mode == Mode.SignIn)
+{
+    <SignIn/>
+}
+@if(_mode == Mode.SignInInspector)
+{
+    <SignInInspector/>
+}
+@if(_mode == Mode.Authenticated)
+{
+    <div class="container-fluid">
+        <h1>@Translator["Welcome"]</h1>
+    </div>
+}
+
+@code {
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthenticationState { get; set; } = null!;
+
+    private Mode _mode = Mode.SignIn;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        var user = (await AuthenticationState).User;
+
+        if (user.Identity?.IsAuthenticated != true)
+        {
+            _mode = Mode.SignIn;
+            return;
+        }
+
+        if (!user.HasInspector())
+        {
+            _mode = Mode.SignInInspector;
+            return;
+        }
+
+        _mode = Mode.Authenticated;
+        return;
+    }
+
+    public enum Mode
+    {
+        SignIn,
+        SignInInspector,
+        Authenticated
+    }
+}

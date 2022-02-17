@@ -1,10 +1,8 @@
-﻿@inject INotificationHandler NotificationHandler
-@inject IInspectorHandler InspectorHandler
-@inject AppAuthentication AppAuthentication
-@inject AppEnvironment AppEnvironment
+﻿@inject AppEnvironment AppEnvironment
 @inject ITranslator Translator
-
-@implements IAsyncDisposable
+@inject IAuthenticationHandler AuthenticationHandler
+@inject ILocalStorage LocalStorage
+@inject NavigationManager NavigationManager   
 
 <div class="top-row pl-4 navbar navbar-dark">
     <a class="navbar-brand" href="">Paula</a>
@@ -17,42 +15,41 @@
     <nav class="flex-column">
         <AuthorizeView>
             <NotAuthorized>
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" Match="NavLinkMatch.All" href="account/sign-in">
-                        <span class="oi oi-account-login" aria-hidden="true"/>@Translator["Sign in"]
-                    </NavLink>
-                </div>
                 @if (AppEnvironment.IsDevelopment)
                 {
                     <div class="nav-item px-3">
-                        <NavLink class="nav-link" Match="NavLinkMatch.All" href="account/register">
+                        <NavLink class="nav-link" Match="NavLinkMatch.All" href="register">
                             <span class="oi oi-person" aria-hidden="true"/>@Translator["Sign up"]
                         </NavLink>
                     </div>
                 }
             </NotAuthorized>
+        </AuthorizeView>
+        <AuthorizeView Policy="AuditingRead">
             <Authorized>
-                <div class="nav-item px-3 text-center">
+                <div class="nav-item px-3 text-center h-100">
                     <div class="nav-link">
-                        @Translator["Information"]
+                        <span class="d-none d-md-block">@Translator["Information"]</span>
                     </div>
                 </div>
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" Match="NavLinkMatch.All" href="notifications">
                         <span class="oi oi-bell" aria-hidden="true"/>@Translator["Notifications"]
-                        @if (_notificationCount > 0)
-                        {
-                            <span class="badge badge-danger ml-2">@_notificationCount</span>
-                        }
+                        <ErrorBoundary Context="Test2">
+                            <ChildContent>
+                                <NotificationBadge/>
+                            </ChildContent>
+                            <ErrorContent/>
+                        </ErrorBoundary>
                     </NavLink>
                 </div>
             </Authorized>
         </AuthorizeView>
-        <AuthorizeView Policy="RequiresMaintainability">
+        <AuthorizeView Policy="Maintainance">
             <Authorized >
                 <div class="nav-item px-3 text-center">
                     <div class="nav-link">
-                        @Translator["Administration"]
+                        <span class="d-none d-md-block">@Translator["Administration"]</span>
                     </div>
                 </div>
                 <div class="nav-item px-3">
@@ -67,11 +64,11 @@
                 </div>
             </Authorized>
         </AuthorizeView>
-        <AuthorizeView Policy="RequiresManagementViewability">
+        <AuthorizeView Policy="ManagementRead">
             <Authorized>
                 <div class="nav-item px-3 text-center">
                     <div class="nav-link">
-                        @Translator["Management"]
+                        <span class="d-none d-md-block">@Translator["Management"]</span>
                     </div>
                 </div>
                 <div class="nav-item px-3">
@@ -91,11 +88,11 @@
                 </div>
             </Authorized>
         </AuthorizeView>
-        <AuthorizeView Policy="RequiresManagementViewability">
+        <AuthorizeView Policy="ManagementRead">
             <Authorized>
                 <div class="nav-item px-3 text-center">
                     <div class="nav-link">
-                        @Translator["Timeline"]
+                        <span class="d-none d-md-block">@Translator["Timeline"]</span>
                     </div>
                 </div>
                 <div class="nav-item px-3">
@@ -105,21 +102,40 @@
                 </div>
             </Authorized>
         </AuthorizeView>
-        <AuthorizeView Policy="RequiresAuditingViewability">
+        <AuthorizeView Policy="AuditingRead">
             <Authorized>
                 <div class="nav-item px-3 text-center">
                     <div class="nav-link">
-                        @Translator["Tasks"]
+                        <span class="d-none d-md-block">@Translator["Tasks"]</span>
                     </div>
                 </div>
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" Match="NavLinkMatch.All" href="business-objects/auditing">
                         <span class="oi oi-clipboard" aria-hidden="true"/>@Translator["Auditing"]
-                        @if (_auditingCount > 0)
-                        {
-                            <span class="badge @(_auditingDelayed ? "badge-danger" : "badge-success") ml-2">@_auditingCount</span>
-                        }
+                        <ErrorBoundary Context="Test">
+                            <ChildContent>
+                                <AuditingBadge/>
+                            </ChildContent>
+                            <ErrorContent/>
+                        </ErrorBoundary>
                     </NavLink>
+                </div>
+            </Authorized>
+        </AuthorizeView>
+        <AuthorizeView>
+            <Authorized>
+                <div class="nav-item px-3 text-center d-md-none">
+                    <div class="nav-link">
+                        <span class="d-none d-md-block">@Translator["Account"]</span>
+                    </div>
+                </div>
+                <div class="nav-item px-3 d-md-none">
+                    <NavLink class="nav-link" Match="NavLinkMatch.All" href="change-secret" title="@Translator["Change Password"]">
+                        <span class="oi oi-person" aria-hidden="true"/>@Translator["Change Password"]</NavLink>
+                </div>
+                <div class="nav-item px-3 d-md-none">
+                    <NavLink class="nav-link" title="@Translator["Sign out"]" @onclick="() => SignOutAsync()">
+                        <span class="oi oi-account-logout" aria-hidden="true"/>@Translator["Sign Out"]</NavLink>
                 </div>
             </Authorized>
         </AuthorizeView>
@@ -131,107 +147,29 @@
     private bool collapseNavMenu = true;
     private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 
-    private IDisposable? _notificationHandlerOnCreation;
-    private IDisposable? _notificationHandlerOnDeletion;
-
-    private IDisposable? _inspectorBusinessObjectCreation;
-    private IDisposable? _inspectorBusinessObjectUpdate;
-    private IDisposable? _inspectorBusinessObjectDeletion;
-
-    private long _notificationCount;
-
-    private long _auditingCount;
-    private bool _auditingDelayed;
-
-
-
-    [CascadingParameter]
-    private Task<AuthenticationState> authenticationState { get; set; } = null!;
-
-    protected override async Task OnParametersSetAsync()
-    {          
-        await authenticationState;
-        await CountNotificationsAsync();
-        await CountInspectorBusinessObjectsAsync();
-    }
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            _notificationHandlerOnCreation = await NotificationHandler.OnCreationAsync(OnNotificationCreationAsync);
-            _notificationHandlerOnDeletion = await NotificationHandler.OnDeletionAsync(OnNotificationDeletionAsync);
-
-            _inspectorBusinessObjectCreation = await InspectorHandler.OnBusinessObjectCreationAsync(OnBusinessObjectCreationAsync);
-            _inspectorBusinessObjectUpdate = await InspectorHandler.OnBusinessObjectUpdateAsync(OnBusinessObjectUpdateAsync);
-            _inspectorBusinessObjectDeletion = await InspectorHandler.OnBusinessObjectDeletionAsync(OnBusinessObjectDeletionAsync);
-        }
-    }
-
     private void ToggleNavMenu()
     {
         collapseNavMenu = !collapseNavMenu;
     }
 
-    public async Task CountNotificationsAsync()
+    public async Task SignOutAsync()
     {
-        _notificationCount = 0;
-
-        if (AppAuthentication.Authorizations.Any())
+        try
         {
-            await foreach (var _ in NotificationHandler.GetAllForInspector(AppAuthentication.Inspector))
-            {
-                _notificationCount++;
-            }
+            await AuthenticationHandler.SignOutAsync();
         }
-        StateHasChanged();
-    }
-
-    public async Task CountInspectorBusinessObjectsAsync()
-    {
-        _auditingCount = 0;
-        _auditingDelayed = false;
-
-        if (AppAuthentication.Authorizations.Any())
+        catch(HttpRequestException e) when (e.StatusCode == HttpStatusCode.Unauthorized)
         {
-            var inspector = await InspectorHandler.GetCurrentAsync();
-
-            foreach (var businessObject in inspector.BusinessObjects)
+            if ((await LocalStorage.ContainKeyAsync("token")) ||
+                (await LocalStorage.ContainKeyAsync("authorization-filter")))
             {
-                if (businessObject.AuditScheduleDelayed) {
-                    _auditingDelayed = true;
-                }
-
-                if (businessObject.AuditScheduleDelayed || 
-                    businessObject.AuditSchedulePending) {
-                    _auditingCount++;
-                }
+                await LocalStorage.RemoveItemAsync("token");
+                await LocalStorage.RemoveItemAsync("authorization-filter");
             }
+        } 
+        finally
+        {
+            NavigationManager.NavigateTo("/");
         }
-        StateHasChanged();
-    }
-
-    public Task OnNotificationCreationAsync(NotificationResponse _)
-        => InvokeAsync(CountNotificationsAsync);
-
-    public Task OnNotificationDeletionAsync(string _, int __, int ___)
-        => InvokeAsync(CountNotificationsAsync);
-
-    public Task OnBusinessObjectCreationAsync(string _, InspectorBusinessObjectResponse __)
-        => InvokeAsync(CountInspectorBusinessObjectsAsync);
-
-    public Task OnBusinessObjectUpdateAsync(string _, InspectorBusinessObjectResponse __)
-        => InvokeAsync(CountInspectorBusinessObjectsAsync);
-
-    public Task OnBusinessObjectDeletionAsync(string _, string __)
-        => InvokeAsync(CountInspectorBusinessObjectsAsync);
-
-
-    public async ValueTask DisposeAsync()
-    {
-        _notificationHandlerOnCreation?.Dispose();
-        _notificationHandlerOnDeletion?.Dispose();
-
-        await ValueTask.CompletedTask;
     }
 }

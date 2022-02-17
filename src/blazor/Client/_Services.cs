@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Http;
 using Super.Paula.Application.Administration;
@@ -16,7 +17,6 @@ using Super.Paula.Client.Inventory;
 using Super.Paula.Client.Localization;
 using Super.Paula.Client.Storage;
 using Super.Paula.Client.Streaming;
-using Super.Paula.Environment;
 
 namespace Super.Paula.Client
 {
@@ -27,7 +27,6 @@ namespace Super.Paula.Client
             bool isDevelopment,
             bool isWebAssembly)
         {
-            services.AddPaulaAppAuthentication();
             services.AddPaulaAppSettings();
             services.AddPaulaAppEnvironment(isDevelopment);
             services.AddPaulaClientAuthorization();
@@ -38,6 +37,7 @@ namespace Super.Paula.Client
 
                 services.AddHttpClient();
                 services.AddHttpClientHandler<AccountHandlerBase>();
+                services.AddHttpClientHandler<AuthenticationHandlerBase>();
                 services.AddHttpClientHandler<NotificationHandlerBase>();
                 services.AddHttpClientHandler<InspectorHandlerBase>();
 
@@ -52,6 +52,10 @@ namespace Super.Paula.Client
                 services.AddScoped<AuthenticationMessageHandler>();
                 services
                     .AddHttpClient<AccountHandlerBase>()
+                    .AddHttpMessageHandler<AuthenticationMessageHandler>();
+
+                services
+                    .AddHttpClient<AuthenticationHandlerBase>()
                     .AddHttpMessageHandler<AuthenticationMessageHandler>();
 
                 services
@@ -86,18 +90,22 @@ namespace Super.Paula.Client
             services.AddScoped<IAccountHandler>(provider =>
                 new AccountHandler(
                     provider.GetRequiredService<AccountHandlerBase>(),
-                    provider.GetRequiredService<AuthenticationStateManager>()));
+                    provider.GetRequiredService<ILocalStorage>()));
+
+            services.AddScoped<IAuthenticationHandler>(provider =>
+                new AuthenticationHandler(
+                    provider.GetRequiredService<AuthenticationHandlerBase>(),
+                    provider.GetRequiredService<ILocalStorage>()));
 
             services.AddScoped<INotificationHandler>(provider => 
                 new NotificationHandler(
                     provider.GetRequiredService<NotificationHandlerBase>(),
-                    provider.GetRequiredService<AuthenticationStateManager>()));
+                    provider.GetRequiredService<AuthenticationStateProvider>()));
 
             services.AddScoped<IInspectorHandler>(provider =>
                 new InspectorHandler(
                     provider.GetRequiredService<InspectorHandlerBase>(),
-                    provider.GetRequiredService<AuthenticationStateManager>(),
-                    provider.GetRequiredService<AppAuthentication>()));
+                    provider.GetRequiredService<AuthenticationStateProvider>()));
 
             services.AddSingleton<ITranslator, Translator>();
             services.AddScoped<IStreamConnection, StreamConnection>();

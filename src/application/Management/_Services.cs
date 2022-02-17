@@ -20,6 +20,7 @@ namespace Super.Paula.Application
                 .AddScoped<IIdentityManager, IdentityManager>()
                 .AddScoped<IInspectionManager, InspectionManager>()
                 .AddScoped<IInspectorManager, InspectorManager>()
+                .AddScoped<IIdentityInspectorManager, IdentityInspectorManager>()
                 .AddScoped<INotificationManager, NotificationManager>()
                 .AddScoped<IOrganizationManager, OrganizationManager>()
                 .AddScoped<IOrganizations, Organizations>()

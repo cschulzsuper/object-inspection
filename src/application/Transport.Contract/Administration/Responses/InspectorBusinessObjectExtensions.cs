@@ -1,6 +1,4 @@
-﻿using Super.Paula.Application.Inventory;
-using Super.Paula.Application.Inventory.Responses;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace Super.Paula.Application.Administration.Responses

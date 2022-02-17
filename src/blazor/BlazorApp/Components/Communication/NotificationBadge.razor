@@ -1,0 +1,60 @@
+﻿@inject INotificationHandler NotificationHandler
+
+@implements IDisposable
+
+@if (_notificationCount > 0)
+{
+    <span class="badge badge-danger ml-2">@_notificationCount</span>
+}
+
+@code {
+    private IDisposable? _notificationHandlerOnCreation;
+    private IDisposable? _notificationHandlerOnDeletion;
+
+    private long _notificationCount;
+
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthenticationState { get; set; } = null!;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _notificationHandlerOnCreation = await NotificationHandler.OnCreationAsync(OnNotificationCreationAsync);
+            _notificationHandlerOnDeletion = await NotificationHandler.OnDeletionAsync(OnNotificationDeletionAsync);
+        }
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {          
+        await CountAsync();
+    }
+
+    public async Task CountAsync()
+    {
+        _notificationCount = 0;
+
+        var user = (await AuthenticationState).User;
+
+        if (user.Identity!.IsAuthenticated && user.HasInspector())
+        {
+            await foreach (var _ in NotificationHandler.GetAllForInspector(user.GetInspector()))
+            {
+                _notificationCount++;
+            }
+        }
+        StateHasChanged();
+    }
+
+    public Task OnNotificationCreationAsync(NotificationResponse _)
+        => InvokeAsync(CountAsync);
+
+    public Task OnNotificationDeletionAsync(string _, int __, int ___)
+        => InvokeAsync(CountAsync);
+
+    public void Dispose()
+    {
+        _notificationHandlerOnCreation?.Dispose();
+        _notificationHandlerOnDeletion?.Dispose();
+    }
+}

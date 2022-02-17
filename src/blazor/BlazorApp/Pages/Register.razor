@@ -1,0 +1,54 @@
+﻿@page "/register"
+
+@inject ITranslator Translator
+@inject IAuthenticationHandler AuthenticationHandler
+@inject NavigationManager NavigationManager
+
+<div class="container-fluid">
+    <h1>@Translator["Sign up"]</h1>
+</div>
+
+<EditForm Model="@model" OnValidSubmit="@OnValidSubmitAsync">
+    <DataAnnotationsValidator />
+
+    <div class="container-fluid">
+        <div class="form-group">
+            <label>@Translator["Username"]</label>
+            <InputText class="form-control" id="uniqueName" @bind-Value="model.UniqueName" />
+        </div>
+        <div class="form-group">
+            <label>@Translator["Mail address"]</label>
+            <InputText class="form-control" id="uniqueName" @bind-Value="model.MailAddress" />
+        </div>
+        <div class="form-group">
+            <label>@Translator["Password"]</label>
+            <InputText class="form-control" id="secret" @bind-Value="model.Secret" type="password"/>
+        </div>
+    </div>
+
+    @if(context.GetValidationMessages().Any())
+    {
+        <div class="container-fluid">
+            <div class="card card-body tex-wrap">
+                <ValidationSummary />    
+            </div>
+        </div>
+    } 
+    else 
+    {
+        <div class="container-fluid">
+            <button type="submit" class="btn btn-primary">@Translator["Submit"]</button>
+        </div>
+    }
+
+</EditForm>
+
+@code {
+    private RegisterRequest model = new RegisterRequest();
+
+    private async Task OnValidSubmitAsync()
+    {
+        await AuthenticationHandler.RegisterAsync(model);
+        NavigationManager.NavigateTo("/");
+    }
+}

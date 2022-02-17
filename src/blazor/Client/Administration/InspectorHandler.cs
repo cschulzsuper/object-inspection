@@ -1,18 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Json;
-using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components.Authorization;
 using Super.Paula.Application.Administration;
 using Super.Paula.Application.Administration.Requests;
 using Super.Paula.Application.Administration.Responses;
-using Super.Paula.Client.Authentication;
-using Super.Paula.Client.ErrorHandling;
-using Super.Paula.Client.Streaming;
+using Super.Paula.Authorization;
 using Super.Paula.Environment;
 
 namespace Super.Paula.Client.Administration
@@ -24,19 +19,15 @@ namespace Super.Paula.Client.Administration
         private readonly SemaphoreSlim _currentInspectorResponseCacheSemaphore;
         private InspectorResponse? _currentInspectorResponseCache;
 
-        private readonly AuthenticationStateManager _authenticationStateManager;
-        private readonly AppAuthentication _appAuthentication;
+        private readonly AuthenticationStateProvider _AuthenticationStateProvider;
 
         public InspectorHandler(
             IInspectorHandler inspectorHandler,
-            AuthenticationStateManager authenticationStateManager,
-            AppAuthentication appAuthentication)
+            AuthenticationStateProvider AuthenticationStateProvider)
         {
 
-            _authenticationStateManager = authenticationStateManager;
-            _authenticationStateManager.AuthenticationStateChanged += AuthenticationStateChanged;
-
-            _appAuthentication = appAuthentication;
+            _AuthenticationStateProvider = AuthenticationStateProvider;
+            _AuthenticationStateProvider.AuthenticationStateChanged += AuthenticationStateChanged;
 
             _inspectorHandler = inspectorHandler;
             _inspectorHandler.OnBusinessObjectCreationAsync(InternalOnBusinessObjectCreationAsync);
@@ -48,7 +39,7 @@ namespace Super.Paula.Client.Administration
 
         public void Dispose()
         {
-            _authenticationStateManager.AuthenticationStateChanged -= AuthenticationStateChanged;
+            _AuthenticationStateProvider.AuthenticationStateChanged -= AuthenticationStateChanged;
 
             GC.SuppressFinalize(this);
         }
@@ -87,9 +78,11 @@ namespace Super.Paula.Client.Administration
 
         public async ValueTask<InspectorResponse> GetAsync(string inspector)
         {
-            if (_appAuthentication.Inspector != inspector)
+            var user = (await _AuthenticationStateProvider.GetAuthenticationStateAsync()).User;
+            
+            if (!user.HasInspector(inspector))
             {
-                await _inspectorHandler.GetAsync(inspector);
+                return await _inspectorHandler.GetAsync(inspector);
             }
 
             try
@@ -142,7 +135,9 @@ namespace Super.Paula.Client.Administration
 
         private async Task InternalOnBusinessObjectDeletionAsync(string inspector, string businessObject)
         {
-            if (_appAuthentication.Inspector != inspector)
+            var user = (await _AuthenticationStateProvider.GetAuthenticationStateAsync()).User;
+
+            if (!user.HasInspector(inspector))
             {
                 return;
             }
@@ -167,7 +162,9 @@ namespace Super.Paula.Client.Administration
 
         private async Task InternalOnBusinessObjectUpdateAsync(string inspector, InspectorBusinessObjectResponse businessObject)
         {
-            if (_appAuthentication.Inspector != inspector)
+            var user = (await _AuthenticationStateProvider.GetAuthenticationStateAsync()).User;
+
+            if (!user.HasInspector(inspector))
             {
                 return;
             }
@@ -193,7 +190,9 @@ namespace Super.Paula.Client.Administration
 
         private async Task InternalOnBusinessObjectCreationAsync(string inspector, InspectorBusinessObjectResponse businessObject)
         {
-            if (_appAuthentication.Inspector != inspector)
+            var user = (await _AuthenticationStateProvider.GetAuthenticationStateAsync()).User;
+
+            if (!user.HasInspector(inspector))
             {
                 return;
             }
@@ -212,5 +211,8 @@ namespace Super.Paula.Client.Administration
                 _currentInspectorResponseCacheSemaphore.Release();
             }
         }
+
+        public IAsyncEnumerable<IdentityInspectorResponse> GetAllForIdentity(string identity)
+            => _inspectorHandler.GetAllForIdentity(identity);
     }
 }

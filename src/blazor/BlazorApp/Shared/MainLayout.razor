@@ -1,10 +1,12 @@
-﻿@inherits LayoutComponentBase
+﻿
+@inherits LayoutComponentBase
 
 @inject IAccountHandler AccountHandler
+@inject IAuthenticationHandler AuthenticationHandler
 @inject NavigationManager NavigationManager   
 @inject AppEnvironment AppEnvironment
-@inject AuthenticationStateManager AuthenticationStateManager
 @inject ITranslator Translator
+@inject ILocalStorage LocalStorage
 
 <div class="page">
     <div class="sidebar text-nowrap">
@@ -12,7 +14,7 @@
     </div>
     <main>
         <div class="top-row px-4">
-            <AuthorizeView Policy="Impersonator">
+            <AuthorizeView Policy="Impersonation">
                 <Authorized>
                     <button type="button" class="nav-link btn btn-secondary ml-3" title="@Translator["Stop impersonation"]"
                         @onclick="() => StopImpersonationAsync()">
@@ -32,7 +34,7 @@
                         </select>
                     }
 
-                    <NavLink class="nav-link" Match="NavLinkMatch.All" href="account/change-secret">
+                    <NavLink class="nav-link" Match="NavLinkMatch.All" href="change-secret">
                         <span class="oi oi-person" aria-hidden="true"/>@Translator["Change Password"]</NavLink>
 
                     <button type="button" class="nav-link btn" title="@Translator["Sign out"]"
@@ -44,7 +46,7 @@
         </div>
 
         <article class="content px-4 text-nowrap">
-            <ErrorBoundary @ref="errorBoundary">
+            <ErrorBoundary @ref="errorBoundaryArticle">
                 <ChildContent>
                     @Body             
                 </ChildContent>
@@ -71,23 +73,53 @@
 
     private string _authorizationFilter = string.Empty;
 
-    private ErrorBoundary? errorBoundary = null!;
+    private ErrorBoundary? errorBoundaryArticle = null!;
 
     protected override void OnParametersSet()
     {
-        errorBoundary?.Recover();
+        errorBoundaryArticle?.Recover();
     }
 
     public async Task SignOutAsync()
     {
-        await AccountHandler.SignOutInspectorAsync();
-        NavigationManager.NavigateTo("/");
+        try
+        {
+            await AuthenticationHandler.SignOutAsync();
+        }
+        catch(HttpRequestException e) when (e.StatusCode == HttpStatusCode.Unauthorized)
+        {
+            if ((await LocalStorage.ContainKeyAsync("token")) ||
+                (await LocalStorage.ContainKeyAsync("authorization-filter")))
+            {
+                await LocalStorage.RemoveItemAsync("token");
+                await LocalStorage.RemoveItemAsync("authorization-filter");
+            }
+        } 
+        finally
+        {
+            NavigationManager.NavigateTo("/");
+        }
     }
 
     public async Task StopImpersonationAsync()
     {
-        await AccountHandler.StopImpersonationAsync();
-        NavigationManager.NavigateTo("/");
+        try
+        {
+            await AccountHandler.StopImpersonationAsync();
+        }
+        catch(HttpRequestException e) when (e.StatusCode == HttpStatusCode.Unauthorized)
+        {
+            if ((await LocalStorage.ContainKeyAsync("token")) ||
+                (await LocalStorage.ContainKeyAsync("authorization-filter")))
+            {
+                await LocalStorage.RemoveItemAsync("token");
+                await LocalStorage.RemoveItemAsync("authorization-filter");
+            }
+        } 
+        finally
+        {
+            NavigationManager.NavigateTo("/");
+        }
     }
 
     public async Task AuthorizationFilterChanged(object? value)
@@ -99,6 +131,6 @@
             .Where(x => !string.IsNullOrWhiteSpace(x))
             .ToArray();
 
-        await AuthenticationStateManager.FilterAuthorizationAsync(authorizationFilter);
+        await LocalStorage.SetItemAsync("authorization-filter", authorizationFilter);
     }
 }

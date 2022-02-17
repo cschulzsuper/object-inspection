@@ -1,4 +1,5 @@
 ﻿using Blazored.LocalStorage;
+using System;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,6 +13,14 @@ namespace Super.Paula.Client.Storage
         public DefaultLocalStorage(ILocalStorageService localStorageService)
         {
             _localStorageService = localStorageService;
+            _localStorageService.Changed += OnChanged;
+        }
+
+        public event EventHandler<LocalStorageEventArgs>? Changed;
+
+        private void OnChanged(object? sender, ChangedEventArgs e)
+        {
+            Changed?.Invoke(this, new LocalStorageEventArgs(e.Key));
         }
 
         public ValueTask<bool> ContainKeyAsync(string key, CancellationToken? cancellationToken = null)

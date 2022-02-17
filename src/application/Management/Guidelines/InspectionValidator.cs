@@ -16,6 +16,9 @@ namespace Super.Paula.Application.Guidelines
         public static (bool, Func<(string, FormattableString)>) UniqueNameIsNotTooLong(string uniqueName)
             => (string.IsNullOrWhiteSpace(uniqueName) || uniqueName.Length <= 140,
                 () => (nameof(uniqueName), $"Unique name '{uniqueName}' can not have more than 140 characters"));
+        public static (bool, Func<(string, FormattableString)>) UniqueNameHasValidValue(string uniqueName)
+            => (string.IsNullOrWhiteSpace(uniqueName) || UniqueNameValidator.IsValid(uniqueName),
+                () => (nameof(uniqueName), $"Unique name '{uniqueName}' has an invalid value"));
 
         public static (bool, Func<(string, FormattableString)>) DisplayNameIsNotEmpty(string displayName)
             => (!string.IsNullOrWhiteSpace(displayName),

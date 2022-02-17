@@ -27,39 +27,39 @@ namespace Super.Paula.Application.Administration
             return endpoints;
         }
         private static Delegate Get =>
-            [Authorize("RequiresMaintainability")]
+            [Authorize("Maintainance")]
             (IOrganizationHandler handler, string organization)
                 => handler.GetAsync(organization);
 
         private static Delegate GetAll =>
-            [Authorize("RequiresMaintainability")]
+            [Authorize("Maintainance")]
             (IOrganizationHandler handler)
                 => handler.GetAll();
 
         private static Delegate Create =>
-            [Authorize("RequiresMaintainability")]
+            [Authorize("Maintainance")]
             (IOrganizationHandler handler, OrganizationRequest request)
                 => handler.CreateAsync(request);
 
         private static Delegate Replace =>
-            [Authorize("RequiresMaintainability")]
+            [Authorize("Maintainance")]
             [IgnoreCurrentOrganization]
             (IOrganizationHandler handler, string organization, OrganizationRequest request)
                 => handler.ReplaceAsync(organization, request);
 
         private static Delegate Delete =>
-            [Authorize("RequiresMaintainability")]
+            [Authorize("Maintainance")]
             (IOrganizationHandler handler, string organization)
                 => handler.DeleteAsync(organization);
 
         private static Delegate Activate =>
-            [Authorize("RequiresMaintainability")]
+            [Authorize("Maintainance")]
             [IgnoreCurrentOrganization]
             (IOrganizationHandler handler, string organization)
                 => handler.ActivateAsync(organization);
 
         private static Delegate Deactivate =>
-            [Authorize("RequiresMaintainability")]
+            [Authorize("Maintainance")]
             [IgnoreCurrentOrganization]
             (IOrganizationHandler handler, string organization)
                 => handler.DeactivateAsync(organization);

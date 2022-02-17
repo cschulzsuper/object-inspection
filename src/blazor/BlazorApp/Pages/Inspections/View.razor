@@ -4,7 +4,7 @@
 @inject NavigationManager NavigationManager
 @inject IInspectionHandler InspectionHandler
 
-@attribute [Authorize("RequiresManagementViewability")]
+@attribute [Authorize("ManagementRead")]
 
 <div class="container-fluid">
     <h1>@Translator["Inspections"]</h1>
@@ -52,12 +52,12 @@ else
                     
                     @if(inspection.Activated) {
                         <td>
-                            <AuthorizedButton Policy="RequiresManageability" class="btn btn-success btn-block" title="@Translator["Deactivate"]" 
+                            <AuthorizedButton Policy="ManagementFull" class="btn btn-success btn-block" title="@Translator["Deactivate"]" 
                                 @onclick="() => DeactivateAsync(inspection.UniqueName)"><span class="oi oi-power-standby"/></AuthorizedButton>
                         </td>
                     } else {
                         <td>
-                            <AuthorizedButton Policy="RequiresManageability" class="btn btn-outline-danger btn-block" title="@Translator["Activate"]"
+                            <AuthorizedButton Policy="ManagementFull" class="btn btn-outline-danger btn-block" title="@Translator["Activate"]"
                                 @onclick="() => ActivateAsync(inspection.UniqueName)"><span class="oi oi-power-standby"/></AuthorizedButton>
                         </td>
                     }
@@ -66,7 +66,7 @@ else
                             @onclick="() => Edit(inspection.UniqueName)"><span class="oi oi-pencil"/></button>
                     </td>
                     <td >
-                        <AuthorizedButton Policy="RequiresManageability" class="btn btn-outline-danger btn-block"  title="@Translator["Delete"]"
+                        <AuthorizedButton Policy="ManagementFull" class="btn btn-outline-danger btn-block"  title="@Translator["Delete"]"
                             @onclick="() => DeleteAsync(inspection.UniqueName)"><span class="oi oi-trash"/></AuthorizedButton>
                     </td>             
                 </tr>
