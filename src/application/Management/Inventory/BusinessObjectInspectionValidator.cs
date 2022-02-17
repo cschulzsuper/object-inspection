@@ -17,6 +17,10 @@ namespace Super.Paula.Application.Inventory
             => (string.IsNullOrWhiteSpace(uniqueName) || uniqueName.Length <= 140,
                 () => (nameof(uniqueName), $"Unique name '{uniqueName}' of inspection can not have more than 140 characters"));
 
+        public static (bool, Func<(string, FormattableString)>) UniqueNameHasValidValue(string uniqueName)
+            => (string.IsNullOrWhiteSpace(uniqueName) || UniqueNameValidator.IsValid(uniqueName),
+                () => (nameof(uniqueName), $"Unique name '{uniqueName}' has an invalid value"));
+
         public static (bool, Func<(string, FormattableString)>) DisplayNameIsNotEmpty(string displayName)
             => (!string.IsNullOrWhiteSpace(displayName),
                 () => (nameof(displayName), $"Display name of inspection can not be empty"));
@@ -44,6 +48,10 @@ namespace Super.Paula.Application.Inventory
         public static (bool, Func<(string, FormattableString)>) AuditInspectorIsNotTooLong(string auditInspector)
             => (auditInspector == null || auditInspector.Length <= 140,
                 () => (nameof(auditInspector), $"Audit inspector '{auditInspector}' of inspection can not have more than 140 characters"));
+
+        public static (bool, Func<(string, FormattableString)>) AuditInspectorHasValidValue(string auditInspector)
+            => (auditInspector == null || UniqueNameValidator.IsValid(auditInspector),
+                () => (nameof(auditInspector), $"Audit inspector '{auditInspector} of inspection' has an invalid value"));
 
         public static (bool, Func<(string, FormattableString)>) AuditAnnotationIsNotNull(string auditAnnotation)
             => (auditAnnotation != null,

@@ -3,10 +3,12 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
-using Super.Paula.Application;
 using Super.Paula.Application.Administration;
 using Super.Paula.Application.Runtime;
+using Super.Paula.Authorization;
 using Super.Paula.Environment;
+
+using IAuthenticationHandler = Microsoft.AspNetCore.Authentication.IAuthenticationHandler;
 
 namespace Super.Paula.Authentication
 {
@@ -77,39 +79,47 @@ namespace Super.Paula.Authentication
             }
 
 
-            if (token.Organization == null ||
-                token.Inspector == null ||
+            if (token.Identity == null ||
                 token.Proof == null)
             {
                 return null;
             }
 
-            var validInspector = _connectionManager!.Verify(
-                token.Organization,
-                token.Inspector,
+            var validIdentity = _connectionManager!.Verify(
+                token.Identity,
                 token.Proof);
 
-            _tokenAuthorizationFilter?.Apply(token);
-
-            if (validInspector)
-            {
-                return token;
-            }
-
-            if (_appSettings!.Maintainer != token.ImpersonatorInspector ||
-                _appSettings!.MaintainerOrganization != token.ImpersonatorOrganization)
+            if(!validIdentity)
             {
                 return null;
             }
 
-            var validMaintainer = _connectionManager!.Verify(
-                token.ImpersonatorOrganization,
-                token.ImpersonatorInspector,
-                token.Proof);
+            if (token.Organization != null &&
+                token.Inspector != null)
+            {
+                var validInspector = _connectionManager!.Verify(
+                    $"{token.Organization}:{token.Inspector}",
+                    token.Proof);
 
-            return validMaintainer
-                ? token
-                : null;
+                if (!validInspector &&
+                    _appSettings!.Maintainer == token.ImpersonatorInspector &&
+                    _appSettings!.MaintainerOrganization == token.ImpersonatorOrganization)
+                {
+                    validInspector = _connectionManager!.Verify(
+                        $"{token.ImpersonatorOrganization}:{token.ImpersonatorInspector}",
+                        token.Proof);
+                }
+
+                if (!validInspector)
+                {
+                    return null;
+                }
+
+                _tokenAuthorizationFilter?.Apply(token);
+            }
+
+
+            return token;
         }
 
         public Task ChallengeAsync(AuthenticationProperties? properties)

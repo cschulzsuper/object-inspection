@@ -7,6 +7,7 @@ namespace Super.Paula.Application.Administration.Requests
     {
         [KebabCase]
         [StringLength(140)]
+        [UniqueName]
         public string ChiefInspector { get; set; } = string.Empty;
 
         [Required]
@@ -16,6 +17,7 @@ namespace Super.Paula.Application.Administration.Requests
         [Required]
         [KebabCase]
         [StringLength(140)]
+        [UniqueName]
         public string UniqueName { get; set; } = string.Empty;
 
         public bool Activated { get; set; }

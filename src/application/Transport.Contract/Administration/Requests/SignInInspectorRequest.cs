@@ -8,15 +8,13 @@ namespace Super.Paula.Application.Administration.Requests
         [Required]
         [KebabCase]
         [StringLength(140)]
-        public string Organization { get; set; } = string.Empty;
+        [UniqueName]
+        public string Inspector { get; set; } = string.Empty;
 
         [Required]
         [KebabCase]
         [StringLength(140)]
-        public string UniqueName { get; set; } = string.Empty;
-
-        [Required]
-        [StringLength(140)]
-        public string Secret { get; set; } = string.Empty;
+        [UniqueName]
+        public string Organization { get; set; } = string.Empty;
     }
 }

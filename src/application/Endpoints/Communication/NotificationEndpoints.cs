@@ -26,32 +26,32 @@ namespace Super.Paula.Application.Communication
         }
 
         private static Delegate Get =>
-            [Authorize("RequiresAuditingViewability")]
+            [Authorize("AuditingRead")]
             (INotificationHandler handler, string inspector, int date, int time)
                 => handler.GetAsync(inspector, date, time);
 
         private static Delegate GetAll =>
-            [Authorize("RequiresAuditingViewability")]
+            [Authorize("AuditingRead")]
             (INotificationHandler handler)
                 => handler.GetAll();
 
         private static Delegate GetAllForInspector =>
-            [Authorize("RequiresAuditingViewability")]
+            [Authorize("AuditingRead")]
             (INotificationHandler handler, string inspector)
                 => handler.GetAllForInspector(inspector);
 
         private static Delegate Create =>
-            [Authorize("RequiresMaintainability")]
+            [Authorize("Maintainance")]
             (INotificationHandler handler, string inspector, NotificationRequest request)
                 => handler.CreateAsync(inspector, request);
 
         private static Delegate Replace =>
-            [Authorize("RequiresMaintainability")]
+            [Authorize("Maintainance")]
             (INotificationHandler handler, string inspector, int date, int time, NotificationRequest request)
                 => handler.ReplaceAsync(inspector, date, time, request);
 
         private static Delegate Delete =>
-            [Authorize("RequiresAuditability")]
+            [Authorize("AuditingFull")]
             (INotificationHandler handler, string inspector, int date, int time)
                 => handler.DeleteAsync(inspector, date, time);
     }

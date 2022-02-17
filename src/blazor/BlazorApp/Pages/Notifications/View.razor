@@ -3,11 +3,10 @@
 @inject ITranslator Translator
 @inject NavigationManager NavigationManager
 @inject INotificationHandler NotificationHandler
-@inject AppAuthentication AppAuthentication
 
 @implements IAsyncDisposable
 
-@attribute [Authorize("RequiresAuditingViewability")]
+@attribute [Authorize("AuditingRead")]
 
 <div class="container-fluid">
     <h1>@Translator["Notification"]</h1>
@@ -26,7 +25,7 @@ else
             <div class="card-body">
                 <h6 class="card-subtitle text-muted mb-1">@((notification.Date, notification.Time).ToLocalTimeString())</h6>
                 <p class="card-text tex-wrap">@notification.Text</p>
-                <AuthorizedButton Policy="RequiresAuditability" class="btn btn-primary" title="@Translator["Delete"]"
+                <AuthorizedButton Policy="AuditingFull" class="btn btn-primary" title="@Translator["Delete"]"
                     @onclick="() => RemoveAsync(notification)"><span class="oi oi-trash"/></AuthorizedButton>
             </div>
         </div>
@@ -40,6 +39,9 @@ else
 
     private IDisposable? _notificationHandlerOnCreation;
     private IDisposable? _notificationHandlerOnDeletion;
+
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthenticationState { get; set; } = null!;
 
     protected override async Task OnParametersSetAsync()
     {          
@@ -59,7 +61,9 @@ else
     {
         _notifications = new List<NotificationResponse>();
 
-        await foreach (var notification in NotificationHandler.GetAllForInspector(AppAuthentication.Inspector))
+        var inspector = (await AuthenticationState).User.GetInspector();
+
+        await foreach (var notification in NotificationHandler.GetAllForInspector(inspector))
         {
             _notifications.Add(notification);
         }

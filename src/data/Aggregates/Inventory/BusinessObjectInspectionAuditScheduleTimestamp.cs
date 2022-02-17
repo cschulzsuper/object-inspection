@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Super.Paula.Application.Inventory
+﻿namespace Super.Paula.Application.Inventory
 {
     public class BusinessObjectInspectionAuditScheduleTimestamp
     {

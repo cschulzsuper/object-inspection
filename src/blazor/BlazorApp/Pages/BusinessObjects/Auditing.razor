@@ -3,11 +3,10 @@
 @inject ITranslator Translator
 @inject NavigationManager NavigationManager
 @inject IInspectorHandler InspectorHandler
-@inject AppAuthentication AppAuthentication
 
 @implements IAsyncDisposable
 
-@attribute [Authorize("RequiresAuditingViewability")]
+@attribute [Authorize("AuditingRead")]
 
 <div class="container-fluid">
     <h1>@Translator["Auditing"]</h1>

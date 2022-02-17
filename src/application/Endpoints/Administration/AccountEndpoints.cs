@@ -12,77 +12,34 @@ namespace Super.Paula.Application.Administration
         {
             endpoints.MapCommands(
                 "/account",
-                ("/sign-in-inspector", SignInInspector),
-                ("/sign-out-inspector", SignOutInspector),
-                ("/register", Register),
                 ("/register-organization", RegisterOrganization),
-                ("/change-secret", ChangeSecret),
+                ("/sign-in-inspector", SignInInspector),
                 ("/start-impersonation", StartImpersonation),
-                ("/stop-impersonation", StopImpersonation),
-                ("/repair-chief-inspector", RepairChiefInspector),
-                ("/assess-chief-inspector-defectiveness", AssessChiefInspectorDefectiveness),
-                ("/verify", Verify));
-
-            endpoints.MapQueries(
-                "/account",
-                ("/authorizations", GetAuthorizations));
+                ("/stop-impersonation", StopImpersonation));
 
             return endpoints;
         }
         private static Delegate SignInInspector =>
             [IgnoreCurrentOrganization]
+            [Authorize]
             (IAccountHandler handler, SignInInspectorRequest request)
                 => handler.SignInInspectorAsync(request);
 
-        private static Delegate SignOutInspector =>
-            [Authorize("RequiresAuditingViewability")]
-            (IAccountHandler handler)
-                => handler.SignOutInspectorAsync();
-
-        private static Delegate Register =>
-            (IAccountHandler handler, RegisterIdentityRequest request)
-                => handler.RegisterIdentityAsync(request);
-
         private static Delegate RegisterOrganization =>
+            [Authorize]
             (IAccountHandler handler, RegisterOrganizationRequest request)
                 => handler.RegisterOrganizationAsync(request);
 
-        private static Delegate ChangeSecret =>
-            [Authorize("RequiresAuditability")]
-            (IAccountHandler handler, ChangeSecretRequest request)
-            => handler.ChangeSecretAsync(request);
-
-        private static Delegate GetAuthorizations =>
-            (IAccountHandler handler)
-                => handler.GetAuthorizations();
-
         private static Delegate StartImpersonation =>
-            [Authorize("RequiresMaintainability")]
+            [Authorize("Maintainance")]
             [IgnoreCurrentOrganization]
             (IAccountHandler handler, StartImpersonationRequest request)
                 => handler.StartImpersonationAsync(request);
 
         private static Delegate StopImpersonation =>
-            [Authorize("RequiresAuditingViewability")]
+            [Authorize("AuditingRead")]
             [IgnoreCurrentOrganization]
             (IAccountHandler handler)
                 => handler.StopImpersonationAsync();
-
-        private static Delegate RepairChiefInspector =>
-            [Authorize("RequiresMaintainability")]
-            [IgnoreCurrentOrganization]
-            (IAccountHandler handler, RepairChiefInspectorRequest request)
-                => handler.RepairChiefInspectorAsync(request);
-
-        private static Delegate AssessChiefInspectorDefectiveness =>
-            [Authorize("RequiresMaintainability")]
-            [IgnoreCurrentOrganization]
-            (IAccountHandler handler, AssessChiefInspectorDefectivenessRequest request)
-                => handler.AssessChiefInspectorDefectivenessAsync(request);
-
-        private static Delegate Verify =>
-            [Authorize("RequiresAuditingViewability")]
-            (IAccountHandler handler)
-                => handler.VerifyAsync();
     }
 }

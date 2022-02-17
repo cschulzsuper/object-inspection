@@ -11,9 +11,6 @@ namespace Super.Paula
         public static IServiceCollection AddPaulaAppState(this IServiceCollection services)
             => services.AddScoped<AppState>();
 
-        public static IServiceCollection AddPaulaAppAuthentication(this IServiceCollection services)
-            => services.AddScoped<AppAuthentication>();
-
         public static IServiceCollection AddPaulaAppEnvironment(this IServiceCollection services, bool isDevelopment)
             => services.AddSingleton(_ =>
                 new AppEnvironment
@@ -34,8 +31,7 @@ namespace Super.Paula
                         CosmosDatabase = configuration["CosmosDatabase"],
                         Maintainer = configuration["Maintainer"],
                         MaintainerOrganization = configuration["MaintainerOrganization"],
-                        DemoInspector = configuration["DemoInspector"],
-                        DemoOrganization = configuration["DemoOrganization"],
+                        DemoIdentity = configuration["DemoIdentity"],
                         Server = configuration["Server"]
                     };
                 });

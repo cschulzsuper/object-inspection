@@ -1,5 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Super.Paula.Application;
 using Super.Paula.Authentication;
@@ -15,7 +17,7 @@ namespace Super.Paula
         public static IServiceCollection AddPaulaServer(this IServiceCollection services, bool isDevelopment)
         {
             services
-                .AddPaulaAppAuthentication()
+                .AddHttpContextAccessor()
                 .AddPaulaAppEnvironment(isDevelopment)
                 .AddPaulaAppSettings()
                 .AddPaulaAppState()
@@ -47,8 +49,12 @@ namespace Super.Paula
             services.AddAuthorization();
             services.AddSingleton<IAuthorizationPolicyProvider, PaulaAuthorizationPolicyProvider>();
             services.AddScoped<IAuthorizationMiddlewareResultHandler, PaulaAuthorizationMiddlewareResultHandler>();
-            services.AddScoped<IAuthorizationHandler, PaulaAuthorizationHandler>();
-            services.AddScoped<IAuthorizationHandler, InspectorAuthorizationHandler>();
+            services.AddScoped<IAuthorizationHandler, AnyAuthorizationClaimHandler>();
+            services.AddScoped<IAuthorizationHandler, IdentityClaimResourceHandler>();
+            services.AddScoped<IAuthorizationHandler, InspectorClaimResourceHandler>();
+
+            services.AddTransient<ClaimsPrincipal>(s =>
+                s.GetRequiredService<IHttpContextAccessor>()!.HttpContext!.User);
 
             return services;
         }

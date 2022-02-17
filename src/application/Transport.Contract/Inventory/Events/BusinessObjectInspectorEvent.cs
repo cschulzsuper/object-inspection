@@ -10,10 +10,12 @@ namespace Super.Paula.Application.Inventory.Events
 
         [KebabCase]
         [StringLength(140)]
+        [UniqueName]
         public string? NewInspector { get; set; }
 
         [KebabCase]
         [StringLength(140)]
+        [UniqueName]
         public string? OldInspector { get; set; }
     }
 }

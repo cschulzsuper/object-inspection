@@ -1,4 +1,6 @@
-﻿namespace Super.Paula.Application.Administration
+﻿using Super.Paula.Authorization;
+
+namespace Super.Paula.Application.Administration
 {
     public interface ITokenAuthorizationFilter
     {

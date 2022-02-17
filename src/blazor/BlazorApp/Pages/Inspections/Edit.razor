@@ -4,7 +4,7 @@
 @inject NavigationManager NavigationManager
 @inject IInspectionHandler InspectionHandler
 
-@attribute [Authorize("RequiresManagementViewability")]
+@attribute [Authorize("ManagementRead")]
 
 <div class="container-fluid">
     <h1>@Translator["Edit inspection"]</h1>
@@ -49,7 +49,7 @@ else
         else 
         {
             <div class="container-fluid">
-                <AuthorizedButton Policy="RequiresManageability" type="submit" class="btn btn-primary">@Translator["Submit"]</AuthorizedButton>
+                <AuthorizedButton Policy="ManagementFull" type="submit" class="btn btn-primary">@Translator["Submit"]</AuthorizedButton>
             </div>
         }
 

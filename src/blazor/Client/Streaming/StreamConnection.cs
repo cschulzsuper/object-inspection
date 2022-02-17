@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.SignalR.Client;
+using Super.Paula.Authorization;
 using Super.Paula.Application.Administration.Responses;
 using Super.Paula.Application.Communication.Responses;
-using Super.Paula.Client.Authentication;
 using Super.Paula.Environment;
 using System;
-using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Super.Paula.Client.Streaming
@@ -13,61 +13,93 @@ namespace Super.Paula.Client.Streaming
     public sealed class StreamConnection : IStreamConnection, IAsyncDisposable
     {
         private readonly HubConnection _hubConnection;
-        private readonly AuthenticationStateManager _authenticationStateManager;
-        private readonly AppAuthentication _appAuthentication;
+        private readonly AuthenticationStateProvider _AuthenticationStateProvider;
+
+        private readonly SemaphoreSlim _hubConnectionSemaphore;
 
         public StreamConnection(
-            AuthenticationStateManager authenticationStateManager,
-            AppAuthentication appAuthentication,
+            AuthenticationStateProvider AuthenticationStateProvider,
             AppSettings appSettings)
         {
-            _authenticationStateManager = authenticationStateManager;
-            _authenticationStateManager.AuthenticationStateChanged += AuthenticationStateChanged;
-
-            _appAuthentication = appAuthentication;
+            _AuthenticationStateProvider = AuthenticationStateProvider;
+            _AuthenticationStateProvider.AuthenticationStateChanged += AuthenticationStateChangedAsync;
 
             _hubConnection = new HubConnectionBuilder()
             .WithUrl(
                 new Uri(new Uri(appSettings.Server), "/stream"),
                 c =>
                 {
-                    c.AccessTokenProvider = () => Task.FromResult(_appAuthentication.Token)!;
+                    c.AccessTokenProvider = async () =>
+                    {
+                        var authenticationState = await _AuthenticationStateProvider.GetAuthenticationStateAsync();
+                        return authenticationState.User
+                            .ToToken()
+                            .ToBase64String();
+                    };
                 })
             .Build();
 
-
+            _hubConnectionSemaphore = new SemaphoreSlim(1, 1);
         }
 
         public async ValueTask DisposeAsync()
         {
-            _authenticationStateManager.AuthenticationStateChanged -= AuthenticationStateChanged;
+            try
+            {
+                await _hubConnectionSemaphore.WaitAsync();
 
-            await _hubConnection.DisposeAsync();
+                _AuthenticationStateProvider.AuthenticationStateChanged -= AuthenticationStateChangedAsync;
+
+                await _hubConnection.DisposeAsync();
+            }
+            finally
+            {
+                _hubConnectionSemaphore.Release();
+            }
         }
 
-        private void AuthenticationStateChanged(Task<AuthenticationState> task)
-            => task.ContinueWith(async _ =>
-            {
-                await EnsureStoppedAsync();
-                await EnsureStartedAsync();
-            });
+        private async void AuthenticationStateChangedAsync(Task<AuthenticationState> authenticationState)
+        {
+            await authenticationState;
+            await EnsureStoppedAsync();
+            await EnsureStartedAsync();
+        }
 
         private async Task EnsureStartedAsync()
         {
-            if (_hubConnection.State == HubConnectionState.Disconnected)
+            try
             {
-                if (_appAuthentication.Authorizations.Any())
+                await _hubConnectionSemaphore.WaitAsync();
+             
+                if (_hubConnection.State == HubConnectionState.Disconnected)
                 {
-                    await _hubConnection.StartAsync();
+                    var authenticationState = await _AuthenticationStateProvider.GetAuthenticationStateAsync();
+                    if (authenticationState.User.Identity?.IsAuthenticated == true)
+                    {
+                        await _hubConnection.StartAsync();
+                    }
                 }
+            }
+            finally
+            {
+                _hubConnectionSemaphore.Release();
             }
         }
 
         private async Task EnsureStoppedAsync()
         {
-            if (_hubConnection.State != HubConnectionState.Disconnected)
+            try
             {
-                await _hubConnection.StopAsync();
+                await _hubConnectionSemaphore.WaitAsync();
+
+                if (_hubConnection.State != HubConnectionState.Disconnected)
+                {
+                    await _hubConnection.StopAsync();
+                }
+            }
+            finally
+            {
+                _hubConnectionSemaphore.Release();
             }
         }
 

@@ -15,12 +15,13 @@ namespace Super.Paula.Application.Auditing.Requests
         [Required]
         [KebabCase]
         [StringLength(140)]
-        [InvalidValues("search")]
+        [UniqueName]
         public string Inspection { get; set; } = string.Empty;
 
         [Required]
         [KebabCase]
         [StringLength(140)]
+        [UniqueName]
         public string Inspector { get; set; } = string.Empty;
 
         [Required]

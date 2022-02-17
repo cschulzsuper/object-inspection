@@ -84,13 +84,15 @@ namespace Super.Paula.Application.Guidelines
             => Validator.Ensure($"unique name '{inspection}' of inspection",
                 InspectionValidator.UniqueNameIsNotEmpty(inspection),
                 InspectionValidator.UniqueNameHasKebabCase(inspection),
-                InspectionValidator.UniqueNameIsNotTooLong(inspection));
+                InspectionValidator.UniqueNameIsNotTooLong(inspection),
+                InspectionValidator.UniqueNameHasValidValue(inspection));
 
         private static void EnsureInsertable(Inspection inspection)
             => Validator.Ensure($"inspection with unique name '{inspection.UniqueName}'",
                 InspectionValidator.UniqueNameIsNotEmpty(inspection.UniqueName),
                 InspectionValidator.UniqueNameHasKebabCase(inspection.UniqueName),
                 InspectionValidator.UniqueNameIsNotTooLong(inspection.UniqueName),
+                InspectionValidator.UniqueNameHasValidValue(inspection.UniqueName),
                 InspectionValidator.DisplayNameIsNotEmpty(inspection.DisplayName),
                 InspectionValidator.DisplayNameIsNotTooLong(inspection.DisplayName),
                 InspectionValidator.TextIsNotNull(inspection.Text),
@@ -101,6 +103,7 @@ namespace Super.Paula.Application.Guidelines
                 InspectionValidator.UniqueNameIsNotEmpty(inspection.UniqueName),
                 InspectionValidator.UniqueNameHasKebabCase(inspection.UniqueName),
                 InspectionValidator.UniqueNameIsNotTooLong(inspection.UniqueName),
+                InspectionValidator.UniqueNameHasValidValue(inspection.UniqueName),
                 InspectionValidator.DisplayNameIsNotEmpty(inspection.DisplayName),
                 InspectionValidator.DisplayNameIsNotTooLong(inspection.DisplayName),
                 InspectionValidator.TextIsNotNull(inspection.Text),
@@ -110,7 +113,8 @@ namespace Super.Paula.Application.Guidelines
             => Validator.Ensure($"inspection with unique name '{inspection.UniqueName}'",
                 InspectionValidator.UniqueNameIsNotEmpty(inspection.UniqueName),
                 InspectionValidator.UniqueNameHasKebabCase(inspection.UniqueName),
-                InspectionValidator.UniqueNameIsNotTooLong(inspection.UniqueName));
+                InspectionValidator.UniqueNameIsNotTooLong(inspection.UniqueName),
+                InspectionValidator.UniqueNameHasValidValue(inspection.UniqueName));
 
     }
 }

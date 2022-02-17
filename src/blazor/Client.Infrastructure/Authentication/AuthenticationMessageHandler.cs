@@ -1,6 +1,7 @@
 ﻿
+using Super.Paula.Application;
+using Super.Paula.Authorization;
 using Super.Paula.Client.Storage;
-using Super.Paula.Environment;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;
@@ -19,10 +20,11 @@ namespace Super.Paula.Client.Authentication
 
         protected async override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            var appAuthentication = await _localStorage.GetItemAsync<AppAuthentication>("app-authentication");
+            var token = (await _localStorage.GetItemAsync<Token>("token"))?
+                .ToBase64String();
 
-            request.Headers.Authorization = !string.IsNullOrWhiteSpace(appAuthentication?.Token)
-                    ? new AuthenticationHeaderValue("Bearer", appAuthentication.Token)
+            request.Headers.Authorization = !string.IsNullOrWhiteSpace(token)
+                    ? new AuthenticationHeaderValue("Bearer", token)
                     : null;
 
             return await base.SendAsync(request, cancellationToken);

@@ -1,4 +1,5 @@
-﻿using Super.Paula.Environment;
+﻿using Super.Paula.Authorization;
+using Super.Paula.Environment;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -26,8 +27,7 @@ namespace Super.Paula.Application.Administration
                 var organization = _organizationManager.GetQueryable()
                     .Single(x => x.UniqueName == token.Organization);
 
-                if (_appSettings.DemoInspector == token.Inspector &&
-                    _appSettings.DemoOrganization == token.Organization)
+                if (_appSettings.DemoIdentity == token.Identity)
                 {
                     authorizations.Add("Observer");
                 } 

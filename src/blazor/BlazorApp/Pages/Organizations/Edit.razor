@@ -4,9 +4,8 @@
 @inject NavigationManager NavigationManager
 @inject IOrganizationHandler OrganizationHandler
 @inject IAccountHandler AccountHandler
-@inject AppAuthentication AppAuthentication
 
-@attribute [Authorize("RequiresMaintainability")]
+@attribute [Authorize("Maintainance")]
 
 <div class="container-fluid">
     <h1>@Translator["Edit organization"]</h1>
@@ -36,7 +35,7 @@ else
             </div>
             <div class="form-check">
                 <InputCheckbox class="form-check-input" id="activated" @bind-Value="_request.Activated"
-                    disabled="@(_request.UniqueName == AppAuthentication.Organization)"/>
+                    disabled="@(_request.UniqueName == _organization)"/>
                 <label class="form-check-label" for="activated">@Translator["Activated"]</label>     
             </div>
         </div>
@@ -53,10 +52,6 @@ else
         {
             <div class="container-fluid">
                 <button type="submit" class="btn btn-primary">@Translator["Submit"]</button>
-                @if(_chiefInspectorDefective?.Defective == true)
-                {
-                    <button class="btn btn-outline-danger ml-3" @onclick="() => RepairAsync()">@Translator["Repair chief inspector"]</button>
-                }
             </div>
         }
 
@@ -70,7 +65,15 @@ else
 
     private OrganizationRequest? _request = null;
 
-    private AssessChiefInspectorDefectivenessResponse? _chiefInspectorDefective;
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthenticationState { get; set; } = null!;
+
+    private string? _organization = null;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        _organization = (await AuthenticationState).User.GetOrganization();
+    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -86,12 +89,6 @@ else
                     Activated = response.Activated
                 };
 
-            _chiefInspectorDefective = await AccountHandler.AssessChiefInspectorDefectivenessAsync(
-                 new AssessChiefInspectorDefectivenessRequest
-                     {
-                         Organization = Organization
-                     });
-
             StateHasChanged();
         }
     }
@@ -100,14 +97,5 @@ else
     {
         await OrganizationHandler.ReplaceAsync(Organization, _request!);
         NavigationManager.NavigateTo("/organizations");
-    }
-
-    private async Task RepairAsync()
-    {
-        await AccountHandler.RepairChiefInspectorAsync(new RepairChiefInspectorRequest
-        {
-            Organization = Organization
-        });
-        //StateHasChanged();
     }
 }

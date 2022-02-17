@@ -17,13 +17,25 @@ namespace Super.Paula.Application.Administration
             => (string.IsNullOrWhiteSpace(uniqueName) || uniqueName.Length <= 140,
                 () => (nameof(uniqueName), $"Unique name '{uniqueName}' can not have more than 140 characters"));
 
+        public static (bool, Func<(string, FormattableString)>) UniqueNameHasValidValue(string uniqueName)
+            => (string.IsNullOrWhiteSpace(uniqueName) || UniqueNameValidator.IsValid(uniqueName),
+                () => (nameof(uniqueName), $"Unique name '{uniqueName}' has an invalid value"));
+
         public static (bool, Func<(string, FormattableString)>) IdentityIsNotNull(string identity)
             => (identity != null,
                 () => (nameof(identity), $"Identity can not be null"));
 
+        public static (bool, Func<(string, FormattableString)>) IdentityHasKebabCase(string identity)
+            => (string.IsNullOrWhiteSpace(identity) || KebabCaseValidator.IsValid(identity),
+                () => (nameof(identity), $"Identity '{identity}' must have kebab case"));
+
         public static (bool, Func<(string, FormattableString)>) IdentityIsNotTooLong(string identity)
             => (identity == null || identity.Length <= 140,
                 () => (nameof(identity), $"Identity '{identity}' can not have more than 140 characters"));
+
+        public static (bool, Func<(string, FormattableString)>) IdentityHasValidValue(string identity)
+            => (identity == null || UniqueNameValidator.IsValid(identity),
+                () => (nameof(identity), $"Identity '{identity}' has an invalid value"));
 
         public static (bool, Func<(string, FormattableString)>) OrganizationIsNotEmpty(string organization)
             => (!string.IsNullOrWhiteSpace(organization),
@@ -36,6 +48,10 @@ namespace Super.Paula.Application.Administration
         public static (bool, Func<(string, FormattableString)>) OrganizationIsNotTooLong(string organization)
             => (string.IsNullOrWhiteSpace(organization) || organization.Length <= 140,
                 () => (nameof(organization), $"Organization '{organization}' can not have more than 140 characters"));
+
+        public static (bool, Func<(string, FormattableString)>) OrganizationHasValidValue(string organization)
+            => (string.IsNullOrWhiteSpace(organization) || UniqueNameValidator.IsValid(organization),
+                () => (nameof(organization), $"Organization '{organization}' has an invalid value"));
 
         public static (bool, Func<(string, FormattableString)>) OrganizationDisplayNameIsNotEmpty(string organizationDisplayName)
             => (!string.IsNullOrWhiteSpace(organizationDisplayName),

@@ -17,6 +17,10 @@ namespace Super.Paula.Application.Administration
             => (string.IsNullOrWhiteSpace(uniqueName) || uniqueName.Length <= 140,
                 () => (nameof(uniqueName), $"Unique name '{uniqueName}' can not have more than 140 characters"));
 
+        public static (bool, Func<(string, FormattableString)>) UniqueNameHasValidValue(string uniqueName)
+            => (string.IsNullOrWhiteSpace(uniqueName) || UniqueNameValidator.IsValid(uniqueName),
+                () => (nameof(uniqueName), $"Unique name '{uniqueName}' has an invalid value"));
+
         public static (bool, Func<(string, FormattableString)>) DisplayNameIsNotEmpty(string displayName)
             => (!string.IsNullOrWhiteSpace(displayName),
                 () => (nameof(displayName), $"Display name can not be empty"));
@@ -36,5 +40,9 @@ namespace Super.Paula.Application.Administration
         public static (bool, Func<(string, FormattableString)>) ChiefInspectorIsNotTooLong(string chiefInspector)
             => (string.IsNullOrWhiteSpace(chiefInspector) || chiefInspector.Length <= 140,
                 () => (nameof(chiefInspector), $"Chief inspector '{chiefInspector}' can not have more than 140 characters"));
+
+        public static (bool, Func<(string, FormattableString)>) ChiefInspectorHasValidValue(string chiefInspector)
+            => (string.IsNullOrWhiteSpace(chiefInspector) || UniqueNameValidator.IsValid(chiefInspector),
+                () => (nameof(chiefInspector), $"Chief inspector '{chiefInspector}' has an invalid value"));
     }
 }

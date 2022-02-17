@@ -11,12 +11,11 @@ namespace Super.Paula.Application.Runtime
             _connectionRuntimeCache = connectionRuntimeCache;
         }
 
-        public void Trace(string realm, string account, string proof)
+        public void Trace(string account, string proof)
         {
-            var connection = _connectionRuntimeCache.Get(realm, account)
+            var connection = _connectionRuntimeCache.Get(account)
                 ?? new Connection
                 {
-                    Realm = realm,
                     Account = account
                 };
 
@@ -25,11 +24,11 @@ namespace Super.Paula.Application.Runtime
             _connectionRuntimeCache.Set(connection);
         }
 
-        public void Forget(string realm, string account)
-            => _connectionRuntimeCache.Remove(realm, account);
+        public void Forget(string account)
+            => _connectionRuntimeCache.Remove(account);
 
-        public bool Verify(string realm, string account, string proof)
-            => _connectionRuntimeCache.Get(realm, account)?.Proof.Contains(proof) == true;
+        public bool Verify(string account, string proof)
+            => _connectionRuntimeCache.Get(account)?.Proof.Contains(proof) == true;
 
     }
 }

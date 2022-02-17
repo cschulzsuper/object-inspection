@@ -8,6 +8,7 @@ namespace Super.Paula.Application.Administration.Requests
         [Required]
         [KebabCase]
         [StringLength(140)]
+        [UniqueName]
         public string UniqueName { get; set; } = string.Empty;
 
         [EmailAddress]

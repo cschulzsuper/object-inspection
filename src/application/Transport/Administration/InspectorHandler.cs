@@ -16,6 +16,7 @@ namespace Super.Paula.Application.Administration
     {
         private readonly IInspectorManager _inspectorManager;
         private readonly IOrganizationProvider _organizationProvider;
+        private readonly IIdentityInspectorManager _identityInspectorManager;
         private readonly AppState _appState;
         private readonly IEventBus _eventBus;
 
@@ -26,11 +27,13 @@ namespace Super.Paula.Application.Administration
         public InspectorHandler(
             IInspectorManager inspectorManager,
             IOrganizationProvider organizationProvider,
+            IIdentityInspectorManager identityInspectorManager,
             AppState appState,
             IEventBus eventBus) 
         {
             _inspectorManager = inspectorManager;
             _organizationProvider = organizationProvider;
+            _identityInspectorManager = identityInspectorManager;
             _appState = appState;
             _eventBus = eventBus;
         }
@@ -51,6 +54,16 @@ namespace Super.Paula.Application.Administration
 
             await _inspectorManager.InsertAsync(entity);
 
+            var identity = new IdentityInspector
+            {
+                Activated = entity.Activated && organization.Activated,
+                Inspector = entity.UniqueName,
+                Organization = organization.UniqueName,
+                UniqueName = entity.Identity
+            };
+
+            await _identityInspectorManager.InsertAsync(identity);
+
             return new InspectorResponse
             {
                 Identity = entity.Identity,
@@ -63,8 +76,13 @@ namespace Super.Paula.Application.Administration
         public async ValueTask DeleteAsync(string inspector)
         {
             var entity = await _inspectorManager.GetAsync(inspector);
-
             await _inspectorManager.DeleteAsync(entity);
+
+            var identity = await _identityInspectorManager.GetAsync(
+                entity.Identity,
+                entity.Organization,
+                entity.UniqueName);
+            await _identityInspectorManager.DeleteAsync(identity);
         }
 
         public IAsyncEnumerable<InspectorResponse> GetAll()
@@ -108,11 +126,30 @@ namespace Super.Paula.Application.Administration
         {
             var entity = await _inspectorManager.GetAsync(inspector);
 
+            var oldIdentity = entity.Identity;
+
             entity.Identity = request.Identity;
             entity.UniqueName = request.UniqueName;
             entity.Activated = request.Activated;
 
             await _inspectorManager.UpdateAsync(entity);
+
+            var identity = await _identityInspectorManager.GetAsync(
+                oldIdentity,
+                entity.Organization,
+                entity.UniqueName);
+
+            await _identityInspectorManager.DeleteAsync(identity);
+
+            identity = new IdentityInspector
+            {
+                Activated = entity.Activated && entity.OrganizationActivated,
+                Inspector = entity.UniqueName,
+                Organization = entity.Organization,
+                UniqueName = entity.Identity
+            };
+
+            await _identityInspectorManager.InsertAsync(identity);
         }
 
         public async ValueTask ActivateAsync(string inspector)
@@ -122,6 +159,15 @@ namespace Super.Paula.Application.Administration
             entity.Activated = true;
 
             await _inspectorManager.UpdateAsync(entity);
+
+            var identity = await _identityInspectorManager.GetAsync(
+                entity.Identity,
+                entity.Organization,
+                entity.UniqueName);
+
+            identity.Activated = entity.OrganizationActivated;
+
+            await _identityInspectorManager.UpdateAsync(identity);
         }
 
         public async ValueTask DeactivateAsync(string inspector)
@@ -131,11 +177,19 @@ namespace Super.Paula.Application.Administration
             entity.Activated = false;
 
             await _inspectorManager.UpdateAsync(entity);
+
+            var identity = await _identityInspectorManager.GetAsync(
+                entity.Identity,
+                entity.Organization,
+                entity.UniqueName);
+
+            identity.Activated = false;
+
+            await _identityInspectorManager.UpdateAsync(identity);
         }
 
         public IAsyncEnumerable<InspectorResponse> GetAllForOrganization(string organization)
-        {
-            return _inspectorManager
+            => _inspectorManager
                .GetAsyncEnumerable(query => query
                    .Where(x => x.Organization == organization)
                    .Select(entity => new InspectorResponse
@@ -145,7 +199,18 @@ namespace Super.Paula.Application.Administration
                        Activated = entity.Activated,
                        BusinessObjects = entity.BusinessObjects.ToResponse()
                    }));
-        }
+
+        public IAsyncEnumerable<IdentityInspectorResponse> GetAllForIdentity(string identity)
+            => _identityInspectorManager
+                .GetIdentityBasedAsyncEnumerable(identity,
+                    query => query
+                       .Select(entity => new IdentityInspectorResponse
+                       {
+                           Identity = entity.UniqueName,
+                           UniqueName = entity.Inspector,
+                           Activated = entity.Activated,
+                           Organization = entity.Organization
+                       }));
 
         public async ValueTask ProcessAsync(string organization, OrganizationEvent @event)
         {
@@ -159,6 +224,15 @@ namespace Super.Paula.Application.Administration
                 inspector.OrganizationDisplayName =  @event.DisplayName ?? inspector.OrganizationDisplayName;
 
                 await _inspectorManager.UpdateAsync(inspector);
+
+                var identity = await _identityInspectorManager.GetAsync(
+                    inspector.Identity,
+                    inspector.Organization,
+                    inspector.UniqueName);
+
+                identity.Activated = inspector.Activated && inspector.OrganizationActivated;
+
+                await _identityInspectorManager.UpdateAsync(identity);
             }
         }
 
@@ -250,7 +324,15 @@ namespace Super.Paula.Application.Administration
                 return;
             }
 
-            var inspector = await _inspectorManager.GetAsync(@event.Inspector);
+            var inspector = _inspectorManager
+                .GetQueryable()
+                .SingleOrDefault(x => x.UniqueName == @event.Inspector);
+
+            if (inspector == null)
+            {
+                return;
+            }
+
             var inspectorBusinessObject = inspector.BusinessObjects
                 .Single(x => x.UniqueName == businessObject);
 

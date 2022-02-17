@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.SignalR.Client;
 using Super.Paula.Application.Administration.Responses;
 using Super.Paula.Application.Communication.Responses;
+using Super.Paula.Authorization;
 using Super.Paula.Environment;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 
 namespace Super.Paula.Application.Streaming
@@ -12,6 +14,8 @@ namespace Super.Paula.Application.Streaming
         private readonly HubConnection _connection;
         private readonly AppSettings _appSettings;
         private readonly AppState _appState;
+
+        private bool _disposed;
 
         public RemoteStreamer(AppSettings appSettings, AppState appState)
         {
@@ -24,13 +28,17 @@ namespace Super.Paula.Application.Streaming
             _appSettings = appSettings;
             _appState = appState;
         }
+
+        [SuppressMessage("Reliability", "CA2012")]
         public void Dispose()
         {
             _ = _connection.DisposeAsync();
+
+            _disposed = true;
             GC.SuppressFinalize(this);
         }
 
-        public Task<string?> CreateTokenAsync()
+        private Task<string?> CreateTokenAsync()
         {
             if (string.IsNullOrWhiteSpace(_appSettings.StreamerSecret))
             {
@@ -45,7 +53,7 @@ namespace Super.Paula.Application.Streaming
             return Task.FromResult(token.ToBase64String())!;
         }
 
-        public async Task EnsureStartedAsync()
+        private async Task EnsureStartedAsync()
         {
             if (_connection.State == HubConnectionState.Disconnected)
             {
@@ -55,6 +63,11 @@ namespace Super.Paula.Application.Streaming
 
         public async Task StreamNotificationCreationAsync(NotificationResponse response)
         {
+            if (_disposed)
+            {
+                return;
+            }
+
             await EnsureStartedAsync();
             var userId = $"{_appState.CurrentOrganization}:{response.Inspector}";
             await _connection.SendAsync("Stream1", userId, "NotificationCreation", response);
@@ -62,6 +75,11 @@ namespace Super.Paula.Application.Streaming
 
         public async Task StreamNotificationDeletionAsync(string inspector, int date, int time)
         {
+            if (_disposed)
+            {
+                return;
+            }
+
             await EnsureStartedAsync();
             var userId = $"{_appState.CurrentOrganization}:{inspector}";
             await _connection.SendAsync("Stream3", userId, "NotificationDeletion", inspector, date, time);
@@ -69,6 +87,11 @@ namespace Super.Paula.Application.Streaming
 
         public async Task StreamInspectorBusinessObjectCreationAsync(string inspector, InspectorBusinessObjectResponse response)
         {
+            if (_disposed)
+            {
+                return;
+            }
+
             await EnsureStartedAsync();
             var userId = $"{_appState.CurrentOrganization}:{inspector}";
             await _connection.SendAsync("Stream2", userId, "InspectorBusinessObjectCreation", inspector, response);
@@ -76,6 +99,11 @@ namespace Super.Paula.Application.Streaming
 
         public async Task StreamInspectorBusinessObjectUpdateAsync(string inspector, InspectorBusinessObjectResponse response)
         {
+            if (_disposed)
+            {
+                return;
+            }
+
             await EnsureStartedAsync();
             var userId = $"{_appState.CurrentOrganization}:{inspector}";
             await _connection.SendAsync("Stream2", userId, "InspectorBusinessObjectUpdate", inspector, response);
@@ -83,6 +111,11 @@ namespace Super.Paula.Application.Streaming
 
         public async Task StreamInspectorBusinessObjectDeletionAsync(string inspector, string businessObject)
         {
+            if (_disposed)
+            {
+                return;
+            }
+
             await EnsureStartedAsync();
             var userId = $"{_appState.CurrentOrganization}:{inspector}";
             await _connection.SendAsync("Stream2", userId, "InspectorBusinessObjectDeletion", inspector, businessObject);

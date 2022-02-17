@@ -4,7 +4,7 @@
 @inject NavigationManager NavigationManager
 @inject IBusinessObjectHandler BusinessObjectHandler
 
-@attribute [Authorize("RequiresManagementViewability")]
+@attribute [Authorize("ManagementRead")]
 
 <div class="container-fluid">
     <h1>@Translator["Business objects"]</h1>
@@ -66,7 +66,7 @@ else
                             @onclick="() => Edit(businessObject.UniqueName)"><span class="oi oi-pencil"/></button>
                     </td>
                     <td>
-                        <AuthorizedButton Policy="RequiresManageability" class="btn btn-outline-danger btn-block" title="@Translator["Delete"]"
+                        <AuthorizedButton Policy="ManagementFull" class="btn btn-outline-danger btn-block" title="@Translator["Delete"]"
                             @onclick="() => DeleteAsync(businessObject.UniqueName)"><span class="oi oi-trash"/></AuthorizedButton>
                     </td>
                     <td>

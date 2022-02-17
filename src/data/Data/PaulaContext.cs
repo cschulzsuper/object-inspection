@@ -27,6 +27,7 @@ namespace Super.Paula.Data
             modelBuilder.ApplyConfiguration(new IdentityMapping());
             modelBuilder.ApplyConfiguration(new InspectionMapping());
             modelBuilder.ApplyConfiguration(new InspectorMapping());
+            modelBuilder.ApplyConfiguration(new IdentityInspectorMapping());
             modelBuilder.ApplyConfiguration(new NotificationMapping());
             modelBuilder.ApplyConfiguration(new OrganizationMapping());
         }

@@ -3,9 +3,8 @@
 @inject ITranslator Translator
 @inject NavigationManager NavigationManager
 @inject IInspectorHandler InspectorHandler
-@inject AppAuthentication AppAuthentication
 
-@attribute [Authorize("RequiresManagementViewability")]
+@attribute [Authorize("ManagementRead")]
 
 <div class="container-fluid">
     <h1>@Translator["Edit inspectors"]</h1>
@@ -31,7 +30,7 @@ else
             </div>
             <div class="form-check">
                 <InputCheckbox class="form-check-input" id="activated" @bind-Value="_request.Activated"
-                    disabled="@(_request.UniqueName == AppAuthentication.Inspector)"/>
+                    disabled="@(_request.UniqueName == _inspector)"/>
                 <label class="form-check-label" for="activated">@Translator["Activated"]</label>     
             </div>
         </div>
@@ -47,7 +46,7 @@ else
         else 
         {
             <div class="container-fluid">
-                <AuthorizedButton Policy="RequiresManageability" type="submit" class="btn btn-primary">@Translator["Submit"]</AuthorizedButton>
+                <AuthorizedButton Policy="ManagementFull" type="submit" class="btn btn-primary">@Translator["Submit"]</AuthorizedButton>
             </div>
         }
 
@@ -60,6 +59,16 @@ else
     public string Inspector { get; set; } = string.Empty;
 
     private InspectorRequest? _request = null;
+
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthenticationState { get; set; } = null!;
+
+    private string? _inspector;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        _inspector = (await AuthenticationState).User.GetInspector();
+    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
