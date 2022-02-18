@@ -7,11 +7,9 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Super.Paula.Client.Components.Forms
 {
-    public class InputMilliseconds : InputBase<int>
+    public class InputWeek : InputBase<(int Year, int Week)>
     {
-        private readonly string _typeAttributeValue = "time";
-
-        private readonly string _format = "HH:mm:ss";
+        private readonly string _typeAttributeValue = "week";
 
         private readonly string _parsingErrorMessage = "The {{0}} field must be an int.";
 
@@ -36,30 +34,44 @@ namespace Super.Paula.Client.Components.Forms
             builder.AddAttribute(3, "class", CssClass);
             builder.AddAttribute(4, "value", BindConverter.FormatValue(CurrentValueAsString));
             builder.AddAttribute(5, "onchange", EventCallback.Factory.CreateBinder<string?>(this, value => CurrentValueAsString = value, CurrentValueAsString));
+            builder.AddAttribute(6, "onkeydown", "return false;");
             builder.AddElementReferenceCapture(6, inputReference => Element = inputReference);
             builder.CloseElement();
         }
 
-        protected override string FormatValueAsString(int value)
-        {
-            var timeSpan = TimeSpan.FromMilliseconds(value);
-            var timeOnly = TimeOnly.FromTimeSpan(timeSpan);
+        protected override string FormatValueAsString((int Year, int Week) value)
+            => $"{value.Year}-W{value.Week:00}";
 
-            return BindConverter.FormatValue(timeOnly, _format, CultureInfo.InvariantCulture);
-        }
-
-        protected override bool TryParseValueFromString(string? value, out int result, [NotNullWhen(false)] out string? validationErrorMessage)
+        protected override bool TryParseValueFromString(string? value, out (int Year, int Week) result, [NotNullWhen(false)] out string? validationErrorMessage)
         {
-            if (BindConverter.TryConvertTo(value, CultureInfo.InvariantCulture, out TimeOnly timeOnly))
+            if (value == null)
             {
-                validationErrorMessage = null;
-                result = (int)timeOnly.ToTimeSpan().TotalMilliseconds;
-                return true;
+                validationErrorMessage = string.Format(CultureInfo.InvariantCulture, _parsingErrorMessage, DisplayName ?? FieldIdentifier.FieldName);
+                result = (0, 0);
+                return false;
+            }
+
+            var calenderWeek = value.Split("-W");
+            if (calenderWeek.Length != 2)
+            {
+                validationErrorMessage = string.Format(CultureInfo.InvariantCulture, _parsingErrorMessage, DisplayName ?? FieldIdentifier.FieldName);
+                result = (0, 0);
+                return false;
+            }
+
+            var yearIsValid = int.TryParse(calenderWeek[0], out var year);
+            var weekIsValid = int.TryParse(calenderWeek[1], out var week);
+
+            if (!yearIsValid || !weekIsValid)
+            {
+                validationErrorMessage = string.Format(CultureInfo.InvariantCulture, _parsingErrorMessage, DisplayName ?? FieldIdentifier.FieldName);
+                result = (0,0);
+                return false;
             }
 
             validationErrorMessage = string.Format(CultureInfo.InvariantCulture, _parsingErrorMessage, DisplayName ?? FieldIdentifier.FieldName);
-            result = default;
-            return false;
+            result = (year, week);
+            return true;
         }
     }
 }

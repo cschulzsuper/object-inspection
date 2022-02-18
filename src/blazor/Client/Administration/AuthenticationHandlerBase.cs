@@ -1,4 +1,5 @@
 ﻿using Super.Paula.Application.Administration;
+using Super.Paula.Application.Administration.Exceptions;
 using Super.Paula.Application.Administration.Requests;
 using Super.Paula.Client.ErrorHandling;
 using Super.Paula.Environment;
@@ -49,10 +50,17 @@ namespace Super.Paula.Client.Administration
 
         public async ValueTask SignOutAsync()
         {
-            var responseMessage = await _httpClient.PostAsync("authentication/sign-out", null);
+            try
+            {
+                var responseMessage = await _httpClient.PostAsync("authentication/sign-out", null);
 
-            responseMessage.RuleOutProblems();
-            responseMessage.EnsureSuccessStatusCode();
+                responseMessage.RuleOutProblems();
+                responseMessage.EnsureSuccessStatusCode();
+            }
+            catch (HttpRequestException exception)
+            {
+                throw new SignOutException($"Could not sign out", exception);
+            }
         }
     }
 }

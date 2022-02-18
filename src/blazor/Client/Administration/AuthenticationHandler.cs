@@ -1,4 +1,5 @@
 ﻿using Super.Paula.Application.Administration;
+using Super.Paula.Application.Administration.Exceptions;
 using Super.Paula.Application.Administration.Requests;
 using Super.Paula.Authorization;
 using Super.Paula.Client.Storage;
@@ -40,10 +41,19 @@ namespace Super.Paula.Client.Administration
 
         public async ValueTask SignOutAsync()
         {
-            await _authenticationHandler.SignOutAsync();
-
-            await _localStorage.RemoveItemAsync("token");
-            await _localStorage.RemoveItemAsync("authorization-filter");
+            try
+            {
+                await _authenticationHandler.SignOutAsync();
+            }
+            catch (SignOutException exception)
+            {
+                throw new SignOutException($"Could not sign out gracefully.", exception);
+            }
+            finally
+            {
+                await _localStorage.RemoveItemAsync("token");
+                await _localStorage.RemoveItemAsync("authorization-filter");
+            }
         }
     }
 }

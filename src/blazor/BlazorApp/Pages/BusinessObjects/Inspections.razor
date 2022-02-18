@@ -13,16 +13,16 @@
 
 <AuthorizeView Policy="ManagementRead">
     <Authorized>
-        <div class="container-fluid m-2">
-            <button class="btn @(_mode == Mode.AssignmentMode ? "btn-primary" : "btn-outline-primary")"
+        <div class="container-fluid m-2 d-lg-none">
+            <button class="btn @(_mode == Mode.AssignmentMode ? "btn-primary" : "btn-outline-secondary")"
                     title="@Translator["Assigment mode"]"
                     @onclick="ToggleAssignmentMode"><span class="oi oi-list"/></button>
 
-            <button class="btn @(_mode == Mode.DropMode ? "btn-primary" : "btn-outline-primary")"
+            <button class="btn @(_mode == Mode.DropMode ? "btn-primary" : "btn-outline-secondary")"
                     title="@Translator["Drop mode"]"
                     @onclick="ToggleDropMode"><span class="oi oi-media-skip-forward"/></button>
 
-            <button class="btn @(_mode == Mode.ScheduleMode ? "btn-primary" : "btn-outline-primary")" 
+            <button class="btn @(_mode == Mode.ScheduleMode ? "btn-primary" : "btn-outline-secondary")" 
                     title="@Translator["Schedule mode"]"
                     @onclick="ToggleScheduleMode"><span class="oi oi-clock"/></button>
         </div>
@@ -41,11 +41,13 @@ else
         <thead class="table-light table-borderless">
             <tr>
                 <th class="col-2 d-none d-lg-table-cell">@Translator["Unique name"]</th>
-                <th class="col-10">@Translator["Display name"]</th>
+                <th class="col-12 col-lg-10">@Translator["Display name"]</th>
 
                 <AuthorizeView Policy="ManagementRead">
                     <Authorized>
-                        <th></th>
+                        <th class=@(_mode == Mode.AssignmentMode ? "" : "d-none d-lg-table-cell")></th>
+                        <th class=@(_mode == Mode.ScheduleMode ? "" : "d-none d-lg-table-cell")></th>
+                        <th class=@(_mode == Mode.DropMode ? "" : "d-none d-lg-table-cell")></th>
                     </Authorized>
                 </AuthorizeView>
 
@@ -62,33 +64,29 @@ else
 
                     <AuthorizeView Policy="ManagementRead">
                         <Authorized>
-                            <td>
-                            @if (_mode == Mode.AssignmentMode)
-                            {
+                            <td class=@(_mode == Mode.AssignmentMode ? "" : "d-none d-lg-table-cell")>
                                 @if (_inspectionBusinessObjects!.ContainsKey(inspection.UniqueName))
                                 {
-                                    <AuthorizedButton Policy="ManagementFull" class="btn btn-primary btn-block" title="@Translator["Unassign"]"
+                                    <AuthorizedButton Policy="ManagementFull" class="btn btn-primary btn-block"
+                                            title="@Translator["Unassign"]"
                                             @onclick="() => UnassignAsync(inspection)"><span class="oi oi-minus"/></AuthorizedButton>
                                 }
                                 else
                                 {
-                                    <AuthorizedButton Policy="ManagementFull" class="btn btn-outline-primary btn-block" title="@Translator["Assign"]"
+                                    <AuthorizedButton Policy="ManagementFull" class="btn btn-primary btn-block"
+                                            title="@Translator["Assign"]"
                                             @onclick="() => AssignAsync(inspection)"><span class="oi oi-plus"/></AuthorizedButton>
                                 }
-                            }
-
-                            @if (_mode == Mode.ScheduleMode)
-                            {
-                                    <button class="btn btn-outline-primary btn-block" title="@Translator["Schedule"]"
-                                            @onclick="() => Schedule(inspection)"><span class="oi oi-clock"/></button>
-                            }
-
-                            @if (_mode == Mode.DropMode)
-                            {
-                                    <AuthorizedButton Policy="ManagementFull" class="btn btn-outline-primary btn-block" title="@Translator["Drop"]"
-                                            @onclick="() => DropAsync(inspection)"><span class="oi oi-media-skip-forward"></span></AuthorizedButton>
-                            }
-
+                            </td>
+                            <td class=@(_mode == Mode.ScheduleMode ? "" : "d-none d-lg-table-cell")>
+                                <button class="btn btn-primary btn-block"
+                                        title="@Translator["Schedule"]"
+                                        @onclick="() => Schedule(inspection)"><span class="oi oi-clock"/></button>
+                            </td>
+                            <td class=@(_mode == Mode.DropMode ? "" : "d-none d-lg-table-cell")>
+                                <AuthorizedButton Policy="ManagementFull" class="btn btn-primary btn-block"
+                                        title="@Translator["Drop"]"
+                                        @onclick="() => DropAsync(inspection)"><span class="oi oi-media-skip-forward"></span></AuthorizedButton>
                             </td>
                         </Authorized>
                     </AuthorizeView>

@@ -35,7 +35,7 @@
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" Match="NavLinkMatch.All" href="notifications">
                         <span class="oi oi-bell" aria-hidden="true"/>@Translator["Notifications"]
-                        <ErrorBoundary Context="Test2">
+                        <ErrorBoundary Context="notificationBadgeErrorBoundary">
                             <ChildContent>
                                 <NotificationBadge/>
                             </ChildContent>
@@ -112,7 +112,7 @@
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" Match="NavLinkMatch.All" href="business-objects/auditing">
                         <span class="oi oi-clipboard" aria-hidden="true"/>@Translator["Auditing"]
-                        <ErrorBoundary Context="Test">
+                        <ErrorBoundary Context="auditingBadgeErrorBoundary">
                             <ChildContent>
                                 <AuditingBadge/>
                             </ChildContent>
@@ -134,8 +134,7 @@
                         <span class="oi oi-person" aria-hidden="true"/>@Translator["Change Password"]</NavLink>
                 </div>
                 <div class="nav-item px-3 d-md-none">
-                    <NavLink class="nav-link" title="@Translator["Sign out"]" @onclick="() => SignOutAsync()">
-                        <span class="oi oi-account-logout" aria-hidden="true"/>@Translator["Sign Out"]</NavLink>
+                    <SignOutButton class="nav-link" title="@Translator["Sign out"]"/>
                 </div>
             </Authorized>
         </AuthorizeView>
@@ -150,26 +149,5 @@
     private void ToggleNavMenu()
     {
         collapseNavMenu = !collapseNavMenu;
-    }
-
-    public async Task SignOutAsync()
-    {
-        try
-        {
-            await AuthenticationHandler.SignOutAsync();
-        }
-        catch(HttpRequestException e) when (e.StatusCode == HttpStatusCode.Unauthorized)
-        {
-            if ((await LocalStorage.ContainKeyAsync("token")) ||
-                (await LocalStorage.ContainKeyAsync("authorization-filter")))
-            {
-                await LocalStorage.RemoveItemAsync("token");
-                await LocalStorage.RemoveItemAsync("authorization-filter");
-            }
-        } 
-        finally
-        {
-            NavigationManager.NavigateTo("/");
-        }
     }
 }

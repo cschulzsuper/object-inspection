@@ -52,11 +52,18 @@ namespace Super.Paula
                         .AllowAnyMethod()
                         .AllowAnyHeader()));
 
+            services.AddStackPolicy(options =>
+            {
+                options.MaxConcurrentRequests = 2;
+                options.RequestQueueLimit = 100;
+            });
+
             services.AddPaulaServer(_environment.IsDevelopment());
         }
 
         public void Configure(IApplicationBuilder app)
         {
+            app.UseConcurrencyLimiter();
             app.UsePaulaBlacklist();
 
             app.UseResponseCompression();

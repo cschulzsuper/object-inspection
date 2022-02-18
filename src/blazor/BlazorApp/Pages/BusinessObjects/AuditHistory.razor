@@ -10,108 +10,93 @@
     <h1>@Translator["Inspection audits"]</h1>
 </div>
 
-<div class="container-fluid d-flex align-items-center m-2">
-    <div class="custom-control custom-switch mr-4">
-        <input type="checkbox" class="custom-control-input" checked="@_showSatisfying" id="showSatisfying" @onchange="ShowSatisfyingChanged">
+<div class="container-fluid d-flex align-items-center mt-2 mb-2">
+    <div class="input-group mr-4">
+        <input type="text" class="form-control" placeholder="Search term" @bind="_searchQuery" @onkeyup="SearchTermKeyDownAsync">
+    </div>
+    <div class="custom-control custom-switch mr-4 d-none d-xl-block">
+        <input type="checkbox" class="custom-control-input" checked="@_showSatisfying" id="showSatisfying" @onchange="ShowSatisfyingChangedAsync">
         <label class="custom-control-label" for="showSatisfying">@Translator["Show satisfying"]</label>
     </div>
-    <div class="custom-control custom-switch mr-4">
-        <input type="checkbox" class="custom-control-input" checked="@_showInsufficient" id="showInsufficient" @onchange="ShowInsufficientChanged">
+    <div class="custom-control custom-switch mr-4 d-none d-xl-block">
+        <input type="checkbox" class="custom-control-input" checked="@_showInsufficient" id="showInsufficient" @onchange="ShowInsufficientChangedAsync">
         <label class="custom-control-label" for="showInsufficient">@Translator["Show insufficient"]</label>
     </div>
-    <div class="custom-control custom-switch mr-4">
-        <input type="checkbox" class="custom-control-input" checked="@_showFailed" id="showFailed" @onchange="ShowFailedChanged">
+    <div class="custom-control custom-switch mr-4 d-none d-xl-block">
+        <input type="checkbox" class="custom-control-input" checked="@_showFailed" id="showFailed" @onchange="ShowFailedChangedAsync">
         <label class="custom-control-label" for="showFailed">@Translator["Show failed"]</label>
     </div>
-    <div class="input-group">
-        <input type="text" class="form-control" placeholder="Search term" @bind="_searchTerm" @onkeyup="SearchTermKeyDownAsync">
-        <div class="input-group-append">
-            <button type="button" id="inspectorSearch" 
-                class="btn @(_searchScope == "inspector" ? "btn-primary" : "btn-outline-secondary")"
-                checked="@(_searchScope == "inspector")"
-                @onclick="@(() => ChangeSearchScopeAsync("inspector"))">@Translator["Inspectors"]</button>
-            <button type="button" id="inspectionSearch"
-                class="btn @(_searchScope == "inspection" ? "btn-primary" : "btn-outline-secondary")"
-                checked="@(_searchScope == "inspection")" 
-                @onclick="@(() => ChangeSearchScopeAsync("inspection"))">@Translator["Inspections"]</button>
-        </div>
-    </div>
-</div> 
+</div>  
 
 <div class="container-fluid">
 
-@if (InspectionAudits == null)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
-    <table class="table">
+<hr />
+<CalenderWeekPager NextText="@Translator["Next"]" PreviousText="@Translator["Previous"]" CalenderWeek="@_calenderWeek" CalenderWeekChanged="@OnCalenderWeekChanged"/>
+
+<table class="table table-sm">
+    @if (_initialSearch != null && _initialSearch.TopResults.Count > 0)
+    {
         <thead class="table-light table-borderless">
             <tr>
-                <th class="col-2">@Translator["Audit time"]</th>
-                <th class="col-8">@Translator["Inspection"]</th>
-                <th class="col-2">@Translator["Inspector"]</th>
+                <th class="col-2 d-none d-lg-table-cell">@Translator["Audit time"]</th>
+                <th class="col-12 col-lg-8">@Translator["Inspection"]</th>
+                <th class="col-2 d-none d-lg-table-cell">@Translator["Inspector"]</th>
                 <th>@Translator["Result"]</th>
             </tr>
         </thead>
-        <tbody>
-            @foreach (var inspectionAudit in InspectionAudits)
-            {
-                <tr>
-                    <td>@((inspectionAudit.AuditDate, inspectionAudit.AuditTime).ToLocalTimeString())</td>
-                    <td>
-                        <button class="btn btn-outline-secondary btn-block text-left" 
-                                @onclick="() => ToggleAnnotationVisibility(inspectionAudit)">@inspectionAudit.InspectionDisplayName</button>
+    }
+    <tbody>
+        <Virtualize @ref="Container" Context="inspectionAudit" ItemsProvider="@GetItemsProviderResultAsync">
+            <tr>
+                <td class="d-none d-lg-table-cell">@((inspectionAudit.AuditDate, inspectionAudit.AuditTime).ToLocalTimeString())</td>
+                <td>
+                    <button class="btn btn-outline-secondary btn-block text-left" @onclick="() => ToggleAnnotationVisibility(inspectionAudit)">
+                        <div>@inspectionAudit.InspectionDisplayName</div>
+                        <small class="d-lg-none">@((inspectionAudit.AuditDate, inspectionAudit.AuditTime).ToLocalTimeString()) - @inspectionAudit.Inspector</small>
+                    </button>
 
-                        @if (_inspectionAuditAnnotationVisibile?[inspectionAudit] == true && !string.IsNullOrWhiteSpace(inspectionAudit.Annotation))
-                        {
-                            <div class="card card-body text-wrap">
-                                @inspectionAudit.Annotation
-                            </div>
-                        }
-                    </td>
-                    <td>@inspectionAudit.Inspector</td>
-                    <td>
-                    @switch(inspectionAudit.Result) 
+                    @if (ShowAnnotation(inspectionAudit))
                     {
-                        case "satisfying":
-                            <button class="btn btn-success btn-block" title="@Translator["Satisfying"]"
-                                    disabled><span class="oi oi-star"/></button>
-                             break;
-                        case "insufficient": 
-                            <button class="btn btn-warning btn-block" title="@Translator["Insufficient"]"
-                                    disabled><span class="oi oi-warning"/></button>
+                        <div class="card card-body text-wrap">
+                            @inspectionAudit.Annotation
+                        </div>
+                    }
+                </td>
+                <td class="d-none d-lg-table-cell">@inspectionAudit.Inspector</td>
+                <td>
+                @switch(inspectionAudit.Result) 
+                {
+                    case "satisfying":
+                        <button class="btn btn-success btn-block" title="@Translator["Satisfying"]" 
+                                disabled><span class="oi oi-star"/></button>
                             break;
-                        case "failed": 
-                            <button class="btn btn-danger btn-block" title="@Translator["Failed"]"
-                                    disabled><span class="oi oi-x"/></button>
-                            break;
-                    } 
-                    </td>                   
-                </tr>
-            }
-        </tbody>
-    </table>
+                    case "insufficient": 
+                        <button class="btn btn-warning btn-block" title="@Translator["Insufficient"]" 
+                                disabled><span class="oi oi-warning"/></button>
+                        break;
+                    case "failed": 
+                        <button class="btn btn-danger btn-block" title="@Translator["Failed"]" 
+                                disabled><span class="oi oi-x"/></button>
+                        break;
+                } 
+                </td>                   
+            </tr>
+        </Virtualize>
+    </tbody>
+</table>
+        
+@if (_initialSearch != null && _initialSearch.TopResults.Count > 0)
+{
+    <CalenderWeekPager NextText="@Translator["Next"]" PreviousText="@Translator["Previous"]" CalenderWeek="@_calenderWeek" CalenderWeekChanged="@OnCalenderWeekChanged"/>
 }
 
 </div>
 
 @code {
 
-    private ICollection<BusinessObjectInspectionAuditResponse>? _inspectionAudits;
+    private SearchBusinessObjectInspectionAuditResponse? _initialSearch;
 
-    private IDictionary<BusinessObjectInspectionAuditResponse,bool>? _inspectionAuditAnnotationVisibile;
-
-    private IEnumerable<BusinessObjectInspectionAuditResponse>? InspectionAudits =>
-        _inspectionAudits?
-            .Where(x => 
-                _showSatisfying && x.Result == "satisfying" ||
-                _showInsufficient && x.Result == "insufficient" ||
-                _showFailed && x.Result == "failed");
-
-    [Parameter]
-    public string BusinessObject { get; set; } = null!;
+    private IList<string> _inspectionAuditAnnotationVisibile = new List<string>();
 
     private bool _showSatisfying = true;
 
@@ -119,97 +104,174 @@ else
 
     private bool _showFailed = true;
 
-    private string _searchTerm = string.Empty;
+    private string _searchQuery = string.Empty;
 
-    private string _searchScope = string.Empty;
+    private (int Year, int Week) _calenderWeek = (default, default);
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    private Virtualize<BusinessObjectInspectionAuditResponse>? Container { get; set; }
+
+    [Parameter]
+    public string BusinessObject { get; set; } = null!;
+
+    protected override void OnInitialized()
     {
-        if(firstRender)
-        {
-            await QueryAsync();
-            StateHasChanged();
-        }
+        var today = DateTime.Today;
+        _calenderWeek = (ISOWeek.GetYear(today), ISOWeek.GetWeekOfYear(today));
     }
 
-    private async Task QueryAsync()
+    protected override async Task OnParametersSetAsync()
     {
-        _inspectionAudits = new List<BusinessObjectInspectionAuditResponse>();
-
-        if (_searchTerm.Length <= 3 && _searchScope != string.Empty)
-        {
-            return;
-        }
-
-        var searchTermInspectorSearch =
-            (_searchTerm.Length > 3 && _searchScope == "inspector")  ? _searchTerm : null;
-        var searchTermInspectionSearch =
-            (_searchTerm.Length > 3 && _searchScope == "inspection")  ? _searchTerm : null;
- 
-        var response = BusinessObjectInspectionAuditHandler.SearchForBusinessObject(
-            BusinessObject,
-            searchTermInspectorSearch,
-            searchTermInspectionSearch
-        );
-
-        await foreach(var inspectionAudit in response)
-        {
-            _inspectionAudits.Add(inspectionAudit);
-            this.StateHasChanged();            
-        }
-
-        _inspectionAuditAnnotationVisibile = _inspectionAudits
-            .ToDictionary(key => key, _ => false);
+        await ResetAsync();
     }
 
-    private void ShowSatisfyingChanged(ChangeEventArgs e)
+    private async Task OnCalenderWeekChanged((int Year, int Week) calenderWeek)
+    {
+        _calenderWeek = calenderWeek;
+        await ResetAsync();
+    }
+
+    private string SearchQuery()
+    {
+        var searchQuery = _searchQuery;
+
+        if (_showSatisfying)
+        {
+            searchQuery += "+result:satisfying";
+        }
+
+        if (_showInsufficient)
+        {
+            searchQuery += "+result:insufficient";
+        }
+
+        if (_showFailed)
+        {
+            searchQuery += "+result:failed";
+        }
+
+        var calenderWeekFrom = ISOWeek
+            .ToDateTime(_calenderWeek.Year, _calenderWeek.Week, DayOfWeek.Monday)
+            .ToUniversalTime()
+            .ToNumbers();
+
+        var calenderWeekTo = ISOWeek
+            .ToDateTime(_calenderWeek.Year, _calenderWeek.Week, DayOfWeek.Sunday)
+            .ToUniversalTime()
+            .ToNumbers();
+
+        searchQuery += $"+from:{calenderWeekFrom.day}+to:{calenderWeekTo.day}";
+
+        searchQuery += $"+business-object:{BusinessObject}";
+
+        return searchQuery
+            .Trim()
+            .Trim('+');
+    }
+
+    private async Task ResetAsync()
+    {
+        _initialSearch = null;
+        _inspectionAuditAnnotationVisibile.Clear();
+
+        if (Container != null)
+        {
+            await Container.RefreshDataAsync();
+        }
+
+        this.StateHasChanged();            
+    }
+
+    private async Task<IEnumerable<BusinessObjectInspectionAuditResponse>> QueryAsync(string searchQuery, int skip, int take, 
+        CancellationToken cancellationToken = default)
+    {
+        var response = BusinessObjectInspectionAuditHandler.GetAll(searchQuery, skip, take, cancellationToken);
+
+        var result = new List<BusinessObjectInspectionAuditResponse>();
+
+        await foreach (var item in response)
+        {
+            result.Add(item);
+        }
+
+        return result;
+    }
+
+    private async ValueTask<ItemsProviderResult<BusinessObjectInspectionAuditResponse>> GetItemsProviderResultAsync(ItemsProviderRequest request)
+    {
+        if (request.StartIndex == 0 || _initialSearch == null)
+        {
+            _initialSearch = await BusinessObjectInspectionAuditHandler.SearchAsync(SearchQuery());
+            this.StateHasChanged(); 
+        }
+
+        var totalCount = _initialSearch.TotalCount;
+
+        var inspectionAudit = new List<BusinessObjectInspectionAuditResponse>();
+
+        if (request.StartIndex == 0)
+        {
+            inspectionAudit.AddRange(
+                _initialSearch.TopResults
+                    .Skip(request.StartIndex)
+                    .Take(request.Count)
+                    .ToList());
+        } 
+
+        if(inspectionAudit.Count < request.Count)
+        {
+            inspectionAudit.AddRange(
+                await QueryAsync(SearchQuery(), 
+                    request.StartIndex + inspectionAudit.Count, 
+                    request.Count - inspectionAudit.Count, 
+                    request.CancellationToken));
+        }
+
+        return new ItemsProviderResult<BusinessObjectInspectionAuditResponse>(inspectionAudit, totalCount);
+    }
+
+    private async Task ShowSatisfyingChangedAsync(ChangeEventArgs e)
     {
         _showSatisfying = (bool)e.Value!;
+        await ResetAsync();
     }
 
-    private Task ChangeSearchScopeAsync(string searchScope)
-    {
-        _searchScope = _searchScope == searchScope
-            ? string.Empty
-            : searchScope;
-        return QueryAsync();
-    }
-
-    private void ShowInsufficientChanged(ChangeEventArgs e)
+    private async Task ShowInsufficientChangedAsync(ChangeEventArgs e)
     {
         _showInsufficient = (bool)e.Value!;
+        await ResetAsync();
     }
 
-    private void ShowFailedChanged(ChangeEventArgs e)
+    private async Task ShowFailedChangedAsync(ChangeEventArgs e)
     {
         _showFailed = (bool)e.Value!;
+        await ResetAsync();
     }
 
     public async Task SearchTermKeyDownAsync(KeyboardEventArgs e)
     {
         if (e.Code == "Enter" || e.Code == "NumpadEnter")
         {
-            if (_searchTerm.Length > 3)
-            {
-                if (_searchScope == string.Empty)
-                {
-                    _searchScope = "inspector";
-                }
-            }
-            else
-            {
-                _searchTerm = string.Empty;
-                _searchScope = string.Empty;
-            }
-            await QueryAsync();
+            await ResetAsync();
         }
-    }    
+    }
+
+    private bool ShowAnnotation(BusinessObjectInspectionAuditResponse audit)
+    {
+        string key = $"{audit.BusinessObject}/{audit.Inspection}/{audit.AuditDate}/{audit.AuditTime}";
+        return _inspectionAuditAnnotationVisibile.Contains(key) && !string.IsNullOrWhiteSpace(audit.Annotation);
+    }
 
     private void ToggleAnnotationVisibility(BusinessObjectInspectionAuditResponse audit)
     {
-        if (_inspectionAuditAnnotationVisibile != null)
+        string key = $"{audit.BusinessObject}/{audit.Inspection}/{audit.AuditDate}/{audit.AuditTime}";
+
+        if (_inspectionAuditAnnotationVisibile.Contains(key))
         {
-            _inspectionAuditAnnotationVisibile[audit] = !_inspectionAuditAnnotationVisibile[audit];
+            _inspectionAuditAnnotationVisibile.Remove(key);
+        } 
+        else
+        {
+            _inspectionAuditAnnotationVisibile.Add(key);
         }
     }
 }

@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using Super.Paula.Application.Inventory;
 using Super.Paula.Application.Inventory.Requests;
@@ -93,43 +95,25 @@ namespace Super.Paula.Client.Inventory
             responseMessage.EnsureSuccessStatusCode();
         }
 
-        public async IAsyncEnumerable<BusinessObjectResponse> GetAll()
+        public async IAsyncEnumerable<BusinessObjectResponse> GetAll(string query, int skip, int take,
+            [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
-            var responseMessage = await _httpClient.GetAsync("business-objects");
+            var responseMessage = await _httpClient.GetAsync($"business-objects?q={query}&s={skip}&t={take}", cancellationToken);
             
             responseMessage.RuleOutProblems();
             responseMessage.EnsureSuccessStatusCode();
 
-            var responseStream = await responseMessage.Content.ReadAsStreamAsync();
+            var responseStream = await responseMessage.Content.ReadAsStreamAsync(cancellationToken);
             var response = JsonSerializer.DeserializeAsyncEnumerable<BusinessObjectResponse>(
                 responseStream,
                 new JsonSerializerOptions(JsonSerializerDefaults.Web)
                 {
                     DefaultBufferSize = 128
-                });
+                },
+                cancellationToken);
 
-            await foreach (var responseItem in response)
-            {
-                yield return responseItem!;
-            }
-        }
-
-        public async IAsyncEnumerable<BusinessObjectResponse> GetAllForInspector(string inspector)
-        {
-            var responseMessage = await _httpClient.GetAsync($"inspectors/{inspector}/business-objects");
-            
-            responseMessage.RuleOutProblems();
-            responseMessage.EnsureSuccessStatusCode();
-
-            var responseStream = await responseMessage.Content.ReadAsStreamAsync();
-            var response = JsonSerializer.DeserializeAsyncEnumerable<BusinessObjectResponse>(
-                responseStream,
-                new JsonSerializerOptions(JsonSerializerDefaults.Web)
-                {
-                    DefaultBufferSize = 128
-                });
-
-            await foreach (var responseItem in response)
+            await foreach (var responseItem in response
+                .WithCancellation(cancellationToken))
             {
                 yield return responseItem!;
             }
@@ -153,33 +137,14 @@ namespace Super.Paula.Client.Inventory
             responseMessage.EnsureSuccessStatusCode();
         }
 
-        public async IAsyncEnumerable<BusinessObjectResponse> Search(string? businessObject, string? inspector)
+        public async ValueTask<SearchBusinessObjectResponse> SearchAsync(string query)
         {
-            var queryValues = new List<string?>
-            {
-                businessObject != null ? $"business-object={businessObject}" : null,
-                inspector != null ? $"inspector={inspector}" : null
-            };
+            var responseMessage = await _httpClient.GetAsync($"business-objects/search?q={query}");
 
-            var query = $"?{string.Join('&', queryValues.Where(x => x != null))}";
-
-            var responseMessage = await _httpClient.GetAsync($"business-objects/search{query}");
-            
             responseMessage.RuleOutProblems();
             responseMessage.EnsureSuccessStatusCode();
 
-            var responseStream = await responseMessage.Content.ReadAsStreamAsync();
-            var response = JsonSerializer.DeserializeAsyncEnumerable<BusinessObjectResponse>(
-                responseStream,
-                new JsonSerializerOptions(JsonSerializerDefaults.Web)
-                {
-                    DefaultBufferSize = 128
-                });
-
-            await foreach (var responseItem in response)
-            {
-                yield return responseItem!;
-            }
+            return (await responseMessage.Content.ReadFromJsonAsync<SearchBusinessObjectResponse>())!;
         }
 
         public async ValueTask<DropInspectionAuditResponse> DropInspectionAuditAsync(string businessObject, string inspection, DropInspectionAuditRequest request)

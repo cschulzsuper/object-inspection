@@ -81,10 +81,6 @@ namespace Super.Paula.Data.Mappings.Inventory
                 .IsRequired();
 
             inspectionsBuilder
-                .Property(x => x.ActivatedGlobally)
-                .IsRequired();
-
-            inspectionsBuilder
                 .Property(x => x.DisplayName)
                 .HasMaxLength(140)
                 .IsRequired();

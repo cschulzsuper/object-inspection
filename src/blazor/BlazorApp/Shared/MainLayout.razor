@@ -37,9 +37,7 @@
                     <NavLink class="nav-link" Match="NavLinkMatch.All" href="change-secret">
                         <span class="oi oi-person" aria-hidden="true"/>@Translator["Change Password"]</NavLink>
 
-                    <button type="button" class="nav-link btn" title="@Translator["Sign out"]"
-                            @onclick="() => SignOutAsync()">
-                        <span class="oi oi-account-logout" aria-hidden="true"/></button>
+                    <SignOutButton class="nav-link btn"/>
 
                 </Authorized>
             </AuthorizeView>
@@ -51,7 +49,7 @@
                     @Body             
                 </ChildContent>
                 <ErrorContent>
-                    <div class="blazor-error-boundary">
+                    <div class="alert alert-danger">
                         <p>@context.Message</p>
                         @if(context is ProblemDetailsException problems && problems.Errors != null)
                         {
@@ -62,6 +60,18 @@
                             }
                             </ul>
                         }
+                        <p>
+                            @if(context is HttpRequestException requestException && 
+                                (requestException.StatusCode == HttpStatusCode.Unauthorized || 
+                                 requestException.StatusCode == HttpStatusCode.Forbidden))
+                            {
+                                 <a class="alert-link" href="javascript:void(0);" @onclick=RecoverAndGoHome>@Translator["Go to Homepage"]</a>                                
+                                 <span> - </span>
+                                 <a class="alert-link" href="javascript:void(0);" @onclick=RecoverAndSignOutAsync>@Translator["Sign Out"]</a>                                
+                                 <span> - </span>
+                            }
+                            <a class="alert-link" href="javascript:void(0);" @onclick=Recover>@Translator["Try Again"]</a>
+                        </p>
                     </div>
                 </ErrorContent>
             </ErrorBoundary>
@@ -75,30 +85,22 @@
 
     private ErrorBoundary? errorBoundaryArticle = null!;
 
-    protected override void OnParametersSet()
+    private void Recover()
     {
         errorBoundaryArticle?.Recover();
     }
 
-    public async Task SignOutAsync()
+    private void RecoverAndGoHome()
     {
-        try
-        {
-            await AuthenticationHandler.SignOutAsync();
-        }
-        catch(HttpRequestException e) when (e.StatusCode == HttpStatusCode.Unauthorized)
-        {
-            if ((await LocalStorage.ContainKeyAsync("token")) ||
-                (await LocalStorage.ContainKeyAsync("authorization-filter")))
-            {
-                await LocalStorage.RemoveItemAsync("token");
-                await LocalStorage.RemoveItemAsync("authorization-filter");
-            }
-        } 
-        finally
-        {
-            NavigationManager.NavigateTo("/");
-        }
+        errorBoundaryArticle?.Recover();
+        NavigationManager.NavigateTo("/", true);
+    }
+
+    private async Task RecoverAndSignOutAsync()
+    {
+        await AuthenticationHandler.SignOutAsync();
+        errorBoundaryArticle?.Recover();
+        NavigationManager.NavigateTo("/", true);
     }
 
     public async Task StopImpersonationAsync()

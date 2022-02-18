@@ -16,7 +16,6 @@ namespace Super.Paula.Application.Inventory.Responses
                 AuditTime = inspection.AuditTime,
                 AuditInspector = inspection.AuditInspector,
                 AuditResult = inspection.AuditResult,
-                ActivatedGlobally = inspection.ActivatedGlobally,
                 DisplayName = inspection.DisplayName,
                 Text = inspection.Text,
                 AuditSchedule = inspection.AuditSchedule.ToResponse()

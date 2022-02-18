@@ -1,0 +1,25 @@
+﻿@using Super.Paula.Application.Administration.Exceptions
+
+@inject ITranslator Translator
+@inject IAuthenticationHandler AuthenticationHandler
+@inject NavigationManager NavigationManager   
+
+<a @attributes="AdditionalAttributes" @onclick="() => SignOutAsync()" href="#">
+    <span class="oi oi-account-logout" aria-hidden="true"/>@Title</a>
+
+@code {
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object>? AdditionalAttributes { get; set; }
+
+    public async Task SignOutAsync()
+    {
+        await AuthenticationHandler.SignOutAsync();
+        NavigationManager.NavigateTo("/", true);
+    }
+
+    public string Title => AdditionalAttributes?.ContainsKey("title") == true
+        ? $"{AdditionalAttributes["title"]}"
+        : string.Empty;
+
+}
