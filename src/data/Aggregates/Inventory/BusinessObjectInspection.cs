@@ -3,7 +3,6 @@
     public class BusinessObjectInspection
     {
         public bool Activated { get; set; } = false;
-        public bool ActivatedGlobally { get; set; } = false;
 
         public string UniqueName { get; set; } = string.Empty;
         public string DisplayName { get; set; } = string.Empty;

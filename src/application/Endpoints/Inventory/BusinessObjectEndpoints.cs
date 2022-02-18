@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Super.Paula.Application.Inventory.Requests;
 using System;
+using System.Threading;
 
 namespace Super.Paula.Application.Inventory
 {
@@ -33,10 +34,6 @@ namespace Super.Paula.Application.Inventory
                 "/business-objects",
                 ("/search", Search));
 
-            endpoints.MapQueries(
-                "/inspectors",
-                ("/{inspector}/business-objects", GetAllForInspector));
-
             return endpoints;
         }
 
@@ -47,8 +44,12 @@ namespace Super.Paula.Application.Inventory
 
         private static Delegate GetAll =>
             [Authorize("ManagementRead")]
-            (IBusinessObjectHandler handler)
-                => handler.GetAll();
+            (IBusinessObjectHandler handler,
+                [FromQuery(Name = "q")] string query,
+                [FromQuery(Name = "s")] int? skip,
+                [FromQuery(Name = "t")] int take,
+                CancellationToken cancellationToken)
+                => handler.GetAll(query, skip ?? 0, take, cancellationToken);
 
         private static Delegate Create =>
             [Authorize("ManagementFull")]
@@ -87,13 +88,9 @@ namespace Super.Paula.Application.Inventory
 
         private static Delegate Search =>
             [Authorize("ManagementRead")]
-            (IBusinessObjectHandler handler, [FromQuery(Name = "business-object")] string? businessObject, string? inspector)
-                => handler.Search(businessObject, inspector);
-
-        private static Delegate GetAllForInspector =>
-            [Authorize("AuditingRead")]
-            (IBusinessObjectHandler handler, string inspector)
-                => handler.GetAllForInspector(inspector);
+            (IBusinessObjectHandler handler,
+                [FromQuery(Name = "q")] string query)
+                => handler.SearchAsync(query);
 
         private static Delegate ChangeInspectionAudit =>
             [Authorize("AuditingFull")]

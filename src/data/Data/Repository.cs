@@ -4,6 +4,8 @@ using Super.Paula.Environment;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Super.Paula.Data
@@ -48,11 +50,29 @@ namespace Super.Paula.Data
                         .ToArray()!)
                 .AsNoTracking();
 
-        public IAsyncEnumerable<TEntity> GetAsyncEnumerable()
-            => GetQueryable().AsAsyncEnumerable();
+        public async IAsyncEnumerable<TEntity> GetAsyncEnumerable(
+            [EnumeratorCancellation] CancellationToken cancellationToken = default)
+        {
+            var enumerable = GetQueryable().AsAsyncEnumerable();
 
-        public IAsyncEnumerable<TResult> GetAsyncEnumerable<TResult>(Func<IQueryable<TEntity>, IQueryable<TResult>> query)
-            => query.Invoke(GetQueryable()).AsAsyncEnumerable();
+            await foreach (var entity in enumerable
+                .WithCancellation(cancellationToken))
+            {
+                yield return entity;
+            }
+        }
+
+        public async IAsyncEnumerable<TResult> GetAsyncEnumerable<TResult>(Func<IQueryable<TEntity>, IQueryable<TResult>> query,
+            [EnumeratorCancellation] CancellationToken cancellationToken = default)
+        {
+            var enumerable = query.Invoke(GetQueryable()).AsAsyncEnumerable();
+
+            await foreach (var entity in enumerable
+                .WithCancellation(cancellationToken))
+            {
+                yield return entity;
+            }
+        }
 
         public IQueryable<TEntity> GetPartitionQueryable(params object[] partitionKeyComponents)
         {

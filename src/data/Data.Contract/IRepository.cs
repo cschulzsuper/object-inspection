@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Super.Paula.Data
@@ -28,10 +29,12 @@ namespace Super.Paula.Data
         IQueryable<TEntity> GetQueryable(FormattableString query);
 
         [ErrorMessage("Could not query entity list")]
-        IAsyncEnumerable<TEntity> GetAsyncEnumerable();
+        IAsyncEnumerable<TEntity> GetAsyncEnumerable(
+            CancellationToken cancellationToken = default);
 
         [ErrorMessage("Could not query entity list")]
-        IAsyncEnumerable<TResult> GetAsyncEnumerable<TResult>(Func<IQueryable<TEntity>, IQueryable<TResult>> query);
+        IAsyncEnumerable<TResult> GetAsyncEnumerable<TResult>(Func<IQueryable<TEntity>, IQueryable<TResult>> query,
+            CancellationToken cancellationToken = default);
 
         [ErrorMessage("Could not query entity list")]
         IQueryable<TEntity> GetPartitionQueryable(params object[] partitionKeyComponents);

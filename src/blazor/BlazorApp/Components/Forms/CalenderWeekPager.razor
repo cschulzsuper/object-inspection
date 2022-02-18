@@ -1,0 +1,66 @@
+﻿<EditForm Model="@CalenderWeek">
+    <nav>
+        <ul class="pagination justify-content-center">
+            <li class="page-item @(CalenderWeek.Year < 1000 ? "disabled" : "")">
+                <button class="page-link" @onclick="DecrementCalenderWeekAsync">@PreviousText</button>
+            </li>
+            <li class="page-item">
+                <InputWeek class="page-link page-link-input-week" min="1000-W01" max="9999-W01"
+                    Value="@CalenderWeek" 
+                    ValueChanged="OnCalenderWeekChanged" 
+                    ValueExpression="() => CalenderWeek" ></InputWeek>
+            </li>
+            <li class="page-item @(CalenderWeek.Year > 9999 ? "disabled" : "")" >
+                <button class="page-link" @onclick="IncrementCalenderWeekAsync">@NextText</button>
+            </li>
+        </ul>
+    </nav>
+</EditForm>
+
+@code {
+
+    [Parameter]
+    public string PreviousText  { get; set; } = null!;
+
+    [Parameter]
+    public string NextText  { get; set; } = null!;
+
+    [Parameter]
+    public (int Year, int Week) CalenderWeek { get; set; }
+
+    [Parameter]
+    public EventCallback<(int Year, int Week)> CalenderWeekChanged { get; set; }
+
+    private async Task OnCalenderWeekChanged((int Year, int Week) calenderWeek)
+    {
+        CalenderWeek = calenderWeek;
+        await CalenderWeekChanged.InvokeAsync(CalenderWeek);
+    }
+
+    private async Task DecrementCalenderWeekAsync()
+    {
+        var date = ISOWeek.ToDateTime(CalenderWeek.Year, CalenderWeek.Week, DayOfWeek.Monday);
+
+        if (date > new DateTime(1000, 1, 1))
+        {
+            date = date.AddDays(-7);
+            CalenderWeek = (ISOWeek.GetYear(date),ISOWeek.GetWeekOfYear(date));
+
+            await CalenderWeekChanged.InvokeAsync(CalenderWeek);
+        }
+    }
+
+    private async Task IncrementCalenderWeekAsync()
+    {
+        var date = ISOWeek.ToDateTime(CalenderWeek.Year, CalenderWeek.Week, DayOfWeek.Monday);
+
+        if (date < new DateTime(9999,1,1))
+        {
+            date = date.AddDays(7);
+            CalenderWeek = (ISOWeek.GetYear(date),ISOWeek.GetWeekOfYear(date));
+
+            await CalenderWeekChanged.InvokeAsync(CalenderWeek);
+        }
+    }
+
+}

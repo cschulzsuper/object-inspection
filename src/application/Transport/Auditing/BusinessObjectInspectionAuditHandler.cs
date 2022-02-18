@@ -3,12 +3,21 @@ using Super.Paula.Application.Auditing.Responses;
 using Super.Paula.Application.Inventory.Events;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Super.Paula.Application.Auditing
 {
     public class BusinessObjectInspectionAuditHandler : IBusinessObjectInspectionAuditHandler, IBusinessObjectInspectionAuditEventHandler
     {
+        private const string SearchTermKeyFreeText = "";
+        private const string SearchTermKeyBusinessObject = "business-object";
+        private const string SearchTermKeyInspector = "inspector";
+        private const string SearchTermKeyInspection = "inspection";
+        private const string SearchTermKeyResult = "result";
+        private const string SearchTermKeyFrom = "from";
+        private const string SearchTermKeyTo = "to";
+
         private readonly IBusinessObjectInspectionAuditManager _businessObjectInspectionAuditManager;
 
         public BusinessObjectInspectionAuditHandler(IBusinessObjectInspectionAuditManager businessObjectInspectionAuditManager)
@@ -34,9 +43,11 @@ namespace Super.Paula.Application.Auditing
             };
         }
 
-        public IAsyncEnumerable<BusinessObjectInspectionAuditResponse> GetAll()
+        public IAsyncEnumerable<BusinessObjectInspectionAuditResponse> GetAll(string query, int skip, int take, CancellationToken cancellationToken = default)
             => _businessObjectInspectionAuditManager
-                .GetAsyncEnumerable(query => query
+                .GetAsyncEnumerable(queryable => WhereSearchQuery(queryable, query)
+                    .Skip(skip)
+                    .Take(take)
                     .Select(entity => new BusinessObjectInspectionAuditResponse
                     {
                         Annotation = entity.Annotation,
@@ -48,13 +59,14 @@ namespace Super.Paula.Application.Auditing
                         InspectionDisplayName = entity.InspectionDisplayName,
                         Inspector = entity.Inspector,
                         Result = entity.Result
-                    }));
+                    }), cancellationToken);
 
-        public IAsyncEnumerable<BusinessObjectInspectionAuditResponse> GetAllForBusinessObject(string businessObject)
+        public IAsyncEnumerable<BusinessObjectInspectionAuditResponse> GetAllForBusinessObject(string businessObject, int skip, int take)
             => _businessObjectInspectionAuditManager
                 .GetAsyncEnumerable(query => query
-                    .Where(entity => 
-                        entity.BusinessObject == businessObject)
+                    .Where(x => x.BusinessObject == businessObject)
+                    .Skip(skip)
+                    .Take(take)
                     .Select(entity => new BusinessObjectInspectionAuditResponse
                     {
                         Annotation = entity.Annotation,
@@ -123,60 +135,60 @@ namespace Super.Paula.Application.Auditing
             await _businessObjectInspectionAuditManager.DeleteAsync(entity);
         }
 
-        public IAsyncEnumerable<BusinessObjectInspectionAuditResponse> Search(string? businessObject, string? inspector, string? inspection)
+        public async ValueTask<SearchBusinessObjectInspectionAuditResponse> SearchAsync(string query)
         {
-            var doBusinessObjectSearch = businessObject?.Length > 3;
-            var doInspectorSearch = inspector?.Length > 3;
-            var doInspectionSearch = inspection?.Length > 3;
+            await ValueTask.CompletedTask;
 
-            return _businessObjectInspectionAuditManager
-                .GetAsyncEnumerable(query => query
-                    .Where(x => !doBusinessObjectSearch ||
-                        (x.BusinessObject.Contains(businessObject!) || x.BusinessObjectDisplayName.Contains(businessObject!)))
-                    .Where(x => !doInspectionSearch ||
-                        (x.Inspection.Contains(inspection!) || x.InspectionDisplayName.Contains(inspection!)))
-                    .Where(x => !doInspectorSearch ||
-                        (x.Inspector.Contains(inspector!)))
-                    .Select(entity => new BusinessObjectInspectionAuditResponse
-                    {
-                        Annotation = entity.Annotation,
-                        AuditDate = entity.AuditDate,
-                        AuditTime = entity.AuditTime,
-                        BusinessObject = entity.BusinessObject,
-                        BusinessObjectDisplayName = entity.BusinessObjectDisplayName,
-                        Inspection = entity.Inspection,
-                        InspectionDisplayName = entity.InspectionDisplayName,
-                        Inspector = entity.Inspector,
-                        Result = entity.Result
-                    }));
+            var queryable = _businessObjectInspectionAuditManager.GetQueryable();
+            queryable = WhereSearchQuery(queryable, query);
+                
+            var topResult = queryable.Take(50)
+                .Select(entity => new BusinessObjectInspectionAuditResponse
+                {
+                    Annotation = entity.Annotation,
+                    AuditDate = entity.AuditDate,
+                    AuditTime = entity.AuditTime,
+                    BusinessObject = entity.BusinessObject,
+                    BusinessObjectDisplayName = entity.BusinessObjectDisplayName,
+                    Inspection = entity.Inspection,
+                    InspectionDisplayName = entity.InspectionDisplayName,
+                    Inspector = entity.Inspector,
+                    Result = entity.Result
+                })
+                .ToHashSet();
 
+            return new SearchBusinessObjectInspectionAuditResponse
+            {
+                TotalCount = queryable.Count(),
+                TopResults = topResult
+            };
         }
 
-        public IAsyncEnumerable<BusinessObjectInspectionAuditResponse> SearchForBusinessObject(string businessObject, string? inspector, string? inspection)
+        private static IQueryable<BusinessObjectInspectionAudit> WhereSearchQuery(IQueryable<BusinessObjectInspectionAudit> query, string searchQuery)
         {
-            var doInspectorSearch = inspector?.Length > 3;
-            var doInspectionSearch = inspection?.Length > 3;
+            var searchTerms = SearchQueryParser.Parse(searchQuery);
+            var businessObjects = searchTerms.GetValidSearchTermValues<string>(SearchTermKeyBusinessObject);
+            var inspections = searchTerms.GetValidSearchTermValues<string>(SearchTermKeyInspection);
+            var inspectors = searchTerms.GetValidSearchTermValues<string>(SearchTermKeyInspector);
+            var results = searchTerms.GetValidSearchTermValues<string>(SearchTermKeyResult);
+            var from = searchTerms.GetValidSearchTermValues<int>(SearchTermKeyFrom).DefaultIfEmpty(default).Max();
+            var to = searchTerms.GetValidSearchTermValues<int>(SearchTermKeyTo).DefaultIfEmpty(default).Max();
+            var freeTexts = searchTerms.GetValidSearchTermValues<string>(SearchTermKeyFreeText).Where(x => x.Length > 3).ToArray();
 
-            return _businessObjectInspectionAuditManager
-                  .GetAsyncEnumerable(query => query
-                      .Where(entity =>
-                          entity.BusinessObject == businessObject)
-                      .Where(x => !doInspectionSearch ||
-                          (x.Inspection.Contains(inspection!) || x.InspectionDisplayName.Contains(inspection!)))
-                      .Where(x => !doInspectorSearch ||
-                          (x.Inspector.Contains(inspector!)))
-                      .Select(entity => new BusinessObjectInspectionAuditResponse
-                      {
-                          Annotation = entity.Annotation,
-                          AuditDate = entity.AuditDate,
-                          AuditTime = entity.AuditTime,
-                          BusinessObject = entity.BusinessObject,
-                          BusinessObjectDisplayName = entity.BusinessObjectDisplayName,
-                          Inspection = entity.Inspection,
-                          InspectionDisplayName = entity.InspectionDisplayName,
-                          Inspector = entity.Inspector,
-                          Result = entity.Result
-                      }));
+            query = query
+                 .Where(x => !businessObjects.Any() || businessObjects.Contains(x.BusinessObject))
+                 .Where(x => !inspections.Any() || inspections.Contains(x.Inspection))
+                 .Where(x => !inspectors.Any() || inspectors.Contains(x.Inspector))
+                 .Where(x => !results.Any() || results.Contains(x.Result))
+                 .Where(x => from == default || x.AuditDate >= from)
+                 .Where(x => to == default || x.AuditDate <= to);
+
+            foreach (var freeText in freeTexts)
+            {
+                query = query.Where(x => x.BusinessObjectDisplayName.Contains(freeText) || x.InspectionDisplayName.Contains(freeText));
+            }
+
+            return query.OrderByDescending(x => x.AuditDate);
         }
 
         public async ValueTask ProcessAsync(string businessObject, BusinessObjectEvent @event)

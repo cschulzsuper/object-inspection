@@ -3,6 +3,7 @@ using Super.Paula.Validation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Super.Paula.Application.Auditing
@@ -38,11 +39,15 @@ namespace Super.Paula.Application.Auditing
         public IQueryable<BusinessObjectInspectionAudit> GetQueryable()
             => _businessObjectInspectionAuditRepository.GetQueryable();
 
-        public IAsyncEnumerable<BusinessObjectInspectionAudit> GetAsyncEnumerable()
-            => _businessObjectInspectionAuditRepository.GetAsyncEnumerable();
+        public IAsyncEnumerable<BusinessObjectInspectionAudit> GetAsyncEnumerable(
+            CancellationToken cancellationToken = default)
 
-        public IAsyncEnumerable<TResult> GetAsyncEnumerable<TResult>(Func<IQueryable<BusinessObjectInspectionAudit>, IQueryable<TResult>> query)
-            => _businessObjectInspectionAuditRepository.GetAsyncEnumerable(query);
+            => _businessObjectInspectionAuditRepository.GetAsyncEnumerable(cancellationToken);
+
+        public IAsyncEnumerable<TResult> GetAsyncEnumerable<TResult>(Func<IQueryable<BusinessObjectInspectionAudit>, IQueryable<TResult>> query,
+            CancellationToken cancellationToken = default)
+
+            => _businessObjectInspectionAuditRepository.GetAsyncEnumerable(query, cancellationToken);
 
         public IQueryable<BusinessObjectInspectionAudit> GetDateBasedQueryable(int date)
         {

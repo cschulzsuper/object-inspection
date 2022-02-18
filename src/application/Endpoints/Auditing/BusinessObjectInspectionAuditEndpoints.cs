@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
@@ -24,10 +25,6 @@ namespace Super.Paula.Application.Auditing
                 ("", GetAll),
                 ("/search", Search));
 
-            endpoints.MapQueries(
-                "/business-objects",
-                ("/{businessObject}/inspection-audits/search", SearchForBusinessObject));
-
             return endpoints;
         }
 
@@ -38,13 +35,20 @@ namespace Super.Paula.Application.Auditing
 
         private static Delegate GetAll =>
             [Authorize("AuditingRead")]
-            (IBusinessObjectInspectionAuditHandler handler)
-                => handler.GetAll();
+            (IBusinessObjectInspectionAuditHandler handler, 
+                [FromQuery(Name = "q")] string query, 
+                [FromQuery(Name = "s")] int? skip,
+                [FromQuery(Name = "t")] int take, 
+                CancellationToken cancellationToken)
+                => handler.GetAll(query, skip ?? 0, take, cancellationToken);
 
         private static Delegate GetAllForBusinessObject =>
             [Authorize("AuditingRead")]
-            (IBusinessObjectInspectionAuditHandler handler, string businessObject)
-                => handler.GetAllForBusinessObject(businessObject);
+            (IBusinessObjectInspectionAuditHandler handler, 
+                string businessObject,                 
+                [FromQuery(Name = "s")] int? skip,
+                [FromQuery(Name = "t")] int take)
+                => handler.GetAllForBusinessObject(businessObject, skip ?? 0, take);
 
         private static Delegate Create =>
             [Authorize("AuditingFull")]
@@ -63,13 +67,8 @@ namespace Super.Paula.Application.Auditing
 
         private static Delegate Search =>
             [Authorize("AuditingRead")]
-            (IBusinessObjectInspectionAuditHandler handler, [FromQuery(Name = "business-object") ]string? businessObject, string? inspector, string? inspection)
-                => handler.Search(businessObject,inspector,inspection);
-
-        private static Delegate SearchForBusinessObject =>
-            [Authorize("AuditingRead")]
-            (IBusinessObjectInspectionAuditHandler handler, string businessObject, string? inspector, string? inspection)
-                => handler.SearchForBusinessObject(businessObject, inspector, inspection);
-
+            (IBusinessObjectInspectionAuditHandler handler, 
+                [FromQuery(Name = "q")] string query)
+                => handler.SearchAsync(query);
     }
 }

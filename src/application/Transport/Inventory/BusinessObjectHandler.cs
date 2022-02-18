@@ -9,11 +9,16 @@ using System.Threading.Tasks;
 using Super.Paula.Application.Guidelines.Events;
 using Super.Paula.Application.Inventory.Events;
 using Super.Paula.Application.Administration.Responses;
+using System.Threading;
 
 namespace Super.Paula.Application.Inventory
 {
     public class BusinessObjectHandler : IBusinessObjectHandler, IBusinessObjectEventHandler
     {
+        private const string SearchTermKeyFreeText = "";
+        private const string SearchTermKeyBusinessObject = "business-object";
+        private const string SearchTermKeyInspector = "inspector";
+
         private readonly IBusinessObjectManager _businessObjectManager;
         private readonly IInspectionProvider _inspectionProvider;
         private readonly AppState _appState;
@@ -47,16 +52,18 @@ namespace Super.Paula.Application.Inventory
             };
         }
 
-        public IAsyncEnumerable<BusinessObjectResponse> GetAll()
+        public IAsyncEnumerable<BusinessObjectResponse> GetAll(string query, int skip, int take, CancellationToken cancellationToken = default)
             => _businessObjectManager
-                .GetAsyncEnumerable(query => query
-                .Select(entity => new BusinessObjectResponse
-                {
-                    Inspections = entity.Inspections.ToResponse(),
-                    Inspector = entity.Inspector,
-                    DisplayName = entity.DisplayName,
-                    UniqueName = entity.UniqueName
-                }));
+                .GetAsyncEnumerable(queryable => WhereSearchQuery(queryable, query)
+                    .Skip(skip)
+                    .Take(take)
+                    .Select(entity => new BusinessObjectResponse
+                    {
+                        Inspections = entity.Inspections.ToResponse(),
+                        Inspector = entity.Inspector,
+                        DisplayName = entity.DisplayName,
+                        UniqueName = entity.UniqueName
+                    }));
 
         public async ValueTask<BusinessObjectResponse> CreateAsync(BusinessObjectRequest request)
         {
@@ -169,8 +176,7 @@ namespace Super.Paula.Application.Inventory
 
             entity.Inspections.Add(new BusinessObjectInspection
             {
-                Activated = true,
-                ActivatedGlobally = inspection.Activated,
+                Activated = inspection.Activated,
 
                 UniqueName = inspection.UniqueName,
                 DisplayName = inspection.DisplayName,
@@ -267,39 +273,48 @@ namespace Super.Paula.Application.Inventory
             await PublishBusinessObjectInspectionAuditAsync(entity, businessObjectInspection);
         }
 
-        public IAsyncEnumerable<BusinessObjectResponse> Search(string? businessObject, string? inspector)
+        public async ValueTask<SearchBusinessObjectResponse> SearchAsync(string query)
         {
-            var doBusinessObjectSearch = businessObject?.Length > 3;
-            var doInspectorSearch = inspector?.Length > 3;
+            await ValueTask.CompletedTask;
 
-            return _businessObjectManager
-                .GetAsyncEnumerable(query => query
+            var queryable = _businessObjectManager.GetQueryable();
+            queryable = WhereSearchQuery(queryable, query);
 
-                    .Where(x => !doBusinessObjectSearch || 
-                        (x.UniqueName.Contains(businessObject!) || x.DisplayName.Contains(businessObject!)))
-                    .Where(x => !doInspectorSearch || 
-                        (x.Inspector.Contains(inspector!)))
-
-                    .Select(entity => new BusinessObjectResponse
-                    {
-                        Inspections = entity.Inspections.ToResponse(),
-                        Inspector = entity.Inspector,
-                        DisplayName = entity.DisplayName,
-                        UniqueName = entity.UniqueName
-                    }));
-        }
-
-        public IAsyncEnumerable<BusinessObjectResponse> GetAllForInspector(string inspector)
-            => _businessObjectManager
-                .GetAsyncEnumerable(query => query
-                .Where(x => x.Inspector == inspector)
+            var topResult = queryable.Take(50)
                 .Select(entity => new BusinessObjectResponse
                 {
                     Inspections = entity.Inspections.ToResponse(),
                     Inspector = entity.Inspector,
                     DisplayName = entity.DisplayName,
                     UniqueName = entity.UniqueName
-                }));
+                })
+                .ToHashSet();
+
+            return new SearchBusinessObjectResponse
+            {
+                TotalCount = queryable.Count(),
+                TopResults = topResult
+            };
+        }
+
+        private static IQueryable<BusinessObject> WhereSearchQuery(IQueryable<BusinessObject> query, string searchQuery)
+        {
+            var searchTerms = SearchQueryParser.Parse(searchQuery);
+            var businessObjects = searchTerms.GetValidSearchTermValues<string>(SearchTermKeyBusinessObject);
+            var inspectors = searchTerms.GetValidSearchTermValues<string>(SearchTermKeyInspector);
+            var freeTexts = searchTerms.GetValidSearchTermValues<string>(SearchTermKeyFreeText).Where(x => x.Length > 3).ToArray();
+
+            query = query
+                 .Where(x => !businessObjects.Any() || businessObjects.Contains(x.UniqueName))
+                 .Where(x => !inspectors.Any() || inspectors.Contains(x.Inspector));
+
+            foreach (var freeText in freeTexts)
+            {
+                query = query.Where(x => x.DisplayName.Contains(freeText));
+            }
+
+            return query.OrderByDescending(x => x.UniqueName);
+        }
 
         public async ValueTask ProcessAsync(string inspection, InspectionEvent @event)
         {
@@ -314,7 +329,7 @@ namespace Super.Paula.Application.Inventory
                     {
                         businessObjectInspection.DisplayName = @event.DisplayName ?? businessObjectInspection.DisplayName;
                         businessObjectInspection.Text = @event.Text ?? businessObjectInspection.Text;
-                        businessObjectInspection.ActivatedGlobally = @event.Activated ?? businessObjectInspection.ActivatedGlobally;
+                        businessObjectInspection.Activated = @event.Activated ?? businessObjectInspection.Activated;
                     }
                 }
 

@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
+using Super.Paula.Application.Administration.Exceptions;
 using Super.Paula.Application.Administration.Requests;
 using Super.Paula.Application.Administration.Responses;
 using Super.Paula.Application.Runtime;
@@ -100,13 +101,20 @@ namespace Super.Paula.Application.Administration
 
         public async ValueTask SignOutAsync()
         {
-            var inspector = _identityManager.GetQueryable()
-                .Single(x => x.UniqueName == _principal.GetIdentity());
+            try
+            {
+                var inspector = _identityManager
+                    .GetQueryable()
+                    .Single(x => x.UniqueName == _principal.GetIdentity());
 
-            _connectionManager.Forget(
-                inspector.UniqueName);
+                _connectionManager.Forget(inspector.UniqueName);
 
-            await Task.CompletedTask;
+                await Task.CompletedTask;
+            } 
+            catch(Exception exception)
+            {
+                throw new SignOutException($"Could not sign out", exception);
+            }
         }
     }
 }
