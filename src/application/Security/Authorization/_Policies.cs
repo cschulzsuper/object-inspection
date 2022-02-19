@@ -62,6 +62,6 @@ namespace Super.Paula.Authorization
                 .AddRequirements(new IdentityClaimResourceRequirement("Maintainer"))
                 .Build();
 
-        
+
     }
 }

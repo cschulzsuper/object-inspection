@@ -27,7 +27,7 @@ namespace Super.Paula.Client.Storage
         public async ValueTask<T?> GetItemAsync<T>(string key, CancellationToken? cancellationToken = null)
         {
             var result = await _protectedLocalStorage.GetAsync<string>("secret", key);
-            
+
             var deserializedResult = result.Value != null
                 ? JsonSerializer.Deserialize<T>(result.Value)
                 : default;

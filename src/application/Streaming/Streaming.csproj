@@ -13,6 +13,7 @@
   
   <ItemGroup>
     <ProjectReference Include="..\Environment\Environment.csproj" />
+    <ProjectReference Include="..\Security.Contract\Security.Contract.csproj" />
     <ProjectReference Include="..\Streaming.Contract\Streaming.Contract.csproj" />
   </ItemGroup>
 

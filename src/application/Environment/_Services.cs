@@ -1,16 +1,13 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Super.Paula.Environment;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Super.Paula
 {
     [SuppressMessage("Style", "IDE1006")]
     public static class _Services
     {
-        public static IServiceCollection AddPaulaAppState(this IServiceCollection services)
-            => services.AddScoped<AppState>();
-
         public static IServiceCollection AddPaulaAppEnvironment(this IServiceCollection services, bool isDevelopment)
             => services.AddSingleton(_ =>
                 new AppEnvironment

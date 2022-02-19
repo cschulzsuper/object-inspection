@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.ValueGeneration;
 using Super.Paula.Application.Administration;
-using Super.Paula.Environment;
 using System.Collections.Generic;
 
 namespace Super.Paula.Data.Mappings.Administration
@@ -12,13 +11,13 @@ namespace Super.Paula.Data.Mappings.Administration
 
         public override string Next(EntityEntry entry)
             => Value(
-                (entry.Context as PaulaContext)!.AppState,
+                (entry.Context as PaulaContext)!.State,
                 (entry.Entity as IdentityInspector)!);
 
-        public string Value(AppState appState, IdentityInspector entity)
+        public string Value(PaulaContextState state, IdentityInspector entity)
             => entity.UniqueName;
 
-        public string Value(AppState appState, Queue<object> partitionKeyComponents)
+        public string Value(PaulaContextState state, Queue<object> partitionKeyComponents)
         {
             var identity = partitionKeyComponents.Dequeue();
             return $"{identity}";

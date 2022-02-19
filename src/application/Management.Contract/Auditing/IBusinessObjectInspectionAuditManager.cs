@@ -17,7 +17,7 @@ namespace Super.Paula.Application.Auditing
         IAsyncEnumerable<BusinessObjectInspectionAudit> GetAsyncEnumerable(
             CancellationToken cancellationToken = default);
 
-        IAsyncEnumerable<TResult> GetAsyncEnumerable<TResult>(Func<IQueryable<BusinessObjectInspectionAudit>, IQueryable<TResult>> query, 
+        IAsyncEnumerable<TResult> GetAsyncEnumerable<TResult>(Func<IQueryable<BusinessObjectInspectionAudit>, IQueryable<TResult>> query,
             CancellationToken cancellationToken = default);
 
         IQueryable<BusinessObjectInspectionAudit> GetDateBasedQueryable(int date);

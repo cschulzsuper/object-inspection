@@ -1,4 +1,9 @@
-﻿using System;
+﻿using Super.Paula.Application.Auditing;
+using Super.Paula.Application.Auditing.Requests;
+using Super.Paula.Application.Auditing.Responses;
+using Super.Paula.Client.ErrorHandling;
+using Super.Paula.Environment;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -7,11 +12,6 @@ using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using Super.Paula.Application.Auditing;
-using Super.Paula.Application.Auditing.Requests;
-using Super.Paula.Application.Auditing.Responses;
-using Super.Paula.Client.ErrorHandling;
-using Super.Paula.Environment;
 
 namespace Super.Paula.Client.Auditing
 {
@@ -30,7 +30,7 @@ namespace Super.Paula.Client.Auditing
         public async ValueTask<BusinessObjectInspectionAuditResponse> CreateAsync(string businessObject, BusinessObjectInspectionAuditRequest request)
         {
             var responseMessage = await _httpClient.PostAsJsonAsync($"business-objects/{businessObject}/inspection-audits", request);
-            
+
             responseMessage.RuleOutProblems();
             responseMessage.EnsureSuccessStatusCode();
 
@@ -40,7 +40,7 @@ namespace Super.Paula.Client.Auditing
         public async ValueTask DeleteAsync(string businessObject, string inspection, int date, int time)
         {
             var responseMessage = await _httpClient.DeleteAsync($"business-objects/{businessObject}/inspection-audits/{inspection}/{date}/{time}");
-            
+
             responseMessage.RuleOutProblems();
             responseMessage.EnsureSuccessStatusCode();
         }
@@ -49,7 +49,7 @@ namespace Super.Paula.Client.Auditing
             [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             var responseMessage = await _httpClient.GetAsync($"inspection-audits?q={query}&s={skip}&t={take}", cancellationToken);
-            
+
             responseMessage.RuleOutProblems();
             responseMessage.EnsureSuccessStatusCode();
 
@@ -59,7 +59,7 @@ namespace Super.Paula.Client.Auditing
                 new JsonSerializerOptions(JsonSerializerDefaults.Web)
                 {
                     DefaultBufferSize = 128
-                }, 
+                },
                 cancellationToken);
 
             await foreach (var responseItem in response
@@ -93,7 +93,7 @@ namespace Super.Paula.Client.Auditing
         public async ValueTask<SearchBusinessObjectInspectionAuditResponse> SearchAsync(string query)
         {
             var responseMessage = await _httpClient.GetAsync($"inspection-audits/search?q={query}");
-            
+
             responseMessage.RuleOutProblems();
             responseMessage.EnsureSuccessStatusCode();
 
@@ -103,7 +103,7 @@ namespace Super.Paula.Client.Auditing
         public async ValueTask<BusinessObjectInspectionAuditResponse> GetAsync(string businessObject, string inspection, int date, int time)
         {
             var responseMessage = await _httpClient.GetAsync($"business-objects/{businessObject}/inspection-audits/{inspection}/{date}/{time}");
-            
+
             responseMessage.RuleOutProblems();
             responseMessage.EnsureSuccessStatusCode();
 
@@ -113,7 +113,7 @@ namespace Super.Paula.Client.Auditing
         public async ValueTask ReplaceAsync(string businessObject, string inspection, int date, int time, BusinessObjectInspectionAuditRequest request)
         {
             var responseMessage = await _httpClient.PostAsJsonAsync($"business-objects/{businessObject}/inspection-audits/{inspection}/{date}/{time}", request);
-            
+
             responseMessage.RuleOutProblems();
             responseMessage.EnsureSuccessStatusCode();
         }

@@ -1,6 +1,4 @@
-﻿
-using Super.Paula.Application;
-using Super.Paula.Authorization;
+﻿using Super.Paula.Authorization;
 using Super.Paula.Client.Storage;
 using System.Net.Http;
 using System.Net.Http.Headers;

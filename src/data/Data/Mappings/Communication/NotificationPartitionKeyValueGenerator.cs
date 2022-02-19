@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.ValueGeneration;
 using Super.Paula.Application.Communication;
-using Super.Paula.Environment;
 using System.Collections.Generic;
 
 namespace Super.Paula.Data.Mappings.Communication
@@ -12,20 +11,20 @@ namespace Super.Paula.Data.Mappings.Communication
 
         public override string Next(EntityEntry entry)
             => Value(
-                (entry.Context as PaulaContext)!.AppState,
+                (entry.Context as PaulaContext)!.State,
                 (entry.Entity as Notification)!);
 
-        public string Value(AppState appState, Notification entity)
+        public string Value(PaulaContextState state, Notification entity)
         {
-            var organization = appState.CurrentOrganization;
+            var organization = state.CurrentOrganization;
             var inspector = entity.Inspector;
 
             return $"{organization}/{inspector}";
         }
 
-        public string Value(AppState appState, Queue<object> partitionKeyComponents)
+        public string Value(PaulaContextState state, Queue<object> partitionKeyComponents)
         {
-            var organization = appState.CurrentOrganization;
+            var organization = state.CurrentOrganization;
             var inspector = partitionKeyComponents.Dequeue();
 
             return $"{organization}/{inspector}";

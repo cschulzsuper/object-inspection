@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.ValueGeneration;
 using Super.Paula.Application.Inventory;
-using Super.Paula.Environment;
 using System.Collections.Generic;
 
 namespace Super.Paula.Data.Mappings.Inventory
@@ -12,19 +11,19 @@ namespace Super.Paula.Data.Mappings.Inventory
 
         public override string Next(EntityEntry entry)
             => Value(
-                (entry.Context as PaulaContext)!.AppState,
+                (entry.Context as PaulaContext)!.State,
                 (entry.Entity as BusinessObject)!);
 
-        public string Value(AppState appState, BusinessObject entity)
-            => appState.IgnoreCurrentOrganization
+        public string Value(PaulaContextState state, BusinessObject entity)
+            => state.IgnoreCurrentOrganization
                 ? string.Empty
-                : appState.CurrentOrganization;
+                : state.CurrentOrganization;
 
 
-        public string Value(AppState appState, Queue<object> partitionKeyComponents)
-            => appState.IgnoreCurrentOrganization
+        public string Value(PaulaContextState state, Queue<object> partitionKeyComponents)
+            => state.IgnoreCurrentOrganization
                 ? string.Empty
-                : appState.CurrentOrganization;
+                : state.CurrentOrganization;
 
     }
 }

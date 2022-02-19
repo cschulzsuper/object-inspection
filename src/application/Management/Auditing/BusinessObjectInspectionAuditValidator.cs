@@ -1,5 +1,5 @@
-﻿using System;
-using Super.Paula.Validation;
+﻿using Super.Paula.Validation;
+using System;
 
 namespace Super.Paula.Application.Auditing
 {
@@ -32,7 +32,7 @@ namespace Super.Paula.Application.Auditing
         public static (bool, Func<(string, FormattableString)>) BusinessObjectIsNotTooLong(string businessObject)
             => (string.IsNullOrWhiteSpace(businessObject) || businessObject.Length <= 140,
                 () => (nameof(businessObject), $"Business object '{businessObject}' can not have more than 140 characters"));
-        
+
         public static (bool, Func<(string, FormattableString)>) BusinessObjectHasValidValue(string businessObject)
             => (string.IsNullOrWhiteSpace(businessObject) || UniqueNameValidator.IsValid(businessObject),
                 () => (nameof(businessObject), $"Business object '{businessObject}' has an invalid value"));

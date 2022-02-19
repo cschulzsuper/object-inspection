@@ -1,5 +1,5 @@
-﻿using System;
-using Super.Paula.Validation;
+﻿using Super.Paula.Validation;
+using System;
 
 namespace Super.Paula.Application.Inventory
 {
@@ -42,16 +42,16 @@ namespace Super.Paula.Application.Inventory
                 () => (nameof(auditInspector), $"Audit inspector '{auditInspector}' of inspection can not be null"));
 
         public static (bool, Func<(string, FormattableString)>) AuditInspectorHasKebabCase(string auditInspector)
-            => (auditInspector == null || KebabCaseValidator.IsValid(auditInspector),
+            => (string.IsNullOrWhiteSpace(auditInspector) || KebabCaseValidator.IsValid(auditInspector),
                 () => (nameof(auditInspector), $"Audit inspector '{auditInspector}' of inspection must have kebab case"));
 
         public static (bool, Func<(string, FormattableString)>) AuditInspectorIsNotTooLong(string auditInspector)
-            => (auditInspector == null || auditInspector.Length <= 140,
+            => (string.IsNullOrWhiteSpace(auditInspector) || auditInspector.Length <= 140,
                 () => (nameof(auditInspector), $"Audit inspector '{auditInspector}' of inspection can not have more than 140 characters"));
 
         public static (bool, Func<(string, FormattableString)>) AuditInspectorHasValidValue(string auditInspector)
-            => (auditInspector == null || UniqueNameValidator.IsValid(auditInspector),
-                () => (nameof(auditInspector), $"Audit inspector '{auditInspector} of inspection' has an invalid value"));
+            => (string.IsNullOrWhiteSpace(auditInspector) || UniqueNameValidator.IsValid(auditInspector),
+                () => (nameof(auditInspector), $"Audit inspector '{auditInspector}' of inspection has an invalid value"));
 
         public static (bool, Func<(string, FormattableString)>) AuditAnnotationIsNotNull(string auditAnnotation)
             => (auditAnnotation != null,

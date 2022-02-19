@@ -1,9 +1,8 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components.Rendering;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 
 namespace Super.Paula.Client.Components.Forms
 {
@@ -65,7 +64,7 @@ namespace Super.Paula.Client.Components.Forms
             if (!yearIsValid || !weekIsValid)
             {
                 validationErrorMessage = string.Format(CultureInfo.InvariantCulture, _parsingErrorMessage, DisplayName ?? FieldIdentifier.FieldName);
-                result = (0,0);
+                result = (0, 0);
                 return false;
             }
 

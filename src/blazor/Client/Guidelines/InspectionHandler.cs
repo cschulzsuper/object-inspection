@@ -1,14 +1,14 @@
-﻿using System;
+﻿using Super.Paula.Application.Guidelines;
+using Super.Paula.Application.Guidelines.Requests;
+using Super.Paula.Application.Guidelines.Responses;
+using Super.Paula.Client.ErrorHandling;
+using Super.Paula.Environment;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Super.Paula.Application.Guidelines;
-using Super.Paula.Application.Guidelines.Requests;
-using Super.Paula.Application.Guidelines.Responses;
-using Super.Paula.Client.ErrorHandling;
-using Super.Paula.Environment;
 
 namespace Super.Paula.Client.Guidelines
 {
@@ -28,7 +28,7 @@ namespace Super.Paula.Client.Guidelines
         public async ValueTask ActivateAsync(string inspection)
         {
             var responseMessage = await _httpClient.PostAsync($"inspections/{inspection}/activate", null);
-            
+
             responseMessage.RuleOutProblems();
             responseMessage.EnsureSuccessStatusCode();
         }
@@ -36,7 +36,7 @@ namespace Super.Paula.Client.Guidelines
         public async ValueTask<InspectionResponse> CreateAsync(InspectionRequest request)
         {
             var responseMessage = await _httpClient.PostAsJsonAsync("inspections", request);
-            
+
             responseMessage.RuleOutProblems();
             responseMessage.EnsureSuccessStatusCode();
 
@@ -46,7 +46,7 @@ namespace Super.Paula.Client.Guidelines
         public async ValueTask DeactivateAsync(string inspection)
         {
             var responseMessage = await _httpClient.PostAsync($"inspections/{inspection}/deactivate", null);
-            
+
             responseMessage.RuleOutProblems();
             responseMessage.EnsureSuccessStatusCode();
         }
@@ -54,7 +54,7 @@ namespace Super.Paula.Client.Guidelines
         public async ValueTask DeleteAsync(string inspection)
         {
             var responseMessage = await _httpClient.DeleteAsync($"inspections/{inspection}");
-            
+
             responseMessage.RuleOutProblems();
             responseMessage.EnsureSuccessStatusCode();
         }
@@ -62,7 +62,7 @@ namespace Super.Paula.Client.Guidelines
         public async IAsyncEnumerable<InspectionResponse> GetAll()
         {
             var responseMessage = await _httpClient.GetAsync("inspections");
-            
+
             responseMessage.RuleOutProblems();
             responseMessage.EnsureSuccessStatusCode();
 
@@ -83,7 +83,7 @@ namespace Super.Paula.Client.Guidelines
         public async ValueTask<InspectionResponse> GetAsync(string inspection)
         {
             var responseMessage = await _httpClient.GetAsync($"inspections/{inspection}");
-            
+
             responseMessage.RuleOutProblems();
             responseMessage.EnsureSuccessStatusCode();
 
@@ -93,7 +93,7 @@ namespace Super.Paula.Client.Guidelines
         public async ValueTask ReplaceAsync(string inspection, InspectionRequest request)
         {
             var responseMessage = await _httpClient.PutAsJsonAsync($"inspections/{inspection}", request);
-            
+
             responseMessage.RuleOutProblems();
             responseMessage.EnsureSuccessStatusCode();
         }

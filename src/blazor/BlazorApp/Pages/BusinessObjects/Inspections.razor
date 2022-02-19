@@ -13,16 +13,16 @@
 
 <AuthorizeView Policy="ManagementRead">
     <Authorized>
-        <div class="container-fluid m-2 d-lg-none">
+        <div class="container-fluid m-2">
             <button class="btn @(_mode == Mode.AssignmentMode ? "btn-primary" : "btn-outline-secondary")"
                     title="@Translator["Assigment mode"]"
                     @onclick="ToggleAssignmentMode"><span class="oi oi-list"/></button>
 
-            <button class="btn @(_mode == Mode.DropMode ? "btn-primary" : "btn-outline-secondary")"
+            <button class="d-lg-none btn @(_mode == Mode.DropMode ? "btn-primary" : "btn-outline-secondary")"
                     title="@Translator["Drop mode"]"
                     @onclick="ToggleDropMode"><span class="oi oi-media-skip-forward"/></button>
 
-            <button class="btn @(_mode == Mode.ScheduleMode ? "btn-primary" : "btn-outline-secondary")" 
+            <button class=" d-lg-none btn @(_mode == Mode.ScheduleMode ? "btn-primary" : "btn-outline-secondary")" 
                     title="@Translator["Schedule mode"]"
                     @onclick="ToggleScheduleMode"><span class="oi oi-clock"/></button>
         </div>
@@ -103,6 +103,7 @@ else
 
     public enum Mode
     {
+        None,
         AssignmentMode,
         ScheduleMode,
         DropMode

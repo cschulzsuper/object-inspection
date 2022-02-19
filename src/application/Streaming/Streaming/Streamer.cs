@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using Super.Paula.Application.Administration.Responses;
 using Super.Paula.Application.Communication.Responses;
-using Super.Paula.Environment;
+using Super.Paula.Authorization;
 using System;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Super.Paula.Application.Streaming
@@ -10,15 +11,15 @@ namespace Super.Paula.Application.Streaming
     public sealed class Streamer : IStreamer, IDisposable
     {
         private readonly IHubContext _streamHubContext;
-        private readonly AppState _appState;
-        
+        private readonly ClaimsPrincipal _claimsPrincipal;
+
         private bool _disposed;
 
-        public Streamer(HubContextResolver hubContextResolver, AppState appState)
+        public Streamer(HubContextResolver hubContextResolver, ClaimsPrincipal claimsPrincipal)
         {
 
             _streamHubContext = hubContextResolver.GetHubContext("Stream");
-            _appState = appState;
+            _claimsPrincipal = claimsPrincipal;
         }
 
         public void Dispose()
@@ -34,7 +35,7 @@ namespace Super.Paula.Application.Streaming
                 return;
             }
 
-            var userId = $"{_appState.CurrentOrganization}:{response.Inspector}";
+            var userId = $"{_claimsPrincipal.GetOrganization()}:{response.Inspector}";
             await _streamHubContext.Clients.User(userId).SendAsync("NotificationCreation", response);
         }
 
@@ -45,7 +46,7 @@ namespace Super.Paula.Application.Streaming
                 return;
             }
 
-            var userId = $"{_appState.CurrentOrganization}:{inspector}";
+            var userId = $"{_claimsPrincipal.GetOrganization()}:{inspector}";
             await _streamHubContext.Clients.User(userId).SendAsync("NotificationDeletion", inspector, date, time);
         }
 
@@ -56,7 +57,7 @@ namespace Super.Paula.Application.Streaming
                 return;
             }
 
-            var userId = $"{_appState.CurrentOrganization}:{inspector}";
+            var userId = $"{_claimsPrincipal.GetOrganization()}:{inspector}";
             await _streamHubContext.Clients.User(userId).SendAsync("InspectorBusinessObjectCreation", inspector, response);
         }
 
@@ -67,7 +68,7 @@ namespace Super.Paula.Application.Streaming
                 return;
             }
 
-            var userId = $"{_appState.CurrentOrganization}:{inspector}";
+            var userId = $"{_claimsPrincipal.GetOrganization()}:{inspector}";
             await _streamHubContext.Clients.User(userId).SendAsync("InspectorBusinessObjectUpdate", inspector, response);
         }
 
@@ -78,7 +79,7 @@ namespace Super.Paula.Application.Streaming
                 return;
             }
 
-            var userId = $"{_appState.CurrentOrganization}:{inspector}";
+            var userId = $"{_claimsPrincipal.GetOrganization()}:{inspector}";
             await _streamHubContext.Clients.User(userId).SendAsync("InspectorBusinessObjectDeletion", inspector, businessObject);
         }
     }

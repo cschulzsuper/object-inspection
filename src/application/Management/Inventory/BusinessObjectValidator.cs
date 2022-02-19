@@ -1,5 +1,5 @@
-﻿using System;
-using Super.Paula.Validation;
+﻿using Super.Paula.Validation;
+using System;
 
 namespace Super.Paula.Application.Inventory
 {
@@ -16,7 +16,7 @@ namespace Super.Paula.Application.Inventory
         public static (bool, Func<(string, FormattableString)>) UniqueNameIsNotTooLong(string uniqueName)
             => (string.IsNullOrWhiteSpace(uniqueName) || uniqueName.Length <= 140,
                 () => (nameof(uniqueName), $"Unique name '{uniqueName}' can not have more than 140 characters"));
-        
+
         public static (bool, Func<(string, FormattableString)>) UniqueNameHasValidValue(string uniqueName)
             => (string.IsNullOrWhiteSpace(uniqueName) || UniqueNameValidator.IsValid(uniqueName),
                 () => (nameof(uniqueName), $"Unique name '{uniqueName}' has an invalid value"));
@@ -34,15 +34,15 @@ namespace Super.Paula.Application.Inventory
                 () => (nameof(inspector), $"Inspector can not be null"));
 
         public static (bool, Func<(string, FormattableString)>) InspectorHasKebabCase(string inspector)
-            => (inspector == null || KebabCaseValidator.IsValid(inspector),
+            => (string.IsNullOrWhiteSpace(inspector) || KebabCaseValidator.IsValid(inspector),
                 () => (nameof(inspector), $"Inspector '{inspector}' must have kebab case"));
 
         public static (bool, Func<(string, FormattableString)>) InspectorIsNotTooLong(string inspector)
-            => (inspector == null || inspector.Length <= 140,
+            => (string.IsNullOrWhiteSpace(inspector) || inspector.Length <= 140,
                 () => (nameof(inspector), $"Inspector '{inspector}' can not have more than 140 characters"));
 
         public static (bool, Func<(string, FormattableString)>) InspectorHasValidValue(string inspector)
-            => (inspector == null || UniqueNameValidator.IsValid(inspector),
+            => (string.IsNullOrWhiteSpace(inspector) || UniqueNameValidator.IsValid(inspector),
                 () => (nameof(inspector), $"Inspector '{inspector}' has an invalid value"));
 
     }

@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.SignalR.Client;
-using Super.Paula.Authorization;
 using Super.Paula.Application.Administration.Responses;
 using Super.Paula.Application.Communication.Responses;
+using Super.Paula.Authorization;
 using Super.Paula.Environment;
 using System;
 using System.Threading;
@@ -70,7 +70,7 @@ namespace Super.Paula.Client.Streaming
             try
             {
                 await _hubConnectionSemaphore.WaitAsync();
-             
+
                 if (_hubConnection.State == HubConnectionState.Disconnected)
                 {
                     var authenticationState = await _AuthenticationStateProvider.GetAuthenticationStateAsync();

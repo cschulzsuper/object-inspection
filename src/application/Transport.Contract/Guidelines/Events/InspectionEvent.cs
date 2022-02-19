@@ -1,15 +1,26 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Super.Paula.Application.Orchestration;
+using Super.Paula.Validation;
+using System.ComponentModel.DataAnnotations;
 
 namespace Super.Paula.Application.Guidelines.Events
 {
-    public class InspectionEvent
-    {
+    [AllowedSubscriber(AllowedSubscribers.InventoryBusinessObject)]
+    [AllowedSubscriber(AllowedSubscribers.AuditingBusinessObjectInspectionAudit)]
+    public record InspectionEvent(
+
         [StringLength(140)]
-        public string? DisplayName { get; set; }
+        [UniqueName]
+        [KebabCase]
+        string UniqueName,
+
+        [StringLength(140)]
+        string DisplayName,
 
         [StringLength(4000)]
-        public string? Text { get; set; }
+        string Text,
 
-        public bool? Activated { get; set; }
-    }
+        bool Activated)
+
+        : EventBase;
+
 }

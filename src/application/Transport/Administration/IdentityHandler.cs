@@ -14,7 +14,7 @@ namespace Super.Paula.Application.Administration
 
         public IdentityHandler(
             IIdentityManager identityManager,
-            IPasswordHasher<Identity> passwordHasher) 
+            IPasswordHasher<Identity> passwordHasher)
         {
             _identityManager = identityManager;
             _passwordHasher = passwordHasher;
@@ -58,7 +58,7 @@ namespace Super.Paula.Application.Administration
         public async ValueTask<IdentityResponse> GetAsync(string identity)
         {
             var entity = await _identityManager.GetAsync(identity);
-         
+
             return new IdentityResponse
             {
                 UniqueName = entity.UniqueName,

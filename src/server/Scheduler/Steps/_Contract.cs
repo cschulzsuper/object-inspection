@@ -14,6 +14,7 @@ namespace Super.Paula.Steps
             using var scope = services.CreateScope();
 
             var scopedServices = scope.ServiceProvider;
+
             var scopedStep = scopedServices.GetRequiredService<TStep>();
 
             await scopedStep.ExecuteAsync();

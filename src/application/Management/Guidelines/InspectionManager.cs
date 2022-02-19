@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Super.Paula.Application.Guidelines
 {
-    public class  InspectionManager : IInspectionManager
+    public class InspectionManager : IInspectionManager
     {
         private readonly IRepository<Inspection> _inspectionRepository;
 
@@ -23,7 +23,7 @@ namespace Super.Paula.Application.Guidelines
             var entity = await _inspectionRepository.GetByIdsOrDefaultAsync(inspection);
             if (entity == null)
             {
-                throw new ManagementException($"Inspection '{inspection}' was not found");
+                throw new ManagementException($"Inspection '{inspection}' was not found.");
             }
 
             return entity;
@@ -48,7 +48,7 @@ namespace Super.Paula.Application.Guidelines
             }
             catch (Exception exception)
             {
-                throw new ManagementException($"Could not insert inspection '{inspection.UniqueName}'", exception);
+                throw new ManagementException($"Could not insert inspection '{inspection.UniqueName}'.", exception);
             }
         }
 
@@ -62,7 +62,7 @@ namespace Super.Paula.Application.Guidelines
             }
             catch (Exception exception)
             {
-                throw new ManagementException($"Could not update inspection '{inspection.UniqueName}'", exception);
+                throw new ManagementException($"Could not update inspection '{inspection.UniqueName}'.", exception);
             }
         }
 
@@ -76,7 +76,7 @@ namespace Super.Paula.Application.Guidelines
             }
             catch (Exception exception)
             {
-                throw new ManagementException($"Could not delete inspection '{inspection.UniqueName}'", exception);
+                throw new ManagementException($"Could not delete inspection '{inspection.UniqueName}'.", exception);
             }
         }
 

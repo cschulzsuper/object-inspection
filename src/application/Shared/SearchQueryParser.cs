@@ -11,7 +11,7 @@ namespace Super.Paula
         public static SearchTermDictionary Parse(string searchQuery)
             => new(ParseInternal(searchQuery));
 
-        private static IEnumerable<KeyValuePair<string,object>> ParseInternal(string searchQuery)
+        private static IEnumerable<KeyValuePair<string, object>> ParseInternal(string searchQuery)
         {
             var matches = Regex.Matches(searchQuery, RegularExpression);
 
@@ -21,13 +21,13 @@ namespace Super.Paula
 
             var searchTerms = SplitAt(searchQuery, indices);
 
-            foreach(var searchTerm in searchTerms)
+            foreach (var searchTerm in searchTerms)
             {
                 var parts = searchTerm
                     .Trim(' ')
                     .Split(':', 2);
 
-                if(parts.Length == 1)
+                if (parts.Length == 1)
                 {
                     var value = parts[0].Trim('\"');
                     if (value != string.Empty)

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Super.Paula.Application.Administration;
 using Super.Paula.Application.Auditing;
@@ -8,7 +6,8 @@ using Super.Paula.Application.Communication;
 using Super.Paula.Application.Guidelines;
 using Super.Paula.Application.Inventory;
 using Super.Paula.Application.Streaming;
-using Super.Paula.Environment;
+using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Super.Paula.Application
 {
@@ -18,9 +17,6 @@ namespace Super.Paula.Application
         public static IServiceCollection AddPaulaServerTransport(this IServiceCollection services)
         {
             services
-                .AddScoped<IEventBus, EventBus>();
-
-            services
                 .AddScoped<IPasswordHasher<Identity>, IdentityPasswordHasher>()
                 .AddScoped<IIdentityHandler, IdentityHandler>();
 
@@ -28,65 +24,51 @@ namespace Super.Paula.Application
                 .AddScoped<IAccountHandler, AccountHandler>()
                 .AddScoped<IAuthenticationHandler, AuthenticationHandler>()
 
-                .AddScoped<BusinessObjectHandler>()
-                .AddScoped<IBusinessObjectHandler>(x => x.GetRequiredService<BusinessObjectHandler>())
-                .AddScoped<IBusinessObjectEventHandler>(x => x.GetRequiredService<BusinessObjectHandler>())
+                .AddScoped<IBusinessObjectHandler, BusinessObjectHandler>()
+                .AddSingleton<IBusinessObjectEventHandler, BusinessObjectEventHandler>()
 
-                .AddScoped<BusinessObjectInspectionAuditHandler>()
-                .AddScoped<IBusinessObjectInspectionAuditHandler>(x => x.GetRequiredService<BusinessObjectInspectionAuditHandler>())
-                .AddScoped<IBusinessObjectInspectionAuditEventHandler>(x => x.GetRequiredService<BusinessObjectInspectionAuditHandler>())
+                .AddScoped<IBusinessObjectInspectionAuditHandler, BusinessObjectInspectionAuditHandler>()
+                .AddSingleton<IBusinessObjectInspectionAuditEventHandler, BusinessObjectInspectionAuditEventHandler>()
 
-                .AddScoped<NotificationHandler>(NotificationHandlerFactory)
-                .AddScoped<INotificationHandler>(x => x.GetRequiredService<NotificationHandler>())
-                .AddScoped<INotificationEventHandler>(x => x.GetRequiredService<NotificationHandler>())
+                .AddScoped<INotificationAnnouncer>(NotificationAnnouncerFactory)
+                .AddScoped<INotificationHandler, NotificationHandler>()
+                .AddSingleton<INotificationEventHandler, NotificationEventHandler>()
 
-                .AddScoped<InspectorHandler>(InspectorHandlerFactory)
-                .AddScoped<IInspectorHandler>(x => x.GetRequiredService<InspectorHandler>())
-                .AddScoped<IInspectorEventHandler>(x => x.GetRequiredService<InspectorHandler>())
+                .AddScoped<IInspectorAnnouncer>(InspectorAnnouncerFactory)
+                .AddScoped<IInspectorHandler, InspectorHandler>()
+                .AddSingleton<IInspectorEventHandler, InspectorEventHandler>()
 
-                .AddScoped<InspectionHandler>()
-                .AddScoped<IInspectionHandler>(x => x.GetRequiredService<InspectionHandler>())
-                .AddScoped<IInspectionProvider>(x => x.GetRequiredService<InspectionHandler>())
-
-                .AddScoped<OrganizationHandler>()
-                .AddScoped<IOrganizationHandler>(x => x.GetRequiredService<OrganizationHandler>())
-                .AddScoped<IOrganizationProvider>(x => x.GetRequiredService<OrganizationHandler>());
+                .AddScoped<IInspectionHandler, InspectionHandler>()
+                .AddScoped<IOrganizationHandler, OrganizationHandler>();
 
             return services;
         }
 
-        private static readonly Func<IServiceProvider, NotificationHandler> NotificationHandlerFactory = 
+        private static readonly Func<IServiceProvider, INotificationAnnouncer> NotificationAnnouncerFactory =
             services =>
             {
-                var notificationManager = services.GetRequiredService<INotificationManager>();
-                var notificationHandler = new NotificationHandler(notificationManager);
+                var notificationAnnouncer = new NotificationAnnouncer();
 
                 var streamer = services.GetRequiredService<IStreamer>();
 
-                notificationHandler.OnCreationAsync(streamer.StreamNotificationCreationAsync);
-                notificationHandler.OnDeletionAsync(streamer.StreamNotificationDeletionAsync);
+                notificationAnnouncer.OnCreationAsync(streamer.StreamNotificationCreationAsync);
+                notificationAnnouncer.OnDeletionAsync(streamer.StreamNotificationDeletionAsync);
 
-                return notificationHandler;
+                return notificationAnnouncer;
             };
 
-        private static readonly Func<IServiceProvider, InspectorHandler> InspectorHandlerFactory =
+        private static readonly Func<IServiceProvider, IInspectorAnnouncer> InspectorAnnouncerFactory =
             services =>
             {
-                var inspectorManager = services.GetRequiredService<IInspectorManager>();
-                var organizationProvider = services.GetRequiredService<IOrganizationProvider>();
-                var identityInspectorManager = services.GetRequiredService<IIdentityInspectorManager>();
-                var appState = services.GetRequiredService<AppState>();
-                var eventBus = services.GetRequiredService<IEventBus>();
-
-                var inspectorHandler = new InspectorHandler(inspectorManager, organizationProvider, identityInspectorManager, appState, eventBus);
+                var inspectorAnnouncer = new InspectorAnnouncer();
 
                 var streamer = services.GetRequiredService<IStreamer>();
 
-                inspectorHandler.OnBusinessObjectCreationAsync(streamer.StreamInspectorBusinessObjectCreationAsync);
-                inspectorHandler.OnBusinessObjectDeletionAsync(streamer.StreamInspectorBusinessObjectDeletionAsync);
-                inspectorHandler.OnBusinessObjectUpdateAsync(streamer.StreamInspectorBusinessObjectUpdateAsync);
+                inspectorAnnouncer.OnBusinessObjectCreationAsync(streamer.StreamInspectorBusinessObjectCreationAsync);
+                inspectorAnnouncer.OnBusinessObjectDeletionAsync(streamer.StreamInspectorBusinessObjectDeletionAsync);
+                inspectorAnnouncer.OnBusinessObjectUpdateAsync(streamer.StreamInspectorBusinessObjectUpdateAsync);
 
-                return inspectorHandler;
+                return inspectorAnnouncer;
             };
     }
 }

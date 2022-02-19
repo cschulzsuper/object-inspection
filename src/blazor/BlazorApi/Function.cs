@@ -1,7 +1,7 @@
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 
 namespace BlazorApi
@@ -10,7 +10,7 @@ namespace BlazorApi
     {
         private readonly IConfiguration _configuration;
 
-        public Function(IConfiguration configuration) 
+        public Function(IConfiguration configuration)
         {
             _configuration = configuration;
         }

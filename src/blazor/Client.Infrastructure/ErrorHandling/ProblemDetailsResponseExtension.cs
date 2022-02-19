@@ -1,7 +1,7 @@
-﻿using System.Net;
+﻿using Super.Paula.ErrorHandling;
+using System.Net;
 using System.Net.Http;
 using System.Text.Json;
-using Super.Paula.ErrorHandling;
 
 namespace Super.Paula.Client.ErrorHandling
 {
@@ -10,7 +10,7 @@ namespace Super.Paula.Client.ErrorHandling
         public static HttpResponseMessage RuleOutProblems(this HttpResponseMessage responseMessage)
         {
             if ((responseMessage.StatusCode == HttpStatusCode.BadRequest ||
-                 responseMessage.StatusCode == HttpStatusCode.NotFound ) &&
+                 responseMessage.StatusCode == HttpStatusCode.NotFound) &&
                 responseMessage.Content.Headers.ContentType?.MediaType == "application/problem+json")
             {
                 var responseStream = responseMessage.Content.ReadAsStream();
@@ -23,7 +23,7 @@ namespace Super.Paula.Client.ErrorHandling
                 {
                     throw new ProblemDetailsException(
                         response.Title,
-                        response.Errors, 
+                        response.Errors,
                         responseMessage.StatusCode);
                 }
             }

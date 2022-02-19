@@ -9,6 +9,7 @@ namespace Super.Paula.Application.Administration
     {
         ValueTask<Inspector> GetAsync(string inspector);
         IQueryable<Inspector> GetQueryable();
+        IQueryable<Inspector> GetQueryableWhereBusinessObject(string businessObject);
         IAsyncEnumerable<Inspector> GetAsyncEnumerable();
         IAsyncEnumerable<TResult> GetAsyncEnumerable<TResult>(Func<IQueryable<Inspector>, IQueryable<TResult>> query);
         ValueTask InsertAsync(Inspector inspector);

@@ -11,9 +11,11 @@ namespace Super.Paula.Client.Configuration
         private readonly HttpClient _httpClient;
 
         public BlazorApiConfigurationProvider(string functionsUrl)
-        {           
-            _httpClient = new HttpClient();
-            _httpClient.BaseAddress = new Uri(functionsUrl);
+        {
+            _httpClient = new HttpClient
+            {
+                BaseAddress = new Uri(functionsUrl)
+            };
         }
         public async Task LoadAsync()
         {

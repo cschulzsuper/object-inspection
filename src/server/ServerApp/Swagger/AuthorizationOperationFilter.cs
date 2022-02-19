@@ -13,7 +13,7 @@ namespace Super.Paula.Swagger
 #if true
             var hasAuthorization = context.ApiDescription.ActionDescriptor.EndpointMetadata.Any(x => x is AuthorizeAttribute);
 
-            if(!hasAuthorization)
+            if (!hasAuthorization)
             {
                 return;
             }

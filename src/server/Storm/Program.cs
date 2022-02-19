@@ -21,7 +21,6 @@ namespace Super.Paula
                 .ConfigureServices((context, services) =>
                 {
                     services.AddHostedService<HostedService>();
-                    services.AddPaulaAppState();
                     services.AddPaulaAppSettings();
 
                     services.AddPaulaServerData(context.HostingEnvironment.IsDevelopment());

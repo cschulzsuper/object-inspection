@@ -1,14 +1,14 @@
-﻿using System;
+﻿using Super.Paula.Application.Administration;
+using Super.Paula.Application.Administration.Requests;
+using Super.Paula.Application.Administration.Responses;
+using Super.Paula.Client.ErrorHandling;
+using Super.Paula.Environment;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Super.Paula.Application.Administration;
-using Super.Paula.Application.Administration.Requests;
-using Super.Paula.Application.Administration.Responses;
-using Super.Paula.Client.ErrorHandling;
-using Super.Paula.Environment;
 
 namespace Super.Paula.Client.Administration
 {
@@ -27,7 +27,7 @@ namespace Super.Paula.Client.Administration
         public async ValueTask<IdentityResponse> CreateAsync(IdentityRequest request)
         {
             var responseMessage = await _httpClient.PostAsJsonAsync("identities", request);
-            
+
             responseMessage.RuleOutProblems();
             responseMessage.EnsureSuccessStatusCode();
 
@@ -37,7 +37,7 @@ namespace Super.Paula.Client.Administration
         public async ValueTask DeleteAsync(string identity)
         {
             var responseMessage = await _httpClient.DeleteAsync($"identities/{identity}");
-            
+
             responseMessage.RuleOutProblems();
             responseMessage.EnsureSuccessStatusCode();
         }
@@ -45,7 +45,7 @@ namespace Super.Paula.Client.Administration
         public async IAsyncEnumerable<IdentityResponse> GetAll()
         {
             var responseMessage = await _httpClient.GetAsync("identities");
-            
+
             responseMessage.RuleOutProblems();
             responseMessage.EnsureSuccessStatusCode();
 
@@ -66,7 +66,7 @@ namespace Super.Paula.Client.Administration
         public async ValueTask<IdentityResponse> GetAsync(string identity)
         {
             var responseMessage = await _httpClient.GetAsync($"identities/{identity}");
-            
+
             responseMessage.RuleOutProblems();
             responseMessage.EnsureSuccessStatusCode();
 

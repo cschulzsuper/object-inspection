@@ -9,23 +9,23 @@ namespace Super.Paula
     {
         public IDictionary<string, object[]> _searchTerms;
 
-        public SearchTermDictionary(IEnumerable<KeyValuePair<string,object>> searchTerms)
+        public SearchTermDictionary(IEnumerable<KeyValuePair<string, object>> searchTerms)
         {
             _searchTerms = searchTerms
                 .Distinct()
                 .GroupBy(x => x.Key, x => x.Value)
                 .ToDictionary(
-                    x => x.Key, 
+                    x => x.Key,
                     x => x.ToArray());
         }
 
-        public object[] this[string key] 
+        public object[] this[string key]
         {
-            get => _searchTerms[key]; 
-            set => _searchTerms[key] = value; 
+            get => _searchTerms[key];
+            set => _searchTerms[key] = value;
         }
 
-        public ICollection<string> Keys 
+        public ICollection<string> Keys
             => _searchTerms.Keys;
 
         public ICollection<object[]> Values

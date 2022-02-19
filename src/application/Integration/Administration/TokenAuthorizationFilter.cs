@@ -11,7 +11,7 @@ namespace Super.Paula.Application.Administration
         private readonly AppSettings _appSettings;
 
         public TokenAuthorizationFilter(
-            IOrganizationManager organizationManager, 
+            IOrganizationManager organizationManager,
             AppSettings appSettings)
         {
             _organizationManager = organizationManager;
@@ -30,7 +30,7 @@ namespace Super.Paula.Application.Administration
                 if (_appSettings.DemoIdentity == token.Identity)
                 {
                     authorizations.Add("Observer");
-                } 
+                }
                 else if (!string.IsNullOrWhiteSpace(token.Inspector))
                 {
                     authorizations.Add("Inspector");

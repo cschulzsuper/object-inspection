@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Super.Paula.Application;
@@ -8,6 +6,8 @@ using Super.Paula.Authentication;
 using Super.Paula.Authorization;
 using Super.Paula.Data;
 using Super.Paula.RuntimeData;
+using System.Diagnostics.CodeAnalysis;
+using System.Security.Claims;
 
 namespace Super.Paula
 {
@@ -17,10 +17,8 @@ namespace Super.Paula
         public static IServiceCollection AddPaulaServer(this IServiceCollection services, bool isDevelopment)
         {
             services
-                .AddHttpContextAccessor()
                 .AddPaulaAppEnvironment(isDevelopment)
                 .AddPaulaAppSettings()
-                .AddPaulaAppState()
                 .AddPaulaServerData(isDevelopment)
                 .AddPaulaServerRuntimeData()
                 .AddPaulaServerManagement()
@@ -47,14 +45,14 @@ namespace Super.Paula
         public static IServiceCollection AddPaulaServerAuthorization(this IServiceCollection services)
         {
             services.AddAuthorization();
-            services.AddSingleton<IAuthorizationPolicyProvider, PaulaAuthorizationPolicyProvider>();
-            services.AddScoped<IAuthorizationMiddlewareResultHandler, PaulaAuthorizationMiddlewareResultHandler>();
-            services.AddScoped<IAuthorizationHandler, AnyAuthorizationClaimHandler>();
-            services.AddScoped<IAuthorizationHandler, IdentityClaimResourceHandler>();
-            services.AddScoped<IAuthorizationHandler, InspectorClaimResourceHandler>();
-
-            services.AddTransient<ClaimsPrincipal>(s =>
-                s.GetRequiredService<IHttpContextAccessor>()!.HttpContext!.User);
+            
+            services
+                .AddSingleton<IAuthorizationPolicyProvider, PaulaAuthorizationPolicyProvider>()
+                .AddScoped<IAuthorizationMiddlewareResultHandler, PaulaAuthorizationMiddlewareResultHandler>()
+                .AddScoped<IAuthorizationHandler, AnyAuthorizationClaimHandler>()
+                .AddScoped<IAuthorizationHandler, IdentityClaimResourceHandler>()
+                .AddScoped<IAuthorizationHandler, InspectorClaimResourceHandler>()
+                .AddUser();
 
             return services;
         }

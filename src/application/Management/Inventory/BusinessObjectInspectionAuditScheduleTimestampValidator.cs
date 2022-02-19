@@ -1,5 +1,5 @@
-﻿using System;
-using Super.Paula.Validation;
+﻿using Super.Paula.Validation;
+using System;
 
 namespace Super.Paula.Application.Inventory
 {

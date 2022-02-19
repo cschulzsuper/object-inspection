@@ -4,6 +4,8 @@ using Microsoft.Extensions.Hosting;
 using Super.Paula.Application;
 using Super.Paula.Data;
 using Super.Paula.Steps;
+using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Super.Paula
@@ -21,7 +23,8 @@ namespace Super.Paula
                 .ConfigureServices((context, services) =>
                 {
                     services.AddHostedService<HostedService>();
-                    services.AddPaulaAppState();
+
+                    services.AddUser();
                     services.AddPaulaAppSettings();
 
                     services.AddPaulaServerData(context.HostingEnvironment.IsDevelopment());
@@ -30,7 +33,7 @@ namespace Super.Paula
                     services.AddPaulaServerTransport();
 
                     services.AddPaulaRemoteStreaming();
-
+   
                     services
                         .AddScoped<BusinessObjectInspectionAuditScheduleCalculation>();
 

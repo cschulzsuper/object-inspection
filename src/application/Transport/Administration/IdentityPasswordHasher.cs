@@ -7,7 +7,7 @@ namespace Super.Paula.Application.Administration
     {
         public override PasswordVerificationResult VerifyHashedPassword(Identity user, string hashedPassword, string providedPassword)
         {
-            if (hashedPassword.Equals(providedPassword)) 
+            if (hashedPassword.Equals(providedPassword))
             {
                 // We need to make sure that the provided password itself is not the hash of the hashed password
 

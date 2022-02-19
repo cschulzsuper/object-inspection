@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Super.Paula.Application.Administration
 {
-    public class  OrganizationManager : IOrganizationManager
+    public class OrganizationManager : IOrganizationManager
     {
         private readonly IRepository<Organization> _organizationRepository;
 
@@ -23,7 +23,7 @@ namespace Super.Paula.Application.Administration
             var entity = await _organizationRepository.GetByIdsOrDefaultAsync(organization);
             if (entity == null)
             {
-                throw new ManagementException($"Organization '{organization}' was not found");
+                throw new ManagementException($"Organization '{organization}' was not found.");
             }
 
             return entity;
@@ -39,7 +39,7 @@ namespace Super.Paula.Application.Administration
             }
             catch (Exception exception)
             {
-                throw new ManagementException($"Could not insert organization '{organization.UniqueName}'", exception);
+                throw new ManagementException($"Could not insert organization '{organization.UniqueName}'.", exception);
             }
         }
 
@@ -53,7 +53,7 @@ namespace Super.Paula.Application.Administration
             }
             catch (Exception exception)
             {
-                throw new ManagementException($"Could not update organization '{organization.UniqueName}'", exception);
+                throw new ManagementException($"Could not update organization '{organization.UniqueName}'.", exception);
             }
         }
 
@@ -67,7 +67,7 @@ namespace Super.Paula.Application.Administration
             }
             catch (Exception exception)
             {
-                throw new ManagementException($"Could not delete organization '{organization.UniqueName}'", exception);
+                throw new ManagementException($"Could not delete organization '{organization.UniqueName}'.", exception);
             }
         }
 
