@@ -15,7 +15,7 @@ namespace Super.Paula.Authorization
         public async Task HandleAsync(RequestDelegate requestDelegate, HttpContext context,
             AuthorizationPolicy authorizationPolicy, PolicyAuthorizationResult authorizationResult)
         {
-            if (authorizationResult.Forbidden && 
+            if (authorizationResult.Forbidden &&
                 authorizationPolicy.Requirements.Any(x =>
                     (x is InspectorClaimResourceRequirement) ||
                     (x is IdentityClaimResourceRequirement)))
@@ -25,7 +25,7 @@ namespace Super.Paula.Authorization
                 var policyEvaluator = context.RequestServices.GetRequiredService<IPolicyEvaluator>();
                 var authorizationService = context.RequestServices.GetRequiredService<IAuthorizationService>();
 
-                var hasItem = 
+                var hasItem =
                     context.Request.RouteValues.ContainsKey("inspector") ||
                     context.Request.RouteValues.ContainsKey("identity");
 

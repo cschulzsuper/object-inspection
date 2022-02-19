@@ -1,21 +1,30 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Super.Paula.Application.Orchestration;
 using Super.Paula.Validation;
+using System.ComponentModel.DataAnnotations;
 
 namespace Super.Paula.Application.Inventory.Events
 {
-    public class BusinessObjectInspectorEvent
-    {
-        [StringLength(140)]
-        public string? BusinessObjectDisplayName { get; set; }
+    [AllowedSubscriber(AllowedSubscribers.AdministrationInspector)]
+    [AllowedSubscriber(AllowedSubscribers.CommunicationNotification)]
+    public record BusinessObjectInspectorEvent(
 
         [KebabCase]
         [StringLength(140)]
         [UniqueName]
-        public string? NewInspector { get; set; }
+        string UnqiueName,
+
+        [StringLength(140)]
+        string DisplayName,
 
         [KebabCase]
         [StringLength(140)]
         [UniqueName]
-        public string? OldInspector { get; set; }
-    }
+        string? NewInspector,
+
+        [KebabCase]
+        [StringLength(140)]
+        [UniqueName]
+        string OldInspector)
+
+        : EventBase;
 }

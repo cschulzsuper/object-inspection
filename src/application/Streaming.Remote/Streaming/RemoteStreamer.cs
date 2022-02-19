@@ -5,6 +5,7 @@ using Super.Paula.Authorization;
 using Super.Paula.Environment;
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Super.Paula.Application.Streaming
@@ -13,11 +14,11 @@ namespace Super.Paula.Application.Streaming
     {
         private readonly HubConnection _connection;
         private readonly AppSettings _appSettings;
-        private readonly AppState _appState;
+        private readonly ClaimsPrincipal _claimsPrincipal;
 
         private bool _disposed;
 
-        public RemoteStreamer(AppSettings appSettings, AppState appState)
+        public RemoteStreamer(AppSettings appSettings, ClaimsPrincipal claimsPrincipal)
         {
             _connection = new HubConnectionBuilder()
                 .WithUrl(
@@ -26,7 +27,7 @@ namespace Super.Paula.Application.Streaming
                 .Build();
 
             _appSettings = appSettings;
-            _appState = appState;
+            _claimsPrincipal = claimsPrincipal;
         }
 
         [SuppressMessage("Reliability", "CA2012")]
@@ -69,7 +70,7 @@ namespace Super.Paula.Application.Streaming
             }
 
             await EnsureStartedAsync();
-            var userId = $"{_appState.CurrentOrganization}:{response.Inspector}";
+            var userId = $"{_claimsPrincipal.GetOrganization()}:{response.Inspector}";
             await _connection.SendAsync("Stream1", userId, "NotificationCreation", response);
         }
 
@@ -81,7 +82,7 @@ namespace Super.Paula.Application.Streaming
             }
 
             await EnsureStartedAsync();
-            var userId = $"{_appState.CurrentOrganization}:{inspector}";
+            var userId = $"{_claimsPrincipal.GetOrganization()}:{inspector}";
             await _connection.SendAsync("Stream3", userId, "NotificationDeletion", inspector, date, time);
         }
 
@@ -93,7 +94,7 @@ namespace Super.Paula.Application.Streaming
             }
 
             await EnsureStartedAsync();
-            var userId = $"{_appState.CurrentOrganization}:{inspector}";
+            var userId = $"{_claimsPrincipal.GetOrganization()}:{inspector}";
             await _connection.SendAsync("Stream2", userId, "InspectorBusinessObjectCreation", inspector, response);
         }
 
@@ -105,7 +106,7 @@ namespace Super.Paula.Application.Streaming
             }
 
             await EnsureStartedAsync();
-            var userId = $"{_appState.CurrentOrganization}:{inspector}";
+            var userId = $"{_claimsPrincipal.GetOrganization()}:{inspector}";
             await _connection.SendAsync("Stream2", userId, "InspectorBusinessObjectUpdate", inspector, response);
         }
 
@@ -117,7 +118,7 @@ namespace Super.Paula.Application.Streaming
             }
 
             await EnsureStartedAsync();
-            var userId = $"{_appState.CurrentOrganization}:{inspector}";
+            var userId = $"{_claimsPrincipal.GetOrganization()}:{inspector}";
             await _connection.SendAsync("Stream2", userId, "InspectorBusinessObjectDeletion", inspector, businessObject);
         }
     }

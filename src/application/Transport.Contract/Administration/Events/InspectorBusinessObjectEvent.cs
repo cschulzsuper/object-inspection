@@ -1,23 +1,33 @@
-﻿using Super.Paula.Validation;
+﻿using Super.Paula.Application.Orchestration;
+using Super.Paula.Validation;
 using System.ComponentModel.DataAnnotations;
 
-namespace Super.Paula.Application.Inventory.Events
+namespace Super.Paula.Application.Administration.Events
 {
-    public class InspectorBusinessObjectEvent
-    {
+    [AllowedSubscriber(AllowedSubscribers.CommunicationNotification)]
+    public record InspectorBusinessObjectEvent
+    (
         [StringLength(140)]
         [UniqueName]
-        public string? UniqueName { get; set; }
+        [KebabCase]
+        string UniqueName,
 
         [StringLength(140)]
-        public string? DisplayName { get; set; }
+        [UniqueName]
+        [KebabCase]
+        string BusinessObject,
 
-        public bool? NewAuditSchedulePending { get; set; }
+        [StringLength(140)]
+        string BusinessObjectDisplayName,
 
-        public bool? OldAuditSchedulePending { get; set; }
+        bool NewAuditSchedulePending,
 
-        public bool? NewAuditScheduleDelayed { get; set; }
+        bool OldAuditSchedulePending,
 
-        public bool? OldAuditScheduleDelayed { get; set; }
-    }
+        bool NewAuditScheduleDelayed,
+
+        bool OldAuditScheduleDelayed)
+
+        : EventBase;
+
 }

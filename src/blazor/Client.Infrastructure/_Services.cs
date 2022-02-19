@@ -1,9 +1,9 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.DependencyInjection;
 using Super.Paula.Authorization;
 using Super.Paula.Client.Authentication;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Super.Paula.Client
 {

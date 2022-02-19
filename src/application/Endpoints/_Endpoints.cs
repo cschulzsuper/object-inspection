@@ -1,12 +1,12 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
+using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Super.Paula.Application
 {
     [SuppressMessage("Style", "IDE1006")]
-    public static class _EndpointsExtension
+    public static class _Endpoints
     {
         public static IEndpointRouteBuilder MapCollection(this IEndpointRouteBuilder endpoints,
             string collection,

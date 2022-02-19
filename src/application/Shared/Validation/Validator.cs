@@ -7,7 +7,7 @@ namespace Super.Paula.Validation
 {
     public static class Validator
     {
-        public static void Ensure(FormattableString term, IEnumerable<(bool, Func<(string,FormattableString)>)> ensureances)
+        public static void Ensure(FormattableString term, IEnumerable<(bool, Func<(string, FormattableString)>)> ensureances)
         {
             var errors = new Dictionary<string, ISet<FormattableString>>();
             foreach (var (assertion, errorFunc) in ensureances)
@@ -24,13 +24,13 @@ namespace Super.Paula.Validation
             }
 
             if (errors.Any())
-            { 
+            {
                 throw new ValidationException(
-                    FormattableStringFactory.Create($"Validation of {term.Format} failed", TrimArguments(term.GetArguments())), 
+                    FormattableStringFactory.Create($"Validation of {term.Format} failed", TrimArguments(term.GetArguments())),
                     errors.ToDictionary(
-                        x => x.Key, 
+                        x => x.Key,
                         y => y.Value
-                            .Select(x => FormattableStringFactory.Create(x.Format,TrimArguments(x.GetArguments())))
+                            .Select(x => FormattableStringFactory.Create(x.Format, TrimArguments(x.GetArguments())))
                             .ToArray()));
             }
         }
@@ -40,7 +40,7 @@ namespace Super.Paula.Validation
 
         public static object?[] TrimArguments(object?[] arguments)
             => arguments
-                .Select(arg => arg is string stringArg ? stringArg?.Substring(0, Math.Min(stringArg.Length,140)) : arg)
+                .Select(arg => arg is string stringArg ? stringArg?[..Math.Min(stringArg.Length, 140)] : arg)
                 .ToArray();
     }
 }

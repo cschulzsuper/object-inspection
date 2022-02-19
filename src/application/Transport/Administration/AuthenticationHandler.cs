@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Identity;
+using Super.Paula.Application.Administration.Exceptions;
+using Super.Paula.Application.Administration.Requests;
+using Super.Paula.Application.Runtime;
+using Super.Paula.Authorization;
+using System;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
-using Super.Paula.Application.Administration.Exceptions;
-using Super.Paula.Application.Administration.Requests;
-using Super.Paula.Application.Administration.Responses;
-using Super.Paula.Application.Runtime;
-using Super.Paula.Authorization;
-using Super.Paula.Environment;
 
 namespace Super.Paula.Application.Administration
 {
@@ -19,7 +16,7 @@ namespace Super.Paula.Application.Administration
         private readonly IIdentityManager _identityManager;
         private readonly IConnectionManager _connectionManager;
         private readonly IPasswordHasher<Identity> _passwordHasher;
-        private readonly ClaimsPrincipal _principal;
+        private readonly ClaimsPrincipal _user;
 
         public AuthenticationHandler(
             IIdentityManager identityManager,
@@ -30,18 +27,18 @@ namespace Super.Paula.Application.Administration
             _identityManager = identityManager;
             _connectionManager = connectionManager;
             _passwordHasher = passwordHasher;
-            _principal = principal;
+            _user = principal;
         }
 
         public async ValueTask ChangeSecretAsync(ChangeSecretRequest request)
         {
             var identity = _identityManager.GetQueryable()
-                .Single(x => x.UniqueName == _principal.GetIdentity());
+                .Single(x => x.UniqueName == _user.GetIdentity());
 
             var oldSecretVerification = _passwordHasher.VerifyHashedPassword(identity, identity.Secret, request.OldSecret);
-            if(oldSecretVerification == PasswordVerificationResult.Failed)
+            if (oldSecretVerification == PasswordVerificationResult.Failed)
             {
-                throw new TransportException($"The old secret does not match");
+                throw new TransportException($"The old secret does not match.");
             }
 
             identity.Secret = _passwordHasher.HashPassword(identity, request.NewSecret);
@@ -80,7 +77,7 @@ namespace Super.Paula.Application.Administration
                     break;
 
                 case PasswordVerificationResult.Failed:
-                    throw new TransportException($"The secret does not match");
+                    throw new TransportException($"The secret does not match.");
             }
 
             var connectionProof = Convert.ToBase64String(
@@ -105,15 +102,15 @@ namespace Super.Paula.Application.Administration
             {
                 var inspector = _identityManager
                     .GetQueryable()
-                    .Single(x => x.UniqueName == _principal.GetIdentity());
+                    .Single(x => x.UniqueName == _user.GetIdentity());
 
                 _connectionManager.Forget(inspector.UniqueName);
 
                 await Task.CompletedTask;
-            } 
-            catch(Exception exception)
+            }
+            catch (Exception exception)
             {
-                throw new SignOutException($"Could not sign out", exception);
+                throw new SignOutException($"Could not sign out.", exception);
             }
         }
     }

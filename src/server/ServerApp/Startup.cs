@@ -37,7 +37,7 @@ namespace Super.Paula
             services.AddEndpointsApiExplorer();
             services.AddSingleton<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerGenOptions>();
             services.AddSwaggerGen();
-            
+
             services.AddSignalR();
             services.AddResponseCompression(opts =>
             {
@@ -45,8 +45,8 @@ namespace Super.Paula
                     new[] { "application/octet-stream" });
             });
 
-            services.AddCors(options => 
-                options.AddDefaultPolicy(policy => 
+            services.AddCors(options =>
+                options.AddDefaultPolicy(policy =>
                     policy
                         .WithOrigins(_configuration["BlazorApp"])
                         .AllowAnyMethod()
@@ -64,7 +64,7 @@ namespace Super.Paula
         public void Configure(IApplicationBuilder app)
         {
             app.UseConcurrencyLimiter();
-            app.UsePaulaBlacklist();
+            app.UseBlacklist();
 
             app.UseResponseCompression();
             app.UseExceptionHandler(appBuilder => appBuilder.Run(HandleError));
@@ -81,14 +81,17 @@ namespace Super.Paula
             app.UseCors();
 
             app.UseAuthentication();
-            app.UsePaulaAppState();
-
+            app.UseRequestUser();
             app.UseAuthorization();
+
+            app.UseEndpointState();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapPaulaServer();
                 endpoints.MapGet("", () => "It works!");
             });
+
+            app.ConfigureEvents();
         }
 
         public async Task HandleError(HttpContext context)
@@ -146,11 +149,11 @@ namespace Super.Paula
             }
             else
             {
-                var errors = new Dictionary<string, FormattableString[]> 
+                var errors = new Dictionary<string, FormattableString[]>
                 {
                     [string.Empty] = GetInnerExceptions(exception).ToArray()
                 };
-                
+
                 var problemDetails = new ProblemDetails(errors)
                 {
                     Detail = exception.StackTrace ?? string.Empty,

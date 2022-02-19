@@ -9,7 +9,7 @@ namespace Super.Paula.Client.Configuration
         public BlazorApiConfigurationSource(IConfigurationProvider provider) =>
             _provider = provider;
 
-        public IConfigurationProvider Build(IConfigurationBuilder builder) => 
+        public IConfigurationProvider Build(IConfigurationBuilder builder) =>
             _provider;
 
 

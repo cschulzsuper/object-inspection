@@ -1,11 +1,10 @@
-﻿using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using Super.Paula.Application.Administration.Requests;
-using Super.Paula.Application.Administration.Responses;
+﻿using Super.Paula.Application.Administration.Requests;
 using Super.Paula.Application.Runtime;
 using Super.Paula.Authorization;
 using Super.Paula.Environment;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace Super.Paula.Application.Administration
 {
@@ -41,12 +40,12 @@ namespace Super.Paula.Application.Administration
         {
             if (_appSettings.MaintainerOrganization != request.UniqueName)
             {
-                throw new TransportException($"Only the maintainer organization can be registered");
+                throw new TransportException($"Only the maintainer organization can be registered.");
             }
 
             if (_appSettings.Maintainer != request.ChiefInspector)
             {
-                throw new TransportException($"Only the maintainer can register with an organization");
+                throw new TransportException($"Only the maintainer can register with an organization.");
             }
 
             await _organizationManager.InsertAsync(new Organization
@@ -115,12 +114,12 @@ namespace Super.Paula.Application.Administration
 
         public ValueTask<string> StopImpersonationAsync()
         {
-             var inspector = _inspectorManager.GetQueryable()
-                .Single(x =>
-                    x.Activated &&
-                    x.OrganizationActivated &&
-                    x.UniqueName == _user.GetImpersonatorInspector() &&
-                    x.Organization == _user.GetImpersonatorOrganization());
+            var inspector = _inspectorManager.GetQueryable()
+               .Single(x =>
+                   x.Activated &&
+                   x.OrganizationActivated &&
+                   x.UniqueName == _user.GetImpersonatorInspector() &&
+                   x.Organization == _user.GetImpersonatorOrganization());
 
             var token = _user.ToToken();
 

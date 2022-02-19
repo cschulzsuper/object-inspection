@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Routing;
 using Super.Paula.Application.Administration.Requests;
-using Super.Paula.Environment;
+using Super.Paula.Data.Annotations;
 using System;
 
 namespace Super.Paula.Application.Administration
@@ -87,7 +87,7 @@ namespace Super.Paula.Application.Administration
 
         private static Delegate Deactivate =>
            [Authorize("ManagementFull")]
-            (IInspectorHandler handler, string inspector)
+           (IInspectorHandler handler, string inspector)
                 => handler.DeactivateAsync(inspector);
     }
 }

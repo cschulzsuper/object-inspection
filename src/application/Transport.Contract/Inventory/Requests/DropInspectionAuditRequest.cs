@@ -6,7 +6,7 @@ namespace Super.Paula.Application.Inventory.Requests
     {
         [DayNumber]
         public int PlannedAuditDate { get; set; }
-        
+
         [Milliseconds]
         public int PlannedAuditTime { get; set; }
     }

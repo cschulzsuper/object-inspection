@@ -1,6 +1,6 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Super.Paula.Application.Streaming;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Super.Paula.Application
 {

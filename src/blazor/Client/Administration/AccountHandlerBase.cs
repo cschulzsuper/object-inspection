@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Net.Http.Json;
-using System.Text.Json;
-using System.Threading.Tasks;
-using Super.Paula.Application.Administration;
+﻿using Super.Paula.Application.Administration;
 using Super.Paula.Application.Administration.Requests;
-using Super.Paula.Application.Administration.Responses;
 using Super.Paula.Client.ErrorHandling;
 using Super.Paula.Environment;
+using System;
+using System.Net.Http;
+using System.Net.Http.Json;
+using System.Threading.Tasks;
 
 namespace Super.Paula.Client.Administration
 {
@@ -27,7 +24,7 @@ namespace Super.Paula.Client.Administration
         public async ValueTask ChangeSecretAsync(ChangeSecretRequest request)
         {
             var responseMessage = await _httpClient.PostAsJsonAsync("account/change-secret", request);
-            
+
             responseMessage.RuleOutProblems();
             responseMessage.EnsureSuccessStatusCode();
         }
@@ -35,7 +32,7 @@ namespace Super.Paula.Client.Administration
         public async ValueTask RegisterOrganizationAsync(RegisterOrganizationRequest request)
         {
             var responseMessage = await _httpClient.PostAsJsonAsync("account/register-organization", request);
-            
+
             responseMessage.RuleOutProblems();
             responseMessage.EnsureSuccessStatusCode();
         }
@@ -43,7 +40,7 @@ namespace Super.Paula.Client.Administration
         public async ValueTask<string> SignInInspectorAsync(SignInInspectorRequest request)
         {
             var responseMessage = await _httpClient.PostAsJsonAsync("account/sign-in-inspector", request);
-            
+
             responseMessage.RuleOutProblems();
             responseMessage.EnsureSuccessStatusCode();
 
@@ -53,7 +50,7 @@ namespace Super.Paula.Client.Administration
         public async ValueTask<string> StartImpersonationAsync(StartImpersonationRequest request)
         {
             var responseMessage = await _httpClient.PostAsJsonAsync("account/start-impersonation", request);
-            
+
             responseMessage.RuleOutProblems();
             responseMessage.EnsureSuccessStatusCode();
 

@@ -1,9 +1,8 @@
-﻿using System.Threading.Tasks;
-using Super.Paula.Application.Administration;
+﻿using Super.Paula.Application.Administration;
 using Super.Paula.Application.Administration.Requests;
-using Super.Paula.Application.Administration.Responses;
 using Super.Paula.Authorization;
 using Super.Paula.Client.Storage;
+using System.Threading.Tasks;
 
 namespace Super.Paula.Client.Administration
 {
@@ -16,7 +15,7 @@ namespace Super.Paula.Client.Administration
             IAccountHandler accountHandler,
             ILocalStorage localStorage)
         {
-            _accountHandler = accountHandler;        
+            _accountHandler = accountHandler;
             _localStorage = localStorage;
         }
 

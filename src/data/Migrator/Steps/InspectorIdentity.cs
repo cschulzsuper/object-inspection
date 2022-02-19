@@ -1,12 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
-using Super.Paula.Application.Inventory;
-using Microsoft.Azure.Cosmos;
+﻿using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using Super.Paula.Environment;
 using Super.Paula.Application.Administration;
+using Super.Paula.Environment;
+using System.Threading.Tasks;
 
 namespace Super.Paula.Data.Steps
 {

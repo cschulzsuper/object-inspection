@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Microsoft.Extensions.Hosting;
+using Super.Paula.Data.Steps;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Hosting;
-using Super.Paula.Data.Steps;
 
 namespace Super.Paula.Data
 {

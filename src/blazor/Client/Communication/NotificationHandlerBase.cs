@@ -1,27 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Net.Http.Json;
-using System.Text.Json;
-using System.Threading.Tasks;
-using Super.Paula.Application.Communication;
+﻿using Super.Paula.Application.Communication;
 using Super.Paula.Application.Communication.Requests;
 using Super.Paula.Application.Communication.Responses;
 using Super.Paula.Client.ErrorHandling;
 using Super.Paula.Client.Streaming;
 using Super.Paula.Environment;
+using System;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Net.Http.Json;
+using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace Super.Paula.Client.Communication
 {
     public sealed class NotificationHandlerBase : INotificationHandler
     {
-        private readonly HttpClient _httpClient;      
+        private readonly HttpClient _httpClient;
 
         private readonly IStreamConnection _streamConnection;
 
         public NotificationHandlerBase(
             HttpClient httpClient,
-            AppSettings appSettings, 
+            AppSettings appSettings,
             IStreamConnection streamConnection)
         {
             _httpClient = httpClient;

@@ -165,7 +165,7 @@ namespace Super.Paula
 
             // Act
             var terms = SearchQueryParser.Parse(searchQuery)
-    .           ToList();
+    .ToList();
 
             // Assert
             terms.Should().HaveCount(2);

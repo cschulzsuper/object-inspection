@@ -1,7 +1,4 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Net.Http;
-using Microsoft.Azure.Cosmos;
+﻿using Microsoft.Azure.Cosmos;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Super.Paula.Application.Administration;
@@ -16,6 +13,9 @@ using Super.Paula.Data.Mappings.Communication;
 using Super.Paula.Data.Mappings.Guidelines;
 using Super.Paula.Data.Mappings.Inventory;
 using Super.Paula.Environment;
+using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Net.Http;
 
 namespace Super.Paula.Data
 {
@@ -48,9 +48,11 @@ namespace Super.Paula.Data
                             options.ConnectionMode(ConnectionMode.Gateway);
                         }
                     });
-                
-               options.LogTo(Console.WriteLine);
+
+                options.LogTo(Console.WriteLine);
             });
+
+            services.AddScoped<PaulaContextState>();
 
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Super.Paula.Application.Administration
 {
-    public class  InspectorManager : IInspectorManager
+    public class InspectorManager : IInspectorManager
     {
         private readonly IRepository<Inspector> _inspectorRepository;
 
@@ -23,7 +23,7 @@ namespace Super.Paula.Application.Administration
             var entity = await _inspectorRepository.GetByIdsOrDefaultAsync(inspector);
             if (entity == null)
             {
-                throw new ManagementException($"Inspector '{inspector}' was not found");
+                throw new ManagementException($"Inspector '{inspector}' was not found.");
             }
 
             return entity;
@@ -31,6 +31,10 @@ namespace Super.Paula.Application.Administration
 
         public IQueryable<Inspector> GetQueryable()
             => _inspectorRepository.GetPartitionQueryable();
+
+        public IQueryable<Inspector> GetQueryableWhereBusinessObject(string businessObject)
+            => _inspectorRepository.GetPartitionQueryable(
+                $"SELECT * FROM c WHERE ARRAY_CONTAINS(c.BusinessObjects, {{\"UniqueName\": {businessObject}}}, true)");
 
         public IAsyncEnumerable<Inspector> GetAsyncEnumerable()
             => _inspectorRepository.GetPartitionAsyncEnumerable();
@@ -48,7 +52,7 @@ namespace Super.Paula.Application.Administration
             }
             catch (Exception exception)
             {
-                throw new ManagementException($"Could not insert inspector '{inspector.UniqueName}'", exception);
+                throw new ManagementException($"Could not insert inspector '{inspector.UniqueName}'.", exception);
             }
         }
 
@@ -62,7 +66,7 @@ namespace Super.Paula.Application.Administration
             }
             catch (Exception exception)
             {
-                throw new ManagementException($"Could not update inspector '{inspector.UniqueName}'", exception);
+                throw new ManagementException($"Could not update inspector '{inspector.UniqueName}'.", exception);
             }
         }
 
@@ -76,7 +80,7 @@ namespace Super.Paula.Application.Administration
             }
             catch (Exception exception)
             {
-                throw new ManagementException($"Could not delete inspector '{inspector.UniqueName}'", exception);
+                throw new ManagementException($"Could not delete inspector '{inspector.UniqueName}'.", exception);
             }
         }
 

@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Super.Paula.Data.Mappings;
-using Super.Paula.Environment;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,10 +13,10 @@ namespace Super.Paula.Data
         where TEntity : class
     {
         private readonly PaulaContext _repositoryContext;
-        private readonly AppState _appState;
+        private readonly PaulaContextState _appState;
         private readonly IPartitionKeyValueGenerator<TEntity> _partitionKeyValueGenerator;
 
-        public Repository(PaulaContext repositoryContext, AppState appState, IPartitionKeyValueGenerator<TEntity> partitionKeyValueGenerator)
+        public Repository(PaulaContext repositoryContext, PaulaContextState appState, IPartitionKeyValueGenerator<TEntity> partitionKeyValueGenerator)
         {
             _repositoryContext = repositoryContext;
             _appState = appState;
@@ -26,14 +25,14 @@ namespace Super.Paula.Data
 
         public async ValueTask<TEntity> GetByIdAsync(object id)
             => await _repositoryContext.FindAsync<TEntity>(AdjustForPartitionKey(id))
-               ?? throw new RepositoryException($"Entity with id ({id}) was not found");
+               ?? throw new RepositoryException($"Entity with id ({id}) was not found.");
 
         public ValueTask<TEntity?> GetByIdOrDefaultAsync(object id)
             => _repositoryContext.FindAsync<TEntity>(AdjustForPartitionKey(id));
 
         public async ValueTask<TEntity> GetByIdsAsync(params object[] ids)
             => await _repositoryContext.FindAsync<TEntity>(AdjustForPartitionKey(ids))
-               ?? throw new RepositoryException($"Entity with ids ({string.Join(',', ids)}) was not found");
+               ?? throw new RepositoryException($"Entity with ids ({string.Join(',', ids)}) was not found.");
 
         public ValueTask<TEntity?> GetByIdsOrDefaultAsync(params object[] ids)
             => _repositoryContext.FindAsync<TEntity>(AdjustForPartitionKey(ids));
@@ -80,7 +79,7 @@ namespace Super.Paula.Data
             var partitionKey = _partitionKeyValueGenerator.Value(_appState, partitionKeyComponentsQueue);
 
             var query = _repositoryContext.Set<TEntity>().AsQueryable();
-            
+
             if (!string.IsNullOrWhiteSpace(partitionKey))
             {
                 query = query.WithPartitionKey(partitionKey);
@@ -132,7 +131,11 @@ namespace Super.Paula.Data
             {
                 var entityEntry = _repositoryContext.Add(entity);
 
-                var partitionKeyProperty = entityEntry.Metadata.GetPartitionKeyProperty(); 
+                // The value of shadow key property 'BusinessObjectInspectionAudit.PartitionKey' is unknown when attempting to save changes.
+                // This is because shadow property values cannot be preserved when the entity is not being tracked.
+                // Consider adding the property to the entity's .NET type. See https://aka.ms/efcore-docs-owned-collections for more information.
+
+                var partitionKeyProperty = entityEntry.Metadata.GetPartitionKeyProperty();
                 if (partitionKeyProperty != null)
                 {
                     var partitionKey = entityEntry.Properties.Single(x => x.Metadata == partitionKeyProperty);
@@ -155,6 +158,18 @@ namespace Super.Paula.Data
             if (_repositoryContext.Entry(entity).State == EntityState.Detached)
             {
                 var entityEntry = _repositoryContext.Add(entity);
+
+                // The value of shadow key property 'BusinessObjectInspectionAudit.PartitionKey' is unknown when attempting to save changes.
+                // This is because shadow property values cannot be preserved when the entity is not being tracked.
+                // Consider adding the property to the entity's .NET type. See https://aka.ms/efcore-docs-owned-collections for more information.
+
+                var partitionKeyProperty = entityEntry.Metadata.GetPartitionKeyProperty();
+                if (partitionKeyProperty != null)
+                {
+                    var partitionKey = entityEntry.Properties.Single(x => x.Metadata == partitionKeyProperty);
+                    partitionKey.IsModified = true;
+                }
+
                 entityEntry.State = EntityState.Unchanged;
             }
 

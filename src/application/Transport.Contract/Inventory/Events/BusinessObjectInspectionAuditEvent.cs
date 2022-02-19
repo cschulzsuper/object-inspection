@@ -1,36 +1,44 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Super.Paula.Application.Orchestration;
 using Super.Paula.Validation;
+using System.ComponentModel.DataAnnotations;
 
 namespace Super.Paula.Application.Inventory.Events
 {
-    public class BusinessObjectInspectionAuditEvent
-    {
-        [StringLength(140)]
-        public string? BusinessObjectDisplayName { get; set; }
+    [AllowedSubscriber(AllowedSubscribers.AuditingBusinessObjectInspectionAudit)]
+    public record BusinessObjectInspectionAuditEvent(
 
         [KebabCase]
         [StringLength(140)]
         [UniqueName]
-        public string AuditInspector { get; set; } = string.Empty;
+        string UniqueName,
 
-        [KebabCase] 
+        [StringLength(140)]
+        string DisplayName,
+
+        [KebabCase]
         [StringLength(140)]
         [UniqueName]
-        public string Inspection { get; set; } = string.Empty;
+        string AuditInspector,
+
+        [KebabCase]
+        [StringLength(140)]
+        [UniqueName]
+        string Inspection,
 
         [StringLength(140)]
-        public string? InspectionDisplayName { get; set; }
+        string InspectionDisplayName,
 
         [StringLength(4000)]
-        public string? AuditAnnotation { get; set; }
+        string AuditAnnotation,
 
         [AuditResult]
-        public string? AuditResult { get; set; }
+        string AuditResult,
 
         [DayNumber]
-        public int AuditDate { get; set; }
+        int AuditDate,
 
         [Milliseconds]
-        public int AuditTime { get; set; }
-    }
+        int AuditTime)
+
+        : EventBase;
 }

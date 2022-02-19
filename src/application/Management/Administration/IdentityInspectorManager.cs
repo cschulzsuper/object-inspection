@@ -23,7 +23,7 @@ namespace Super.Paula.Application.Administration
             var entity = await _identityInspectorRepository.GetByIdsOrDefaultAsync(identity, organization, inspector);
             if (entity == null)
             {
-                throw new ManagementException($"Identity inspector '{identity}/{organization}/{inspector}' was not found");
+                throw new ManagementException($"Identity inspector '{identity}/{organization}/{inspector}' was not found.");
             }
 
             return entity;
@@ -39,7 +39,7 @@ namespace Super.Paula.Application.Administration
             }
             catch (Exception exception)
             {
-                throw new ManagementException($"Could not insert inspector identity '{identity.UniqueName}'", exception);
+                throw new ManagementException($"Could not insert inspector identity '{identity.UniqueName}'.", exception);
             }
         }
 
@@ -53,7 +53,7 @@ namespace Super.Paula.Application.Administration
             }
             catch (Exception exception)
             {
-                throw new ManagementException($"Could not update inspector identity '{identity.UniqueName}'", exception);
+                throw new ManagementException($"Could not update inspector identity '{identity.UniqueName}'.", exception);
             }
         }
 
@@ -67,7 +67,7 @@ namespace Super.Paula.Application.Administration
             }
             catch (Exception exception)
             {
-                throw new ManagementException($"Could not delete inspector identity '{identity.UniqueName}'", exception);
+                throw new ManagementException($"Could not delete inspector identity '{identity.UniqueName}'.", exception);
             }
         }
 

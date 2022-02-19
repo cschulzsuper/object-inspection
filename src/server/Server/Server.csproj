@@ -13,7 +13,6 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\application\Endpoints\Endpoints.csproj" />
-		<ProjectReference Include="..\..\application\Environment.AspNetCore\Environment.AspNetCore.csproj" />
 		<ProjectReference Include="..\..\application\Integration\Integration.csproj" />
 		<ProjectReference Include="..\..\application\Management\Management.csproj" />
 		<ProjectReference Include="..\..\application\Security\Security.csproj" />

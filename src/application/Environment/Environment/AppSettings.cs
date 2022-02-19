@@ -15,7 +15,7 @@
         public string MaintainerOrganization { get; set; } = string.Empty;
 
         public string DemoIdentity { get; set; } = string.Empty;
-        
+
         public string Server { get; set; } = string.Empty;
     }
 }

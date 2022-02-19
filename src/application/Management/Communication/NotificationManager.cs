@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Super.Paula.Data;
+using Super.Paula.Validation;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Super.Paula.Data;
-using Super.Paula.Validation;
 
 namespace Super.Paula.Application.Communication
 {
@@ -22,7 +22,7 @@ namespace Super.Paula.Application.Communication
             var notification = await _notificationRepository.GetByIdsOrDefaultAsync(inspector, date, time);
             if (notification == null)
             {
-                throw new ManagementException($"Notification '{inspector}/{date}/{time}' was not found");
+                throw new ManagementException($"Notification '{inspector}/{date}/{time}' was not found.");
             }
 
             return notification;
@@ -65,7 +65,7 @@ namespace Super.Paula.Application.Communication
             }
             catch (Exception exception)
             {
-                throw new ManagementException($"Could not insert notification '{notification.Inspector}/{notification.Date}/{notification.Time}'", exception);
+                throw new ManagementException($"Could not insert notification '{notification.Inspector}/{notification.Date}/{notification.Time}'.", exception);
             }
         }
 
@@ -79,7 +79,7 @@ namespace Super.Paula.Application.Communication
             }
             catch (Exception exception)
             {
-                throw new ManagementException($"Could not update notification '{notification.Inspector}/{notification.Date}/{notification.Time}'", exception);
+                throw new ManagementException($"Could not update notification '{notification.Inspector}/{notification.Date}/{notification.Time}'.", exception);
             }
         }
 
@@ -93,7 +93,7 @@ namespace Super.Paula.Application.Communication
             }
             catch (Exception exception)
             {
-                throw new ManagementException($"Could not delete notification '{notification.Inspector}/{notification.Date}/{notification.Time}'", exception);
+                throw new ManagementException($"Could not delete notification '{notification.Inspector}/{notification.Date}/{notification.Time}'.", exception);
             }
         }
 

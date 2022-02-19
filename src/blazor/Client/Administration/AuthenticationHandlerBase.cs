@@ -59,7 +59,7 @@ namespace Super.Paula.Client.Administration
             }
             catch (HttpRequestException exception)
             {
-                throw new SignOutException($"Could not sign out", exception);
+                throw new SignOutException($"Could not sign out.", exception);
             }
         }
     }

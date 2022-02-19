@@ -23,7 +23,7 @@ namespace Super.Paula.Application.Inventory
             var entity = await _businessObjectRepository.GetByIdsOrDefaultAsync(businessObject);
             if (entity == null)
             {
-                throw new ManagementException($"Business object '{businessObject}' was not found");
+                throw new ManagementException($"Business object '{businessObject}' was not found.");
             }
 
             return entity;
@@ -52,7 +52,7 @@ namespace Super.Paula.Application.Inventory
             }
             catch (Exception exception)
             {
-                throw new ManagementException($"Could not insert business object '{businessObject.UniqueName}'", exception);
+                throw new ManagementException($"Could not insert business object '{businessObject.UniqueName}'.", exception);
             }
         }
 
@@ -66,7 +66,7 @@ namespace Super.Paula.Application.Inventory
             }
             catch (Exception exception)
             {
-                throw new ManagementException($"Could not update business object '{businessObject.UniqueName}'", exception);
+                throw new ManagementException($"Could not update business object '{businessObject.UniqueName}'.", exception);
             }
         }
 
@@ -80,7 +80,7 @@ namespace Super.Paula.Application.Inventory
             }
             catch (Exception exception)
             {
-                throw new ManagementException($"Could not delete business object '{businessObject.UniqueName}'", exception);
+                throw new ManagementException($"Could not delete business object '{businessObject.UniqueName}'.", exception);
             }
         }
 

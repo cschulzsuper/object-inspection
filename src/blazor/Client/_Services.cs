@@ -1,7 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
-using System.Net.Http;
-using Microsoft.AspNetCore.Components.Authorization;
+﻿using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Http;
 using Super.Paula.Application.Administration;
@@ -18,13 +15,15 @@ using Super.Paula.Client.Inventory;
 using Super.Paula.Client.Localization;
 using Super.Paula.Client.Storage;
 using Super.Paula.Client.Streaming;
+using System.Diagnostics.CodeAnalysis;
+using System.Net.Http;
 
 namespace Super.Paula.Client
 {
     [SuppressMessage("Style", "IDE1006")]
     public static class _Services
     {
-        public static IServiceCollection AddPaulaClient(this IServiceCollection services, 
+        public static IServiceCollection AddPaulaClient(this IServiceCollection services,
             bool isDevelopment,
             bool isWebAssembly)
         {
@@ -98,7 +97,7 @@ namespace Super.Paula.Client
                     provider.GetRequiredService<AuthenticationHandlerBase>(),
                     provider.GetRequiredService<ILocalStorage>()));
 
-            services.AddScoped<INotificationHandler>(provider => 
+            services.AddScoped<INotificationHandler>(provider =>
                 new NotificationHandler(
                     provider.GetRequiredService<NotificationHandlerBase>(),
                     provider.GetRequiredService<AuthenticationStateProvider>()));

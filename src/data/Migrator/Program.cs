@@ -1,8 +1,8 @@
-﻿using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Super.Paula.Data.Steps;
+using System.Threading.Tasks;
 
 namespace Super.Paula.Data
 {
@@ -19,7 +19,6 @@ namespace Super.Paula.Data
                 .ConfigureServices((context, services) =>
                 {
                     services.AddHostedService<HostedService>();
-                    services.AddPaulaAppState();
                     services.AddPaulaAppSettings();
                     services.AddPaulaServerData(context.HostingEnvironment.IsDevelopment());
 

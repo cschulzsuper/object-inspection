@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Components.Authorization;
+﻿using Microsoft.AspNetCore.Components.Authorization;
 using Super.Paula.Application.Administration;
 using Super.Paula.Application.Administration.Requests;
 using Super.Paula.Application.Administration.Responses;
 using Super.Paula.Authorization;
-using Super.Paula.Environment;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Super.Paula.Client.Administration
 {
@@ -79,7 +78,7 @@ namespace Super.Paula.Client.Administration
         public async ValueTask<InspectorResponse> GetAsync(string inspector)
         {
             var user = (await _AuthenticationStateProvider.GetAuthenticationStateAsync()).User;
-            
+
             if (!user.HasInspector(inspector))
             {
                 return await _inspectorHandler.GetAsync(inspector);

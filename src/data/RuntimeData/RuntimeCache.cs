@@ -11,7 +11,7 @@ namespace Super.Paula.RuntimeData
         public TEntity? Get(params string[] correlationParts)
         {
             var correlation = string.Join(":", correlationParts);
-            
+
             return _runtimeBucket.ContainsKey(correlation)
                 ? _runtimeBucket[correlation]
                 : null;

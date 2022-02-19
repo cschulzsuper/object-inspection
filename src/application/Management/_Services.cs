@@ -1,11 +1,11 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Super.Paula.Application.Administration;
 using Super.Paula.Application.Auditing;
+using Super.Paula.Application.Communication;
 using Super.Paula.Application.Guidelines;
 using Super.Paula.Application.Inventory;
 using Super.Paula.Application.Runtime;
 using System.Diagnostics.CodeAnalysis;
-using Super.Paula.Application.Communication;
 
 namespace Super.Paula.Application
 {

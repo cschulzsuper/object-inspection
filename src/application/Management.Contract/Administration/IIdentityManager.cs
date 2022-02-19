@@ -14,6 +14,6 @@ namespace Super.Paula.Application.Administration
         ValueTask InsertAsync(Identity identity);
         ValueTask UpdateAsync(Identity identity);
         ValueTask DeleteAsync(Identity identity);
-       
+
     }
 }

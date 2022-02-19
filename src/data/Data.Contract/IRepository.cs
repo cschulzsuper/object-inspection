@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Super.Paula.Data
 {
-    public interface IRepository<TEntity> 
+    public interface IRepository<TEntity>
         where TEntity : class
     {
         [ErrorMessage("Could not query entity by id")]

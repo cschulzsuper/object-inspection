@@ -1,11 +1,10 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Components.Authorization;
+using Super.Paula.Authorization;
+using Super.Paula.Client.Storage;
+using System;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Components.Authorization;
-using Super.Paula.Application;
-using Super.Paula.Authorization;
-using Super.Paula.Client.Storage;
 
 namespace Super.Paula.Client.Authentication
 {
@@ -63,7 +62,7 @@ namespace Super.Paula.Client.Authentication
 
             return new AuthenticationState(
                 new ClaimsPrincipal(
-                    new ClaimsIdentity(claims,"password")));
+                    new ClaimsIdentity(claims, "password")));
         }
     }
 }

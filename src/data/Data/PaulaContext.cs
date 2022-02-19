@@ -4,19 +4,18 @@ using Super.Paula.Data.Mappings.Auditing;
 using Super.Paula.Data.Mappings.Communication;
 using Super.Paula.Data.Mappings.Guidelines;
 using Super.Paula.Data.Mappings.Inventory;
-using Super.Paula.Environment;
 
 namespace Super.Paula.Data
 {
     public class PaulaContext : DbContext
     {
-        public PaulaContext(DbContextOptions<PaulaContext> options, AppState appState)
-            : base(options)  
+        public PaulaContext(DbContextOptions<PaulaContext> options, PaulaContextState state)
+            : base(options)
         {
-            AppState = appState;
+            State = state;
         }
 
-        public AppState AppState { get; }
+        public PaulaContextState State { get; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

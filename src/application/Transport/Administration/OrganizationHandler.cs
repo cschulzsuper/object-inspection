@@ -1,9 +1,11 @@
-﻿using Super.Paula.Application.Administration.Requests;
+﻿using Super.Paula.Application.Administration.Events;
+using Super.Paula.Application.Administration.Requests;
 using Super.Paula.Application.Administration.Responses;
+using Super.Paula.Application.Orchestration;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
-using Super.Paula.Application.Administration.Events;
 
 namespace Super.Paula.Application.Administration
 {
@@ -11,13 +13,16 @@ namespace Super.Paula.Application.Administration
     {
         private readonly IOrganizationManager _organizationManager;
         private readonly IEventBus _eventBus;
+        private readonly ClaimsPrincipal _user;
 
         public OrganizationHandler(
             IOrganizationManager organizationManager,
-            IEventBus eventBus)
+            IEventBus eventBus,
+            ClaimsPrincipal user)
         {
             _organizationManager = organizationManager;
             _eventBus = eventBus;
+            _user = user;
         }
 
         public async ValueTask<OrganizationResponse> CreateAsync(OrganizationRequest request)
@@ -32,6 +37,8 @@ namespace Super.Paula.Application.Administration
 
             await _organizationManager.InsertAsync(entity);
 
+            await PublishOrganizationAsync(entity);
+
             return new OrganizationResponse
             {
                 ChiefInspector = entity.ChiefInspector,
@@ -44,7 +51,8 @@ namespace Super.Paula.Application.Administration
         public async ValueTask DeleteAsync(string organization)
         {
             var entity = await _organizationManager.GetAsync(organization);
-            await _organizationManager.DeleteAsync(entity);
+            
+            await _organizationManager.DeleteAsync(entity); 
         }
 
         public IAsyncEnumerable<OrganizationResponse> GetAll()
@@ -127,13 +135,12 @@ namespace Super.Paula.Application.Administration
 
         private async ValueTask PublishOrganizationAsync(Organization entity)
         {
-            var @event = new OrganizationEvent
-            {
-                DisplayName = entity.DisplayName,
-                Activated = entity.Activated
-            };
+            var @event = new OrganizationEvent(
+                entity.UniqueName,
+                entity.DisplayName,
+                entity.Activated);
 
-            await _eventBus.PublishAsync(EventCategories.Inspector, entity.UniqueName, @event);
+            await _eventBus.PublishAsync(@event, _user);
         }
     }
 }

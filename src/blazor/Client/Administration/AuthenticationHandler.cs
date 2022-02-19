@@ -3,9 +3,6 @@ using Super.Paula.Application.Administration.Exceptions;
 using Super.Paula.Application.Administration.Requests;
 using Super.Paula.Authorization;
 using Super.Paula.Client.Storage;
-using System;
-using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace Super.Paula.Client.Administration

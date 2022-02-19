@@ -1,13 +1,12 @@
-﻿using System.Security.Claims;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication;
+﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Super.Paula.Application.Administration;
 using Super.Paula.Application.Runtime;
 using Super.Paula.Authorization;
 using Super.Paula.Environment;
-
+using System.Security.Claims;
+using System.Threading.Tasks;
 using IAuthenticationHandler = Microsoft.AspNetCore.Authentication.IAuthenticationHandler;
 
 namespace Super.Paula.Authentication
@@ -36,7 +35,7 @@ namespace Super.Paula.Authentication
             var authorizationHeader = _context?.Request.Headers.Authorization.ToString();
 
             if (string.IsNullOrWhiteSpace(authorizationHeader))
-                if(_context?.Request.Query.ContainsKey("access_token") == true)
+                if (_context?.Request.Query.ContainsKey("access_token") == true)
                 {
                     authorizationHeader = $"Bearer {_context.Request.Query["access_token"]}";
                 }
@@ -89,7 +88,7 @@ namespace Super.Paula.Authentication
                 token.Identity,
                 token.Proof);
 
-            if(!validIdentity)
+            if (!validIdentity)
             {
                 return null;
             }

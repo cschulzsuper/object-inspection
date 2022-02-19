@@ -13,7 +13,7 @@ namespace Super.Paula.Client.Components.Forms
         [Parameter]
         public string Policy { get; set; } = null!;
 
-        [Parameter(CaptureUnmatchedValues = true)] 
+        [Parameter(CaptureUnmatchedValues = true)]
         public IReadOnlyDictionary<string, object> AdditionalAttributes { get; set; } = null!;
 
         [CascadingParameter]
@@ -22,14 +22,14 @@ namespace Super.Paula.Client.Components.Forms
         [Inject]
         public IAuthorizationService AuthorizationService { get; set; } = null!;
 
-        [Parameter] 
+        [Parameter]
         public RenderFragment ChildContent { get; set; } = null!;
 
         private bool _isAuthorized = false;
 
         protected override async Task OnParametersSetAsync()
         {
-            var user  = (await AuthenticationState).User;
+            var user = (await AuthenticationState).User;
             _isAuthorized = await IsAuthorizedAsync(user);
         }
 

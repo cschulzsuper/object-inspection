@@ -1,22 +1,30 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Super.Paula.Application.Orchestration;
 using Super.Paula.Validation;
+using System.ComponentModel.DataAnnotations;
 
 namespace Super.Paula.Application.Inventory.Events
 {
-    public class BusinessObjectInspectionAuditScheduleEvent
-    {
+    [AllowedSubscriber(AllowedSubscribers.AdministrationInspector)]
+    public record BusinessObjectInspectionAuditScheduleEvent(
+
         [KebabCase]
         [StringLength(140)]
         [UniqueName]
-        public string? Inspector { get; set; }
+        string UniqueName,
+
+        [KebabCase]
+        [StringLength(140)]
+        [UniqueName]
+        string Inspector,
 
         [DayNumber]
-        public int? PlannedAuditDate { get; set; }
+        int PlannedAuditDate,
 
         [Milliseconds]
-        public int? PlannedAuditTime { get; set; }
+        int PlannedAuditTime,
 
         [Milliseconds]
-        public int? Threshold { get; set; }
-    }
+        int Threshold)
+
+        : EventBase;
 }

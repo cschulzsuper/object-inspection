@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Super.Paula.Application.Administration
 {
-    public class  IdentityManager : IIdentityManager
+    public class IdentityManager : IIdentityManager
     {
         private readonly IRepository<Identity> _identityRepository;
 
@@ -23,7 +23,7 @@ namespace Super.Paula.Application.Administration
             var entity = await _identityRepository.GetByIdsOrDefaultAsync(identity);
             if (entity == null)
             {
-                throw new ManagementException($"Identity '{identity}' was not found");
+                throw new ManagementException($"Identity '{identity}' was not found.");
             }
 
             return entity;
@@ -48,7 +48,7 @@ namespace Super.Paula.Application.Administration
             }
             catch (Exception exception)
             {
-                throw new ManagementException($"Could not insert identity '{identity.UniqueName}'", exception);
+                throw new ManagementException($"Could not insert identity '{identity.UniqueName}'.", exception);
             }
         }
 
@@ -62,7 +62,7 @@ namespace Super.Paula.Application.Administration
             }
             catch (Exception exception)
             {
-                throw new ManagementException($"Could not update identity '{identity.UniqueName}'", exception);
+                throw new ManagementException($"Could not update identity '{identity.UniqueName}'.", exception);
             }
         }
 
@@ -76,7 +76,7 @@ namespace Super.Paula.Application.Administration
             }
             catch (Exception exception)
             {
-                throw new ManagementException($"Could not delete identity '{identity.UniqueName}'", exception);
+                throw new ManagementException($"Could not delete identity '{identity.UniqueName}'.", exception);
             }
         }
 

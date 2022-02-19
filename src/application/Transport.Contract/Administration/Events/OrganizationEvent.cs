@@ -1,11 +1,21 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Super.Paula.Application.Orchestration;
+using Super.Paula.Validation;
+using System.ComponentModel.DataAnnotations;
 
 namespace Super.Paula.Application.Administration.Events
 {
-    public class OrganizationEvent
-    {
+    [AllowedSubscriber(AllowedSubscribers.AdministrationInspector)]
+    public record OrganizationEvent(
+
+        [KebabCase]
         [StringLength(140)]
-        public string? DisplayName { get; set; }
-        public bool? Activated { get; set; }
-    }
+        [UniqueName]
+        string UniqueName,
+
+        [StringLength(140)]
+        string DisplayName,
+
+        bool Activated)
+
+        : EventBase;
 }

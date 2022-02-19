@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
-using Super.Paula.Application.Streaming;
 
-namespace Super.Paula.Application.Communication
+namespace Super.Paula.Application.Streaming
 {
     public static class StreamEndpoints
     {

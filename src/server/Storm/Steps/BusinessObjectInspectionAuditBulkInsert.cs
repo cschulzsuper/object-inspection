@@ -1,10 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Super.Paula.Application.Administration;
-using Super.Paula.Application.Auditing;
-using Super.Paula.Application.Inventory;
+﻿using Super.Paula.Application.Auditing;
 using Super.Paula.Data;
-using Super.Paula.Environment;
 using System;
 using System.Threading.Tasks;
 
@@ -15,7 +10,7 @@ namespace Super.Paula.Steps
         private readonly IBusinessObjectInspectionAuditManager _businessObjectInspectionAuditManager;
 
         public BusinessObjectInspectionAuditBulkInsert(
-            IBusinessObjectInspectionAuditManager businessObjectInspectionAuditManager, AppState appState)
+            IBusinessObjectInspectionAuditManager businessObjectInspectionAuditManager, PaulaContextState appState)
         {
             appState.CurrentOrganization = "super";
             _businessObjectInspectionAuditManager = businessObjectInspectionAuditManager;

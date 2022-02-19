@@ -27,7 +27,7 @@ else
             </tr>
         </thead>
         <tbody>
-            @foreach (var inspection in _businessObject.Inspections.Where(x => x.Activated && x.ActivatedGlobally))
+            @foreach (var inspection in _businessObject.Inspections.Where(x => x.Activated))
             {
                 <tr>
                     <td>

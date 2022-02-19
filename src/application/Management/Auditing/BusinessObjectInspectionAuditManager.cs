@@ -23,7 +23,7 @@ namespace Super.Paula.Application.Auditing
             var entity = await _businessObjectInspectionAuditRepository.GetByIdsOrDefaultAsync(date, businessObject, inspection, time);
             if (entity == null)
             {
-                throw new ManagementException($"Business object inspection audit '{businessObject}/{inspection}/{date}/{time}' was not found");
+                throw new ManagementException($"Business object inspection audit '{businessObject}/{inspection}/{date}/{time}' was not found.");
             }
 
             return entity;
@@ -77,7 +77,7 @@ namespace Super.Paula.Application.Auditing
             }
             catch (Exception exception)
             {
-                throw new ManagementException($"Could not insert business object inspection audit '{audit.BusinessObject}/{audit.Inspection}/{audit.AuditDate}/{audit.AuditTime}'", exception);
+                throw new ManagementException($"Could not insert business object inspection audit '{audit.BusinessObject}/{audit.Inspection}/{audit.AuditDate}/{audit.AuditTime}'.", exception);
             }
         }
 
@@ -91,7 +91,7 @@ namespace Super.Paula.Application.Auditing
             }
             catch (Exception exception)
             {
-                throw new ManagementException($"Could not update business object inspection audit '{audit.BusinessObject}/{audit.Inspection}/{audit.AuditDate}/{audit.AuditTime}'", exception);
+                throw new ManagementException($"Could not update business object inspection audit '{audit.BusinessObject}/{audit.Inspection}/{audit.AuditDate}/{audit.AuditTime}'.", exception);
             }
         }
 
@@ -105,7 +105,7 @@ namespace Super.Paula.Application.Auditing
             }
             catch (Exception exception)
             {
-                throw new ManagementException($"Could not delete business object inspection audit '{audit.BusinessObject}/{audit.Inspection}/{audit.AuditDate}/{audit.AuditTime}'", exception);
+                throw new ManagementException($"Could not delete business object inspection audit '{audit.BusinessObject}/{audit.Inspection}/{audit.AuditDate}/{audit.AuditTime}'.", exception);
             }
         }
 

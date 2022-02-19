@@ -4,58 +4,34 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Super.Paula.Application.Inventory.Events;
 
 namespace Super.Paula.Application.Communication
 {
-    public class NotificationHandler : INotificationHandler, INotificationEventHandler
+    public class NotificationHandler : INotificationHandler
     {
         private readonly INotificationManager _notificationManager;
-        
-        private Func<NotificationResponse, Task>? _onCreationHandler;
-        private Func<string, int, int, Task>? _onDeletionHandler;
+        private readonly INotificationAnnouncer _notificationAnnouncer;
 
-        public NotificationHandler(INotificationManager notificationManager)
+        public NotificationHandler(
+            INotificationManager notificationManager,
+            INotificationAnnouncer notificationAnnouncer)
         {
             _notificationManager = notificationManager;
+            _notificationAnnouncer = notificationAnnouncer;
         }
 
-        public async ValueTask<NotificationResponse> CreateAsync(string inspector, NotificationRequest request)
-        {
-            var entity = new Notification
-            {
-                Date = request.Date,
-                Time = request.Time,
-                Inspector = inspector,
-                Target = request.Target,
-                Text = request.Text
-            };
-
-            await _notificationManager.InsertAsync(entity);
-
-            var response = new NotificationResponse
-            {
-                Date = entity.Date,
-                Time = entity.Time,
-                Text = entity.Text,
-                Inspector = entity.Inspector,
-                Target = entity.Target
-            };
-
-            var onCreationTask = _onCreationHandler?.Invoke(response);
-            if (onCreationTask != null) await onCreationTask;
-
-            return response;
-        }
-
-        public async ValueTask DeleteAsync(string inspector, int date, int time)
+        public async ValueTask<NotificationResponse> GetAsync(string inspector, int date, int time)
         {
             var entity = await _notificationManager.GetAsync(inspector, date, time);
 
-            var onDeletionTask = _onDeletionHandler?.Invoke(inspector, date, time);
-            if (onDeletionTask != null) await onDeletionTask;
-
-            await _notificationManager.DeleteAsync(entity);
+            return new NotificationResponse
+            {
+                Date = entity.Date,
+                Time = entity.Time,
+                Inspector = entity.Inspector,
+                Target = entity.Target,
+                Text = entity.Text
+            };
         }
 
         public IAsyncEnumerable<NotificationResponse> GetAll()
@@ -82,30 +58,31 @@ namespace Super.Paula.Application.Communication
                         Text = entity.Text
                     }));
 
-        public async ValueTask<NotificationResponse> GetAsync(string inspector, int date, int time)
+        public async ValueTask<NotificationResponse> CreateAsync(string inspector, NotificationRequest request)
         {
-            var entity = await _notificationManager.GetAsync(inspector, date, time);
+            var entity = new Notification
+            {
+                Date = request.Date,
+                Time = request.Time,
+                Inspector = inspector,
+                Target = request.Target,
+                Text = request.Text
+            };
 
-            return new NotificationResponse
+            await _notificationManager.InsertAsync(entity);
+
+            var response = new NotificationResponse
             {
                 Date = entity.Date,
                 Time = entity.Time,
+                Text = entity.Text,
                 Inspector = entity.Inspector,
-                Target = entity.Target,
-                Text = entity.Text
+                Target = entity.Target
             };
-        }
 
-        public Task<IDisposable> OnCreationAsync(Func<NotificationResponse, Task> handler)
-        {
-            _onCreationHandler = handler;
-            return Task.FromResult<IDisposable>(null!);
-        }
+            await _notificationAnnouncer.AnnounceCreationAsync(response);
 
-        public Task<IDisposable> OnDeletionAsync(Func<string, int, int, Task> handler)
-        {
-            _onDeletionHandler = handler;
-            return Task.FromResult<IDisposable>(null!);
+            return response;
         }
 
         public async ValueTask ReplaceAsync(string inspector, int date, int time, NotificationRequest request)
@@ -116,75 +93,23 @@ namespace Super.Paula.Application.Communication
             entity.Time = request.Time;
             entity.Inspector = inspector;
             entity.Target = request.Target;
-            entity.Text = request.Text; 
+            entity.Text = request.Text;
 
             await _notificationManager.UpdateAsync(entity);
         }
 
-        public async ValueTask ProcessAsync(string businessObject, BusinessObjectInspectorEvent @event)
+        public async ValueTask DeleteAsync(string inspector, int date, int time)
         {
-            var (date, time) = DateTime.UtcNow.ToNumbers();
+            var entity = await _notificationManager.GetAsync(inspector, date, time);
 
-            if (@event.OldInspector != null &&
-                @event.OldInspector != @event.NewInspector)
-            {
-
-                await CreateAsync(@event.OldInspector, new NotificationRequest
-                {
-                    Date = date,
-                    Time = time,
-                    Target = $"business-objects/{businessObject}",
-                    Text = $"You are not longer the inspector for {@event.BusinessObjectDisplayName}!"
-                });
-            }
-
-            if (@event.NewInspector != null &&
-                @event.NewInspector != @event.OldInspector)
-            {
-
-                await CreateAsync(@event.NewInspector, new NotificationRequest
-                {
-                    Date = date,
-                    Time = time,
-                    Target = $"business-objects/{businessObject}",
-                    Text = $"You are now the inspector for {@event.BusinessObjectDisplayName}!"
-                });
-            }
+            await _notificationManager.DeleteAsync(entity);
+            await _notificationAnnouncer.AnnounceDeletionAsync(inspector, date, time);
         }
 
-        public async ValueTask ProcessAsync(string inspector, InspectorBusinessObjectEvent @event)
-        {
-            if (@event.NewAuditSchedulePending == true &&
-                @event.NewAuditSchedulePending != @event.OldAuditSchedulePending &&
-                @event.NewAuditScheduleDelayed == false &&
-                @event.OldAuditScheduleDelayed == false)
-            {
+        public Task<IDisposable> OnCreationAsync(Func<NotificationResponse, Task> handler)
+            => _notificationAnnouncer.OnCreationAsync(handler);
 
-                var (date, time) = DateTime.UtcNow.ToNumbers();
-
-                await CreateAsync(inspector, new NotificationRequest
-                {
-                    Date = date,
-                    Time = time,
-                    Target = $"business-objects/{@event.UniqueName}",
-                    Text = $"An inspection audit for {@event.DisplayName} imminent!"
-                });
-            }
-
-            if (@event.NewAuditScheduleDelayed == true &&
-                @event.NewAuditScheduleDelayed != @event.OldAuditScheduleDelayed)
-            {
-
-                var (date, time) = DateTime.UtcNow.ToNumbers();
-
-                await CreateAsync(inspector, new NotificationRequest
-                {
-                    Date = date,
-                    Time = time,
-                    Target = $"business-objects/{@event.UniqueName}",
-                    Text = $"An inspection audit for {@event.DisplayName} overdue!"
-                });
-            }
-        }
+        public Task<IDisposable> OnDeletionAsync(Func<string, int, int, Task> handler)
+            => _notificationAnnouncer.OnDeletionAsync(handler);
     }
 }

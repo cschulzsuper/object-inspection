@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Routing;
 using Super.Paula.Application.Administration.Requests;
-using Super.Paula.Environment;
 using System;
 
 namespace Super.Paula.Application.Administration
@@ -25,7 +24,7 @@ namespace Super.Paula.Application.Administration
 
         private static Delegate SignOut =>
             [Authorize]
-            (IAuthenticationHandler handler)
+        (IAuthenticationHandler handler)
                 => handler.SignOutAsync();
 
         private static Delegate Register =>
@@ -34,7 +33,7 @@ namespace Super.Paula.Application.Administration
 
         private static Delegate ChangeSecret =>
             [Authorize]
-            (IAuthenticationHandler handler, ChangeSecretRequest request)
+        (IAuthenticationHandler handler, ChangeSecretRequest request)
                 => handler.ChangeSecretAsync(request);
     }
 }

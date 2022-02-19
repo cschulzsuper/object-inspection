@@ -1,5 +1,5 @@
-﻿using System;
-using Super.Paula.Validation;
+﻿using Super.Paula.Validation;
+using System;
 
 namespace Super.Paula.Application.Administration
 {
@@ -30,11 +30,11 @@ namespace Super.Paula.Application.Administration
                 () => (nameof(identity), $"Identity '{identity}' must have kebab case"));
 
         public static (bool, Func<(string, FormattableString)>) IdentityIsNotTooLong(string identity)
-            => (identity == null || identity.Length <= 140,
+            => (string.IsNullOrWhiteSpace(identity) || identity.Length <= 140,
                 () => (nameof(identity), $"Identity '{identity}' can not have more than 140 characters"));
 
         public static (bool, Func<(string, FormattableString)>) IdentityHasValidValue(string identity)
-            => (identity == null || UniqueNameValidator.IsValid(identity),
+            => (string.IsNullOrWhiteSpace(identity) || UniqueNameValidator.IsValid(identity),
                 () => (nameof(identity), $"Identity '{identity}' has an invalid value"));
 
         public static (bool, Func<(string, FormattableString)>) OrganizationIsNotEmpty(string organization)
