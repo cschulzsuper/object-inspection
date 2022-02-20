@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Super.Paula.Application;
 using Super.Paula.Authentication;
@@ -7,7 +6,6 @@ using Super.Paula.Authorization;
 using Super.Paula.Data;
 using Super.Paula.RuntimeData;
 using System.Diagnostics.CodeAnalysis;
-using System.Security.Claims;
 
 namespace Super.Paula
 {

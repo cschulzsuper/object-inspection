@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Routing;
 using Super.Paula.Application.Administration.Requests;
-using Super.Paula.Data.Annotations;
 using System;
 
 namespace Super.Paula.Application.Administration
@@ -38,29 +37,28 @@ namespace Super.Paula.Application.Administration
 
         private static Delegate Create =>
             [Authorize("Maintainance")]
+            [UseOrganizationFromRoute]
             (IOrganizationHandler handler, OrganizationRequest request)
-                => handler.CreateAsync(request);
+                    => handler.CreateAsync(request);
 
         private static Delegate Replace =>
             [Authorize("Maintainance")]
-            [IgnoreCurrentOrganization]
             (IOrganizationHandler handler, string organization, OrganizationRequest request)
                 => handler.ReplaceAsync(organization, request);
 
         private static Delegate Delete =>
             [Authorize("Maintainance")]
+            [UseOrganizationFromRoute]
             (IOrganizationHandler handler, string organization)
                 => handler.DeleteAsync(organization);
 
         private static Delegate Activate =>
             [Authorize("Maintainance")]
-            [IgnoreCurrentOrganization]
             (IOrganizationHandler handler, string organization)
                 => handler.ActivateAsync(organization);
 
         private static Delegate Deactivate =>
             [Authorize("Maintainance")]
-            [IgnoreCurrentOrganization]
             (IOrganizationHandler handler, string organization)
                 => handler.DeactivateAsync(organization);
     }

@@ -6,7 +6,14 @@ namespace Super.Paula.Data.Mappings.Administration
 {
     public class InspectorMapping : IEntityTypeConfiguration<Inspector>
     {
-        public string PartitionKey = "Organization";
+        public string PartitionKey = nameof(PartitionKey);
+
+        private readonly PaulaContextState _state;
+
+        public InspectorMapping(PaulaContextState state)
+        {
+            _state = state;
+        }
 
         public void Configure(EntityTypeBuilder<Inspector> builder)
         {
@@ -18,9 +25,9 @@ namespace Super.Paula.Data.Mappings.Administration
                 .HasKey(PartitionKey, nameof(Inspector.UniqueName));
 
             builder
-                .ToContainer(nameof(Inspector))
-                .HasPartitionKey(x => x.Organization)
-                .HasNoDiscriminator();
+                .ToContainer(_state.CurrentOrganization)
+                .HasPartitionKey(PartitionKey)
+                .HasDiscriminator<string>("Type");
 
             builder
                 .Property(x => x.Organization)

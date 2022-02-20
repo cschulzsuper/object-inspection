@@ -5,6 +5,7 @@ using Super.Paula.Application.Auditing;
 using Super.Paula.Application.Communication;
 using Super.Paula.Application.Guidelines;
 using Super.Paula.Application.Inventory;
+using Super.Paula.Application.Operation;
 using Super.Paula.Application.Streaming;
 using System;
 using System.Diagnostics.CodeAnalysis;
@@ -39,7 +40,9 @@ namespace Super.Paula.Application
                 .AddSingleton<IInspectorEventHandler, InspectorEventHandler>()
 
                 .AddScoped<IInspectionHandler, InspectionHandler>()
-                .AddScoped<IOrganizationHandler, OrganizationHandler>();
+                .AddScoped<IOrganizationHandler, OrganizationHandler>()
+
+                .AddSingleton<IApplicationEventHandler, ApplicationEventHandler>();
 
             return services;
         }

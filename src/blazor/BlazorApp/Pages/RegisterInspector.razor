@@ -1,4 +1,4 @@
-﻿@page "/register-organization"
+﻿@page "/register-inspector"
 
 @inject ITranslator Translator
 @inject IAccountHandler AccountHandler
@@ -7,7 +7,7 @@
 @attribute [Authorize]
 
 <div class="container-fluid">
-    <h1>@Translator["Organization sign up"]</h1>
+    <h1>@Translator["Inspector sign up"]</h1>
 </div>
 
 <EditForm Model="@_model" OnValidSubmit="@OnValidSubmitAsync">
@@ -15,12 +15,12 @@
 
     <div class="container-fluid">
         <div class="form-group">
-            <label>@Translator["Unique name"]</label>
-            <InputText class="form-control" id="organizationUniqueName" @bind-Value="_model.UniqueName" />
+            <label>@Translator["Organization"]</label>
+            <InputText class="form-control" id="inspectorOrganization" @bind-Value="_organization" />
         </div>
         <div class="form-group">
-            <label>@Translator["Display name"]</label>
-            <InputText class="form-control" id="organizationDisplayName" @bind-Value="_model.DisplayName" />
+            <label>@Translator["Unique name"]</label>
+            <InputText class="form-control" id="inspectorUniqueName" @bind-Value="_model.ChiefInspector" />
         </div>
     </div>
 
@@ -43,11 +43,13 @@
 
 @code {
 
-    private RegisterOrganizationRequest _model = new RegisterOrganizationRequest();
+    private RegisterInspectorRequest _model = new RegisterInspectorRequest();
+
+    private string _organization = string.Empty;
 
     private async Task OnValidSubmitAsync()
     {
-        await AccountHandler.RegisterOrganizationAsync(_model);
+        await AccountHandler.RegisterInspectorAsync(_organization, _model);
         NavigationManager.NavigateTo("/");
     }
 }

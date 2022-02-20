@@ -1,5 +1,4 @@
-﻿using Super.Paula.Application.Administration.Events;
-using Super.Paula.Application.Guidelines.Events;
+﻿using Super.Paula.Application.Guidelines.Events;
 using Super.Paula.Application.Orchestration;
 
 namespace Super.Paula.Application.Inventory

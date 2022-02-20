@@ -18,9 +18,6 @@ namespace Super.Paula.Data.Mappings.Administration
             => entity.UniqueName;
 
         public string Value(PaulaContextState state, Queue<object> partitionKeyComponents)
-        {
-            var identity = partitionKeyComponents.Dequeue();
-            return $"{identity}";
-        }
+            => $"{partitionKeyComponents.Dequeue()}";
     }
 }

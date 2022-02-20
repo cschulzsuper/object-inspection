@@ -8,6 +8,13 @@ namespace Super.Paula.Data.Mappings.Auditing
     {
         public string PartitionKey = nameof(PartitionKey);
 
+        private readonly PaulaContextState _state;
+
+        public BusinessObjectInspectionAuditMapping(PaulaContextState state)
+        {
+            _state = state;
+        }
+
         public void Configure(EntityTypeBuilder<BusinessObjectInspectionAudit> builder)
         {
             builder
@@ -21,9 +28,9 @@ namespace Super.Paula.Data.Mappings.Auditing
                     nameof(BusinessObjectInspectionAudit.AuditTime));
 
             builder
-                .ToContainer(nameof(BusinessObjectInspectionAudit))
+                .ToContainer(_state.CurrentOrganization)
                 .HasPartitionKey(PartitionKey)
-                .HasNoDiscriminator();
+                .HasDiscriminator<string>("Type");
 
             builder
                 .Property(x => x.BusinessObject)

@@ -15,15 +15,10 @@ namespace Super.Paula.Data.Mappings.Inventory
                 (entry.Entity as BusinessObject)!);
 
         public string Value(PaulaContextState state, BusinessObject entity)
-            => state.IgnoreCurrentOrganization
-                ? string.Empty
-                : state.CurrentOrganization;
-
+            => "business-object";
 
         public string Value(PaulaContextState state, Queue<object> partitionKeyComponents)
-            => state.IgnoreCurrentOrganization
-                ? string.Empty
-                : state.CurrentOrganization;
+            => "business-object";
 
     }
 }

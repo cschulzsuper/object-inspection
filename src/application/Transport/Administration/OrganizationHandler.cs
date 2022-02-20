@@ -1,6 +1,7 @@
 ﻿using Super.Paula.Application.Administration.Events;
 using Super.Paula.Application.Administration.Requests;
 using Super.Paula.Application.Administration.Responses;
+using Super.Paula.Application.Operation;
 using Super.Paula.Application.Orchestration;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,17 +13,17 @@ namespace Super.Paula.Application.Administration
     public class OrganizationHandler : IOrganizationHandler
     {
         private readonly IOrganizationManager _organizationManager;
+        private readonly IIdentityInspectorManager _identityInspectorManager;
         private readonly IEventBus _eventBus;
-        private readonly ClaimsPrincipal _user;
 
         public OrganizationHandler(
             IOrganizationManager organizationManager,
-            IEventBus eventBus,
-            ClaimsPrincipal user)
+            IIdentityInspectorManager identityInspectorManager,
+            IEventBus eventBus)
         {
             _organizationManager = organizationManager;
+            _identityInspectorManager = identityInspectorManager;
             _eventBus = eventBus;
-            _user = user;
         }
 
         public async ValueTask<OrganizationResponse> CreateAsync(OrganizationRequest request)
@@ -37,7 +38,7 @@ namespace Super.Paula.Application.Administration
 
             await _organizationManager.InsertAsync(entity);
 
-            await PublishOrganizationAsync(entity);
+            await PublishOrganizationCreationAsync(entity);
 
             return new OrganizationResponse
             {
@@ -52,7 +53,18 @@ namespace Super.Paula.Application.Administration
         {
             var entity = await _organizationManager.GetAsync(organization);
             
-            await _organizationManager.DeleteAsync(entity); 
+            await _organizationManager.DeleteAsync(entity);
+
+            var identityInspectors = _identityInspectorManager.GetQueryable()
+                .Where(x => x.Organization == organization)
+                .ToList();
+
+            foreach (var identityInspector in identityInspectors)
+            {
+                await _identityInspectorManager.DeleteAsync(identityInspector);
+            }
+
+            await PublishOrganizationDeletionAsync(organization);
         }
 
         public IAsyncEnumerable<OrganizationResponse> GetAll()
@@ -65,7 +77,6 @@ namespace Super.Paula.Application.Administration
                         UniqueName = entity.UniqueName,
                         Activated = entity.Activated
                     }));
-
 
         public async ValueTask<OrganizationResponse> GetAsync(string organization)
         {
@@ -99,7 +110,7 @@ namespace Super.Paula.Application.Administration
 
                 await _organizationManager.UpdateAsync(entity);
 
-                await PublishOrganizationAsync(entity);
+                await PublishOrganizationUpdateAsync(entity);
             }
         }
 
@@ -114,7 +125,7 @@ namespace Super.Paula.Application.Administration
 
                 await _organizationManager.UpdateAsync(entity);
 
-                await PublishOrganizationAsync(entity);
+                await PublishOrganizationUpdateAsync(entity);
             }
         }
 
@@ -129,18 +140,56 @@ namespace Super.Paula.Application.Administration
 
                 await _organizationManager.UpdateAsync(entity);
 
-                await PublishOrganizationAsync(entity);
+                await PublishOrganizationUpdateAsync(entity);
             }
         }
 
-        private async ValueTask PublishOrganizationAsync(Organization entity)
+        private async ValueTask PublishOrganizationCreationAsync(Organization entity)
         {
-            var @event = new OrganizationEvent(
+            var @event = new OrganizationCreationEvent(
                 entity.UniqueName,
                 entity.DisplayName,
                 entity.Activated);
 
-            await _eventBus.PublishAsync(@event, _user);
+            var user = new ClaimsPrincipal(
+                    new ClaimsIdentity(
+                        new List<Claim>
+                        {
+                            new Claim("Organization", entity.UniqueName)
+                        }));
+
+            await _eventBus.PublishAsync(@event, user);
+        }
+
+        private async ValueTask PublishOrganizationUpdateAsync(Organization entity)
+        {
+            var @event = new OrganizationUpdateEvent(
+                entity.UniqueName,
+                entity.DisplayName,
+                entity.Activated);
+
+            var user = new ClaimsPrincipal(
+                    new ClaimsIdentity(
+                        new List<Claim>
+                        {
+                            new Claim("Organization", entity.UniqueName)
+                        }));
+
+            await _eventBus.PublishAsync(@event, user);
+        }
+
+        private async ValueTask PublishOrganizationDeletionAsync(string organization)
+        {
+            var @event = new OrganizationDeletionEvent(organization);
+
+            var user = new ClaimsPrincipal(
+                new ClaimsIdentity(
+                    new List<Claim>
+                    {
+                        new Claim("Organization", organization)
+                    }));
+
+            await _eventBus.PublishAsync(@event, user);
         }
     }
 }

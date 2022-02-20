@@ -5,6 +5,7 @@ using Super.Paula.Application.Communication;
 using Super.Paula.Application.Guidelines.Events;
 using Super.Paula.Application.Inventory;
 using Super.Paula.Application.Inventory.Events;
+using Super.Paula.Application.Operation;
 using Super.Paula.Application.Orchestration;
 using System.Diagnostics.CodeAnalysis;
 
@@ -15,7 +16,7 @@ namespace Super.Paula.Application
     {
         public static IEventBus ConfigureTransport(this IEventBus eventBus)
         {
-            eventBus.Subscribe<OrganizationEvent, IInspectorEventHandler>(
+            eventBus.Subscribe<OrganizationUpdateEvent, IInspectorEventHandler>(
                 AllowedSubscribers.AdministrationInspector);
 
             eventBus.Subscribe<BusinessObjectDeletionEvent, IInspectorEventHandler>(
@@ -56,6 +57,13 @@ namespace Super.Paula.Application
 
             eventBus.Subscribe<InspectionDeletionEvent, IBusinessObjectEventHandler>(
                 AllowedSubscribers.InventoryBusinessObject);
+
+
+            eventBus.Subscribe<OrganizationCreationEvent, IApplicationEventHandler>(
+                AllowedSubscribers.OperationApplication);
+
+            eventBus.Subscribe<OrganizationDeletionEvent, IApplicationEventHandler>(
+                AllowedSubscribers.OperationApplication);
 
             return eventBus;
         }

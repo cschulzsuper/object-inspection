@@ -4,7 +4,7 @@ using Super.Paula.Application.Auditing;
 using Super.Paula.Application.Communication;
 using Super.Paula.Application.Guidelines;
 using Super.Paula.Application.Inventory;
-using Super.Paula.Application.Runtime;
+using Super.Paula.Application.Operation;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Super.Paula.Application
@@ -24,6 +24,7 @@ namespace Super.Paula.Application
                 .AddScoped<INotificationManager, NotificationManager>()
                 .AddScoped<IOrganizationManager, OrganizationManager>()
                 .AddScoped<IOrganizations, Organizations>()
+                .AddScoped<IApplicationManager, ApplicationManager>()
                 .AddScoped<IConnectionManager, ConnectionManager>()
                 .AddScoped<IConnectionViolationManager, ConnectionViolationManager>();
     }

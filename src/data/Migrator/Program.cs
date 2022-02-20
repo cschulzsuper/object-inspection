@@ -18,13 +18,15 @@ namespace Super.Paula.Data
             Host.CreateDefaultBuilder(args)
                 .ConfigureServices((context, services) =>
                 {
+                    services.AddUser();
                     services.AddHostedService<HostedService>();
                     services.AddPaulaAppSettings();
                     services.AddPaulaServerData(context.HostingEnvironment.IsDevelopment());
 
                     services
                         .AddScoped<Initialization>()
-                        .AddScoped<InspectorIdentity>();
+                        .AddScoped<InitializationApplication>();
+                        //.AddScoped<InspectorIdentity>();
 
                 })
                 .ConfigureAppConfiguration((context, builder) =>

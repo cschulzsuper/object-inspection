@@ -4,16 +4,16 @@ namespace Super.Paula.Data.Steps
 {
     public class Initialization : IStep
     {
-        private readonly PaulaContext _paulaContext;
+        private readonly PaulaAdministrationContext _paulaAdministrationContext;
 
-        public Initialization(PaulaContext paulaContext)
+        public Initialization(PaulaAdministrationContext paulaAdministrationContext)
         {
-            _paulaContext = paulaContext;
+            _paulaAdministrationContext = paulaAdministrationContext;
         }
 
         public Task ExecuteAsync()
         {
-            _paulaContext.Database.EnsureCreated();
+            _paulaAdministrationContext.Database.EnsureCreated();
 
             return Task.CompletedTask;
         }

@@ -4,8 +4,6 @@ using Microsoft.Extensions.Hosting;
 using Super.Paula.Application;
 using Super.Paula.Data;
 using Super.Paula.Steps;
-using System.Collections.Generic;
-using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Super.Paula

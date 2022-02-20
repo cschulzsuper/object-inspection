@@ -14,10 +14,24 @@
     <h1>@Translator["Inspectors"]</h1>
 </div>
 
-<div class="container-fluid m-2">
-    <button class="btn btn-primary" title="@Translator["Create"]" 
+@if (_organization == null)
+{
+    <div class="container-fluid m-2">
+        <button class="btn btn-primary" title="@Translator["Create"]" 
             @onclick="Create"><span class="oi oi-plus"/></button>
-</div>
+    </div>
+
+}
+else 
+{
+    @if (_inspectors?.Any() == false)
+    {
+        <div class="container-fluid m-2">
+            <button class="btn btn-primary" title="@Translator["Repair"]" 
+                @onclick="RepairAsync"><span class="oi oi-wrench"/></button>
+        </div>
+    }
+}
 
 <div class="container-fluid">
 
@@ -155,6 +169,19 @@ else
     public void Edit(string inspector)
         => NavigationManager.NavigateTo($"/inspectors/{inspector}/edit");
 
+    public async Task RepairAsync() 
+    {
+        if (_organization == null)
+        {
+            return;
+        }
+
+        await AccountHandler.RegisterInspectorAsync(_organization.UniqueName ,new RegisterInspectorRequest
+        {
+            ChiefInspector = _organization.ChiefInspector
+        });  
+    }
+
     public async Task DeleteAsync(string inspector) 
     {
         await InspectorHandler.DeleteAsync(inspector);
@@ -175,13 +202,11 @@ else
 
     public async Task ImpersonateAsync(string inspector)
     {
-        var organizatio = (await AuthenticationState).User.GetOrganization();
+        var organization = (await AuthenticationState).User.GetOrganization();
 
-        await AccountHandler.StartImpersonationAsync(new StartImpersonationRequest
-        {
-            UniqueName = inspector,
-            Organization = Organization ?? organizatio
-        });
+        await AccountHandler.StartImpersonationAsync(
+            Organization ?? organization,
+            inspector);
 
         NavigationManager.NavigateTo("/");
     }

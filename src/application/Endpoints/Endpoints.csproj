@@ -12,7 +12,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\data\Data.Annotations\Data.Annotations.csproj" />
 		<ProjectReference Include="..\Streaming.Contract\Streaming.Contract.csproj" />
 		<ProjectReference Include="..\Transport.Contract\Transport.Contract.csproj" />
 	</ItemGroup>

@@ -8,20 +8,23 @@ namespace Super.Paula.Data.Steps
 {
     public class InspectorIdentity : IStep
     {
-        private readonly PaulaContext _paulaContext;
+        private readonly PaulaApplicationContext _paulaApplicationContext;
+        private readonly PaulaAdministrationContext _paulaAdministrationContext;
         private readonly AppSettings _appSettings;
 
         public InspectorIdentity(
-            PaulaContext paulaContext,
+            PaulaApplicationContext paulaApplicationContext,
+            PaulaAdministrationContext paulaAdministrationContext,
             AppSettings appSettings)
         {
-            _paulaContext = paulaContext;
+            _paulaApplicationContext = paulaApplicationContext;
+            _paulaAdministrationContext = paulaAdministrationContext;
             _appSettings = appSettings;
         }
 
         public async Task ExecuteAsync()
         {
-            var cosmosClient = _paulaContext.Database.GetCosmosClient();
+            var cosmosClient = _paulaApplicationContext.Database.GetCosmosClient();
             var cosmosDatabase = cosmosClient.GetDatabase(_appSettings.CosmosDatabase);
 
             var inspectorContainer = cosmosDatabase.GetContainer("Inspector");
@@ -36,19 +39,24 @@ namespace Super.Paula.Data.Steps
                         continue;
                     }
 
-                    var inspectorIdentity = new Application.Administration.IdentityInspector
-                    {
-                        UniqueName = inspector.Identity,
-                        Inspector   = inspector.UniqueName,
-                        Organization = inspector.Organization,
-                        Activated = inspector.Activated && inspector.OrganizationActivated
-                    };
+                    var existing = _paulaAdministrationContext.Set<IdentityInspector>().Find(inspector.Identity, inspector.Organization, inspector.UniqueName) != null;
 
-                    _paulaContext.Add(inspectorIdentity);
+                    if (!existing)
+                    {
+                        var inspectorIdentity = new Application.Administration.IdentityInspector
+                        {
+                            UniqueName = inspector.Identity,
+                            Inspector   = inspector.UniqueName,
+                            Organization = inspector.Organization,
+                            Activated = inspector.Activated && inspector.OrganizationActivated
+                        };
+
+                        _paulaAdministrationContext.Add(inspectorIdentity);
+                    }
                 }
             }
 
-            await _paulaContext.SaveChangesAsync();
+            await _paulaAdministrationContext.SaveChangesAsync();
         }
 
         private class InspectorWithId : Inspector
