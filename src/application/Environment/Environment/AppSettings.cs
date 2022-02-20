@@ -10,12 +10,12 @@
 
         public string CosmosDatabase { get; set; } = string.Empty;
 
-        public string Maintainer { get; set; } = string.Empty;
-
-        public string MaintainerOrganization { get; set; } = string.Empty;
+        public string MaintainerIdentity { get; set; } = string.Empty;
 
         public string DemoIdentity { get; set; } = string.Empty;
 
         public string Server { get; set; } = string.Empty;
+
+        public string Client { get; set; } = string.Empty;
     }
 }

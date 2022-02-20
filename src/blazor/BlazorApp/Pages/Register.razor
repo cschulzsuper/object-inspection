@@ -14,15 +14,15 @@
     <div class="container-fluid">
         <div class="form-group">
             <label>@Translator["Username"]</label>
-            <InputText class="form-control" id="uniqueName" @bind-Value="model.UniqueName" />
+            <InputText class="form-control" id="identityUniqueName" @bind-Value="model.UniqueName" />
         </div>
         <div class="form-group">
             <label>@Translator["Mail address"]</label>
-            <InputText class="form-control" id="uniqueName" @bind-Value="model.MailAddress" />
+            <InputText class="form-control" id="identityMailAddress" @bind-Value="model.MailAddress" />
         </div>
         <div class="form-group">
             <label>@Translator["Password"]</label>
-            <InputText class="form-control" id="secret" @bind-Value="model.Secret" type="password"/>
+            <InputText class="form-control" id="identitySecret" @bind-Value="model.Secret" type="password"/>
         </div>
     </div>
 
@@ -37,7 +37,10 @@
     else 
     {
         <div class="container-fluid">
-            <button type="submit" class="btn btn-primary">@Translator["Submit"]</button>
+            <button 
+                id="submit"
+                type="submit" 
+                class="btn btn-primary">@Translator["Submit"]</button>
         </div>
     }
 

@@ -22,11 +22,11 @@ else
         <div class="container-fluid">
             <div class="form-group">
                 <label>@Translator["Audit schedule"]</label>
-                <InputText class="form-control" id="Schedule" @bind-Value="_request.Schedule"/>
+                <InputText class="form-control" id="schedule" @bind-Value="_request.Schedule"/>
             </div>
             <div class="form-group">
                 <label>@Translator["Upcoming audit threshold"] (@TimeSpan.FromMilliseconds(_request.Threshold).ToString("c"))</label>
-                <InputMilliseconds class="form-control" id="Threshold"  @bind-Value="_request.Threshold" step="1"/>
+                <InputMilliseconds class="form-control" id="threshold"  @bind-Value="_request.Threshold" step="1"/>
             </div>
         </div>
 
@@ -41,7 +41,7 @@ else
         else 
         {
             <div class="container-fluid">
-                <AuthorizedButton Policy="ManagementFull" type="submit" class="btn btn-primary">@Translator["Submit"]</AuthorizedButton>
+                <AuthorizedButton Policy="ManagementFull" id="submit" type="submit" class="btn btn-primary">@Translator["Submit"]</AuthorizedButton>
             </div>
         }
 

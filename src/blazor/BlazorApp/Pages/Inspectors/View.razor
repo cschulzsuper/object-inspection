@@ -27,7 +27,7 @@ else
     @if (_inspectors?.Any() == false)
     {
         <div class="container-fluid m-2">
-            <button class="btn btn-primary" title="@Translator["Repair"]" 
+            <button id="repair" class="btn btn-primary" title="@Translator["Repair"]" 
                 @onclick="RepairAsync"><span class="oi oi-wrench"/></button>
         </div>
     }
@@ -176,10 +176,15 @@ else
             return;
         }
 
-        await AccountHandler.RegisterInspectorAsync(_organization.UniqueName ,new RegisterInspectorRequest
+        var identity = (await AuthenticationState).User.GetInspector();
+
+        await AccountHandler.RegisterChiefInspectorAsync(_organization.UniqueName ,new RegisterChiefInspectorRequest
         {
-            ChiefInspector = _organization.ChiefInspector
+            Inspector = _organization.ChiefInspector,
+            Identity = identity
         });  
+
+        NavigationManager.NavigateTo(NavigationManager.Uri,true);
     }
 
     public async Task DeleteAsync(string inspector) 

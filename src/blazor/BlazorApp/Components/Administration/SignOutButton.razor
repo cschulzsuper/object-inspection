@@ -15,7 +15,7 @@
     public async Task SignOutAsync()
     {
         await AuthenticationHandler.SignOutAsync();
-        NavigationManager.NavigateTo("/", true);
+        NavigationManager.NavigateTo("/");
     }
 
     public string Title => AdditionalAttributes?.ContainsKey("title") == true

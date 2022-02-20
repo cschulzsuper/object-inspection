@@ -26,10 +26,10 @@ namespace Super.Paula
                         CosmosEndpoint = configuration["CosmosEndpoint"],
                         CosmosKey = configuration["CosmosKey"],
                         CosmosDatabase = configuration["CosmosDatabase"],
-                        Maintainer = configuration["Maintainer"],
-                        MaintainerOrganization = configuration["MaintainerOrganization"],
+                        MaintainerIdentity = configuration["MaintainerIdentity"],
                         DemoIdentity = configuration["DemoIdentity"],
-                        Server = configuration["Server"]
+                        Server = configuration["Server"],
+                        Client = configuration["Client"],
                     };
                 });
     }

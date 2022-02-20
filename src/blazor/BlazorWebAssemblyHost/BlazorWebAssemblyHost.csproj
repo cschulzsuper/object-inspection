@@ -4,8 +4,8 @@
 		<TargetFramework>net6.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<LangVersion>Preview</LangVersion>
-		<UserSecretsId>2de90365-10b3-4b62-b2fa-7dc3d1e63fdb</UserSecretsId>
-    <RootNamespace>Super.Paula.Client</RootNamespace>
+		<UserSecretsId>b60582a0-a9df-4614-a837-b9ab58e3463d</UserSecretsId>
+		<RootNamespace>Super.Paula.Client</RootNamespace>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -13,7 +13,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\BlazorApp\BlazorApp.csproj" />
+		<ProjectReference Include="..\BlazorApp\BlazorApp.csproj" />
 	</ItemGroup>
 
 </Project>

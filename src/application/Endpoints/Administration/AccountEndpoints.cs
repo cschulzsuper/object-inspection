@@ -12,7 +12,7 @@ namespace Super.Paula.Application.Administration
             endpoints.MapCommands(
                 "/account",
                 ("/register-organization", RegisterOrganization),
-                ("/register-inspector/{organization}", RegisterInspector),
+                ("/register-chief-inspector/{organization}", RegisterChiefInspector),
                 ("/sign-in-inspector/{organization}/{inspector}", SignInInspector),
                 ("/start-impersonation/{organization}/{inspector}", StartImpersonation),
                 ("/stop-impersonation", StopImpersonation));
@@ -30,11 +30,11 @@ namespace Super.Paula.Application.Administration
             (IAccountHandler handler, RegisterOrganizationRequest request)
                 => handler.RegisterOrganizationAsync(request);
 
-        private static Delegate RegisterInspector =>
+        private static Delegate RegisterChiefInspector =>
             [Authorize]
             [UseOrganizationFromRoute]
-            (IAccountHandler handler, string organization, RegisterInspectorRequest request)
-                => handler.RegisterInspectorAsync(organization, request);
+            (IAccountHandler handler, string organization, RegisterChiefInspectorRequest request)
+                => handler.RegisterChiefInspectorAsync(organization, request);
 
         private static Delegate StartImpersonation =>
             [Authorize("Maintainance")]

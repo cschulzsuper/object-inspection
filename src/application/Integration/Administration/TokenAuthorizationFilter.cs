@@ -41,8 +41,7 @@ namespace Super.Paula.Application.Administration
                     authorizations.Add("Chief");
                 }
 
-                if (_appSettings.Maintainer == token.Inspector &&
-                    _appSettings.MaintainerOrganization == token.Organization)
+                if (_appSettings.MaintainerIdentity == token.Identity)
                 {
                     authorizations.Add("Maintainer");
                 }

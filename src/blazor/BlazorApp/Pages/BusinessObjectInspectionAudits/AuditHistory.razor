@@ -155,11 +155,11 @@
             .ToNumbers();
 
         var calenderWeekTo = ISOWeek
-            .ToDateTime(_calenderWeek.Year, _calenderWeek.Week, DayOfWeek.Sunday)
+            .ToDateTime(_calenderWeek.Year, _calenderWeek.Week, DayOfWeek.Monday).AddDays(7).AddMilliseconds(-1)
             .ToUniversalTime()
             .ToNumbers();
 
-        searchQuery += $"+from:{calenderWeekFrom.day}+to:{calenderWeekTo.day}";
+        searchQuery += $"+from-date:{calenderWeekFrom.day}+from-time:{calenderWeekFrom.milliseconds}+to-date:{calenderWeekTo.day}+to-time:{calenderWeekTo.milliseconds}";
 
         return searchQuery
             .Trim()

@@ -22,8 +22,8 @@ namespace Super.Paula.Client.Administration
         public ValueTask RegisterOrganizationAsync(RegisterOrganizationRequest request)
             => _accountHandler.RegisterOrganizationAsync(request);
 
-        public ValueTask RegisterInspectorAsync(string organization, RegisterInspectorRequest request)
-            => _accountHandler.RegisterInspectorAsync(organization, request);
+        public ValueTask RegisterChiefInspectorAsync(string organization, RegisterChiefInspectorRequest request)
+            => _accountHandler.RegisterChiefInspectorAsync(organization, request);
 
         public async ValueTask<string> SignInInspectorAsync(string organization, string inspector)
         {

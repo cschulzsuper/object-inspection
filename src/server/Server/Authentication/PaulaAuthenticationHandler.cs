@@ -101,8 +101,7 @@ namespace Super.Paula.Authentication
                     token.Proof);
 
                 if (!validInspector &&
-                    _appSettings!.Maintainer == token.ImpersonatorInspector &&
-                    _appSettings!.MaintainerOrganization == token.ImpersonatorOrganization)
+                    _appSettings!.MaintainerIdentity == token.Identity)
                 {
                     validInspector = _connectionManager!.Verify(
                         $"{token.ImpersonatorOrganization}:{token.ImpersonatorInspector}",

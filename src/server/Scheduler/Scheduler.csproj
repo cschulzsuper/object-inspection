@@ -6,7 +6,7 @@
 		<Nullable>enable</Nullable>
 		<LangVersion>Preview</LangVersion>
 		<RootNamespace>Super.Paula</RootNamespace>
-		<UserSecretsId>0093716c-5bb9-44d4-9a62-b033e0548fd0</UserSecretsId>
+		<UserSecretsId>b60582a0-a9df-4614-a837-b9ab58e3463d</UserSecretsId>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -16,11 +16,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\..\application\Integration\Integration.csproj" />
-	  <ProjectReference Include="..\..\application\Management\Management.csproj" />
-	  <ProjectReference Include="..\..\application\Streaming.Remote\Streaming.Remote.csproj" />
-	  <ProjectReference Include="..\..\application\Transport\Transport.csproj" />
-	  <ProjectReference Include="..\..\data\Data\Data.csproj" />
+		<ProjectReference Include="..\..\application\Integration\Integration.csproj" />
+		<ProjectReference Include="..\..\application\Management\Management.csproj" />
+		<ProjectReference Include="..\..\application\Streaming.Remote\Streaming.Remote.csproj" />
+		<ProjectReference Include="..\..\application\Transport\Transport.csproj" />
+		<ProjectReference Include="..\..\data\Data\Data.csproj" />
 	</ItemGroup>
 
 </Project>

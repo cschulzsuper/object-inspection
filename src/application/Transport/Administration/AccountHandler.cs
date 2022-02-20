@@ -44,14 +44,14 @@ namespace Super.Paula.Application.Administration
 
         public async ValueTask RegisterOrganizationAsync(RegisterOrganizationRequest request)
         {
-            if (_appSettings.MaintainerOrganization != request.UniqueName)
+            if (_appSettings.MaintainerIdentity != _user.GetIdentity())
             {
                 throw new TransportException($"Only the maintainer organization can be registered.");
             }
 
             var organization = new Organization
             {
-                ChiefInspector = string.Empty,
+                ChiefInspector = request.UniqueName,
                 UniqueName = request.UniqueName,
                 DisplayName = request.DisplayName,
                 Activated = true
@@ -62,34 +62,33 @@ namespace Super.Paula.Application.Administration
             await PublishOrganizationCreationAsync(organization);
         }
 
-        public async ValueTask RegisterInspectorAsync(string organization, RegisterInspectorRequest request)
+        public async ValueTask RegisterChiefInspectorAsync(string organization, RegisterChiefInspectorRequest request)
         {
-            if (_appSettings.MaintainerOrganization != _user.GetOrganization() ||
-                _appSettings.Maintainer != _user.GetInspector())
-            {
-                throw new TransportException($"Only the maintainer can register inspectors.");
+            if (_appSettings.MaintainerIdentity != _user.GetIdentity())
+            { 
+                throw new TransportException($"Only the maintainer can register the chief inspectors.");
             }
 
             var organizationEntity = await _organizationManager.GetAsync(organization);
 
-            organizationEntity.ChiefInspector =  request.ChiefInspector;
+            organizationEntity.ChiefInspector =  request.Inspector;
 
             await _inspectorManager.InsertAsync(new Inspector
             {
-                Identity = _user.GetIdentity(),
+                Identity = request.Identity,
                 Organization = organization,
                 OrganizationActivated = true,
                 OrganizationDisplayName = organizationEntity.DisplayName,
-                UniqueName = request.ChiefInspector,
+                UniqueName = request.Inspector,
                 Activated = true
             });
 
             await _identityInspectorManager.InsertAsync(new IdentityInspector
             {
                 Activated = true,
-                Inspector = request.ChiefInspector,
+                Inspector = request.Inspector,
                 Organization = organization,
-                UniqueName = _user.GetIdentity()
+                UniqueName = request.Identity
             });
 
             await _organizationManager.UpdateAsync(organizationEntity);
