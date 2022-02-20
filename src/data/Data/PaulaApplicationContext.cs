@@ -7,15 +7,12 @@ using Super.Paula.Data.Mappings.Inventory;
 
 namespace Super.Paula.Data
 {
-    public class PaulaContext : DbContext
+    public class PaulaApplicationContext : PaulaContext
     {
-        public PaulaContext(DbContextOptions options, PaulaContextState state)
-            : base(options)
+        public PaulaApplicationContext(DbContextOptions<PaulaApplicationContext> options, PaulaContextState state)
+            : base(options, state)
         {
-            State = state;
         }
-
-        public PaulaContextState State { get; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

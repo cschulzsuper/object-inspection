@@ -57,7 +57,7 @@ namespace Super.Paula.Application.Inventory
             }
         }
 
-        private async ValueTask PublishBusinessObjectInspectionAuditScheduleAsync(EventHandlerContext context, BusinessObject businessObject)
+        private static async ValueTask PublishBusinessObjectInspectionAuditScheduleAsync(EventHandlerContext context, BusinessObject businessObject)
         {
             var eventBus = context.Services.GetRequiredService<IEventBus>();
 

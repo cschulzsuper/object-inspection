@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Super.Paula.Application.Administration;
 using Super.Paula.Application.Inventory;
-using Super.Paula.Data;
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;

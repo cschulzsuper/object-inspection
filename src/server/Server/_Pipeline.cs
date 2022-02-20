@@ -3,13 +3,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.DependencyInjection;
 using Super.Paula.Application;
+using Super.Paula.Application.Operation;
 using Super.Paula.Application.Orchestration;
-using Super.Paula.Application.Runtime;
 using Super.Paula.Authorization;
 using Super.Paula.Data;
-using Super.Paula.Data.Annotations;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Net;
 
 namespace Super.Paula
@@ -21,7 +19,7 @@ namespace Super.Paula
         {
             var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
 
-            eventBus.Configure((context) => 
+            eventBus.Configure((context) =>
             {
                 var paulaContextState = context.Services.GetRequiredService<PaulaContextState>();
 
@@ -32,9 +30,6 @@ namespace Super.Paula
                 paulaContextState.CurrentInspector = context.User.HasInspector()
                    ? context.User.GetInspector()
                    : string.Empty;
-
-                var ignoreCurrentOrganization = context.Annotations.Any(x => x is IgnoreCurrentOrganizationAttribute);
-                paulaContextState.IgnoreCurrentOrganization = ignoreCurrentOrganization;
             });
 
             eventBus.ConfigureTransport();
@@ -87,18 +82,29 @@ namespace Super.Paula
             {
                 var paulaContextState = context.RequestServices.GetRequiredService<PaulaContextState>();
 
-                paulaContextState.CurrentOrganization = context.User.HasOrganization()
-                   ? context.User.GetOrganization()
-                   : string.Empty;
-
-                paulaContextState.CurrentInspector = context.User.HasInspector()
-                   ? context.User.GetInspector()
-                   : string.Empty;
-
                 var endpoint = context.GetEndpoint();
+                var useOrganizationFromRoute = endpoint?.Metadata.GetMetadata<UseOrganizationFromRouteAttribute>() != null;
 
-                var ignoreCurrentOrganization = endpoint?.Metadata.GetMetadata<IgnoreCurrentOrganizationAttribute>() != null;
-                paulaContextState.IgnoreCurrentOrganization = ignoreCurrentOrganization;
+                if (useOrganizationFromRoute)
+                {
+                    context.Request.RouteValues.TryGetValue("organization", out var organization);
+
+                    paulaContextState.CurrentOrganization = organization != null
+                        ? $"{organization}"
+                        : string.Empty;
+
+                    paulaContextState.CurrentInspector = string.Empty;
+                }
+                else
+                {
+                    paulaContextState.CurrentOrganization = context.User.HasOrganization()
+                       ? context.User.GetOrganization()
+                       : string.Empty;
+
+                    paulaContextState.CurrentInspector = context.User.HasInspector()
+                       ? context.User.GetInspector()
+                       : string.Empty;
+                }
 
                 return next();
 

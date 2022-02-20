@@ -22,7 +22,9 @@ namespace Super.Paula.Data
         public async Task StartAsync(CancellationToken _)
         {
             await IStep.ExecuteAsync<Initialization>(_serviceProvider);
-            await IStep.ExecuteAsync<InspectorIdentity>(_serviceProvider);
+
+            await IStep.ExecuteAsync<InitializationApplication>(_serviceProvider);
+            //await IStep.ExecuteAsync<InspectorIdentity>(_serviceProvider);
 
             _applicationLifetime.StopApplication();
         }

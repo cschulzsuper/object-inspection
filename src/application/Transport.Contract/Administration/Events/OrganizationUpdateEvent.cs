@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 namespace Super.Paula.Application.Administration.Events
 {
     [AllowedSubscriber(AllowedSubscribers.AdministrationInspector)]
-    public record OrganizationEvent(
+    public record OrganizationUpdateEvent(
 
         [KebabCase]
         [StringLength(140)]

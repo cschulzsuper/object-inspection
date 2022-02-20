@@ -1,4 +1,4 @@
-﻿namespace Super.Paula.Application.Runtime
+﻿namespace Super.Paula.Application.Operation
 {
     public interface IConnectionViolationManager
     {

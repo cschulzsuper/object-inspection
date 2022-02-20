@@ -22,9 +22,12 @@ namespace Super.Paula.Client.Administration
         public ValueTask RegisterOrganizationAsync(RegisterOrganizationRequest request)
             => _accountHandler.RegisterOrganizationAsync(request);
 
-        public async ValueTask<string> SignInInspectorAsync(SignInInspectorRequest request)
+        public ValueTask RegisterInspectorAsync(string organization, RegisterInspectorRequest request)
+            => _accountHandler.RegisterInspectorAsync(organization, request);
+
+        public async ValueTask<string> SignInInspectorAsync(string organization, string inspector)
         {
-            var response = await _accountHandler.SignInInspectorAsync(request);
+            var response = await _accountHandler.SignInInspectorAsync(organization, inspector);
 
             var token = response.ToToken();
             await _localStorage.SetItemAsync("token", token);
@@ -32,9 +35,9 @@ namespace Super.Paula.Client.Administration
             return response;
         }
 
-        public async ValueTask<string> StartImpersonationAsync(StartImpersonationRequest request)
+        public async ValueTask<string> StartImpersonationAsync(string organization, string inspector)
         {
-            var response = await _accountHandler.StartImpersonationAsync(request);
+            var response = await _accountHandler.StartImpersonationAsync(organization, inspector);
 
             var token = response.ToToken();
             await _localStorage.SetItemAsync("token", token);

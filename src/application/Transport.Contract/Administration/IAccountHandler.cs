@@ -6,8 +6,9 @@ namespace Super.Paula.Application.Administration
     public interface IAccountHandler
     {
         ValueTask RegisterOrganizationAsync(RegisterOrganizationRequest request);
-        ValueTask<string> SignInInspectorAsync(SignInInspectorRequest request);
-        ValueTask<string> StartImpersonationAsync(StartImpersonationRequest request);
+        ValueTask RegisterInspectorAsync(string organization, RegisterInspectorRequest request);
+        ValueTask<string> SignInInspectorAsync(string organization, string inspector);
+        ValueTask<string> StartImpersonationAsync(string organization, string inspector);
         ValueTask<string> StopImpersonationAsync();
     }
 }

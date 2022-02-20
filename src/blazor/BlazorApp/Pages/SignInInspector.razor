@@ -64,13 +64,10 @@ else
 
     private async Task SignInAsync(IdentityInspectorResponse inspector)
     {
-        var request = new SignInInspectorRequest
-        {
-            Inspector = inspector.UniqueName,
-            Organization = inspector.Organization
-        };
+        await AccountHandler.SignInInspectorAsync(
+            inspector.Organization,
+            inspector.UniqueName);
 
-        await AccountHandler.SignInInspectorAsync(request);
         NavigationManager.NavigateTo("/");
     }
 }

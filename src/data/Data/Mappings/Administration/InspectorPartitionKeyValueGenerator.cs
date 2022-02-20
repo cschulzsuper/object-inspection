@@ -15,13 +15,9 @@ namespace Super.Paula.Data.Mappings.Administration
                 (entry.Entity as Inspector)!);
 
         public string Value(PaulaContextState state, Inspector entity)
-            => state.IgnoreCurrentOrganization
-                ? string.Empty
-                : state.CurrentOrganization;
+            => "inspector";
 
         public string Value(PaulaContextState state, Queue<object> partitionKeyComponents)
-            => state.IgnoreCurrentOrganization
-                ? string.Empty
-                : state.CurrentOrganization;
+            => "inspector";
     }
 }

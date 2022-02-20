@@ -5,7 +5,7 @@ using Super.Paula.Application.Orchestration;
 namespace Super.Paula.Application.Administration
 {
     public interface IInspectorEventHandler :
-        IEventHandler<OrganizationEvent>,
+        IEventHandler<OrganizationUpdateEvent>,
         IEventHandler<BusinessObjectDeletionEvent>,
         IEventHandler<BusinessObjectInspectorEvent>,
         IEventHandler<BusinessObjectInspectionAuditScheduleEvent>

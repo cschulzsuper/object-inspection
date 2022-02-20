@@ -1,7 +1,10 @@
-﻿using Super.Paula.Application.Administration.Requests;
-using Super.Paula.Application.Runtime;
+﻿using Super.Paula.Application.Administration.Events;
+using Super.Paula.Application.Administration.Requests;
+using Super.Paula.Application.Operation;
+using Super.Paula.Application.Orchestration;
 using Super.Paula.Authorization;
 using Super.Paula.Environment;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -17,6 +20,7 @@ namespace Super.Paula.Application.Administration
         private readonly ITokenAuthorizationFilter _tokenAuthorizatioFilter;
         private readonly IConnectionManager _connectionManager;
         private readonly ClaimsPrincipal _user;
+        private readonly IEventBus _eventBus;
 
         public AccountHandler(
             IInspectorManager inspectorManager,
@@ -25,7 +29,8 @@ namespace Super.Paula.Application.Administration
             AppSettings appSettings,
             ITokenAuthorizationFilter tokenAuthorizatioFilter,
             IConnectionManager connectionManager,
-            ClaimsPrincipal user)
+            ClaimsPrincipal user,
+            IEventBus eventBus)
         {
             _inspectorManager = inspectorManager;
             _identityInspectorManager = identityInspectorManager;
@@ -34,6 +39,7 @@ namespace Super.Paula.Application.Administration
             _tokenAuthorizatioFilter = tokenAuthorizatioFilter;
             _connectionManager = connectionManager;
             _user = user;
+            _eventBus = eventBus;
         }
 
         public async ValueTask RegisterOrganizationAsync(RegisterOrganizationRequest request)
@@ -43,38 +49,60 @@ namespace Super.Paula.Application.Administration
                 throw new TransportException($"Only the maintainer organization can be registered.");
             }
 
-            if (_appSettings.Maintainer != request.ChiefInspector)
+            var organization = new Organization
             {
-                throw new TransportException($"Only the maintainer can register with an organization.");
-            }
-
-            await _organizationManager.InsertAsync(new Organization
-            {
-                ChiefInspector = request.ChiefInspector,
+                ChiefInspector = string.Empty,
                 UniqueName = request.UniqueName,
                 DisplayName = request.DisplayName,
                 Activated = true
-            });
+            };
+
+            await _organizationManager.InsertAsync(organization);
+
+            await PublishOrganizationCreationAsync(organization);
+        }
+
+        public async ValueTask RegisterInspectorAsync(string organization, RegisterInspectorRequest request)
+        {
+            if (_appSettings.MaintainerOrganization != _user.GetOrganization() ||
+                _appSettings.Maintainer != _user.GetInspector())
+            {
+                throw new TransportException($"Only the maintainer can register inspectors.");
+            }
+
+            var organizationEntity = await _organizationManager.GetAsync(organization);
+
+            organizationEntity.ChiefInspector =  request.ChiefInspector;
 
             await _inspectorManager.InsertAsync(new Inspector
             {
-                Identity = request.Identity,
-                Organization = request.UniqueName,
+                Identity = _user.GetIdentity(),
+                Organization = organization,
                 OrganizationActivated = true,
-                OrganizationDisplayName = request.DisplayName,
+                OrganizationDisplayName = organizationEntity.DisplayName,
                 UniqueName = request.ChiefInspector,
                 Activated = true
             });
+
+            await _identityInspectorManager.InsertAsync(new IdentityInspector
+            {
+                Activated = true,
+                Inspector = request.ChiefInspector,
+                Organization = organization,
+                UniqueName = _user.GetIdentity()
+            });
+
+            await _organizationManager.UpdateAsync(organizationEntity);
         }
 
-        public ValueTask<string> SignInInspectorAsync(SignInInspectorRequest request)
+        public ValueTask<string> SignInInspectorAsync(string organization, string inspector)
         {
             var identityInspector = _identityInspectorManager
                 .GetIdentityBasedQueryable(_user.GetIdentity())
                 .Single(x =>
                     x.Activated &&
-                    x.Inspector == request.Inspector &&
-                    x.Organization == request.Organization);
+                    x.Inspector == inspector &&
+                    x.Organization == organization);
 
             var token = _user.ToToken();
 
@@ -90,20 +118,20 @@ namespace Super.Paula.Application.Administration
             return ValueTask.FromResult(token.ToBase64String());
         }
 
-        public ValueTask<string> StartImpersonationAsync(StartImpersonationRequest request)
+        public ValueTask<string> StartImpersonationAsync(string organization, string inspector)
         {
-            var inspector = _inspectorManager.GetQueryable()
+            var entity = _inspectorManager.GetQueryable()
                 .Single(x =>
                     x.Activated &&
                     x.OrganizationActivated &&
-                    x.UniqueName == request.UniqueName &&
-                    x.Organization == request.Organization);
+                    x.UniqueName == inspector &&
+                    x.Organization == organization);
 
             var token = _user.ToToken();
 
             token.Proof = _user.GetProof();
-            token.Inspector = inspector.UniqueName;
-            token.Organization = inspector.Organization;
+            token.Inspector = entity.UniqueName;
+            token.Organization = entity.Organization;
             token.ImpersonatorInspector = _user.GetInspector();
             token.ImpersonatorOrganization = _user.GetOrganization();
 
@@ -131,6 +159,23 @@ namespace Super.Paula.Application.Administration
             _tokenAuthorizatioFilter.Apply(token);
 
             return ValueTask.FromResult(token.ToBase64String());
+        }
+
+        private async ValueTask PublishOrganizationCreationAsync(Organization entity)
+        {
+            var @event = new OrganizationCreationEvent(
+                entity.UniqueName,
+                entity.DisplayName,
+                entity.Activated);
+
+            var user = new ClaimsPrincipal(
+                    new ClaimsIdentity(
+                        new List<Claim>
+                        {
+                            new Claim("Organization", entity.UniqueName)
+                        }));
+
+            await _eventBus.PublishAsync(@event, user);
         }
     }
 }

@@ -15,15 +15,10 @@ namespace Super.Paula.Data.Mappings.Guidelines
                 (entry.Entity as Inspection)!);
 
         public string Value(PaulaContextState state, Inspection entity)
-            => state.IgnoreCurrentOrganization
-                ? string.Empty
-                : state.CurrentOrganization;
-
+            => "inspection";
 
         public string Value(PaulaContextState state, Queue<object> partitionKeyComponents)
-            => state.IgnoreCurrentOrganization
-                ? string.Empty
-                : state.CurrentOrganization;
+            => "inspection";
 
     }
 }

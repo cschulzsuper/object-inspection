@@ -6,7 +6,14 @@ namespace Super.Paula.Data.Mappings.Inventory
 {
     public class BusinessObjectMapping : IEntityTypeConfiguration<BusinessObject>
     {
-        public string PartitionKey = "Organization";
+        public string PartitionKey = nameof(PartitionKey);
+
+        private readonly PaulaContextState _state;
+
+        public BusinessObjectMapping(PaulaContextState state)
+        {
+            _state = state;
+        }
 
         public void Configure(EntityTypeBuilder<BusinessObject> builder)
         {
@@ -18,9 +25,9 @@ namespace Super.Paula.Data.Mappings.Inventory
                 .HasKey(PartitionKey, nameof(BusinessObject.UniqueName));
 
             builder
-                .ToContainer(nameof(BusinessObject))
+                .ToContainer(_state.CurrentOrganization)
                 .HasPartitionKey(PartitionKey)
-                .HasNoDiscriminator();
+                .HasDiscriminator<string>("Type");
 
             builder
                 .Property(x => x.UniqueName)

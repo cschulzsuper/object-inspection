@@ -6,7 +6,6 @@ using Super.Paula.Authorization;
 using Super.Paula.Data;
 using Super.Paula.Steps;
 using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -49,8 +48,6 @@ namespace Super.Paula
                 paulaContextState.CurrentInspector = context.User.HasInspector()
                    ? context.User.GetInspector()
                    : string.Empty;
-
-                paulaContextState.IgnoreCurrentOrganization = false;
             });
 
             eventBus.ConfigureTransport();

@@ -11,7 +11,7 @@ namespace Super.Paula.Application.Administration
 {
     public class InspectorEventHandler : IInspectorEventHandler
     {
-        public async Task HandleAsync(EventHandlerContext context, OrganizationEvent @event)
+        public async Task HandleAsync(EventHandlerContext context, OrganizationUpdateEvent @event)
         {
             var inspectorManager = context.Services.GetRequiredService<IInspectorManager>();
             var identityInspectorManager = context.Services.GetRequiredService<IIdentityInspectorManager>();

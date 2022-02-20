@@ -8,6 +8,13 @@ namespace Super.Paula.Data.Mappings.Communication
     {
         public string PartitionKey = nameof(PartitionKey);
 
+        private readonly PaulaContextState _state;
+
+        public NotificationMapping(PaulaContextState state)
+        {
+            _state = state;
+        }
+
         public void Configure(EntityTypeBuilder<Notification> builder)
         {
             builder
@@ -20,9 +27,9 @@ namespace Super.Paula.Data.Mappings.Communication
                     nameof(Notification.Time));
 
             builder
-                .ToContainer(nameof(Notification))
+                .ToContainer(_state.CurrentOrganization)
                 .HasPartitionKey(PartitionKey)
-                .HasNoDiscriminator();
+                .HasDiscriminator<string>("Type");
 
             builder
                 .Property(x => x.Target)
