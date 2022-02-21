@@ -16,19 +16,19 @@
     <div class="container-fluid">
         <div class="form-group">
             <label>@Translator["Display name"]</label>
-            <InputText class="form-control" id="displayName" @bind-Value="_request.DisplayName" />
+            <InputText class="form-control" id="inspectionDisplayName" @bind-Value="_request.DisplayName" />
         </div>
         <div class="form-group">
             <label>@Translator["Unique name"]</label>
-            <InputText class="form-control" id="uniqueName" @bind-Value="_request.UniqueName" />
+            <InputText class="form-control" id="inspectionUniqueName" @bind-Value="_request.UniqueName" />
         </div>
         <div class="form-group">
             <label>@Translator["Text"]</label>
-            <InputTextArea class="form-control" id="text" rows="6" @bind-Value="_request.Text" />
+            <InputTextArea class="form-control" id="inspectionText" rows="6" @bind-Value="_request.Text" />
         </div>
         <div class="form-check">
-            <InputCheckbox class="form-check-input" id="activated" @bind-Value="_request.Activated"/>
-            <label class="form-check-label" for="activated">@Translator["Activated"]</label>     
+            <InputCheckbox class="form-check-input" id="inspectionActivated" @bind-Value="_request.Activated"/>
+            <label class="form-check-label" for="inspectionActivated">@Translator["Activated"]</label>     
         </div>
     </div>
 
@@ -43,7 +43,10 @@
     else 
     {
         <div class="container-fluid">
-            <AuthorizedButton Policy="ManagementFull" type="submit" class="btn btn-primary">@Translator["Submit"]</AuthorizedButton>
+            <AuthorizedButton Policy="ManagementFull" 
+                id="submit"
+                type="submit" 
+                class="btn btn-primary">@Translator["Submit"]</AuthorizedButton>
         </div>
     }
 

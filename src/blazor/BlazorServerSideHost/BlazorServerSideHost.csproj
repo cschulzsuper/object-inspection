@@ -5,7 +5,7 @@
 		<Nullable>enable</Nullable>
 		<LangVersion>Preview</LangVersion>
 		<RootNamespace>Super.Paula.Client</RootNamespace>
-		<UserSecretsId>7604232f-8b5e-4159-a38c-8802b735f823</UserSecretsId>
+		<UserSecretsId>b60582a0-a9df-4614-a837-b9ab58e3463d</UserSecretsId>
 	</PropertyGroup>
 
 	<ItemGroup>

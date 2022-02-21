@@ -21,7 +21,10 @@ namespace Super.Paula
 
         public async Task StartAsync(CancellationToken _)
         {
-            await IStep.ExecuteAsync<BusinessObjectInspectionAuditBulkInsert>(_serviceProvider);
+            await IStep.ExecuteAsync<Purge>(_serviceProvider);
+            await IStep.ExecuteAsync<Initialization>(_serviceProvider);
+            await IStep.ExecuteAsync<InitializationAdministration>(_serviceProvider);
+            await IStep.ExecuteAsync<InitializationAdventureTours>(_serviceProvider);
 
             _applicationLifetime.StopApplication();
         }

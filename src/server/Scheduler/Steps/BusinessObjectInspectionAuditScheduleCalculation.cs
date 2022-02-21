@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Super.Paula.Application.Administration;
 using Super.Paula.Application.Inventory;
+using Super.Paula.Authorization;
+using Super.Paula.Data;
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;
@@ -25,17 +27,10 @@ namespace Super.Paula.Steps
         {
             var organizations = _organizations.GetAllUniqueNames();
 
-            foreach (var organiztaion in organizations)
+            foreach (var organizaion in organizations)
             {
                 using var serviceScope = _serviceProvider.CreateScope();
-
-                serviceScope.ServiceProvider.ConfigureUser(
-                    new ClaimsPrincipal(
-                        new ClaimsIdentity(
-                            new List<Claim>
-                            {
-                                new Claim("Organization", organiztaion)
-                            })));
+                SetupScope(organizaion, serviceScope);
 
                 var businessObjects = serviceScope.ServiceProvider
                     .GetRequiredService<IBusinessObjects>()
@@ -49,6 +44,28 @@ namespace Super.Paula.Steps
                     await businessObjectHandler.TimeInspectionAuditAsync(businessObject);
                 }
             }
+        }
+
+        private static void SetupScope(string organization, IServiceScope scope)
+        {
+            scope.ServiceProvider.ConfigureUser(
+                new ClaimsPrincipal(
+                    new ClaimsIdentity(
+                        new List<Claim>
+                        {
+                                new Claim("Organization", organization)
+                        })));
+
+            var paulaContextState = scope.ServiceProvider.GetRequiredService<PaulaContextState>();
+            var user = scope.ServiceProvider.GetRequiredService<ClaimsPrincipal>();
+
+            paulaContextState.CurrentOrganization = user.HasOrganization()
+               ? user.GetOrganization()
+               : string.Empty;
+
+            paulaContextState.CurrentInspector = user.HasInspector()
+               ? user.GetInspector()
+               : string.Empty;
         }
     }
 }

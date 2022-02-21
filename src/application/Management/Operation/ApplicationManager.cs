@@ -1,7 +1,4 @@
 ﻿using Super.Paula.Data;
-using System;
-using System.Collections.Generic;
-using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Super.Paula.Application.Operation

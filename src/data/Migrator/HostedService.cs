@@ -24,7 +24,7 @@ namespace Super.Paula.Data
             await IStep.ExecuteAsync<Initialization>(_serviceProvider);
 
             await IStep.ExecuteAsync<InitializationApplication>(_serviceProvider);
-            //await IStep.ExecuteAsync<InspectorIdentity>(_serviceProvider);
+            await IStep.ExecuteAsync<InspectorIdentity>(_serviceProvider);
 
             _applicationLifetime.StopApplication();
         }

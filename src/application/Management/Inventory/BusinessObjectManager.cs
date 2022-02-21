@@ -121,8 +121,8 @@ namespace Super.Paula.Application.Inventory
                     yield return BusinessObjectInspectionValidator.AuditInspectorHasValidValue(inspection.AuditInspector);
                     yield return BusinessObjectInspectionValidator.AuditAnnotationIsNotNull(inspection.AuditAnnotation);
                     yield return BusinessObjectInspectionValidator.AuditAnnotationIsNotTooLong(inspection.AuditAnnotation);
-                    yield return BusinessObjectInspectionValidator.AuditResultIsNotNull(inspection.AuditAnnotation);
-                    yield return BusinessObjectInspectionValidator.AuditResultHasValidValue(inspection.AuditAnnotation);
+                    yield return BusinessObjectInspectionValidator.AuditResultIsNotNull(inspection.AuditResult);
+                    yield return BusinessObjectInspectionValidator.AuditResultHasValidValue(inspection.AuditResult);
                     yield return BusinessObjectInspectionValidator.AuditDateIsPositive(inspection.AuditDate);
                     yield return BusinessObjectInspectionValidator.AuditTimeIsInDayTimeRange(inspection.AuditTime);
                     yield return BusinessObjectInspectionValidator.AssignmentDateIsPositive(inspection.AssignmentDate);
@@ -196,8 +196,8 @@ namespace Super.Paula.Application.Inventory
                     yield return BusinessObjectInspectionValidator.AuditInspectorHasValidValue(inspection.AuditInspector);
                     yield return BusinessObjectInspectionValidator.AuditAnnotationIsNotNull(inspection.AuditAnnotation);
                     yield return BusinessObjectInspectionValidator.AuditAnnotationIsNotTooLong(inspection.AuditAnnotation);
-                    yield return BusinessObjectInspectionValidator.AuditResultIsNotNull(inspection.AuditAnnotation);
-                    yield return BusinessObjectInspectionValidator.AuditResultHasValidValue(inspection.AuditAnnotation);
+                    yield return BusinessObjectInspectionValidator.AuditResultIsNotNull(inspection.AuditResult);
+                    yield return BusinessObjectInspectionValidator.AuditResultHasValidValue(inspection.AuditResult);
                     yield return BusinessObjectInspectionValidator.AuditDateIsPositive(inspection.AuditDate);
                     yield return BusinessObjectInspectionValidator.AuditTimeIsInDayTimeRange(inspection.AuditTime);
                     yield return BusinessObjectInspectionValidator.AssignmentDateIsPositive(inspection.AssignmentDate);

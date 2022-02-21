@@ -14,8 +14,10 @@ namespace Super.Paula.Application.Auditing
         private const string SearchTermKeyInspector = "inspector";
         private const string SearchTermKeyInspection = "inspection";
         private const string SearchTermKeyResult = "result";
-        private const string SearchTermKeyFrom = "from";
-        private const string SearchTermKeyTo = "to";
+        private const string SearchTermKeyFromDate = "from-date";
+        private const string SearchTermKeyFromTime = "from-time";
+        private const string SearchTermKeyToDate = "to-date";
+        private const string SearchTermKeyToTime = "to-time";
 
         private readonly IBusinessObjectInspectionAuditManager _businessObjectInspectionAuditManager;
 
@@ -170,8 +172,10 @@ namespace Super.Paula.Application.Auditing
             var inspections = searchTerms.GetValidSearchTermValues<string>(SearchTermKeyInspection);
             var inspectors = searchTerms.GetValidSearchTermValues<string>(SearchTermKeyInspector);
             var results = searchTerms.GetValidSearchTermValues<string>(SearchTermKeyResult);
-            var from = searchTerms.GetValidSearchTermValues<int>(SearchTermKeyFrom).DefaultIfEmpty(default).Max();
-            var to = searchTerms.GetValidSearchTermValues<int>(SearchTermKeyTo).DefaultIfEmpty(default).Max();
+            var fromDate = searchTerms.GetValidSearchTermValues<int>(SearchTermKeyFromDate).DefaultIfEmpty(default).Max();
+            var fromTime = searchTerms.GetValidSearchTermValues<int>(SearchTermKeyFromTime).DefaultIfEmpty(default).Max();
+            var toDate = searchTerms.GetValidSearchTermValues<int>(SearchTermKeyToDate).DefaultIfEmpty(default).Max();
+            var toTime = searchTerms.GetValidSearchTermValues<int>(SearchTermKeyToTime).DefaultIfEmpty(default).Max();
             var freeTexts = searchTerms.GetValidSearchTermValues<string>(SearchTermKeyFreeText).Where(x => x.Length > 3).ToArray();
 
             query = query
@@ -179,8 +183,8 @@ namespace Super.Paula.Application.Auditing
                  .Where(x => !inspections.Any() || inspections.Contains(x.Inspection))
                  .Where(x => !inspectors.Any() || inspectors.Contains(x.Inspector))
                  .Where(x => !results.Any() || results.Contains(x.Result))
-                 .Where(x => from == default || x.AuditDate >= from)
-                 .Where(x => to == default || x.AuditDate <= to);
+                 .Where(x => (fromDate == default && fromTime == default) || (x.AuditDate == fromDate && x.AuditTime >= fromTime) || (x.AuditDate > fromDate))
+                 .Where(x => (toDate == default && toTime == default) || (x.AuditDate == toDate && x.AuditTime <= toTime) || (x.AuditDate < toDate));
 
             foreach (var freeText in freeTexts)
             {

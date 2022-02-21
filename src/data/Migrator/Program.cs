@@ -25,8 +25,8 @@ namespace Super.Paula.Data
 
                     services
                         .AddScoped<Initialization>()
-                        .AddScoped<InitializationApplication>();
-                        //.AddScoped<InspectorIdentity>();
+                        .AddScoped<InitializationApplication>()
+                        .AddScoped<InspectorIdentity>();
 
                 })
                 .ConfigureAppConfiguration((context, builder) =>

@@ -37,20 +37,31 @@ else
                         @switch (inspection.AuditResult)
                         {
                             case "satisfying":
-                                <AuthorizedButton Policy="AuditingFull" class="btn btn-success btn-block" title="@Translator["Satisfying"]"
-                                        @onclick="() => ToggleAsync(inspection)"><span class="oi oi-star"/></AuthorizedButton>
+                                <AuthorizedButton Policy="AuditingFull" 
+                                    class=@ToggleCss(inspection,"success")
+                                    title="@Translator["Satisfying"]"
+                                    @onclick="() => ToggleAsync(inspection)"><span class="oi oi-star"/></AuthorizedButton>
                                 break;
+
                             case "insufficient":
-                                <AuthorizedButton Policy="AuditingFull" class="btn btn-warning btn-block" title="@Translator["Insufficient"]"
+                                <AuthorizedButton Policy="AuditingFull" 
+                                    class=@ToggleCss(inspection,"warning") 
+                                    title="@Translator["Insufficient"]"
                                         @onclick="() => ToggleAsync(inspection)"><span class="oi oi-warning"/></AuthorizedButton>
                                 break;
+
                             case "failed":
-                                <AuthorizedButton Policy="AuditingFull" class="btn btn-danger btn-block" title="@Translator["Failed"]"
-                                        @onclick="() => ToggleAsync(inspection)"><span class="oi oi-x"/></AuthorizedButton>
+                                <AuthorizedButton Policy="AuditingFull" 
+                                    class=@ToggleCss(inspection,"danger")
+                                    title="@Translator["Failed"]"
+                                    @onclick="() => ToggleAsync(inspection)"><span class="oi oi-x"/></AuthorizedButton>
                                 break;
+
                             default:
-                                <AuthorizedButton Policy="AuditingFull" class="btn btn-secondary btn-block" title="@Translator["Unset"]"
-                                        @onclick="() => ToggleAsync(inspection)"><span class="oi oi-ellipses"></span></AuthorizedButton>
+                                <AuthorizedButton Policy="AuditingFull" 
+                                    class=@ToggleCss(inspection,"secondary")
+                                    title="@Translator["Unset"]"
+                                    @onclick="() => ToggleAsync(inspection)"><span class="oi oi-ellipses"></span></AuthorizedButton>
                                 break;
                         }
                     </td> 
@@ -87,6 +98,18 @@ else
         _businessObject = await BusinessObjectHandler.GetAsync(BusinessObject);
     }
 
+    private string ToggleCss(BusinessObjectInspectionResponse inspection, string btnClass)
+    {
+        var utcNow = DateTime.UtcNow;
+
+        var audit = (inspection.AuditDate, inspection.AuditTime)
+            .ToDateTime();
+
+        return audit < utcNow.AddMinutes(-10)
+            ? $"btn btn-outline-{btnClass} btn-block"
+            : $"btn btn-{btnClass} btn-block";
+    }
+
     private async Task ToggleAsync(BusinessObjectInspectionResponse inspection)
     {
         var utcNow = DateTime.UtcNow;
@@ -94,18 +117,18 @@ else
         var audit = (inspection.AuditDate, inspection.AuditTime)
             .ToDateTime();
 
-        var inspectionToOld = audit < utcNow.AddMinutes(-1);
-
-        var nextResult = new Dictionary<string,string>
-        {
-            [""] = "satisfying",
-            ["satisfying"] = "insufficient",
-            ["insufficient"] = "failed",
-            ["failed"] = "satisfying"
-        };
+        var inspectionToOld = audit < utcNow.AddMinutes(-10);
 
         if (!inspectionToOld)
         {
+            var nextResult = new Dictionary<string,string>
+            {
+                [""] = "satisfying",
+                ["satisfying"] = "insufficient",
+                ["insufficient"] = "failed",
+                ["failed"] = "satisfying"
+            };
+
             var request = new ChangeInspectionAuditRequest
             {
                 Result = nextResult[inspection.AuditResult]
@@ -118,12 +141,16 @@ else
         }
         else
         {
+            var nextResult = string.IsNullOrWhiteSpace(inspection.AuditResult)
+                    ? "satisfying"
+                    : inspection.AuditResult;
+
             var request = new CreateInspectionAuditRequest
             {
                 Inspection = inspection.UniqueName,
                 AuditDate = DateOnly.FromDateTime(utcNow).DayNumber,
                 AuditTime = (int)utcNow.TimeOfDay.TotalMilliseconds,
-                Result = nextResult[inspection.AuditResult]
+                Result = nextResult
             };
 
             var response = await BusinessObjectHandler.CreateInspectionAuditAsync(

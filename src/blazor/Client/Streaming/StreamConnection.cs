@@ -17,6 +17,8 @@ namespace Super.Paula.Client.Streaming
 
         private readonly SemaphoreSlim _hubConnectionSemaphore;
 
+        private bool _disposed;
+
         public StreamConnection(
             AuthenticationStateProvider AuthenticationStateProvider,
             AppSettings appSettings)
@@ -44,8 +46,15 @@ namespace Super.Paula.Client.Streaming
 
         public async ValueTask DisposeAsync()
         {
+            if (_disposed)
+            {
+                return;
+            }
+
             try
             {
+                _disposed = true;
+
                 await _hubConnectionSemaphore.WaitAsync();
 
                 _AuthenticationStateProvider.AuthenticationStateChanged -= AuthenticationStateChangedAsync;
@@ -67,6 +76,11 @@ namespace Super.Paula.Client.Streaming
 
         private async Task EnsureStartedAsync()
         {
+            if (_disposed)
+            {
+                return;
+            }
+
             try
             {
                 await _hubConnectionSemaphore.WaitAsync();
@@ -88,6 +102,11 @@ namespace Super.Paula.Client.Streaming
 
         private async Task EnsureStoppedAsync()
         {
+            if (_disposed)
+            {
+                return;
+            }
+
             try
             {
                 await _hubConnectionSemaphore.WaitAsync();

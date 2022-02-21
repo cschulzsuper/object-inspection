@@ -8,7 +8,7 @@
 @attribute [Authorize]
 
 <div class="container-fluid">
-    <h1>@Translator["Sign in inspector"]</h1>
+    <h1 id="signInInspectorHeadline">@Translator["Sign in inspector"]</h1>
 </div>
 
 <div class="container-fluid">
@@ -24,8 +24,10 @@ else
 {
     @foreach (var inspector in _inspectors)
     {
-        <button class="btn btn-outline-secondary btn-block text-left font-italic"
-                @onclick="() => SignInAsync(inspector)">
+        <button 
+            id=@($"signIn{inspector.UniqueName}For{inspector.Organization}")
+            class="btn btn-outline-secondary btn-block text-left font-italic"
+            @onclick="() => SignInAsync(inspector)">
             @inspector.Organization @@ @inspector.UniqueName
         </button>
     }

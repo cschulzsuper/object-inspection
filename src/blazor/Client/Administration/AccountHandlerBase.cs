@@ -37,9 +37,9 @@ namespace Super.Paula.Client.Administration
             responseMessage.EnsureSuccessStatusCode();
         }
 
-        public async ValueTask RegisterInspectorAsync(string organization, RegisterInspectorRequest request)
+        public async ValueTask RegisterChiefInspectorAsync(string organization, RegisterChiefInspectorRequest request)
         {
-            var responseMessage = await _httpClient.PostAsJsonAsync($"account/register-inspector/{organization}", request);
+            var responseMessage = await _httpClient.PostAsJsonAsync($"account/register-chief-inspector/{organization}", request);
 
             responseMessage.RuleOutProblems();
             responseMessage.EnsureSuccessStatusCode();

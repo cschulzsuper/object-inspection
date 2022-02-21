@@ -16,19 +16,19 @@
     <div class="container-fluid">
         <div class="form-group">
             <label>@Translator["Display name"]</label>
-            <InputText class="form-control" id="displayName" @bind-Value="_request.DisplayName" />
+            <InputText class="form-control" id="organizationDisplayName" @bind-Value="_request.DisplayName" />
         </div>
         <div class="form-group">
             <label>@Translator["Unique name"]</label>
-            <InputText class="form-control" id="uniqueName" @bind-Value="_request.UniqueName" />
+            <InputText class="form-control" id="organizationUniqueName" @bind-Value="_request.UniqueName" />
         </div>
         <div class="form-group">
             <label>@Translator["Chief inspector"]</label>
-            <InputText class="form-control" id="chiefInspector" @bind-Value="_request.ChiefInspector" />
+            <InputText class="form-control" id="organizationChiefInspector" @bind-Value="_request.ChiefInspector" />
         </div>
         <div class="form-check">
-            <InputCheckbox class="form-check-input" id="activated" @bind-Value="_request.Activated"/>
-            <label class="form-check-label" for="activated">@Translator["Activated"]</label>     
+            <InputCheckbox class="form-check-input" id="organizationActivated" @bind-Value="_request.Activated"/>
+            <label class="form-check-label" for="organizationActivated">@Translator["Activated"]</label>     
         </div>
     </div>
 
@@ -43,7 +43,10 @@
     else 
     {
         <div class="container-fluid">
-            <button type="submit" class="btn btn-primary">@Translator["Submit"]</button>
+            <button
+                id="submit"
+                type="submit"
+                class="btn btn-primary">@Translator["Submit"]</button>
         </div>
     }
 

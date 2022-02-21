@@ -48,7 +48,7 @@ namespace Super.Paula
             services.AddCors(options =>
                 options.AddDefaultPolicy(policy =>
                     policy
-                        .WithOrigins(_configuration["BlazorApp"])
+                        .WithOrigins(_configuration["Client"])
                         .AllowAnyMethod()
                         .AllowAnyHeader()));
 
@@ -63,8 +63,11 @@ namespace Super.Paula
 
         public void Configure(IApplicationBuilder app)
         {
-            app.UseConcurrencyLimiter();
-            app.UseBlacklist();
+            //app.UseConcurrencyLimiter();
+            if (!_environment.IsDevelopment())
+            {
+                app.UseBlacklist();
+            }
 
             app.UseResponseCompression();
             app.UseExceptionHandler(appBuilder => appBuilder.Run(HandleError));
