@@ -48,22 +48,15 @@ namespace Super.Paula
             services.AddCors(options =>
                 options.AddDefaultPolicy(policy =>
                     policy
-                        .WithOrigins(_configuration["Client"])
+                        .WithOrigins(_configuration["Paula:Client"])
                         .AllowAnyMethod()
                         .AllowAnyHeader()));
 
-            services.AddStackPolicy(options =>
-            {
-                options.MaxConcurrentRequests = 2;
-                options.RequestQueueLimit = 100;
-            });
-
-            services.AddPaulaServer(_environment.IsDevelopment());
+            services.AddServer(_environment.IsDevelopment());
         }
 
         public void Configure(IApplicationBuilder app)
         {
-            //app.UseConcurrencyLimiter();
             if (!_environment.IsDevelopment())
             {
                 app.UseBlacklist();
@@ -95,6 +88,7 @@ namespace Super.Paula
             });
 
             app.ConfigureEvents();
+            app.ConfigureWorker();
         }
 
         public async Task HandleError(HttpContext context)

@@ -2,10 +2,10 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Super.Paula.Data;
-using Super.Paula.Steps;
+using Super.Paula.Templates.AdventureTours.Steps;
 using System.Threading.Tasks;
 
-namespace Super.Paula
+namespace Super.Paula.Templates.AdventureTours
 {
     public class Program
     {
@@ -20,9 +20,9 @@ namespace Super.Paula
                 .ConfigureServices((context, services) =>
                 {
                     services.AddHostedService<HostedService>();
-                    services.AddPaulaAppSettings();
+                    services.AddAppSettings();
 
-                    services.AddPaulaServerData(context.HostingEnvironment.IsDevelopment());
+                    services.AddServerData(context.HostingEnvironment.IsDevelopment());
 
                     services
                         .AddScoped<Purge>()

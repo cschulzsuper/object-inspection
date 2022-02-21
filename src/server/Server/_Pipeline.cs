@@ -19,20 +19,18 @@ namespace Super.Paula
         {
             var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
 
-            eventBus.Configure((context) =>
-            {
-                var paulaContextState = context.Services.GetRequiredService<PaulaContextState>();
-
-                paulaContextState.CurrentOrganization = context.User.HasOrganization()
-                   ? context.User.GetOrganization()
-                   : string.Empty;
-
-                paulaContextState.CurrentInspector = context.User.HasInspector()
-                   ? context.User.GetInspector()
-                   : string.Empty;
-            });
-
+            eventBus.Configure((context) => context.Services.ConfigureData());
             eventBus.ConfigureTransport();
+
+            return app;
+        }
+
+        public static IApplicationBuilder ConfigureWorker(this IApplicationBuilder app)
+        {
+            var workerRegistry = app.ApplicationServices.GetRequiredService<IWorkerRegistry>();
+
+            workerRegistry.ConfigureWorkflows();
+            workerRegistry.ConfigureIntegration();
 
             return app;
         }
@@ -80,30 +78,17 @@ namespace Super.Paula
         public static IApplicationBuilder UseEndpointState(this IApplicationBuilder app)
             => app.Use((context, next) =>
             {
-                var paulaContextState = context.RequestServices.GetRequiredService<PaulaContextState>();
-
                 var endpoint = context.GetEndpoint();
                 var useOrganizationFromRoute = endpoint?.Metadata.GetMetadata<UseOrganizationFromRouteAttribute>() != null;
 
                 if (useOrganizationFromRoute)
                 {
                     context.Request.RouteValues.TryGetValue("organization", out var organization);
-
-                    paulaContextState.CurrentOrganization = organization != null
-                        ? $"{organization}"
-                        : string.Empty;
-
-                    paulaContextState.CurrentInspector = string.Empty;
+                    context.RequestServices.ConfigureData($"{organization}", string.Empty);
                 }
                 else
                 {
-                    paulaContextState.CurrentOrganization = context.User.HasOrganization()
-                       ? context.User.GetOrganization()
-                       : string.Empty;
-
-                    paulaContextState.CurrentInspector = context.User.HasInspector()
-                       ? context.User.GetInspector()
-                       : string.Empty;
+                    context.RequestServices.ConfigureData();
                 }
 
                 return next();

@@ -161,30 +161,9 @@ namespace Super.Paula.Application.Administration
                 await inspectorManager.UpdateAsync(inspector);
                 await inspectorAnnouncer.AnnounceBusinessObjectUpdateAsync(@event.Inspector, inspectorBusinessObject.ToResponse());
 
-                await PublishInspectorBusinessObjectAsync(context, inspector, inspectorBusinessObject, oldDelayed, oldPending);
+                var inspectorEventService = context.Services.GetRequiredService<IInspectorEventService>();
+                await inspectorEventService.CreateInspectorBusinessObjectEventAsync(inspector, inspectorBusinessObject, oldDelayed, oldPending);
             }
-        }
-
-        private static async ValueTask PublishInspectorBusinessObjectAsync(
-            EventHandlerContext context,
-            Inspector inspector,
-            InspectorBusinessObject inspectorBusinessObject,
-            bool oldDelayed,
-            bool oldPending)
-
-        {
-            var eventBus = context.Services.GetRequiredService<IEventBus>();
-
-            var @event = new InspectorBusinessObjectEvent(
-                inspector.UniqueName,
-                inspectorBusinessObject.UniqueName,
-                inspectorBusinessObject.DisplayName,
-                inspectorBusinessObject.AuditScheduleDelayed,
-                inspectorBusinessObject.AuditSchedulePending,
-                oldDelayed,
-                oldPending);
-
-            await eventBus.PublishAsync(@event, context.User);
         }
 
         public async Task HandleAsync(EventHandlerContext context, BusinessObjectDeletionEvent @event)

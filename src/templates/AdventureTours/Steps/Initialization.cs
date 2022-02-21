@@ -1,7 +1,7 @@
 ﻿using Super.Paula.Data;
 using System.Threading.Tasks;
 
-namespace Super.Paula.Steps
+namespace Super.Paula.Templates.AdventureTours.Steps
 {
     public class Initialization : IStep
     {

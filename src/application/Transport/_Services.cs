@@ -15,34 +15,64 @@ namespace Super.Paula.Application
     [SuppressMessage("Style", "IDE1006")]
     public static class _Services
     {
-        public static IServiceCollection AddPaulaServerTransport(this IServiceCollection services)
+        public static IServiceCollection AddServerTransport(this IServiceCollection services)
         {
-            services
-                .AddScoped<IPasswordHasher<Identity>, IdentityPasswordHasher>()
-                .AddScoped<IIdentityHandler, IdentityHandler>();
+            services.AddServerTransportAdministration();
+            services.AddServerTransportAuditing();
+            services.AddServerTransportCommunication();
+            services.AddServerTransportGuidelines();
+            services.AddServerTransportInventory();
 
-            services
-                .AddScoped<IAccountHandler, AccountHandler>()
-                .AddScoped<IAuthenticationHandler, AuthenticationHandler>()
+            return services;
+        }
 
-                .AddScoped<IBusinessObjectHandler, BusinessObjectHandler>()
-                .AddSingleton<IBusinessObjectEventHandler, BusinessObjectEventHandler>()
+        private static IServiceCollection AddServerTransportAdministration(this IServiceCollection services)
+        {
+            services.AddScoped<IPasswordHasher<Identity>, IdentityPasswordHasher>();
+            services.AddScoped<IIdentityHandler, IdentityHandler>();
 
-                .AddScoped<IBusinessObjectInspectionAuditHandler, BusinessObjectInspectionAuditHandler>()
-                .AddSingleton<IBusinessObjectInspectionAuditEventHandler, BusinessObjectInspectionAuditEventHandler>()
+            services.AddScoped<IAccountHandler, AccountHandler>();
+            services.AddScoped<IAuthenticationHandler, AuthenticationHandler>();
 
-                .AddScoped<INotificationAnnouncer>(NotificationAnnouncerFactory)
-                .AddScoped<INotificationHandler, NotificationHandler>()
-                .AddSingleton<INotificationEventHandler, NotificationEventHandler>()
+            services.AddScoped<IInspectorAnnouncer>(InspectorAnnouncerFactory);
+            services.AddScoped<IInspectorHandler, InspectorHandler>();
+            services.AddScoped<IInspectorEventService, InspectorEventService>();
 
-                .AddScoped<IInspectorAnnouncer>(InspectorAnnouncerFactory)
-                .AddScoped<IInspectorHandler, InspectorHandler>()
-                .AddSingleton<IInspectorEventHandler, InspectorEventHandler>()
+            services.AddScoped<IOrganizationHandler, OrganizationHandler>();
+            services.AddScoped<IOrganizations, Organizations>();
+            services.AddScoped<IOrganizationEventService, OrganizationEventService>();
 
-                .AddScoped<IInspectionHandler, InspectionHandler>()
-                .AddScoped<IOrganizationHandler, OrganizationHandler>()
+            return services;
+        }
 
-                .AddSingleton<IApplicationEventHandler, ApplicationEventHandler>();
+        private static IServiceCollection AddServerTransportAuditing(this IServiceCollection services)
+        {
+            services.AddScoped<IBusinessObjectInspectionAuditHandler, BusinessObjectInspectionAuditHandler>();
+
+            return services;
+        }
+
+        private static IServiceCollection AddServerTransportCommunication(this IServiceCollection services)
+        {
+            services.AddScoped<INotificationAnnouncer>(NotificationAnnouncerFactory);
+            services.AddScoped<INotificationHandler, NotificationHandler>();
+
+            return services;
+        }
+
+        private static IServiceCollection AddServerTransportGuidelines(this IServiceCollection services)
+        {
+            services.AddScoped<IInspectionHandler, InspectionHandler>();
+            services.AddScoped<IInspectionEventService, InspectionEventService>();
+
+            return services;
+        }
+
+        private static IServiceCollection AddServerTransportInventory(this IServiceCollection services)
+        {
+            services.AddScoped<IBusinessObjectHandler, BusinessObjectHandler>();
+            services.AddScoped<IBusinessObjects, BusinessObjects>();
+            services.AddScoped<IBusinessObjectEventService, BusinessObjectEventService>();
 
             return services;
         }

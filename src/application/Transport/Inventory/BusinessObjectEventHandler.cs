@@ -2,6 +2,7 @@
 using Super.Paula.Application.Guidelines.Events;
 using Super.Paula.Application.Inventory.Events;
 using Super.Paula.Application.Orchestration;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -49,37 +50,18 @@ namespace Super.Paula.Application.Inventory
                 foreach (var businessObjectInspection in businessObjectInspections)
                 {
                     businessObject.Inspections.Remove(businessObjectInspection);
+
+                    businessObjectInspectionAuditScheduleFilter.Apply(
+                        new BusinessObjectInspectionAuditScheduleFilterContext(
+                            Inspection: businessObjectInspection,
+                            Limit: DateTime.UtcNow.AddMonths(1).ToNumbers()));
                 }
 
                 await businessObjectManager.UpdateAsync(businessObject);
 
-                await PublishBusinessObjectInspectionAuditScheduleAsync(context, businessObject);
+                var businessObjectEventService = context.Services.GetRequiredService<IBusinessObjectEventService>();
+                await businessObjectEventService.CreateBusinessObjectInspectionAuditScheduleEventAsync(businessObject);
             }
-        }
-
-        private static async ValueTask PublishBusinessObjectInspectionAuditScheduleAsync(EventHandlerContext context, BusinessObject businessObject)
-        {
-            var eventBus = context.Services.GetRequiredService<IEventBus>();
-
-            var inspection = businessObject.Inspections
-                .Where(x => x.AuditSchedule.Appointments.Any())
-                .OrderBy(x => x.AuditSchedule.Appointments
-                    .Min(y => (y.PlannedAuditDate, y.PlannedAuditTime).ToDateTime()))
-                .FirstOrDefault();
-
-            if (inspection == null)
-            {
-                return;
-            }
-
-            var @event = new BusinessObjectInspectionAuditScheduleEvent(
-                businessObject.UniqueName,
-                businessObject.Inspector,
-                inspection.AuditSchedule.Appointments.First().PlannedAuditDate,
-                inspection.AuditSchedule.Appointments.First().PlannedAuditTime,
-                inspection.AuditSchedule.Threshold);
-
-            await eventBus.PublishAsync(@event, context.User);
         }
     }
 }

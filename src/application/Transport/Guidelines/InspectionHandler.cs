@@ -1,10 +1,7 @@
-﻿using Super.Paula.Application.Guidelines.Events;
-using Super.Paula.Application.Guidelines.Requests;
+﻿using Super.Paula.Application.Guidelines.Requests;
 using Super.Paula.Application.Guidelines.Responses;
-using Super.Paula.Application.Orchestration;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Super.Paula.Application.Guidelines
@@ -12,17 +9,14 @@ namespace Super.Paula.Application.Guidelines
     public class InspectionHandler : IInspectionHandler
     {
         private readonly IInspectionManager _inspectionManager;
-        private readonly IEventBus _eventBus;
-        private readonly ClaimsPrincipal _user;
+        private readonly IInspectionEventService _inspectionEventService;
 
         public InspectionHandler(
             IInspectionManager inspectionManager,
-            IEventBus eventBus,
-            ClaimsPrincipal user)
+            IInspectionEventService inspectionEventService)
         {
             _inspectionManager = inspectionManager;
-            _eventBus = eventBus;
-            _user = user;
+            _inspectionEventService = inspectionEventService;
         }
 
         public IAsyncEnumerable<InspectionResponse> GetAll()
@@ -60,8 +54,7 @@ namespace Super.Paula.Application.Guidelines
             };
 
             await _inspectionManager.InsertAsync(entity);
-
-            await PublishInspectionAsync(entity);
+            await _inspectionEventService.CreateInspectionEventAsync(entity);
 
             return new InspectionResponse
             {
@@ -89,8 +82,7 @@ namespace Super.Paula.Application.Guidelines
                 entity.UniqueName = request.UniqueName;
 
                 await _inspectionManager.UpdateAsync(entity);
-
-                await PublishInspectionAsync(entity);
+                await _inspectionEventService.CreateInspectionEventAsync(entity);
             }
         }
 
@@ -99,8 +91,7 @@ namespace Super.Paula.Application.Guidelines
             var entity = await _inspectionManager.GetAsync(inspection);
 
             await _inspectionManager.DeleteAsync(entity);
-
-            await PublishInspectionDeletionAsync(entity.UniqueName);
+            await _inspectionEventService.CreateInspectionDeletionEventAsync(entity.UniqueName);
         }
 
         public async ValueTask ActivateAsync(string inspection)
@@ -114,8 +105,7 @@ namespace Super.Paula.Application.Guidelines
                 entity.Activated = true;
 
                 await _inspectionManager.UpdateAsync(entity);
-
-                await PublishInspectionAsync(entity);
+                await _inspectionEventService.CreateInspectionEventAsync(entity);
             }
         }
 
@@ -130,27 +120,8 @@ namespace Super.Paula.Application.Guidelines
                 entity.Activated = false;
 
                 await _inspectionManager.UpdateAsync(entity);
-
-                await PublishInspectionAsync(entity);
+                await _inspectionEventService.CreateInspectionEventAsync(entity);
             }
-        }
-
-        private async ValueTask PublishInspectionAsync(Inspection inspection)
-        {
-            var @event = new InspectionEvent(
-                inspection.UniqueName,
-                inspection.DisplayName,
-                inspection.Text,
-                inspection.Activated);
-
-            await _eventBus.PublishAsync(@event, _user);
-        }
-
-        private async ValueTask PublishInspectionDeletionAsync(string inspection)
-        {
-            var @event = new InspectionDeletionEvent(inspection);
-
-            await _eventBus.PublishAsync(@event, _user);
         }
     }
 }

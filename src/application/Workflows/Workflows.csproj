@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<LangVersion>Preview</LangVersion>
+		<RootNamespace>Super.Paula.Application</RootNamespace>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Integration.Contract\Integration.Contract.csproj" />
+		<ProjectReference Include="..\Management.Contract\Management.Contract.csproj" />
+		<ProjectReference Include="..\Transport.Contract\Transport.Contract.csproj" />
+		<ProjectReference Include="..\..\data\Data\Data.csproj" />
+	</ItemGroup>
+
+</Project>

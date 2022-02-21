@@ -11,8 +11,6 @@
 
         public const string InventoryBusinessObject = "inventory/business-object";
 
-        public const string GuidlinesInspection = "guidlines/inspection";
-
         public const string OperationApplication = "operation/application";
     }
 }

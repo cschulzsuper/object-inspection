@@ -24,7 +24,7 @@ namespace Super.Paula.Client.Configuration
             var value = await _httpClient.GetStringAsync("api/settings/server");
             if (value != null)
             {
-                data.Add("Server", value);
+                data.Add("Paula:Server", value);
             }
 
             Data = data;

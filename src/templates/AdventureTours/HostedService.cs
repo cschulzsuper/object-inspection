@@ -1,10 +1,10 @@
 ﻿using Microsoft.Extensions.Hosting;
-using Super.Paula.Steps;
+using Super.Paula.Templates.AdventureTours.Steps;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Super.Paula
+namespace Super.Paula.Templates.AdventureTours
 {
     public class HostedService : IHostedService
     {

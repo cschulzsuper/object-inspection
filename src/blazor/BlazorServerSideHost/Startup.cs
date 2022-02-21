@@ -20,9 +20,7 @@ namespace Super.Paula.Client
             services.AddRazorPages();
             services.AddServerSideBlazor();
 
-            services
-                .AddPaulaClient(_environment.IsDevelopment(), isWebAssembly: false)
-                .AddScoped<ILocalStorage, ProtectedLocalStorage>();
+            services.AddClient<ProtectedLocalStorage>(_environment.IsDevelopment(), isWebAssembly: false);
         }
 
         public void Configure(IApplicationBuilder app)

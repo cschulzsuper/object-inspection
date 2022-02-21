@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text.Json.Serialization;
+using Super.Paula;
 
 namespace Super.Paula.Application.Orchestration
 {
@@ -8,13 +9,16 @@ namespace Super.Paula.Application.Orchestration
         public EventBase()
         {
             Id = Guid.NewGuid();
-            CreationDate = DateTime.UtcNow;
+            (CreationDate, CreationTime) = DateTime.UtcNow.ToNumbers();
         }
 
         [JsonInclude]
         public Guid Id { get; private init; }
 
         [JsonInclude]
-        public DateTime CreationDate { get; private init; }
+        public int CreationDate { get; private init; }
+
+        [JsonInclude]
+        public int CreationTime { get; private init; }
     }
 }

@@ -30,9 +30,7 @@ namespace Super.Paula.Client
         {
             services.AddBlazoredLocalStorage();
 
-            services
-                .AddPaulaClient(environment.IsDevelopment(), isWebAssembly: true)
-                .AddScoped<ILocalStorage, DefaultLocalStorage>();
+            services.AddClient<DefaultLocalStorage>(environment.IsDevelopment(), isWebAssembly: true);
         }
     }
 }

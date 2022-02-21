@@ -7,7 +7,7 @@ namespace Super.Paula.Application
     [SuppressMessage("Style", "IDE1006")]
     public static class _Services
     {
-        public static IServiceCollection AddPaulaServerStreaming(this IServiceCollection services)
+        public static IServiceCollection AddServerStreaming(this IServiceCollection services)
             => services
                 .AddScoped<HubContextResolver>()
                 .AddScoped<IStreamer, Streamer>();
