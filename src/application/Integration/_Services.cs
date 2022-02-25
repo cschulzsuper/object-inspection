@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Super.Paula.Application.Administration;
-using Super.Paula.Application.Inventory;
+using Super.Paula.Application.Auditing;
 using Super.Paula.Application.Orchestration;
 using System.Diagnostics.CodeAnalysis;
 

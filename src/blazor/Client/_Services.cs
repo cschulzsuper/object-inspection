@@ -166,12 +166,17 @@ namespace Super.Paula.Client
             if (isWebAssembly)
             {
                 services
-                    .AddHttpClient<IBusinessObjectInspectionAuditHandler, BusinessObjectInspectionAuditHandler>()
+                    .AddHttpClient<IBusinessObjectInspectionAuditRecordHandler, BusinessObjectInspectionAuditRecordHandler>()
+                    .AddHttpMessageHandler<AuthenticationMessageHandler>();
+
+                services
+                    .AddHttpClient<IBusinessObjectInspectionHandler, BusinessObjectInspectionHandler>()
                     .AddHttpMessageHandler<AuthenticationMessageHandler>();
             }
             else
             {
-                services.AddHttpClientHandler<IBusinessObjectInspectionAuditHandler, BusinessObjectInspectionAuditHandler>();
+                services.AddHttpClientHandler<IBusinessObjectInspectionAuditRecordHandler, BusinessObjectInspectionAuditRecordHandler>();
+                services.AddHttpClientHandler<IBusinessObjectInspectionHandler, BusinessObjectInspectionHandler>();
             }
 
             return services;

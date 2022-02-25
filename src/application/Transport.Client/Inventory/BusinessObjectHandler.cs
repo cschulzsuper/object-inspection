@@ -1,4 +1,5 @@
-﻿using Super.Paula.Application.Inventory;
+﻿using Super.Paula.Application.Auditing.Responses;
+using Super.Paula.Application.Inventory;
 using Super.Paula.Application.Inventory.Requests;
 using Super.Paula.Application.Inventory.Responses;
 using Super.Paula.Environment;
@@ -27,46 +28,6 @@ namespace Super.Paula.Client.Inventory
             _httpClient.BaseAddress = new Uri(appSettings.Server);
         }
 
-        public async ValueTask AssignInspectionAsync(string businessObject, AssignInspectionRequest request)
-        {
-            var responseMessage = await _httpClient.PostAsJsonAsync($"business-objects/{businessObject}/assign-inspection", request);
-
-            responseMessage.RuleOutProblems();
-            responseMessage.EnsureSuccessStatusCode();
-        }
-
-        public async ValueTask CancelInspectionAsync(string businessObject, CancelInspectionRequest request)
-        {
-            var responseMessage = await _httpClient.PostAsJsonAsync($"business-objects/{businessObject}/cancel-inspection", request);
-
-            responseMessage.RuleOutProblems();
-            responseMessage.EnsureSuccessStatusCode();
-        }
-
-        public async ValueTask ScheduleInspectionAuditAsync(string businessObject, string inspection, ScheduleInspectionAuditRequest request)
-        {
-            var responseMessage = await _httpClient.PostAsJsonAsync($"business-objects/{businessObject}/schedule-inspection-audit/{inspection}", request);
-
-            responseMessage.RuleOutProblems();
-            responseMessage.EnsureSuccessStatusCode();
-        }
-
-        public async ValueTask ChangeInspectionAuditAsync(string businessObject, string inspection, ChangeInspectionAuditRequest request)
-        {
-            var responseMessage = await _httpClient.PostAsJsonAsync($"business-objects/{businessObject}/change-inspection-audit/{inspection}", request);
-
-            responseMessage.RuleOutProblems();
-            responseMessage.EnsureSuccessStatusCode();
-        }
-
-        public async ValueTask AnnotateInspectionAuditAsync(string businessObject, string inspection, AnnotateInspectionAuditRequest request)
-        {
-            var responseMessage = await _httpClient.PostAsJsonAsync($"business-objects/{businessObject}/annotate-inspection-audit/{inspection}", request);
-
-            responseMessage.RuleOutProblems();
-            responseMessage.EnsureSuccessStatusCode();
-        }
-
         public async ValueTask<BusinessObjectResponse> CreateAsync(BusinessObjectRequest request)
         {
             var responseMessage = await _httpClient.PostAsJsonAsync("business-objects", request);
@@ -77,19 +38,12 @@ namespace Super.Paula.Client.Inventory
             return (await responseMessage.Content.ReadFromJsonAsync<BusinessObjectResponse>())!;
         }
 
-        public async ValueTask<CreateInspectionAuditResponse> CreateInspectionAuditAsync(string businessObject, CreateInspectionAuditRequest request)
+        public async ValueTask DeleteAsync(string businessObject, string etag)
         {
-            var responseMessage = await _httpClient.PostAsJsonAsync($"business-objects/{businessObject}/create-inspection-audit", request);
+            var request = new HttpRequestMessage(HttpMethod.Delete, $"business-objects/{businessObject}");
+            request.Headers.Add("If-Match", etag);
 
-            responseMessage.RuleOutProblems();
-            responseMessage.EnsureSuccessStatusCode();
-
-            return (await responseMessage.Content.ReadFromJsonAsync<CreateInspectionAuditResponse>())!;
-        }
-
-        public async ValueTask DeleteAsync(string businessObject)
-        {
-            var responseMessage = await _httpClient.DeleteAsync($"business-objects/{businessObject}");
+            var responseMessage = await _httpClient.SendAsync(request);
 
             responseMessage.RuleOutProblems();
             responseMessage.EnsureSuccessStatusCode();
@@ -146,18 +100,5 @@ namespace Super.Paula.Client.Inventory
 
             return (await responseMessage.Content.ReadFromJsonAsync<SearchBusinessObjectResponse>())!;
         }
-
-        public async ValueTask<DropInspectionAuditResponse> DropInspectionAuditAsync(string businessObject, string inspection, DropInspectionAuditRequest request)
-        {
-            var responseMessage = await _httpClient.PostAsJsonAsync($"business-objects/{businessObject}/drop-inspection-audit/{inspection}", request);
-
-            responseMessage.RuleOutProblems();
-            responseMessage.EnsureSuccessStatusCode();
-
-            return (await responseMessage.Content.ReadFromJsonAsync<DropInspectionAuditResponse>())!;
-        }
-
-        public ValueTask TimeInspectionAuditAsync(string businessObject)
-            => throw new NotSupportedException("Clients can not time the business object inspection audit.");
     }
 }

@@ -5,6 +5,8 @@ namespace Super.Paula.Application.Administration.Requests
 {
     public class OrganizationRequest
     {
+        public string ETag { get; set; } = string.Empty;
+
         [KebabCase]
         [StringLength(140)]
         [UniqueName]
@@ -21,5 +23,6 @@ namespace Super.Paula.Application.Administration.Requests
         public string UniqueName { get; set; } = string.Empty;
 
         public bool Activated { get; set; }
+
     }
 }

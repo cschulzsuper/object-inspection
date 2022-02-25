@@ -20,10 +20,20 @@ namespace Super.Paula.Data
 
             if (!string.IsNullOrWhiteSpace(State.CurrentOrganization))
             {
+                // Inventory
                 modelBuilder.ApplyConfiguration(new BusinessObjectMapping(State));
-                modelBuilder.ApplyConfiguration(new BusinessObjectInspectionAuditMapping(State));
+               
+                // Auditing
+                modelBuilder.ApplyConfiguration(new BusinessObjectInspectionMapping(State));
+                modelBuilder.ApplyConfiguration(new BusinessObjectInspectionAuditRecordMapping(State));
+
+                // Guidelines
                 modelBuilder.ApplyConfiguration(new InspectionMapping(State));
+
+                // Administration
                 modelBuilder.ApplyConfiguration(new InspectorMapping(State));
+
+                // Communication
                 modelBuilder.ApplyConfiguration(new NotificationMapping(State));
             }
         }

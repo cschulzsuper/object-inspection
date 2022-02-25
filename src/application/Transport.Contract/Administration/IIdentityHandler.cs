@@ -12,8 +12,8 @@ namespace Super.Paula.Application.Administration
 
         ValueTask<IdentityResponse> CreateAsync(IdentityRequest request);
         ValueTask ReplaceAsync(string identity, IdentityRequest request);
-        ValueTask DeleteAsync(string identity);
+        ValueTask DeleteAsync(string identity, string etag);
 
-        ValueTask ResetAsync(string identity);
+        ValueTask<ResetIdentityResponse> ResetAsync(string identity, string etag);
     }
 }

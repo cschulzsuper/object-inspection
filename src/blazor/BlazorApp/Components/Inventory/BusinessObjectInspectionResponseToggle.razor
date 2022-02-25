@@ -9,7 +9,7 @@
                             ? "btn-outline-success"
                             : "btn-outline-secondary")"
 
-        @onclick="() => Toggle()">@Inspection.DisplayName</button>
+        @onclick="() => Toggle()">@Inspection.InspectionDisplayName</button>
 
 @if (_isExpanded)
 {
@@ -39,7 +39,7 @@
             </ul>
         }
         <span>
-            @Inspection.Text
+            @Inspection.InspectionText
         </span>
     </div>
 }
@@ -125,7 +125,7 @@
         => IsScheduled() || IsAuditted();
 
     private bool CanToggle()
-        => HasTimestamps() || !string.IsNullOrWhiteSpace(Inspection.Text);
+        => HasTimestamps() || !string.IsNullOrWhiteSpace(Inspection.InspectionText);
 
     private string GetAuditString()
     {

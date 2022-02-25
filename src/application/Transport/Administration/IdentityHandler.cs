@@ -34,14 +34,17 @@ namespace Super.Paula.Application.Administration
 
             return new IdentityResponse
             {
+                ETag = entity.ETag,
                 UniqueName = entity.UniqueName,
                 MailAddress = entity.MailAddress
             };
         }
 
-        public async ValueTask DeleteAsync(string identity)
+        public async ValueTask DeleteAsync(string identity, string etag)
         {
             var entity = await _identityManager.GetAsync(identity);
+
+            entity.ETag = etag;
 
             await _identityManager.DeleteAsync(entity);
         }
@@ -51,6 +54,7 @@ namespace Super.Paula.Application.Administration
                 .GetAsyncEnumerable(query => query
                 .Select(entity => new IdentityResponse
                 {
+                    ETag = entity.ETag,
                     UniqueName = entity.UniqueName,
                     MailAddress = entity.MailAddress
                 }));
@@ -61,6 +65,7 @@ namespace Super.Paula.Application.Administration
 
             return new IdentityResponse
             {
+                ETag = entity.ETag,
                 UniqueName = entity.UniqueName,
                 MailAddress = entity.MailAddress
             };
@@ -72,17 +77,24 @@ namespace Super.Paula.Application.Administration
 
             entity.UniqueName = request.UniqueName;
             entity.MailAddress = request.MailAddress;
+            entity.ETag = request.ETag;
 
             await _identityManager.UpdateAsync(entity);
         }
 
-        public async ValueTask ResetAsync(string identity)
+        public async ValueTask<ResetIdentityResponse> ResetAsync(string identity, string etag)
         {
             var entity = await _identityManager.GetAsync(identity);
 
             entity.Secret = _passwordHasher.HashPassword(entity, "default");
+            entity.ETag = etag;
 
             await _identityManager.UpdateAsync(entity);
+
+            return new ResetIdentityResponse
+            {
+                ETag = entity.ETag
+            };
         }
     }
 }

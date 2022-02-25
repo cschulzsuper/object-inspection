@@ -5,6 +5,8 @@ namespace Super.Paula.Application.Administration.Requests
 {
     public class InspectorRequest
     {
+        public string ETag { get; set; } = string.Empty;
+
         [Required]
         [StringLength(140)]
         [UniqueName]

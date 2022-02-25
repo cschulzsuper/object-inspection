@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Super.Paula.Application.Inventory.Events
 {
-    [AllowedSubscriber(AllowedSubscribers.AuditingBusinessObjectInspectionAudit)]
+    [AllowedSubscriber(AllowedSubscribers.AuditingBusinessObjectInspectionAuditRecord)]
     public record BusinessObjectEvent(
 
         [StringLength(140)]

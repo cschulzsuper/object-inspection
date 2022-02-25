@@ -24,18 +24,56 @@ namespace Super.Paula.Data
         }
 
         public async ValueTask<TEntity> GetByIdAsync(object id)
-            => await _repositoryContext.FindAsync<TEntity>(AdjustForPartitionKey(id))
-               ?? throw new RepositoryException($"Entity with id ({id}) was not found.");
+        {
+            var entity = await _repositoryContext.FindAsync<TEntity>(AdjustForPartitionKey(id));
+            
+            if (entity == null) 
+            {
+               throw new RepositoryException($"Entity with id ({id}) was not found.");
+            }
 
-        public ValueTask<TEntity?> GetByIdOrDefaultAsync(object id)
-            => _repositoryContext.FindAsync<TEntity>(AdjustForPartitionKey(id));
+            _repositoryContext.Entry(entity).State = EntityState.Detached;
+
+            return entity;
+        }
+
+        public async ValueTask<TEntity?> GetByIdOrDefaultAsync(object id)
+        {
+            var entity = await _repositoryContext.FindAsync<TEntity>(AdjustForPartitionKey(id));
+
+            if (entity != null)
+            {
+                _repositoryContext.Entry(entity).State = EntityState.Detached;
+            }
+
+            return entity;
+        }
 
         public async ValueTask<TEntity> GetByIdsAsync(params object[] ids)
-            => await _repositoryContext.FindAsync<TEntity>(AdjustForPartitionKey(ids))
-               ?? throw new RepositoryException($"Entity with ids ({string.Join(',', ids)}) was not found.");
+        {
+            var entity = await _repositoryContext.FindAsync<TEntity>(AdjustForPartitionKey(ids));
 
-        public ValueTask<TEntity?> GetByIdsOrDefaultAsync(params object[] ids)
-            => _repositoryContext.FindAsync<TEntity>(AdjustForPartitionKey(ids));
+            if (entity == null)
+            {
+                throw new RepositoryException($"Entity with ids ({string.Join(',', ids)}) was not found."); ;
+            }
+
+            _repositoryContext.Entry(entity).State = EntityState.Detached;
+
+            return entity;
+        }
+
+        public async ValueTask<TEntity?> GetByIdsOrDefaultAsync(params object[] ids)
+        {
+            var entity = await _repositoryContext.FindAsync<TEntity>(AdjustForPartitionKey(ids));
+
+            if (entity != null)
+            {
+                _repositoryContext.Entry(entity).State = EntityState.Detached;
+            }
+
+            return entity;
+        }
 
         public IQueryable<TEntity> GetQueryable()
             => _repositoryContext.Set<TEntity>().AsNoTracking();

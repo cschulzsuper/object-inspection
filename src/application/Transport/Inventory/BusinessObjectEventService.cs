@@ -1,4 +1,5 @@
-﻿using Super.Paula.Application.Inventory.Events;
+﻿using Super.Paula.Application.Auditing;
+using Super.Paula.Application.Inventory.Events;
 using Super.Paula.Application.Orchestration;
 using System.Linq;
 using System.Security.Claims;
@@ -45,50 +46,5 @@ namespace Super.Paula.Application.Inventory
 
             await _eventStorage.AddAsync(@event, _user);
         }
-
-        public async ValueTask CreateBusinessObjectInspectionAuditEventAsync(BusinessObject businessObject, BusinessObjectInspection inspection)
-        {
-            if (inspection.AuditDate == default)
-            {
-                return;
-            }
-
-            var @event = new BusinessObjectInspectionAuditEvent(
-                businessObject.UniqueName,
-                businessObject.DisplayName,
-                inspection.AuditInspector,
-                inspection.UniqueName,
-                inspection.DisplayName,
-                inspection.AuditAnnotation,
-                inspection.AuditResult,
-                inspection.AuditDate,
-                inspection.AuditTime);
-
-            await _eventStorage.AddAsync(@event, _user);
-        }
-
-        public async ValueTask CreateBusinessObjectInspectionAuditScheduleEventAsync(BusinessObject businessObject)
-        {
-            var inspection = businessObject.Inspections
-                .Where(x => x.AuditSchedule.Appointments.Any())
-                .OrderBy(x => x.AuditSchedule.Appointments
-                    .Min(y => (y.PlannedAuditDate, y.PlannedAuditTime).ToDateTime()))
-                .FirstOrDefault();
-
-            if (inspection == null)
-            {
-                return;
-            }
-
-            var @event = new BusinessObjectInspectionAuditScheduleEvent(
-                businessObject.UniqueName,
-                businessObject.Inspector,
-                inspection.AuditSchedule.Appointments.First().PlannedAuditDate,
-                inspection.AuditSchedule.Appointments.First().PlannedAuditTime,
-                inspection.AuditSchedule.Threshold);
-
-            await _eventStorage.AddAsync(@event, _user);
-        }
-
     }
 }

@@ -45,8 +45,11 @@ namespace Super.Paula.Client.Communication
         public Task<IDisposable> OnDeletionAsync(Func<string, int, int, Task> handler)
             => _streamConnection.OnNotificationDeletionAsync(handler);
 
-        public async ValueTask DeleteAsync(string inspector, int date, int time)
+        public async ValueTask DeleteAsync(string inspector, int date, int time, string etag)
         {
+            var request = new HttpRequestMessage(HttpMethod.Delete, $"inspectors/{inspector}/notifications/{date}/{time}");
+            request.Headers.Add("If-Match", etag);
+
             var responseMessage = await _httpClient.DeleteAsync($"inspectors/{inspector}/notifications/{date}/{time}");
 
             responseMessage.RuleOutProblems();

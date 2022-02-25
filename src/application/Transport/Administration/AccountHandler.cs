@@ -1,4 +1,5 @@
 ﻿using Super.Paula.Application.Administration.Requests;
+using Super.Paula.Application.Administration.Responses;
 using Super.Paula.Application.Operation;
 using Super.Paula.Authorization;
 using Super.Paula.Environment;
@@ -59,7 +60,7 @@ namespace Super.Paula.Application.Administration
             await _organizationEvents.CreateOrganizationCreationEventAsync(organization);
         }
 
-        public async ValueTask RegisterChiefInspectorAsync(string organization, RegisterChiefInspectorRequest request)
+        public async ValueTask<RegisterChiefInspectorResponse> RegisterChiefInspectorAsync(string organization, RegisterChiefInspectorRequest request)
         {
             if (_appSettings.MaintainerIdentity != _user.GetIdentity())
             { 
@@ -68,7 +69,14 @@ namespace Super.Paula.Application.Administration
 
             var organizationEntity = await _organizationManager.GetAsync(organization);
 
+            if (!string.IsNullOrWhiteSpace(organizationEntity.ChiefInspector))
+            {
+                organizationEntity.ETag =  request.ETag;
+            }
+
             organizationEntity.ChiefInspector =  request.Inspector;
+
+            await _organizationManager.UpdateAsync(organizationEntity);
 
             await _inspectorManager.InsertAsync(new Inspector
             {
@@ -88,7 +96,10 @@ namespace Super.Paula.Application.Administration
                 UniqueName = request.Identity
             });
 
-            await _organizationManager.UpdateAsync(organizationEntity);
+            return new RegisterChiefInspectorResponse
+            {
+                ETag = organizationEntity.ETag
+            };
         }
 
         public ValueTask<string> SignInInspectorAsync(string organization, string inspector)

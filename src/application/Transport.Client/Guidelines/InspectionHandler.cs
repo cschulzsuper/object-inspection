@@ -25,12 +25,17 @@ namespace Super.Paula.Client.Guidelines
             _httpClient.BaseAddress = new Uri(appSettings.Server);
         }
 
-        public async ValueTask ActivateAsync(string inspection)
+        public async ValueTask<ActivateInspectionResponse> ActivateAsync(string inspection, string etag)
         {
-            var responseMessage = await _httpClient.PostAsync($"inspections/{inspection}/activate", null);
+            var request = new HttpRequestMessage(HttpMethod.Post, $"inspections/{inspection}/activate");
+            request.Headers.Add("If-Match", etag);
+
+            var responseMessage = await _httpClient.SendAsync(request);
 
             responseMessage.RuleOutProblems();
             responseMessage.EnsureSuccessStatusCode();
+
+            return (await responseMessage.Content.ReadFromJsonAsync<ActivateInspectionResponse>())!;
         }
 
         public async ValueTask<InspectionResponse> CreateAsync(InspectionRequest request)
@@ -43,17 +48,25 @@ namespace Super.Paula.Client.Guidelines
             return (await responseMessage.Content.ReadFromJsonAsync<InspectionResponse>())!;
         }
 
-        public async ValueTask DeactivateAsync(string inspection)
+        public async ValueTask<DeactivateInspectionResponse> DeactivateAsync(string inspection, string etag)
         {
-            var responseMessage = await _httpClient.PostAsync($"inspections/{inspection}/deactivate", null);
+            var request = new HttpRequestMessage(HttpMethod.Post, $"inspections/{inspection}/deactivate");
+            request.Headers.Add("If-Match", etag);
+
+            var responseMessage = await _httpClient.SendAsync(request);
 
             responseMessage.RuleOutProblems();
             responseMessage.EnsureSuccessStatusCode();
+
+            return (await responseMessage.Content.ReadFromJsonAsync<DeactivateInspectionResponse>())!;
         }
 
-        public async ValueTask DeleteAsync(string inspection)
+        public async ValueTask DeleteAsync(string inspection, string etag)
         {
-            var responseMessage = await _httpClient.DeleteAsync($"inspections/{inspection}");
+            var request = new HttpRequestMessage(HttpMethod.Delete, $"inspections/{inspection}");
+            request.Headers.Add("If-Match", etag);
+
+            var responseMessage = await _httpClient.SendAsync(request);
 
             responseMessage.RuleOutProblems();
             responseMessage.EnsureSuccessStatusCode();

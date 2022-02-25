@@ -62,13 +62,17 @@ namespace Super.Paula.Application.Administration
                 Identity = entity.Identity,
                 UniqueName = entity.UniqueName,
                 Activated = entity.Activated,
-                BusinessObjects = entity.BusinessObjects.ToResponse()
+                BusinessObjects = entity.BusinessObjects.ToResponse(),
+                ETag = entity.ETag
             };
         }
 
-        public async ValueTask DeleteAsync(string inspector)
+        public async ValueTask DeleteAsync(string inspector, string etag)
         {
             var entity = await _inspectorManager.GetAsync(inspector);
+
+            entity.ETag = etag;
+
             await _inspectorManager.DeleteAsync(entity);
 
             var identity = await _identityInspectorManager.GetAsync(
@@ -86,7 +90,8 @@ namespace Super.Paula.Application.Administration
                     Identity = entity.Identity,
                     UniqueName = entity.UniqueName,
                     Activated = entity.Activated,
-                    BusinessObjects = entity.BusinessObjects.ToResponse()
+                    BusinessObjects = entity.BusinessObjects.ToResponse(),
+                    ETag = entity.ETag
                 }));
 
         public async ValueTask<InspectorResponse> GetAsync(string inspector)
@@ -98,7 +103,8 @@ namespace Super.Paula.Application.Administration
                 Identity = entity.Identity,
                 UniqueName = entity.UniqueName,
                 Activated = entity.Activated,
-                BusinessObjects = entity.BusinessObjects.ToResponse()
+                BusinessObjects = entity.BusinessObjects.ToResponse(),
+                ETag = entity.ETag
             };
         }
 
@@ -111,7 +117,8 @@ namespace Super.Paula.Application.Administration
                 Identity = entity.Identity,
                 UniqueName = entity.UniqueName,
                 Activated = entity.Activated,
-                BusinessObjects = entity.BusinessObjects.ToResponse()
+                BusinessObjects = entity.BusinessObjects.ToResponse(),
+                ETag = entity.ETag
             };
         }
 
@@ -124,6 +131,7 @@ namespace Super.Paula.Application.Administration
             entity.Identity = request.Identity;
             entity.UniqueName = request.UniqueName;
             entity.Activated = request.Activated;
+            entity.ETag = request.ETag;
 
             await _inspectorManager.UpdateAsync(entity);
 
@@ -145,11 +153,12 @@ namespace Super.Paula.Application.Administration
             await _identityInspectorManager.InsertAsync(identity);
         }
 
-        public async ValueTask ActivateAsync(string inspector)
+        public async ValueTask<ActivateInspectorResponse> ActivateAsync(string inspector, string etag)
         {
             var entity = await _inspectorManager.GetAsync(inspector);
 
             entity.Activated = true;
+            entity.ETag = etag;
 
             await _inspectorManager.UpdateAsync(entity);
 
@@ -161,13 +170,19 @@ namespace Super.Paula.Application.Administration
             identity.Activated = entity.OrganizationActivated;
 
             await _identityInspectorManager.UpdateAsync(identity);
+
+            return new ActivateInspectorResponse
+            {
+                ETag = entity.ETag
+            };
         }
 
-        public async ValueTask DeactivateAsync(string inspector)
+        public async ValueTask<DeactivateInspectorResponse> DeactivateAsync(string inspector, string etag)
         {
             var entity = await _inspectorManager.GetAsync(inspector);
 
             entity.Activated = false;
+            entity.ETag = etag;
 
             await _inspectorManager.UpdateAsync(entity);
 
@@ -179,6 +194,11 @@ namespace Super.Paula.Application.Administration
             identity.Activated = false;
 
             await _identityInspectorManager.UpdateAsync(identity);
+
+            return new DeactivateInspectorResponse
+            {
+                ETag = entity.ETag
+            };
         }
 
         public IAsyncEnumerable<InspectorResponse> GetAllForOrganization(string organization)
@@ -190,7 +210,8 @@ namespace Super.Paula.Application.Administration
                        Identity = entity.Identity,
                        UniqueName = entity.UniqueName,
                        Activated = entity.Activated,
-                       BusinessObjects = entity.BusinessObjects.ToResponse()
+                       BusinessObjects = entity.BusinessObjects.ToResponse(),
+                       ETag = entity.ETag
                    }));
 
         public IAsyncEnumerable<IdentityInspectorResponse> GetAllForIdentity(string identity)

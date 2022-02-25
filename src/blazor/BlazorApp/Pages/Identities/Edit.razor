@@ -64,7 +64,8 @@ else
             _request = new IdentityRequest
                 {
                     MailAddress = response.MailAddress,
-                    UniqueName = response.UniqueName
+                    UniqueName = response.UniqueName,
+                    ETag = response.ETag
                 };
 
             StateHasChanged();

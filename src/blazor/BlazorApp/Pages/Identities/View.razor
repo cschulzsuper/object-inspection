@@ -41,7 +41,7 @@ else
                     <td>@identity.MailAddress</td>
                     <td>
                         <button class="btn btn-outline-warning btn-block" title="@Translator["Reset"]"
-                            @onclick="() => ResetAsync(identity.UniqueName)"><span class="oi oi-action-undo"/></button>
+                            @onclick="() => ResetAsync(identity)"><span class="oi oi-action-undo"/></button>
                     </td>
                     <td>
                         <button class="btn btn-outline-info btn-block" title="@Translator["Edit"]"
@@ -49,7 +49,7 @@ else
                     </td>
                     <td>
                         <button class="btn btn-outline-danger btn-block" title="@Translator["Delete"]"
-                            @onclick="() => DeleteAsync(identity.UniqueName)"><span class="oi oi-trash"/></button>
+                            @onclick="() => DeleteAsync(identity)"><span class="oi oi-trash"/></button>
                     </td>
                     
                 </tr>
@@ -93,14 +93,15 @@ else
     public void Edit(string identity)
         => NavigationManager.NavigateTo($"/identities/{identity}/edit");
 
-    public async Task DeleteAsync(string identity)
+    public async Task DeleteAsync(IdentityResponse identity)
     {
-        await IdentityHandler.DeleteAsync(identity);
-        _identities!.Remove(identity);
+        await IdentityHandler.DeleteAsync(identity.UniqueName, identity.ETag);
+        _identities!.Remove(identity.UniqueName);
     }
 
-    public async Task ResetAsync(string identity) 
+    public async Task ResetAsync(IdentityResponse identity) 
     {
-        await IdentityHandler.ResetAsync(identity);
+        var reponse = await IdentityHandler.ResetAsync(identity.UniqueName, identity.ETag);
+        identity.ETag = reponse.ETag;
     }
 }

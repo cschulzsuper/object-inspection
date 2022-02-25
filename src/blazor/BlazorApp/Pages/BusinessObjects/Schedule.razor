@@ -2,7 +2,7 @@
 
 @inject ITranslator Translator
 @inject NavigationManager NavigationManager
-@inject IBusinessObjectHandler BusinessObjectHandler
+@inject IBusinessObjectInspectionHandler BusinessObjectInspectionHandler
 
 @attribute [Authorize("ManagementRead")]
 
@@ -56,30 +56,28 @@ else
     [Parameter]
     public string Inspection { get; set; } = string.Empty;
 
-    private ScheduleInspectionAuditRequest? _request = null;
+    private BusinessObjectInspectionAuditScheduleRequest? _request = null;
 
     protected override async Task OnInitializedAsync()
     {
-        var response = await BusinessObjectHandler.GetAsync(BusinessObject);
+        var response = await BusinessObjectInspectionHandler.GetAsync(BusinessObject, Inspection);
 
-        var responseInspection = response.Inspections
-            .SingleOrDefault(x => x.UniqueName == Inspection);
-
-        if (responseInspection != null)
+        if (response != null)
         {
-            var expression = responseInspection.AuditSchedule.Expressions.FirstOrDefault();
+            var expression = response.AuditSchedule.Expressions.FirstOrDefault();
 
-            _request = new ScheduleInspectionAuditRequest
+            _request = new BusinessObjectInspectionAuditScheduleRequest
             {
-                Threshold = responseInspection.AuditSchedule.Threshold,
-                Schedule = expression?.CronExpression ?? string.Empty
+                Threshold = response.AuditSchedule.Threshold,
+                Schedule = expression?.CronExpression ?? string.Empty,
+                ETag = response.ETag
             };
         }
     }
 
     private async Task OnValidSubmitAsync()
     {
-        await BusinessObjectHandler.ScheduleInspectionAuditAsync(BusinessObject, Inspection, _request!);
+        await BusinessObjectInspectionHandler.ReplaceAuditScheduleAsync(BusinessObject, Inspection, _request!);
         NavigationManager.NavigateTo($"/business-objects/{BusinessObject}/inspections");
     }
 }

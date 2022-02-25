@@ -41,13 +41,16 @@ namespace Super.Paula.Application.Administration
                 ChiefInspector = entity.ChiefInspector,
                 DisplayName = entity.DisplayName,
                 UniqueName = entity.UniqueName,
-                Activated = entity.Activated
+                Activated = entity.Activated,
+                ETag = entity.ETag
             };
         }
 
-        public async ValueTask DeleteAsync(string organization)
+        public async ValueTask DeleteAsync(string organization, string etag)
         {
             var entity = await _organizationManager.GetAsync(organization);
+
+            entity.ETag =etag;
             
             await _organizationManager.DeleteAsync(entity);
 
@@ -71,7 +74,8 @@ namespace Super.Paula.Application.Administration
                         ChiefInspector = entity.ChiefInspector,
                         DisplayName = entity.DisplayName,
                         UniqueName = entity.UniqueName,
-                        Activated = entity.Activated
+                        Activated = entity.Activated,
+                        ETag = entity.ETag
                     }));
 
         public async ValueTask<OrganizationResponse> GetAsync(string organization)
@@ -83,7 +87,8 @@ namespace Super.Paula.Application.Administration
                 ChiefInspector = entity.ChiefInspector,
                 DisplayName = entity.DisplayName,
                 UniqueName = entity.UniqueName,
-                Activated = entity.Activated
+                Activated = entity.Activated,
+                ETag = entity.ETag
             };
         }
 
@@ -103,13 +108,14 @@ namespace Super.Paula.Application.Administration
                 entity.DisplayName = request.DisplayName;
                 entity.ChiefInspector = request.ChiefInspector;
                 entity.UniqueName = request.UniqueName;
+                entity.ETag = request.ETag;
 
                 await _organizationManager.UpdateAsync(entity);
                 await _organizationEventService.CreateOrganizationUpdateEventAsync(entity);
             }
         }
 
-        public async ValueTask ActivateAsync(string organization)
+        public async ValueTask<ActivateOrganizationResponse> ActivateAsync(string organization, string etag)
         {
             var entity = await _organizationManager.GetAsync(organization);
 
@@ -117,13 +123,19 @@ namespace Super.Paula.Application.Administration
             if (required)
             {
                 entity.Activated = true;
+                entity.ETag = etag;
 
                 await _organizationManager.UpdateAsync(entity);
                 await _organizationEventService.CreateOrganizationUpdateEventAsync(entity);
             }
+
+            return new ActivateOrganizationResponse
+            {
+                ETag = entity.ETag
+            };
         }
 
-        public async ValueTask DeactivateAsync(string organization)
+        public async ValueTask<DeactivateOrganizationResponse> DeactivateAsync(string organization, string etag)
         {
             var entity = await _organizationManager.GetAsync(organization);
 
@@ -131,10 +143,17 @@ namespace Super.Paula.Application.Administration
             if (required)
             {
                 entity.Activated = false;
+                entity.ETag = etag;
 
                 await _organizationManager.UpdateAsync(entity);
                 await _organizationEventService.CreateOrganizationUpdateEventAsync(entity);
             }
+
+            return new DeactivateOrganizationResponse
+            {
+                ETag = entity.ETag
+            };
+
         }
     }
 }

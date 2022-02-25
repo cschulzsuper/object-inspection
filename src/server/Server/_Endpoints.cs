@@ -12,12 +12,13 @@ namespace Super.Paula
     [SuppressMessage("Style", "IDE1006")]
     public static class _Endpoints
     {
-        public static IEndpointRouteBuilder MapPaulaServer(this IEndpointRouteBuilder endpoints)
+        public static IEndpointRouteBuilder MapServer(this IEndpointRouteBuilder endpoints)
             => endpoints
                 .MapAccount()
                 .MapAuthentication()
                 .MapBusinessObject()
-                .MapBusinessObjectInspectionAudit()
+                .MapBusinessObjectInspection()
+                .MapBusinessObjectInspectionAuditRecord()
                 .MapIdentity()
                 .MapInspection()
                 .MapInspector()

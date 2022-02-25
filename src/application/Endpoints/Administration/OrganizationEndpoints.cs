@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Super.Paula.Application.Administration.Requests;
 using System;
@@ -49,17 +50,17 @@ namespace Super.Paula.Application.Administration
         private static Delegate Delete =>
             [Authorize("Maintainance")]
             [UseOrganizationFromRoute]
-            (IOrganizationHandler handler, string organization)
-                => handler.DeleteAsync(organization);
+            (IOrganizationHandler handler, string organization, [FromHeader(Name = "If-Match")] string etag)
+                => handler.DeleteAsync(organization, etag);
 
         private static Delegate Activate =>
             [Authorize("Maintainance")]
-            (IOrganizationHandler handler, string organization)
-                => handler.ActivateAsync(organization);
+            (IOrganizationHandler handler, string organization, [FromHeader(Name = "If-Match")] string etag)
+                => handler.ActivateAsync(organization, etag);
 
         private static Delegate Deactivate =>
             [Authorize("Maintainance")]
-            (IOrganizationHandler handler, string organization)
-                => handler.DeactivateAsync(organization);
+            (IOrganizationHandler handler, string organization, [FromHeader(Name = "If-Match")] string etag)
+                => handler.DeactivateAsync(organization, etag);
     }
 }

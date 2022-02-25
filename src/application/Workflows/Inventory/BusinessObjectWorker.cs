@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Super.Paula.Application.Administration;
+using Super.Paula.Application.Auditing;
 using Super.Paula.Application.Orchestration;
 using Super.Paula.Authorization;
 using Super.Paula.Data;
@@ -34,10 +35,10 @@ namespace Super.Paula.Application.Inventory
 
                     foreach (var businessObject in businessObjects)
                     {
-                        var businessObjectHandler = serviceScope.ServiceProvider
-                            .GetRequiredService<IBusinessObjectHandler>();
+                        var businessObjectInspectionHandler = serviceScope.ServiceProvider
+                            .GetRequiredService<IBusinessObjectInspectionHandler>();
 
-                        await businessObjectHandler.TimeInspectionAuditAsync(businessObject);
+                        await businessObjectInspectionHandler.RecalculateInspectionAuditAppointmentsAsync(businessObject);
                     }
                 }
 

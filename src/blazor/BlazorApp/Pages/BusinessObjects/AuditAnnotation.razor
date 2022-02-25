@@ -1,8 +1,8 @@
-﻿@page "/business-objects/{businessObject}/audit/{inspection}/{auditDate:int}/{auditTime:int}/annotation"
+﻿@page "/business-objects/{businessObject}/inspections/{inspection}/annotation"
 
 @inject ITranslator Translator
 @inject NavigationManager NavigationManager
-@inject IBusinessObjectHandler BusinessObjectHandler
+@inject IBusinessObjectInspectionHandler BusinessObjectInspectionHandler
 
 @attribute [Authorize("AuditingRead")]
 
@@ -22,7 +22,7 @@ else
         <div class="container-fluid">
             <div class="form-group">
                 <label>@Translator["Display name"]</label>
-                <InputText class="form-control" id="uniqueName" @bind-Value="_inspection.DisplayName" readonly/>
+                <InputText class="form-control" id="uniqueName" @bind-Value="_inspection.InspectionDisplayName" readonly/>
             </div>
             <div class="form-group">
                 <label>@Translator["Audit result"]</label>
@@ -72,23 +72,18 @@ else
     {
         if (firstRender)
         {
-            var response = await BusinessObjectHandler.GetAsync(BusinessObject);
-
-            _inspection = response.Inspections
-                .Single(inspection =>
-                    inspection.UniqueName == Inspection &&
-                    inspection.AuditDate == AuditDate &&
-                    inspection.AuditTime == AuditTime);
+            _inspection = await BusinessObjectInspectionHandler.GetAsync(BusinessObject, Inspection);
             StateHasChanged();
         }
     }
 
     private async Task OnValidSubmitAsync()
     {
-        await BusinessObjectHandler.AnnotateInspectionAuditAsync(BusinessObject, Inspection,
-            new AnnotateInspectionAuditRequest
+        await BusinessObjectInspectionHandler.ReplaceAuditAnnotationAsync(BusinessObject, Inspection,
+            new BusinessObjectInspectionAuditAnnotationRequest
             {
-               Annotation = _inspection!.AuditAnnotation 
+               Annotation = _inspection!.AuditAnnotation,
+               ETag = _inspection.ETag
             });
         NavigationManager.NavigateTo($"/business-objects/{BusinessObject}/audit");
     }

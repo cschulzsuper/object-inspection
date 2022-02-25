@@ -34,9 +34,12 @@ namespace Super.Paula.Client.Administration
             return (await responseMessage.Content.ReadFromJsonAsync<IdentityResponse>())!;
         }
 
-        public async ValueTask DeleteAsync(string identity)
+        public async ValueTask DeleteAsync(string identity, string etag)
         {
-            var responseMessage = await _httpClient.DeleteAsync($"identities/{identity}");
+            var request = new HttpRequestMessage(HttpMethod.Delete, $"identities/{identity}");
+            request.Headers.Add("If-Match", etag);
+
+            var responseMessage = await _httpClient.SendAsync(request);
 
             responseMessage.RuleOutProblems();
             responseMessage.EnsureSuccessStatusCode();
@@ -81,12 +84,17 @@ namespace Super.Paula.Client.Administration
             responseMessage.EnsureSuccessStatusCode();
         }
 
-        public async ValueTask ResetAsync(string identity)
+        public async ValueTask<ResetIdentityResponse> ResetAsync(string identity, string etag)
         {
-            var responseMessage = await _httpClient.PostAsync($"identities/{identity}/reset", null);
+            var request = new HttpRequestMessage(HttpMethod.Post, $"identities/{identity}/reset");
+            request.Headers.Add("If-Match", etag);
+
+            var responseMessage = await _httpClient.SendAsync(request);
 
             responseMessage.RuleOutProblems();
             responseMessage.EnsureSuccessStatusCode();
+
+            return (await responseMessage.Content.ReadFromJsonAsync<ResetIdentityResponse>())!;
         }
     }
 }
