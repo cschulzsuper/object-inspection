@@ -4,6 +4,7 @@ using Super.Paula.Application;
 using Super.Paula.Authentication;
 using Super.Paula.Authorization;
 using Super.Paula.Data;
+using Super.Paula.Orchestration;
 using Super.Paula.RuntimeData;
 using System.Diagnostics.CodeAnalysis;
 
@@ -12,24 +13,26 @@ namespace Super.Paula
     [SuppressMessage("Style", "IDE1006")]
     public static class _Services
     {
-        public static IServiceCollection AddPaulaServer(this IServiceCollection services, bool isDevelopment)
+        public static IServiceCollection AddServer(this IServiceCollection services, bool isDevelopment)
         {
+            services.AddHostedService<WorkerService>();
+
             services
-                .AddPaulaAppEnvironment(isDevelopment)
-                .AddPaulaAppSettings()
-                .AddPaulaServerData(isDevelopment)
-                .AddPaulaServerRuntimeData()
-                .AddPaulaServerManagement()
-                .AddPaulaServerIntegration()
-                .AddPaulaServerStreaming()
-                .AddPaulaServerTransport()
-                .AddPaulaServerAuthentication()
-                .AddPaulaServerAuthorization();
+                .AddAppEnvironment(isDevelopment)
+                .AddAppSettings()
+                .AddServerData(isDevelopment)
+                .AddServerRuntimeData()
+                .AddServerManagement()
+                .AddServerIntegration()
+                .AddServerStreaming()
+                .AddServerTransport()
+                .AddServerAuthentication()
+                .AddServerAuthorization();
 
             return services;
         }
 
-        public static IServiceCollection AddPaulaServerAuthentication(this IServiceCollection services)
+        public static IServiceCollection AddServerAuthentication(this IServiceCollection services)
         {
             services.AddAuthentication(options =>
             {
@@ -40,7 +43,7 @@ namespace Super.Paula
             return services;
         }
 
-        public static IServiceCollection AddPaulaServerAuthorization(this IServiceCollection services)
+        public static IServiceCollection AddServerAuthorization(this IServiceCollection services)
         {
             services.AddAuthorization();
             

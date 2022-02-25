@@ -7,6 +7,7 @@ using Super.Paula.Application.Auditing;
 using Super.Paula.Application.Communication;
 using Super.Paula.Application.Guidelines;
 using Super.Paula.Application.Inventory;
+using Super.Paula.Authorization;
 using Super.Paula.Data.Mappings;
 using Super.Paula.Data.Mappings.Administration;
 using Super.Paula.Data.Mappings.Auditing;
@@ -17,13 +18,14 @@ using Super.Paula.Environment;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
+using System.Security.Claims;
 
 namespace Super.Paula.Data
 {
     [SuppressMessage("Style", "IDE1006")]
     public static class _Services
     {
-        public static IServiceCollection AddPaulaServerData(this IServiceCollection services, bool isDevelopment)
+        public static IServiceCollection AddServerData(this IServiceCollection services, bool isDevelopment)
         {
             services.AddDbContext<PaulaAdministrationContext>((services, options) =>
             {
@@ -52,7 +54,11 @@ namespace Super.Paula.Data
                         }
                     });
 
-                options.LogTo(Console.WriteLine);
+                
+                if(isDevelopment)
+                {
+                    options.EnableSensitiveDataLogging();
+                }
             });
 
             services.AddDbContext<PaulaApplicationContext>((services, options) =>
@@ -82,7 +88,10 @@ namespace Super.Paula.Data
                         }
                     });
 
-                options.LogTo(Console.WriteLine);
+                if (isDevelopment)
+                {
+                    options.EnableSensitiveDataLogging();
+                }
             });
 
             services.AddScoped<PaulaContextState>();
@@ -119,5 +128,37 @@ namespace Super.Paula.Data
                     services.GetRequiredService<TContext>(),
                     services.GetRequiredService<PaulaContextState>(),
                     services.GetRequiredService<IPartitionKeyValueGenerator<TEntity>>());
+
+
+        public static IServiceProvider ConfigureData(this IServiceProvider services, string? organization, string? inspector)
+        {
+            var paulaContextState = services.GetRequiredService<PaulaContextState>();
+
+            paulaContextState.CurrentOrganization = organization != null
+                ? $"{organization}"
+                : string.Empty;
+
+            paulaContextState.CurrentInspector = inspector != null
+                ? $"{inspector}"
+                : string.Empty;
+
+            return services;
+        }
+
+        public static IServiceProvider ConfigureData(this IServiceProvider services)
+        {
+            var user = services.GetRequiredService<ClaimsPrincipal>();
+            var paulaContextState = services.GetRequiredService<PaulaContextState>();
+
+            paulaContextState.CurrentOrganization = user.HasOrganization()
+               ? user.GetOrganization()
+               : string.Empty;
+
+            paulaContextState.CurrentInspector = user.HasInspector()
+               ? user.GetInspector()
+               : string.Empty;
+
+            return services;
+        }
     }
 }

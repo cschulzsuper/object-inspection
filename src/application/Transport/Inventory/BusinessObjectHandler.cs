@@ -1,9 +1,7 @@
 ﻿using Super.Paula.Application.Administration.Responses;
 using Super.Paula.Application.Guidelines;
-using Super.Paula.Application.Inventory.Events;
 using Super.Paula.Application.Inventory.Requests;
 using Super.Paula.Application.Inventory.Responses;
-using Super.Paula.Application.Orchestration;
 using Super.Paula.Authorization;
 using System;
 using System.Collections.Generic;
@@ -23,20 +21,20 @@ namespace Super.Paula.Application.Inventory
         private readonly IBusinessObjectManager _businessObjectManager;
         private readonly IInspectionManager _inspectionManager;
         private readonly ClaimsPrincipal _user;
-        private readonly IEventBus _eventBus;
+        private readonly IBusinessObjectEventService _businessObjectEventService;
         private readonly IBusinessObjectInspectionAuditScheduleFilter _businessObjectInspectionAuditScheduleFilter;
 
         public BusinessObjectHandler(
             IBusinessObjectManager businessObjectManager,
             IInspectionManager inspectionManager,
             ClaimsPrincipal user,
-            IEventBus eventBus,
+            IBusinessObjectEventService businessObjectEventService,
             IBusinessObjectInspectionAuditScheduleFilter businessObjectInspectionAuditScheduleFilter)
         {
             _businessObjectManager = businessObjectManager;
             _inspectionManager = inspectionManager;
             _user = user;
-            _eventBus = eventBus;
+            _businessObjectEventService = businessObjectEventService;
             _businessObjectInspectionAuditScheduleFilter = businessObjectInspectionAuditScheduleFilter;
         }
 
@@ -100,9 +98,8 @@ namespace Super.Paula.Application.Inventory
             };
 
             await _businessObjectManager.InsertAsync(entity);
-
-            await PublishBusinessObjectAsync(entity);
-            await PublishBusinessObjectInspectorAsync(entity, entity.Inspector, string.Empty);
+            await _businessObjectEventService.CreateBusinessObjectEventAsync(entity);
+            await _businessObjectEventService.CreateBusinessObjectInspectorEventAsync(entity, entity.Inspector, string.Empty);
 
             return new BusinessObjectResponse
             {
@@ -130,9 +127,8 @@ namespace Super.Paula.Application.Inventory
                 entity.UniqueName = request.UniqueName;
 
                 await _businessObjectManager.UpdateAsync(entity);
-
-                await PublishBusinessObjectAsync(entity);
-                await PublishBusinessObjectInspectorAsync(entity, entity.Inspector, oldInspector);
+                await _businessObjectEventService.CreateBusinessObjectEventAsync(entity);
+                await _businessObjectEventService.CreateBusinessObjectInspectorEventAsync(entity, entity.Inspector, oldInspector);
             }
         }
 
@@ -141,9 +137,8 @@ namespace Super.Paula.Application.Inventory
             var entity = await _businessObjectManager.GetAsync(businessObject);
 
             await _businessObjectManager.DeleteAsync(entity);
-
-            await PublishBusinessObjectDeletionAsync(businessObject);
-            await PublishBusinessObjectInspectorAsync(entity, string.Empty, entity.Inspector);
+            await _businessObjectEventService.CreateBusinessObjectDeletionEventAsync(businessObject);
+            await _businessObjectEventService.CreateBusinessObjectInspectorEventAsync(entity, string.Empty, entity.Inspector);
         }
 
         public async ValueTask ScheduleInspectionAuditAsync(string businessObject, string inspection, ScheduleInspectionAuditRequest request)
@@ -175,8 +170,7 @@ namespace Super.Paula.Application.Inventory
                     Limit: DateTime.UtcNow.AddMonths(1).ToNumbers()));
 
             await _businessObjectManager.UpdateAsync(entity);
-
-            await PublishBusinessObjectInspectionAuditScheduleAsync(entity);
+            await _businessObjectEventService.CreateBusinessObjectInspectionAuditScheduleEventAsync(entity);
         }
 
         public async ValueTask TimeInspectionAuditAsync(string businessObject)
@@ -192,8 +186,7 @@ namespace Super.Paula.Application.Inventory
             }
 
             await _businessObjectManager.UpdateAsync(entity);
-
-            await PublishBusinessObjectInspectionAuditScheduleAsync(entity);
+            await _businessObjectEventService.CreateBusinessObjectInspectionAuditScheduleEventAsync(entity);
         }
 
         public async ValueTask AssignInspectionAsync(string businessObject, AssignInspectionRequest request)
@@ -260,9 +253,8 @@ namespace Super.Paula.Application.Inventory
                     Limit: DateTime.UtcNow.AddMonths(1).ToNumbers()));
 
             await _businessObjectManager.UpdateAsync(entity);
-
-            await PublishBusinessObjectInspectionAuditAsync(entity, inspection);
-            await PublishBusinessObjectInspectionAuditScheduleAsync(entity);
+            await _businessObjectEventService.CreateBusinessObjectInspectionAuditEventAsync(entity, inspection);
+            await _businessObjectEventService.CreateBusinessObjectInspectionAuditScheduleEventAsync(entity);
 
             return new CreateInspectionAuditResponse
             {
@@ -283,8 +275,7 @@ namespace Super.Paula.Application.Inventory
             businessObjectInspection.AuditResult = request.Result;
 
             await _businessObjectManager.UpdateAsync(entity);
-
-            await PublishBusinessObjectInspectionAuditAsync(entity, businessObjectInspection);
+            await _businessObjectEventService.CreateBusinessObjectInspectionAuditEventAsync(entity, businessObjectInspection);
         }
 
         public async ValueTask AnnotateInspectionAuditAsync(string businessObject, string inspection, AnnotateInspectionAuditRequest request)
@@ -298,8 +289,7 @@ namespace Super.Paula.Application.Inventory
             businessObjectInspection.AuditAnnotation = request.Annotation;
 
             await _businessObjectManager.UpdateAsync(entity);
-
-            await PublishBusinessObjectInspectionAuditAsync(entity, businessObjectInspection);
+            await _businessObjectEventService.CreateBusinessObjectInspectionAuditEventAsync(entity, businessObjectInspection);
         }
 
         public async ValueTask<DropInspectionAuditResponse> DropInspectionAuditAsync(string businessObject, string inspection, DropInspectionAuditRequest request)
@@ -323,8 +313,7 @@ namespace Super.Paula.Application.Inventory
                     Limit: DateTime.UtcNow.AddMonths(1).ToNumbers()));
 
             await _businessObjectManager.UpdateAsync(entity);
-
-            await PublishBusinessObjectInspectionAuditScheduleAsync(entity);
+            await _businessObjectEventService.CreateBusinessObjectInspectionAuditScheduleEventAsync(entity);
 
             return new DropInspectionAuditResponse
             {
@@ -352,77 +341,5 @@ namespace Super.Paula.Application.Inventory
 
             return query.OrderByDescending(x => x.UniqueName);
         }
-
-        private async ValueTask PublishBusinessObjectAsync(BusinessObject businessObject)
-        {
-            var @event = new BusinessObjectEvent(
-                businessObject.UniqueName,
-                businessObject.DisplayName);
-
-            await _eventBus.PublishAsync(@event, _user);
-        }
-
-        private async ValueTask PublishBusinessObjectDeletionAsync(string businessObject)
-        {
-            var @event = new BusinessObjectDeletionEvent(businessObject);
-
-            await _eventBus.PublishAsync(@event, _user);
-        }
-
-        private async ValueTask PublishBusinessObjectInspectorAsync(BusinessObject businessObject, string newInspector, string oldInspector)
-        {
-            var @event = new BusinessObjectInspectorEvent(
-                businessObject.UniqueName,
-                businessObject.DisplayName,
-                newInspector,
-                oldInspector);
-
-            await _eventBus.PublishAsync(@event, _user);
-        }
-
-        private async ValueTask PublishBusinessObjectInspectionAuditAsync(BusinessObject businessObject, BusinessObjectInspection inspection)
-        {
-            if (inspection.AuditDate == default)
-            {
-                return;
-            }
-
-            var @event = new BusinessObjectInspectionAuditEvent(
-                businessObject.UniqueName,
-                businessObject.DisplayName,
-                inspection.AuditInspector,
-                inspection.UniqueName,
-                inspection.DisplayName,
-                inspection.AuditAnnotation,
-                inspection.AuditResult,
-                inspection.AuditDate,
-                inspection.AuditTime);
-
-            await _eventBus.PublishAsync(@event, _user);
-        }
-
-        private async ValueTask PublishBusinessObjectInspectionAuditScheduleAsync(BusinessObject businessObject)
-        {
-            var inspection = businessObject.Inspections
-                .Where(x => x.AuditSchedule.Appointments.Any())
-                .OrderBy(x => x.AuditSchedule.Appointments
-                    .Min(y => (y.PlannedAuditDate, y.PlannedAuditTime).ToDateTime()))
-                .FirstOrDefault();
-
-            if (inspection == null)
-            {
-                return;
-            }
-
-            var @event = new BusinessObjectInspectionAuditScheduleEvent(
-                businessObject.UniqueName,
-                businessObject.Inspector,
-                inspection.AuditSchedule.Appointments.First().PlannedAuditDate,
-                inspection.AuditSchedule.Appointments.First().PlannedAuditTime,
-                inspection.AuditSchedule.Threshold);
-
-            await _eventBus.PublishAsync(@event, _user);
-        }
-
     }
 }

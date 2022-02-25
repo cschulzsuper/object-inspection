@@ -10,11 +10,13 @@
 	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="6.0.2" />
 		<PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="6.0.2" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\application\Environment\Environment.csproj" />
-		<ProjectReference Include="..\Client.Infrastructure\Client.Infrastructure.csproj" />
+		<ProjectReference Include="..\..\application\Security\Security.csproj" />
+		<ProjectReference Include="..\..\application\Transport.Client\Transport.Client.csproj" />
 	</ItemGroup>
 
 </Project>

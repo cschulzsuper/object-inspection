@@ -8,28 +8,28 @@ namespace Super.Paula
     [SuppressMessage("Style", "IDE1006")]
     public static class _Services
     {
-        public static IServiceCollection AddPaulaAppEnvironment(this IServiceCollection services, bool isDevelopment)
+        public static IServiceCollection AddAppEnvironment(this IServiceCollection services, bool isDevelopment)
             => services.AddSingleton(_ =>
                 new AppEnvironment
                 {
                     IsDevelopment = isDevelopment
                 });
 
-        public static IServiceCollection AddPaulaAppSettings(this IServiceCollection services)
+        public static IServiceCollection AddAppSettings(this IServiceCollection services)
             => services.AddSingleton(serviceProvider =>
                 {
                     var configuration = serviceProvider.GetRequiredService<IConfiguration>();
 
                     return new AppSettings
                     {
-                        StreamerSecret = configuration["StreamerSecret"],
-                        CosmosEndpoint = configuration["CosmosEndpoint"],
-                        CosmosKey = configuration["CosmosKey"],
-                        CosmosDatabase = configuration["CosmosDatabase"],
-                        MaintainerIdentity = configuration["MaintainerIdentity"],
-                        DemoIdentity = configuration["DemoIdentity"],
-                        Server = configuration["Server"],
-                        Client = configuration["Client"],
+                        StreamerSecret = configuration["Paula:StreamerSecret"],
+                        CosmosEndpoint = configuration["Paula:CosmosEndpoint"],
+                        CosmosKey = configuration["Paula:CosmosKey"],
+                        CosmosDatabase = configuration["Paula:CosmosDatabase"],
+                        MaintainerIdentity = configuration["Paula:MaintainerIdentity"],
+                        DemoIdentity = configuration["Paula:DemoIdentity"],
+                        Server = configuration["Paula:Server"],
+                        Client = configuration["Paula:Client"],
                     };
                 });
     }

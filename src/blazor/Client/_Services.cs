@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Http;
 using Super.Paula.Application.Administration;
@@ -6,6 +7,7 @@ using Super.Paula.Application.Auditing;
 using Super.Paula.Application.Communication;
 using Super.Paula.Application.Guidelines;
 using Super.Paula.Application.Inventory;
+using Super.Paula.Authorization;
 using Super.Paula.Client.Administration;
 using Super.Paula.Client.Auditing;
 using Super.Paula.Client.Authentication;
@@ -23,97 +25,34 @@ namespace Super.Paula.Client
     [SuppressMessage("Style", "IDE1006")]
     public static class _Services
     {
-        public static IServiceCollection AddPaulaClient(this IServiceCollection services,
-            bool isDevelopment,
-            bool isWebAssembly)
+        public static IServiceCollection AddClient<TStorage>(this IServiceCollection services,
+            bool isDevelopment, bool isWebAssembly)
+
+            where TStorage : class, ILocalStorage
         {
-            services.AddPaulaAppSettings();
-            services.AddPaulaAppEnvironment(isDevelopment);
-            services.AddPaulaClientAuthorization();
+            services.AddAppSettings();
+            services.AddAppEnvironment(isDevelopment);
 
-            if (!isWebAssembly)
-            {
-                services.AddScoped<AuthenticationMessageHandler>();
+            services.AddClientAuthorization();
+            services.AddClientTransport(isWebAssembly);
 
-                services.AddHttpClient();
-                services.AddHttpClientHandler<AccountHandlerBase>();
-                services.AddHttpClientHandler<AuthenticationHandlerBase>();
-                services.AddHttpClientHandler<NotificationHandlerBase>();
-                services.AddHttpClientHandler<InspectorHandlerBase>();
-
-                services.AddHttpClientHandler<IBusinessObjectHandler, BusinessObjectHandler>();
-                services.AddHttpClientHandler<IOrganizationHandler, OrganizationHandler>();
-                services.AddHttpClientHandler<IBusinessObjectInspectionAuditHandler, BusinessObjectInspectionAuditHandler>();
-                services.AddHttpClientHandler<IInspectionHandler, InspectionHandler>();
-                services.AddHttpClientHandler<IIdentityHandler, IdentityHandler>();
-            }
-            else
-            {
-                services.AddScoped<AuthenticationMessageHandler>();
-                services
-                    .AddHttpClient<AccountHandlerBase>()
-                    .AddHttpMessageHandler<AuthenticationMessageHandler>();
-
-                services
-                    .AddHttpClient<AuthenticationHandlerBase>()
-                    .AddHttpMessageHandler<AuthenticationMessageHandler>();
-
-                services
-                    .AddHttpClient<NotificationHandlerBase>()
-                    .AddHttpMessageHandler<AuthenticationMessageHandler>();
-
-                services
-                    .AddHttpClient<IBusinessObjectHandler, BusinessObjectHandler>()
-                    .AddHttpMessageHandler<AuthenticationMessageHandler>();
-
-                services
-                    .AddHttpClient<IOrganizationHandler, OrganizationHandler>()
-                    .AddHttpMessageHandler<AuthenticationMessageHandler>();
-
-                services
-                    .AddHttpClient<IBusinessObjectInspectionAuditHandler, BusinessObjectInspectionAuditHandler>()
-                    .AddHttpMessageHandler<AuthenticationMessageHandler>();
-
-                services
-                    .AddHttpClient<IInspectionHandler, InspectionHandler>()
-                    .AddHttpMessageHandler<AuthenticationMessageHandler>();
-
-                services
-                    .AddHttpClient<InspectorHandlerBase>()
-                    .AddHttpMessageHandler<AuthenticationMessageHandler>();
-
-                services
-                    .AddHttpClient<IIdentityHandler, IdentityHandler>()
-                    .AddHttpMessageHandler<AuthenticationMessageHandler>();
-            }
-
-            services.AddScoped<IAccountHandler>(provider =>
-                new AccountHandler(
-                    provider.GetRequiredService<AccountHandlerBase>(),
-                    provider.GetRequiredService<ILocalStorage>()));
-
-            services.AddScoped<IAuthenticationHandler>(provider =>
-                new AuthenticationHandler(
-                    provider.GetRequiredService<AuthenticationHandlerBase>(),
-                    provider.GetRequiredService<ILocalStorage>()));
-
-            services.AddScoped<INotificationHandler>(provider =>
-                new NotificationHandler(
-                    provider.GetRequiredService<NotificationHandlerBase>(),
-                    provider.GetRequiredService<AuthenticationStateProvider>()));
-
-            services.AddScoped<IInspectorHandler>(provider =>
-                new InspectorHandler(
-                    provider.GetRequiredService<InspectorHandlerBase>(),
-                    provider.GetRequiredService<AuthenticationStateProvider>()));
-
+            services.AddScoped<ILocalStorage, TStorage>();
             services.AddSingleton<ITranslator, Translator>();
-            services.AddScoped<IStreamConnection, StreamConnection>();
 
             return services;
         }
 
-        public static IServiceCollection AddHttpClientHandler<THandler>(this IServiceCollection services)
+        private static IServiceCollection AddClientAuthorization(this IServiceCollection services)
+        {
+            services.AddAuthorizationCore();
+            services.AddSingleton<IAuthorizationPolicyProvider, PaulaAuthorizationPolicyProvider>();
+            services.AddScoped<IAuthorizationHandler, AnyAuthorizationClaimHandler>();
+            services.AddScoped<AuthenticationStateProvider, AuthenticationStateManager>();
+
+            return services;
+        }
+
+        private static IServiceCollection AddHttpClientHandler<THandler>(this IServiceCollection services)
             where THandler : class
         {
             return services.AddTransient(sp =>
@@ -132,7 +71,7 @@ namespace Super.Paula.Client
             });
         }
 
-        public static IServiceCollection AddHttpClientHandler<TService, THandler>(this IServiceCollection services)
+        private static IServiceCollection AddHttpClientHandler<TService, THandler>(this IServiceCollection services)
             where TService : class
             where THandler : class, TService
         {
@@ -150,6 +89,145 @@ namespace Super.Paula.Client
                 var httpClient = new HttpClient(fullHandler, disposeHandler: true);
                 return clientFactory.CreateClient(httpClient);
             });
+        }
+
+        private static IServiceCollection AddClientTransport(this IServiceCollection services, bool isWebAssembly)
+        {
+            if (!isWebAssembly)
+            {
+                services.AddHttpClient();
+            }
+
+            services.AddScoped<AuthenticationMessageHandler>();
+            services.AddScoped<IStreamConnection, StreamConnection>();
+
+            services.AddClientTransportAdministration(isWebAssembly);
+            services.AddClientTransportAuditing(isWebAssembly);
+            services.AddClientTransportCommunication(isWebAssembly);
+            services.AddClientTransportGuidelines(isWebAssembly);
+            services.AddClientTransportInventory(isWebAssembly);
+
+            return services;
+        }
+
+        private static IServiceCollection AddClientTransportAdministration(this IServiceCollection services, bool isWebAssembly)
+        {
+            if (isWebAssembly)
+            {
+                services
+                    .AddHttpClient<InspectorHandler>()
+                    .AddHttpMessageHandler<AuthenticationMessageHandler>();
+
+                services
+                    .AddHttpClient<IIdentityHandler, IdentityHandler>()
+                    .AddHttpMessageHandler<AuthenticationMessageHandler>();
+
+                services
+                    .AddHttpClient<IOrganizationHandler, OrganizationHandler>()
+                    .AddHttpMessageHandler<AuthenticationMessageHandler>();
+
+                services
+                    .AddHttpClient<AccountHandler>()
+                    .AddHttpMessageHandler<AuthenticationMessageHandler>();
+
+                services
+                    .AddHttpClient<AuthenticationHandler>()
+                    .AddHttpMessageHandler<AuthenticationMessageHandler>();
+            }
+            else
+            {
+                services.AddHttpClientHandler<AccountHandler>();
+                services.AddHttpClientHandler<AuthenticationHandler>();
+                services.AddHttpClientHandler<InspectorHandler>();
+                services.AddHttpClientHandler<IOrganizationHandler, OrganizationHandler>();
+                services.AddHttpClientHandler<IIdentityHandler, IdentityHandler>();
+            }
+
+            services.AddScoped<IAuthenticationHandler>(provider =>
+                new StoredTokenAuthenticationHandler(
+                    provider.GetRequiredService<AuthenticationHandler>(),
+                    provider.GetRequiredService<ILocalStorage>()));
+
+            services.AddScoped<IAccountHandler>(provider =>
+                new StoredTokenAccountHandler(
+                    provider.GetRequiredService<AccountHandler>(),
+                    provider.GetRequiredService<ILocalStorage>()));
+
+            services.AddScoped<IInspectorHandler>(provider =>
+                new CachedInspectorHandler(
+                    provider.GetRequiredService<InspectorHandler>(),
+                    provider.GetRequiredService<AuthenticationStateProvider>()));
+
+            return services;
+        }
+
+        private static IServiceCollection AddClientTransportAuditing(this IServiceCollection services, bool isWebAssembly)
+        {
+            if (isWebAssembly)
+            {
+                services
+                    .AddHttpClient<IBusinessObjectInspectionAuditHandler, BusinessObjectInspectionAuditHandler>()
+                    .AddHttpMessageHandler<AuthenticationMessageHandler>();
+            }
+            else
+            {
+                services.AddHttpClientHandler<IBusinessObjectInspectionAuditHandler, BusinessObjectInspectionAuditHandler>();
+            }
+
+            return services;
+        }
+
+        private static IServiceCollection AddClientTransportCommunication(this IServiceCollection services, bool isWebAssembly)
+        {
+            if (isWebAssembly)
+            {
+                services
+                    .AddHttpClient<NotificationHandler>()
+                    .AddHttpMessageHandler<AuthenticationMessageHandler>();
+            }
+            else
+            {
+                services.AddHttpClientHandler<NotificationHandler>();
+            }
+
+            services.AddScoped<INotificationHandler>(provider =>
+                new CachedNotificationHandler(
+                    provider.GetRequiredService<NotificationHandler>(),
+                    provider.GetRequiredService<AuthenticationStateProvider>()));
+
+            return services;
+        }
+
+        private static IServiceCollection AddClientTransportGuidelines(this IServiceCollection services, bool isWebAssembly)
+        {
+            if (isWebAssembly)
+            {
+                services
+                    .AddHttpClient<IInspectionHandler, InspectionHandler>()
+                    .AddHttpMessageHandler<AuthenticationMessageHandler>();
+            }
+            else
+            {
+                services.AddHttpClientHandler<IInspectionHandler, InspectionHandler>();
+            }
+
+            return services;
+        }
+
+        private static IServiceCollection AddClientTransportInventory(this IServiceCollection services, bool isWebAssembly)
+        {
+            if (isWebAssembly)
+            {
+                services
+                    .AddHttpClient<IBusinessObjectHandler, BusinessObjectHandler>()
+                    .AddHttpMessageHandler<AuthenticationMessageHandler>();
+            }
+            else
+            {
+                services.AddHttpClientHandler<IBusinessObjectHandler, BusinessObjectHandler>();
+            }
+
+            return services;
         }
     }
 }

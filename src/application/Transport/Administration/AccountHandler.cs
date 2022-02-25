@@ -1,10 +1,7 @@
-﻿using Super.Paula.Application.Administration.Events;
-using Super.Paula.Application.Administration.Requests;
+﻿using Super.Paula.Application.Administration.Requests;
 using Super.Paula.Application.Operation;
-using Super.Paula.Application.Orchestration;
 using Super.Paula.Authorization;
 using Super.Paula.Environment;
-using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -20,7 +17,7 @@ namespace Super.Paula.Application.Administration
         private readonly ITokenAuthorizationFilter _tokenAuthorizatioFilter;
         private readonly IConnectionManager _connectionManager;
         private readonly ClaimsPrincipal _user;
-        private readonly IEventBus _eventBus;
+        private readonly IOrganizationEventService _organizationEvents;
 
         public AccountHandler(
             IInspectorManager inspectorManager,
@@ -30,7 +27,7 @@ namespace Super.Paula.Application.Administration
             ITokenAuthorizationFilter tokenAuthorizatioFilter,
             IConnectionManager connectionManager,
             ClaimsPrincipal user,
-            IEventBus eventBus)
+            IOrganizationEventService organizationEvents)
         {
             _inspectorManager = inspectorManager;
             _identityInspectorManager = identityInspectorManager;
@@ -39,7 +36,7 @@ namespace Super.Paula.Application.Administration
             _tokenAuthorizatioFilter = tokenAuthorizatioFilter;
             _connectionManager = connectionManager;
             _user = user;
-            _eventBus = eventBus;
+            _organizationEvents = organizationEvents;
         }
 
         public async ValueTask RegisterOrganizationAsync(RegisterOrganizationRequest request)
@@ -59,7 +56,7 @@ namespace Super.Paula.Application.Administration
 
             await _organizationManager.InsertAsync(organization);
 
-            await PublishOrganizationCreationAsync(organization);
+            await _organizationEvents.CreateOrganizationCreationEventAsync(organization);
         }
 
         public async ValueTask RegisterChiefInspectorAsync(string organization, RegisterChiefInspectorRequest request)
@@ -158,23 +155,6 @@ namespace Super.Paula.Application.Administration
             _tokenAuthorizatioFilter.Apply(token);
 
             return ValueTask.FromResult(token.ToBase64String());
-        }
-
-        private async ValueTask PublishOrganizationCreationAsync(Organization entity)
-        {
-            var @event = new OrganizationCreationEvent(
-                entity.UniqueName,
-                entity.DisplayName,
-                entity.Activated);
-
-            var user = new ClaimsPrincipal(
-                    new ClaimsIdentity(
-                        new List<Claim>
-                        {
-                            new Claim("Organization", entity.UniqueName)
-                        }));
-
-            await _eventBus.PublishAsync(@event, user);
         }
     }
 }

@@ -24,9 +24,11 @@ A couple of things need to be setup, if you want to start Paula yourself.
 
 ```json
 {
-  "CosmosEndpoint": "<URI of the Azure Cosmos DB emulator>",
-  "CosmosKey": "<Primary Key of the Azure Cosmos DB emulator>",
-  "CosmosDatabase": "<Name of the Azure Cosmos DB Database>",
+	"Paula": {
+        "CosmosEndpoint": "<URI of the Azure Cosmos DB emulator>",
+        "CosmosKey": "<Primary Key of the Azure Cosmos DB emulator>",
+        "CosmosDatabase": "<Name of the Azure Cosmos DB Database>"
+	}
 }
 ```
 
@@ -36,12 +38,14 @@ A couple of things need to be setup, if you want to start Paula yourself.
 
 ```json
 {
-  "CosmosEndpoint": "<URI of the Azure Cosmos DB emulator>",
-  "CosmosKey": "<Primary Key of the Azure Cosmos DB emulator>",
-  "CosmosDatabase": "<Name of the Azure Cosmos DB Database>",
-  "MaintainerIdentity": "<The identity that will be the admin>",
-  "Server": "https://localhost:5001",
-  "Client": "https://localhost:5002",
+    "Paula": {
+        "CosmosEndpoint": "<URI of the Azure Cosmos DB emulator>",
+        "CosmosKey": "<Primary Key of the Azure Cosmos DB emulator>",
+        "CosmosDatabase": "<Name of the Azure Cosmos DB Database>",
+        "MaintainerIdentity": "<The identity that will be the admin>",
+        "Server": "https://localhost:5001",
+        "Client": "https://localhost:5002"
+    }
 }
 ```
 

@@ -16,53 +16,84 @@ namespace Super.Paula.Application
     {
         public static IEventBus ConfigureTransport(this IEventBus eventBus)
         {
-            eventBus.Subscribe<OrganizationUpdateEvent, IInspectorEventHandler>(
+            eventBus.ConfigureTransportAdministration();
+            eventBus.ConfigureTransportAuditing();
+            eventBus.ConfigureTransportInventory();
+            eventBus.ConfigureTransportOperation();
+            eventBus.ConfigureTransportCommunication();
+
+            return eventBus;
+        }
+
+        private static IEventBus ConfigureTransportAdministration(this IEventBus eventBus)
+        {
+            eventBus.Subscribe<OrganizationUpdateEvent, InspectorEventHandler>(
                 AllowedSubscribers.AdministrationInspector);
 
-            eventBus.Subscribe<BusinessObjectDeletionEvent, IInspectorEventHandler>(
+            eventBus.Subscribe<BusinessObjectDeletionEvent, InspectorEventHandler>(
                 AllowedSubscribers.AdministrationInspector);
 
-            eventBus.Subscribe<BusinessObjectInspectorEvent, IInspectorEventHandler>(
+            eventBus.Subscribe<BusinessObjectInspectorEvent, InspectorEventHandler>(
                 AllowedSubscribers.AdministrationInspector);
 
-            eventBus.Subscribe<BusinessObjectInspectionAuditScheduleEvent, IInspectorEventHandler>(
+            eventBus.Subscribe<BusinessObjectInspectionAuditScheduleEvent, InspectorEventHandler>(
                 AllowedSubscribers.AdministrationInspector);
 
+            return eventBus;
+        }
 
-            eventBus.Subscribe<BusinessObjectEvent, IBusinessObjectInspectionAuditEventHandler>(
+        private static IEventBus ConfigureTransportAuditing(this IEventBus eventBus)
+        {
+
+            eventBus.Subscribe<BusinessObjectEvent, BusinessObjectInspectionAuditEventHandler>(
                 AllowedSubscribers.AuditingBusinessObjectInspectionAudit);
 
-            eventBus.Subscribe<BusinessObjectDeletionEvent, IBusinessObjectInspectionAuditEventHandler>(
+            eventBus.Subscribe<BusinessObjectDeletionEvent, BusinessObjectInspectionAuditEventHandler>(
                 AllowedSubscribers.AuditingBusinessObjectInspectionAudit);
 
-            eventBus.Subscribe<BusinessObjectInspectionAuditEvent, IBusinessObjectInspectionAuditEventHandler>(
+            eventBus.Subscribe<BusinessObjectInspectionAuditEvent, BusinessObjectInspectionAuditEventHandler>(
                 AllowedSubscribers.AuditingBusinessObjectInspectionAudit);
 
-            eventBus.Subscribe<InspectionEvent, IBusinessObjectInspectionAuditEventHandler>(
+            eventBus.Subscribe<InspectionEvent, BusinessObjectInspectionAuditEventHandler>(
                 AllowedSubscribers.AuditingBusinessObjectInspectionAudit);
 
-            eventBus.Subscribe<InspectionDeletionEvent, IBusinessObjectInspectionAuditEventHandler>(
+            eventBus.Subscribe<InspectionDeletionEvent, BusinessObjectInspectionAuditEventHandler>(
                 AllowedSubscribers.AuditingBusinessObjectInspectionAudit);
 
+            return eventBus;
+        }
 
-            eventBus.Subscribe<BusinessObjectInspectorEvent, INotificationEventHandler>(
+        private static IEventBus ConfigureTransportCommunication(this IEventBus eventBus)
+        {
+
+            eventBus.Subscribe<BusinessObjectInspectorEvent, NotificationEventHandler>(
                 AllowedSubscribers.CommunicationNotification);
 
-            eventBus.Subscribe<InspectorBusinessObjectEvent, INotificationEventHandler>(
+            eventBus.Subscribe<InspectorBusinessObjectEvent, NotificationEventHandler>(
                 AllowedSubscribers.CommunicationNotification);
 
+            return eventBus;
+        }
 
-            eventBus.Subscribe<InspectionEvent, IBusinessObjectEventHandler>(
+        private static IEventBus ConfigureTransportInventory(this IEventBus eventBus)
+        {
+
+            eventBus.Subscribe<InspectionEvent, BusinessObjectEventHandler>(
                 AllowedSubscribers.InventoryBusinessObject);
 
-            eventBus.Subscribe<InspectionDeletionEvent, IBusinessObjectEventHandler>(
+            eventBus.Subscribe<InspectionDeletionEvent, BusinessObjectEventHandler>(
                 AllowedSubscribers.InventoryBusinessObject);
 
+            return eventBus;
+        }
 
-            eventBus.Subscribe<OrganizationCreationEvent, IApplicationEventHandler>(
+        private static IEventBus ConfigureTransportOperation(this IEventBus eventBus)
+        {
+
+            eventBus.Subscribe<OrganizationCreationEvent, ApplicationEventHandler>(
                 AllowedSubscribers.OperationApplication);
 
-            eventBus.Subscribe<OrganizationDeletionEvent, IApplicationEventHandler>(
+            eventBus.Subscribe<OrganizationDeletionEvent, ApplicationEventHandler>(
                 AllowedSubscribers.OperationApplication);
 
             return eventBus;

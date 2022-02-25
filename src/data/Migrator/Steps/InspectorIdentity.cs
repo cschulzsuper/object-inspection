@@ -27,7 +27,10 @@ namespace Super.Paula.Data.Steps
             var cosmosClient = _paulaApplicationContext.Database.GetCosmosClient();
             var cosmosDatabase = cosmosClient.GetDatabase(_appSettings.CosmosDatabase);
 
+
+            await cosmosDatabase.CreateContainerIfNotExistsAsync("Inspector","/Organization");
             var inspectorContainer = cosmosDatabase.GetContainer("Inspector");
+            
             var inspectorFeed = inspectorContainer.GetItemQueryIterator<InspectorWithId>("SELECT * FROM c");
 
             while (inspectorFeed.HasMoreResults)

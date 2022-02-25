@@ -20,8 +20,8 @@ namespace Super.Paula.Data
                 {
                     services.AddUser();
                     services.AddHostedService<HostedService>();
-                    services.AddPaulaAppSettings();
-                    services.AddPaulaServerData(context.HostingEnvironment.IsDevelopment());
+                    services.AddAppSettings();
+                    services.AddServerData(context.HostingEnvironment.IsDevelopment());
 
                     services
                         .AddScoped<Initialization>()

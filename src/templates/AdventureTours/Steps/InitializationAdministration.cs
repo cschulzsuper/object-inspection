@@ -1,9 +1,11 @@
-﻿using Microsoft.Playwright;
-using Super.Paula.Environment;
+﻿using Super.Paula.Environment;
 using Super.Paula.Templates.Playwright.Administration;
 using System.Threading.Tasks;
+using Microsoft.Playwright;
 
-namespace Super.Paula.Steps
+using playwright = Microsoft.Playwright;
+
+namespace Super.Paula.Templates.AdventureTours.Steps
 {
     public sealed class InitializationAdministration : IStep
     {
@@ -16,7 +18,7 @@ namespace Super.Paula.Steps
 
         public async Task ExecuteAsync()
         {
-            using var playwright = await Playwright.CreateAsync();
+            using var playwright = await playwright::Playwright.CreateAsync();
             await using var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
             {
                 Headless = false,
@@ -44,12 +46,12 @@ namespace Super.Paula.Steps
 
             await page.RegisterAsync(
                 maintainerIdentity,
-                maintainerMailAddress, 
+                maintainerMailAddress,
                 maintainerPassword);
 
             await page.RegisterAsync(
                 adventureToursIdentity,
-                adventureToursMailAddress, 
+                adventureToursMailAddress,
                 adventureToursPassword);
 
             await page.SignInAsync(
@@ -60,6 +62,8 @@ namespace Super.Paula.Steps
             await page.RegisterOrganizationAsync(
                 maintainerOrganization,
                 maintainerOrganizationDisplayName);
+
+            await Task.Delay(6000);
 
             await page.RegisterChiefInspectorAsync(
                 maintainerOrganization,
@@ -74,8 +78,12 @@ namespace Super.Paula.Steps
                 adventureToursOrganization,
                 adventureToursInspector);
 
+            await Task.Delay(6000);
+
             await page.RepairOrganizationAsync(
                 adventureToursOrganization);
+
+            await Task.Delay(6000);
 
             await page.SignOutAsync();
 

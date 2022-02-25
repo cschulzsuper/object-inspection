@@ -12,20 +12,63 @@ namespace Super.Paula.Application
     [SuppressMessage("Style", "IDE1006")]
     public static class _Services
     {
-        public static IServiceCollection AddPaulaServerManagement(this IServiceCollection services)
-            => services
-                .AddScoped<IBusinessObjectInspectionAuditManager, BusinessObjectInspectionAuditManager>()
-                .AddScoped<IBusinessObjectManager, BusinessObjectManager>()
-                .AddScoped<IBusinessObjects, BusinessObjects>()
-                .AddScoped<IIdentityManager, IdentityManager>()
-                .AddScoped<IInspectionManager, InspectionManager>()
-                .AddScoped<IInspectorManager, InspectorManager>()
-                .AddScoped<IIdentityInspectorManager, IdentityInspectorManager>()
-                .AddScoped<INotificationManager, NotificationManager>()
-                .AddScoped<IOrganizationManager, OrganizationManager>()
-                .AddScoped<IOrganizations, Organizations>()
-                .AddScoped<IApplicationManager, ApplicationManager>()
-                .AddScoped<IConnectionManager, ConnectionManager>()
-                .AddScoped<IConnectionViolationManager, ConnectionViolationManager>();
+        public static IServiceCollection AddServerManagement(this IServiceCollection services)
+        {
+            services.AddServerManagementAdministration();
+            services.AddServerManagementAuditing();
+            services.AddServerManagementCommunication();
+            services.AddServerManagementGuidelines();
+            services.AddServerManagementInventory();
+            services.AddServerManagementOperation();
+
+            return services;
+        }
+
+        private static IServiceCollection AddServerManagementAdministration(this IServiceCollection services)
+        {
+            services.AddScoped<IInspectorManager, InspectorManager>();
+            services.AddScoped<IIdentityInspectorManager, IdentityInspectorManager>();
+            services.AddScoped<IIdentityManager, IdentityManager>();
+            services.AddScoped<IOrganizationManager, OrganizationManager>();
+
+            return services;
+        }
+
+        private static IServiceCollection AddServerManagementAuditing(this IServiceCollection services)
+        {
+            services.AddScoped<IBusinessObjectInspectionAuditManager, BusinessObjectInspectionAuditManager>();
+
+            return services;
+        }
+
+        private static IServiceCollection AddServerManagementCommunication(this IServiceCollection services)
+        {
+            services.AddScoped<INotificationManager, NotificationManager>();
+
+            return services;
+        }
+
+        private static IServiceCollection AddServerManagementGuidelines(this IServiceCollection services)
+        {
+            services.AddScoped<IInspectionManager, InspectionManager>();
+
+            return services;
+        }
+
+        private static IServiceCollection AddServerManagementInventory(this IServiceCollection services)
+        {
+            services.AddScoped<IBusinessObjectManager, BusinessObjectManager>();
+
+            return services;
+        }
+
+        private static IServiceCollection AddServerManagementOperation(this IServiceCollection services)
+        {
+            services.AddScoped<IApplicationManager, ApplicationManager>();
+            services.AddScoped<IConnectionManager, ConnectionManager>();
+            services.AddScoped<IConnectionViolationManager, ConnectionViolationManager>();
+
+            return services;
+        }
     }
 }

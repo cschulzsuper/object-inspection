@@ -2,7 +2,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace Super.Paula.Steps
+namespace Super.Paula.Templates.AdventureTours.Steps
 {
     public interface IStep
     {

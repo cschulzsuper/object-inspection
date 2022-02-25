@@ -224,16 +224,7 @@ namespace Super.Paula.Data.Steps
                                 new Claim("Organization", organization)
                         })));
 
-            var paulaContextState = scope.ServiceProvider.GetRequiredService<PaulaContextState>();
-            var user = scope.ServiceProvider.GetRequiredService<ClaimsPrincipal>();
-
-            paulaContextState.CurrentOrganization = user.HasOrganization()
-               ? user.GetOrganization()
-               : string.Empty;
-
-            paulaContextState.CurrentInspector = user.HasInspector()
-               ? user.GetInspector()
-               : string.Empty;
+            scope.ServiceProvider.ConfigureData();
         }
 
         private class BusinessObjectWithId : BusinessObject

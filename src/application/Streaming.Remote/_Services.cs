@@ -7,7 +7,7 @@ namespace Super.Paula.Application
     [SuppressMessage("Style", "IDE1006")]
     public static class _Services
     {
-        public static IServiceCollection AddPaulaRemoteStreaming(this IServiceCollection services)
+        public static IServiceCollection AddRemoteStreaming(this IServiceCollection services)
             => services
                 .AddScoped<IStreamer, RemoteStreamer>();
     }
