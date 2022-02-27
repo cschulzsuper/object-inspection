@@ -5,6 +5,8 @@ namespace Super.Paula.Application.Inventory.Requests
 {
     public class BusinessObjectRequest
     {
+        public string ETag { get; set; } = string.Empty;
+
         [Required]
         [KebabCase]
         [StringLength(140)]

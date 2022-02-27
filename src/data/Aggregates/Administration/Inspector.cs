@@ -4,6 +4,7 @@ namespace Super.Paula.Application.Administration
 {
     public class Inspector
     {
+        public string ETag { get; set; } = string.Empty;
         public string UniqueName { get; set; } = string.Empty;
         public string Identity { get; set; } = string.Empty;
         public bool Activated { get; set; }

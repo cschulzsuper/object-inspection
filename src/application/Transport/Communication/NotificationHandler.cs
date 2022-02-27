@@ -30,7 +30,8 @@ namespace Super.Paula.Application.Communication
                 Time = entity.Time,
                 Inspector = entity.Inspector,
                 Target = entity.Target,
-                Text = entity.Text
+                Text = entity.Text,
+                ETag = entity.ETag
             };
         }
 
@@ -43,7 +44,8 @@ namespace Super.Paula.Application.Communication
                     Time = entity.Time,
                     Inspector = entity.Inspector,
                     Target = entity.Target,
-                    Text = entity.Text
+                    Text = entity.Text,
+                    ETag = entity.ETag
                 }));
 
         public IAsyncEnumerable<NotificationResponse> GetAllForInspector(string inspector)
@@ -55,7 +57,8 @@ namespace Super.Paula.Application.Communication
                         Time = entity.Time,
                         Inspector = entity.Inspector,
                         Target = entity.Target,
-                        Text = entity.Text
+                        Text = entity.Text,
+                        ETag = entity.ETag
                     }));
 
         public async ValueTask<NotificationResponse> CreateAsync(string inspector, NotificationRequest request)
@@ -77,7 +80,8 @@ namespace Super.Paula.Application.Communication
                 Time = entity.Time,
                 Text = entity.Text,
                 Inspector = entity.Inspector,
-                Target = entity.Target
+                Target = entity.Target,
+                ETag = entity.ETag
             };
 
             await _notificationAnnouncer.AnnounceCreationAsync(response);
@@ -94,13 +98,16 @@ namespace Super.Paula.Application.Communication
             entity.Inspector = inspector;
             entity.Target = request.Target;
             entity.Text = request.Text;
+            entity.ETag = request.ETag;
 
             await _notificationManager.UpdateAsync(entity);
         }
 
-        public async ValueTask DeleteAsync(string inspector, int date, int time)
+        public async ValueTask DeleteAsync(string inspector, int date, int time, string etag)
         {
             var entity = await _notificationManager.GetAsync(inspector, date, time);
+
+            entity.ETag = etag;
 
             await _notificationManager.DeleteAsync(entity);
             await _notificationAnnouncer.AnnounceDeletionAsync(inspector, date, time);

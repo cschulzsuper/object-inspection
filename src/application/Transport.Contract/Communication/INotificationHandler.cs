@@ -14,7 +14,7 @@ namespace Super.Paula.Application.Communication
 
         ValueTask<NotificationResponse> CreateAsync(string inspector, NotificationRequest request);
         ValueTask ReplaceAsync(string inspector, int date, int time, NotificationRequest request);
-        ValueTask DeleteAsync(string inspector, int date, int time);
+        ValueTask DeleteAsync(string inspector, int date, int time, string etag);
 
 
         Task<IDisposable> OnCreationAsync(Func<NotificationResponse, Task> handler);

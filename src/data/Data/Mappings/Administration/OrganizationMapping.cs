@@ -23,6 +23,10 @@ namespace Super.Paula.Data.Mappings.Administration
                 .HasNoDiscriminator();
 
             builder
+                .Property(x => x.ETag)
+                .IsETagConcurrency();
+
+            builder
                 .Property(x => x.UniqueName)
                 .HasMaxLength(140)
                 .IsRequired();

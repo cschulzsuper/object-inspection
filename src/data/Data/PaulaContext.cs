@@ -24,7 +24,7 @@ namespace Super.Paula.Data
             if (!string.IsNullOrWhiteSpace(State.CurrentOrganization))
             {
                 modelBuilder.ApplyConfiguration(new BusinessObjectMapping(State));
-                modelBuilder.ApplyConfiguration(new BusinessObjectInspectionAuditMapping(State));
+                modelBuilder.ApplyConfiguration(new BusinessObjectInspectionAuditRecordMapping(State));
                 modelBuilder.ApplyConfiguration(new InspectionMapping(State));
                 modelBuilder.ApplyConfiguration(new InspectorMapping(State));
                 modelBuilder.ApplyConfiguration(new NotificationMapping(State));

@@ -2,6 +2,7 @@
 {
     public class NotificationResponse
     {
+        public string ETag { get; set; } = string.Empty;
         public int Date { get; set; }
         public int Time { get; set; }
         public string Inspector { get; set; } = string.Empty;

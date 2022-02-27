@@ -24,12 +24,17 @@ namespace Super.Paula.Client.Administration
             _httpClient.BaseAddress = new Uri(appSettings.Server);
         }
 
-        public async ValueTask ActivateAsync(string organization)
+        public async ValueTask<ActivateOrganizationResponse> ActivateAsync(string organization, string etag)
         {
-            var responseMessage = await _httpClient.PostAsync($"organizations/{organization}/activate", null);
+            var request = new HttpRequestMessage(HttpMethod.Post, $"organizations/{organization}/activate");
+            request.Headers.Add("If-Match", etag);
+
+            var responseMessage = await _httpClient.SendAsync(request);
 
             responseMessage.RuleOutProblems();
             responseMessage.EnsureSuccessStatusCode();
+
+            return (await responseMessage.Content.ReadFromJsonAsync<ActivateOrganizationResponse>())!;
         }
 
         public async ValueTask<OrganizationResponse> CreateAsync(OrganizationRequest request)
@@ -42,17 +47,25 @@ namespace Super.Paula.Client.Administration
             return (await responseMessage.Content.ReadFromJsonAsync<OrganizationResponse>())!;
         }
 
-        public async ValueTask DeactivateAsync(string organization)
+        public async ValueTask<DeactivateOrganizationResponse> DeactivateAsync(string organization, string etag)
         {
-            var responseMessage = await _httpClient.PostAsync($"organizations/{organization}/deactivate", null);
+            var request = new HttpRequestMessage(HttpMethod.Post, $"organizations/{organization}/deactivate");
+            request.Headers.Add("If-Match", etag);
+
+            var responseMessage = await _httpClient.SendAsync(request);
 
             responseMessage.RuleOutProblems();
             responseMessage.EnsureSuccessStatusCode();
+
+            return (await responseMessage.Content.ReadFromJsonAsync<DeactivateOrganizationResponse>())!;
         }
 
-        public async ValueTask DeleteAsync(string organization)
+        public async ValueTask DeleteAsync(string organization, string etag)
         {
-            var responseMessage = await _httpClient.DeleteAsync($"organizations/{organization}");
+            var request = new HttpRequestMessage(HttpMethod.Delete, $"organizations/{organization}");
+            request.Headers.Add("If-Match", etag);
+
+            var responseMessage = await _httpClient.SendAsync(request);
 
             responseMessage.RuleOutProblems();
             responseMessage.EnsureSuccessStatusCode();

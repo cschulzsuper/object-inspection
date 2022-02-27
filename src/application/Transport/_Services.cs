@@ -47,7 +47,9 @@ namespace Super.Paula.Application
 
         private static IServiceCollection AddServerTransportAuditing(this IServiceCollection services)
         {
-            services.AddScoped<IBusinessObjectInspectionAuditHandler, BusinessObjectInspectionAuditHandler>();
+            services.AddScoped<IBusinessObjectInspectionAuditRecordHandler, BusinessObjectInspectionAuditRecordHandler>();
+            services.AddScoped<IBusinessObjectInspectionHandler, BusinessObjectInspectionHandler>();
+            services.AddScoped<IBusinessObjectInspectionEventService, BusinessObjectInspectionEventService>();
 
             return services;
         }

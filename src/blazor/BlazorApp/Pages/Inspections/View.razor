@@ -53,12 +53,12 @@ else
                     @if(inspection.Activated) {
                         <td>
                             <AuthorizedButton Policy="ManagementFull" class="btn btn-success btn-block" title="@Translator["Deactivate"]" 
-                                @onclick="() => DeactivateAsync(inspection.UniqueName)"><span class="oi oi-power-standby"/></AuthorizedButton>
+                                @onclick="() => DeactivateAsync(inspection)"><span class="oi oi-power-standby"/></AuthorizedButton>
                         </td>
                     } else {
                         <td>
                             <AuthorizedButton Policy="ManagementFull" class="btn btn-outline-danger btn-block" title="@Translator["Activate"]"
-                                @onclick="() => ActivateAsync(inspection.UniqueName)"><span class="oi oi-power-standby"/></AuthorizedButton>
+                                @onclick="() => ActivateAsync(inspection)"><span class="oi oi-power-standby"/></AuthorizedButton>
                         </td>
                     }
                     <td>
@@ -67,7 +67,7 @@ else
                     </td>
                     <td >
                         <AuthorizedButton Policy="ManagementFull" class="btn btn-outline-danger btn-block"  title="@Translator["Delete"]"
-                            @onclick="() => DeleteAsync(inspection.UniqueName)"><span class="oi oi-trash"/></AuthorizedButton>
+                            @onclick="() => DeleteAsync(inspection)"><span class="oi oi-trash"/></AuthorizedButton>
                     </td>             
                 </tr>
             }
@@ -110,22 +110,26 @@ else
     public void Edit(string inspection)
         => NavigationManager.NavigateTo($"/inspections/{inspection}/edit");
 
-    public async Task DeleteAsync(string inspection)
+    public async Task DeleteAsync(InspectionResponse inspection)
     {
-        await InspectionHandler.DeleteAsync(inspection);
-        _inspections!.Remove(inspection);
+        await InspectionHandler.DeleteAsync(inspection.UniqueName, inspection.ETag);
+        _inspections!.Remove(inspection.UniqueName);
     }
 
-    public async Task ActivateAsync(string inspection) 
+    public async Task ActivateAsync(InspectionResponse inspection) 
     {
-        await InspectionHandler.ActivateAsync(inspection);
-        _inspections![inspection].Activated = true;
+        var response = await InspectionHandler.ActivateAsync(inspection.UniqueName, inspection.ETag);
+
+        inspection.Activated = true;
+        inspection.ETag = response.ETag;
     }
 
-    public async Task DeactivateAsync(string inspection) 
+    public async Task DeactivateAsync(InspectionResponse inspection) 
     {
-        await InspectionHandler.DeactivateAsync(inspection);
-        _inspections![inspection].Activated = false;
+        var response = await InspectionHandler.DeactivateAsync(inspection.UniqueName, inspection.ETag);
+
+        inspection.Activated = false;
+        inspection.ETag = response.ETag;
     }
 
     private void ToggleTextVisibility(string inspection)

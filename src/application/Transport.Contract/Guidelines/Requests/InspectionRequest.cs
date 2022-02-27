@@ -5,6 +5,8 @@ namespace Super.Paula.Application.Guidelines.Requests
 {
     public class InspectionRequest
     {
+        public string ETag { get; set; } = string.Empty;
+
         [Required]
         [KebabCase]
         [StringLength(140)]

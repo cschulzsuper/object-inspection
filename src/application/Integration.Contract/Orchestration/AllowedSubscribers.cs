@@ -5,7 +5,9 @@
 
         public const string AdministrationInspector = "administration/inspector";
 
-        public const string AuditingBusinessObjectInspectionAudit = "auditing/business-object-inspection-audit";
+        public const string AuditingBusinessObjectInspectionAuditRecord = "auditing/business-object-inspection-audit-record";
+
+        public const string AuditingBusinessObjectInspection = "auditing/business-object-inspection";
 
         public const string CommunicationNotification = "communication/notification";
 

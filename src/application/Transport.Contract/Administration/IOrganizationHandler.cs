@@ -12,10 +12,10 @@ namespace Super.Paula.Application.Administration
 
         ValueTask<OrganizationResponse> CreateAsync(OrganizationRequest request);
         ValueTask ReplaceAsync(string organization, OrganizationRequest request);
-        ValueTask DeleteAsync(string organization);
+        ValueTask DeleteAsync(string organization, string etag);
 
-        ValueTask ActivateAsync(string organization);
-        ValueTask DeactivateAsync(string organization);
+        ValueTask<ActivateOrganizationResponse> ActivateAsync(string organization, string etag);
+        ValueTask<DeactivateOrganizationResponse> DeactivateAsync(string organization, string etag);
         
     }
 }

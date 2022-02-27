@@ -119,13 +119,13 @@ namespace Super.Paula.Client.Communication
             }
         }
 
-        public ValueTask ReplaceAsync(string inspector, int date, int time, NotificationRequest request)
+        public ValueTask ReplaceAsync(string inspector, int date, int time, NotificationRequest requestg)
         {
             throw new NotImplementedException();
         }
 
-        public ValueTask DeleteAsync(string inspector, int date, int time)
-            => _notificationHandler.DeleteAsync(inspector, date, time);
+        public ValueTask DeleteAsync(string inspector, int date, int time, string etag)
+            => _notificationHandler.DeleteAsync(inspector, date, time, etag);
 
         public Task<IDisposable> OnDeletionAsync(Func<string, int, int, Task> handler)
             => _notificationHandler.OnDeletionAsync(handler);

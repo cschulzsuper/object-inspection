@@ -12,10 +12,10 @@ namespace Super.Paula.Application.Guidelines
 
         ValueTask<InspectionResponse> CreateAsync(InspectionRequest request);
         ValueTask ReplaceAsync(string inspection, InspectionRequest request);
-        ValueTask DeleteAsync(string inspection);
+        ValueTask DeleteAsync(string inspection, string etag);
 
-        ValueTask ActivateAsync(string inspection);
-        ValueTask DeactivateAsync(string inspection);
+        ValueTask<ActivateInspectionResponse> ActivateAsync(string inspection, string etag);
+        ValueTask<DeactivateInspectionResponse> DeactivateAsync(string inspection, string etag);
 
     }
 }

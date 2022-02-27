@@ -30,6 +30,10 @@ namespace Super.Paula.Data.Mappings.Inventory
                 .HasDiscriminator<string>("Type");
 
             builder
+                .Property(x => x.ETag)
+                .IsETagConcurrency();
+
+            builder
                 .Property(x => x.UniqueName)
                 .HasMaxLength(140)
                 .IsRequired();
@@ -42,107 +46,6 @@ namespace Super.Paula.Data.Mappings.Inventory
             builder
                 .Property(x => x.Inspector)
                 .HasMaxLength(140)
-                .IsRequired();
-
-            var inspectionsBuilder = builder
-                .OwnsMany(x => x.Inspections);
-
-            inspectionsBuilder
-                .Property(x => x.Activated)
-                .IsRequired();
-
-            inspectionsBuilder
-                .Property(x => x.AuditAnnotation)
-                .HasMaxLength(4000)
-                .IsRequired();
-
-            inspectionsBuilder
-                .Property(x => x.AssignmentDate)
-                .IsRequired();
-
-            inspectionsBuilder
-                .Property(x => x.AssignmentTime)
-                .IsRequired();
-
-            inspectionsBuilder
-                .Property(x => x.AuditDate)
-                .IsRequired();
-
-            inspectionsBuilder
-                .Property(x => x.AuditTime)
-                .IsRequired();
-
-            inspectionsBuilder
-                .Property(x => x.AuditInspector)
-                .HasMaxLength(140)
-                .IsRequired();
-
-            inspectionsBuilder
-                .Property(x => x.AuditResult)
-                .HasMaxLength(140)
-                .IsRequired();
-
-            inspectionsBuilder
-                .Property(x => x.UniqueName)
-                .HasMaxLength(140)
-                .IsRequired();
-
-            inspectionsBuilder
-                .Property(x => x.DisplayName)
-                .HasMaxLength(140)
-                .IsRequired();
-
-            inspectionsBuilder
-                .Property(x => x.Text)
-                .HasMaxLength(4000)
-                .IsRequired();
-
-            var auditScheduleBuilder = inspectionsBuilder
-                .OwnsOne(x => x.AuditSchedule);
-
-            auditScheduleBuilder
-                .Property(x => x.Threshold)
-                .IsRequired();
-
-            var auditScheduleExpressionsBuilder = auditScheduleBuilder
-                .OwnsMany(x => x.Expressions);
-
-            auditScheduleExpressionsBuilder
-                .Property(x => x.CronExpression)
-                .HasMaxLength(140)
-                .IsRequired();
-
-            var auditScheduleOmissionsBuilder = auditScheduleBuilder
-                .OwnsMany(x => x.Omissions);
-
-            auditScheduleOmissionsBuilder
-                .Property(x => x.PlannedAuditDate)
-                .IsRequired();
-
-            auditScheduleOmissionsBuilder
-                .Property(x => x.PlannedAuditTime)
-                .IsRequired();
-
-            var auditScheduleAdditionalsBuilder = auditScheduleBuilder
-                .OwnsMany(x => x.Additionals);
-
-            auditScheduleAdditionalsBuilder
-                .Property(x => x.PlannedAuditDate)
-                .IsRequired();
-
-            auditScheduleAdditionalsBuilder
-                .Property(x => x.PlannedAuditTime)
-                .IsRequired();
-
-            var auditScheduleAppointmentsBuilder = auditScheduleBuilder
-                .OwnsMany(x => x.Appointments);
-
-            auditScheduleAppointmentsBuilder
-                .Property(x => x.PlannedAuditDate)
-                .IsRequired();
-
-            auditScheduleAppointmentsBuilder
-                .Property(x => x.PlannedAuditTime)
                 .IsRequired();
         }
     }

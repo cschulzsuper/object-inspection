@@ -4,6 +4,7 @@
 @inject NavigationManager NavigationManager
 @inject IInspectionHandler InspectionHandler
 @inject IBusinessObjectHandler BusinessObjectHandler
+@inject IBusinessObjectInspectionHandler BusinessObjectInspectionHandler
 
 @attribute [Authorize("AuditingRead")]
 
@@ -57,7 +58,7 @@ else
             @foreach (var inspection in RelevantInspections)
             {
                 <tr>
-                    <td class="d-none d-lg-table-cell">@inspection.UniqueName</td>
+                    <td class="d-none d-lg-table-cell">@inspection.Inspection</td>
                     <td>
                         <BusinessObjectInspectionResponseToggle Inspection="inspection"/>
                     </td>
@@ -65,10 +66,10 @@ else
                     <AuthorizeView Policy="ManagementRead">
                         <Authorized>
                             <td class=@(_mode == Mode.AssignmentMode ? "" : "d-none d-lg-table-cell")>
-                                @if (_inspectionBusinessObjects!.ContainsKey(inspection.UniqueName))
+                                @if (_inspectionBusinessObjects!.ContainsKey(inspection.Inspection))
                                 {
                                     <AuthorizedButton Policy="ManagementFull" 
-                                            id="@($"unassign{inspection.UniqueName}")"
+                                            id="@($"unassign{inspection.Inspection}")"
                                             class="btn btn-primary btn-block"
                                             title="@Translator["Unassign"]"
                                             @onclick="() => UnassignAsync(inspection)"><span class="oi oi-minus"/></AuthorizedButton>
@@ -76,7 +77,7 @@ else
                                 else
                                 {
                                     <AuthorizedButton Policy="ManagementFull" 
-                                            id="@($"assign{inspection.UniqueName}")"
+                                            id="@($"assign{inspection.Inspection}")"
                                             class="btn btn-primary btn-block"
                                             title="@Translator["Assign"]"
                                             @onclick="() => AssignAsync(inspection)"><span class="oi oi-plus"/></AuthorizedButton>
@@ -84,14 +85,14 @@ else
                             </td>
                             <td class=@(_mode == Mode.ScheduleMode ? "" : "d-none d-lg-table-cell")>
                                 <button 
-                                        id="@($"schedule{inspection.UniqueName}")"
+                                        id="@($"schedule{inspection.Inspection}")"
                                         class="btn btn-primary btn-block"
                                         title="@Translator["Schedule"]"
                                         @onclick="() => Schedule(inspection)"><span class="oi oi-clock"/></button>
                             </td>
                             <td class=@(_mode == Mode.DropMode ? "" : "d-none d-lg-table-cell")>
                                 <AuthorizedButton Policy="ManagementFull" 
-                                        id="@($"drop{inspection.UniqueName}")"
+                                        id="@($"drop{inspection.Inspection}")"
                                         class="btn btn-primary btn-block"
                                         title="@Translator["Drop"]"
                                         @onclick="() => DropAsync(inspection)"><span class="oi oi-media-skip-forward"></span></AuthorizedButton>
@@ -124,6 +125,8 @@ else
 
     private IDictionary<string, BusinessObjectInspectionResponse>? _inspections;
 
+    private BusinessObjectResponse? _businessObject;
+
     private Mode _mode = Mode.ScheduleMode;
 
     [CascadingParameter]
@@ -154,6 +157,8 @@ else
     {
         _inspections = new Dictionary<string, BusinessObjectInspectionResponse>();
 
+        _businessObject = await BusinessObjectHandler.GetAsync(BusinessObject);
+
         var isChief = (await AuthenticationState).User.HasAuthorization("Chief");
 
         if (isChief)
@@ -164,22 +169,24 @@ else
             {
                 _inspections!.Add(inspection.UniqueName, new BusinessObjectInspectionResponse
                 {
-                    Activated = false,
-                    DisplayName = inspection.DisplayName,
-                    Text = inspection.Text,
-                    UniqueName = inspection.UniqueName
+                    Activated = inspection.Activated,
+                    InspectionDisplayName = inspection.DisplayName,
+                    InspectionText = inspection.Text,
+                    Inspection = inspection.UniqueName,
+                    BusinessObject = _businessObject.UniqueName,
+                    BusinessObjectDisplayName = _businessObject.DisplayName
                 });
                 this.StateHasChanged();
             }
         }
 
-        var response = await BusinessObjectHandler.GetAsync(BusinessObject);
-
         _inspectionBusinessObjects = new Dictionary<string, BusinessObjectInspectionResponse>();
 
-        foreach (var inspection in response.Inspections)
+        var inspections = BusinessObjectInspectionHandler.GetAllForBusinessObject(BusinessObject);
+
+        await foreach (var inspection in inspections)
         {
-            _inspectionBusinessObjects!.Add(inspection.UniqueName, inspection);
+            _inspectionBusinessObjects!.Add(inspection.Inspection, inspection);
 
             this.StateHasChanged();
         }
@@ -212,31 +219,36 @@ else
 
     public async Task AssignAsync(BusinessObjectInspectionResponse inspection)
     {
-        await BusinessObjectHandler.AssignInspectionAsync(
+        var response = await BusinessObjectInspectionHandler.CreateAsync(
             BusinessObject!,
-            new AssignInspectionRequest
+            new BusinessObjectInspectionRequest
             {
-                Activated = true,
-                UniqueName = inspection.UniqueName
+                BusinessObjectDisplayName = inspection.BusinessObjectDisplayName,
+                Inspection = inspection.Inspection,
+                InspectionDisplayName = inspection.InspectionDisplayName,
+                InspectionText = inspection.InspectionText,
+                Activated = inspection.Activated
             });
 
-        _inspectionBusinessObjects!.Add(inspection.UniqueName, _inspections![inspection.UniqueName]);
+        inspection.ETag = response.ETag;
+
+        _inspectionBusinessObjects!.Add(inspection.Inspection, inspection);
+        StateHasChanged();
     }
 
     public async Task UnassignAsync(BusinessObjectInspectionResponse inspection)
     {
-        await BusinessObjectHandler.CancelInspectionAsync(
+        await BusinessObjectInspectionHandler.DeleteAsync(
             BusinessObject!,
-            new CancelInspectionRequest
-            {
-                UniqueName = inspection.UniqueName
-            });
+            inspection.Inspection,
+            inspection.ETag);
 
-        _inspectionBusinessObjects!.Remove(inspection.UniqueName);
+        _inspectionBusinessObjects!.Remove(inspection.Inspection);
+        StateHasChanged();
     }
 
     public void Schedule(BusinessObjectInspectionResponse inspection)
-        => NavigationManager.NavigateTo($"/business-objects/{BusinessObject}/inspections/{inspection.UniqueName}/schedule");
+        => NavigationManager.NavigateTo($"/business-objects/{BusinessObject}/inspections/{inspection.Inspection}/schedule");
 
     public async Task DropAsync(BusinessObjectInspectionResponse inspection)
     {
@@ -247,15 +259,16 @@ else
             return;
         }
 
-        var response = await BusinessObjectHandler.DropInspectionAuditAsync(
+        var response = await BusinessObjectInspectionHandler.CreateAuditOmissionAsync(
             BusinessObject!,
-            inspection.UniqueName,
-            new DropInspectionAuditRequest
+            inspection.Inspection,
+            new BusinessObjectInspectionAuditOmissionRequest
             {
                 PlannedAuditDate = appointment.PlannedAuditDate,
-                PlannedAuditTime = appointment.PlannedAuditTime                 
+                PlannedAuditTime = appointment.PlannedAuditTime,
             });
 
         inspection.AuditSchedule.Appointments = response.Appointments;
+        inspection.ETag = response.ETag;
     }
 }

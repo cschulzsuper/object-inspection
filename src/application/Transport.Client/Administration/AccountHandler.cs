@@ -1,5 +1,6 @@
 ﻿using Super.Paula.Application.Administration;
 using Super.Paula.Application.Administration.Requests;
+using Super.Paula.Application.Administration.Responses;
 using Super.Paula.Environment;
 using Super.Paula.ErrorHandling;
 using System;
@@ -37,12 +38,14 @@ namespace Super.Paula.Client.Administration
             responseMessage.EnsureSuccessStatusCode();
         }
 
-        public async ValueTask RegisterChiefInspectorAsync(string organization, RegisterChiefInspectorRequest request)
+        public async ValueTask<RegisterChiefInspectorResponse> RegisterChiefInspectorAsync(string organization, RegisterChiefInspectorRequest request)
         {
             var responseMessage = await _httpClient.PostAsJsonAsync($"account/register-chief-inspector/{organization}", request);
 
             responseMessage.RuleOutProblems();
             responseMessage.EnsureSuccessStatusCode();
+
+            return (await responseMessage.Content.ReadFromJsonAsync<RegisterChiefInspectorResponse>())!;
         }
 
         public async ValueTask<string> SignInInspectorAsync(string organization, string inspector)

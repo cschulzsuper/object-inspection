@@ -100,6 +100,8 @@ namespace Super.Paula.Templates.AdventureTours.Steps
             await page.ScheduleBusinessObjectInspectionAuditAsync("flashlight-142", "operational", "0 0 3 * *", "12:00:00");
             await page.ScheduleBusinessObjectInspectionAuditAsync("flashlight-142", "condition", "0 0 3 * *", "12:00:00");
 
+            await Task.Delay(1000);
+
             await page.SignOutAsync();
         }
     }

@@ -51,7 +51,7 @@
                 </td>
                 <td>
                     <AuthorizedButton Policy="ManagementFull" class="btn btn-outline-danger btn-block" title="@Translator["Delete"]"
-                        @onclick="() => DeleteAsync(businessObject.UniqueName)"><span class="oi oi-trash"/></AuthorizedButton>
+                        @onclick="() => DeleteAsync(businessObject)"><span class="oi oi-trash"/></AuthorizedButton>
                 </td>
                 <td>
                     <button class="btn btn-outline-info btn-block" title="@Translator["Inspections"]"
@@ -177,9 +177,9 @@
     public void Edit(string businessObject)
         => NavigationManager.NavigateTo($"/business-objects/{businessObject}/edit");
 
-    public async Task DeleteAsync(string businessObject) 
+    public async Task DeleteAsync(BusinessObjectResponse businessObject) 
     {
-        await BusinessObjectHandler.DeleteAsync(businessObject);
+        await BusinessObjectHandler.DeleteAsync(businessObject.UniqueName, businessObject.ETag);
         await ResetAsync();
     }
 

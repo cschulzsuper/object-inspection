@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Super.Paula.Application.Guidelines.Requests;
 using System;
@@ -28,37 +29,37 @@ namespace Super.Paula.Application.Guidelines
 
         private static Delegate Get =>
             [Authorize("AuditingRead")]
-        (IInspectionHandler handler, string inspection)
+            (IInspectionHandler handler, string inspection)
                 => handler.GetAsync(inspection);
 
         private static Delegate GetAll =>
             [Authorize("AuditingRead")]
-        (IInspectionHandler handler)
+            (IInspectionHandler handler)
                 => handler.GetAll();
 
         private static Delegate Create =>
             [Authorize("ManagementFull")]
-        (IInspectionHandler handler, InspectionRequest request)
+            (IInspectionHandler handler, InspectionRequest request)
                 => handler.CreateAsync(request);
 
         private static Delegate Replace =>
             [Authorize("ManagementFull")]
-        (IInspectionHandler handler, string inspection, InspectionRequest request)
+            (IInspectionHandler handler, string inspection, InspectionRequest request)
                 => handler.ReplaceAsync(inspection, request);
 
         private static Delegate Delete =>
             [Authorize("ManagementFull")]
-        (IInspectionHandler handler, string inspection)
-                => handler.DeleteAsync(inspection);
+            (IInspectionHandler handler, string inspection, [FromHeader(Name = "If-Match")] string etag)
+                => handler.DeleteAsync(inspection, etag);
 
         private static Delegate Activate =>
              [Authorize("ManagementFull")]
-        (IInspectionHandler handler, string inspection)
-                => handler.ActivateAsync(inspection);
+            (IInspectionHandler handler, string inspection, [FromHeader(Name = "If-Match")] string etag)
+                => handler.ActivateAsync(inspection, etag);
 
         private static Delegate Deactivate =>
             [Authorize("ManagementFull")]
-        (IInspectionHandler handler, string inspection)
-                => handler.DeactivateAsync(inspection);
+            (IInspectionHandler handler, string inspection, [FromHeader(Name = "If-Match")] string etag)
+                => handler.DeactivateAsync(inspection, etag);
     }
 }

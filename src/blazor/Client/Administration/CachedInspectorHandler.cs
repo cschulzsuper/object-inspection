@@ -57,17 +57,17 @@ namespace Super.Paula.Client.Administration
                 }
             });
 
-        public ValueTask ActivateAsync(string inspector)
-            => _inspectorHandler.ActivateAsync(inspector);
+        public ValueTask<ActivateInspectorResponse> ActivateAsync(string inspector, string etag)
+            => _inspectorHandler.ActivateAsync(inspector, etag);
 
         public ValueTask<InspectorResponse> CreateAsync(InspectorRequest request)
             => _inspectorHandler.CreateAsync(request);
 
-        public ValueTask DeactivateAsync(string inspector)
-            => _inspectorHandler.DeactivateAsync(inspector);
+        public ValueTask<DeactivateInspectorResponse> DeactivateAsync(string inspector, string etag)
+            => _inspectorHandler.DeactivateAsync(inspector, etag);
 
-        public ValueTask DeleteAsync(string inspector)
-            => _inspectorHandler.DeleteAsync(inspector);
+        public ValueTask DeleteAsync(string inspector, string etag)
+            => _inspectorHandler.DeleteAsync(inspector, etag);
 
         public IAsyncEnumerable<InspectorResponse> GetAll()
              => _inspectorHandler.GetAll();

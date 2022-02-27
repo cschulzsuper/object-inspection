@@ -87,6 +87,10 @@ else
 
     public async Task RemoveAsync(NotificationResponse notification)
     {
-        await NotificationHandler.DeleteAsync(notification.Inspector, notification.Date, notification.Time);
+        await NotificationHandler.DeleteAsync(
+            notification.Inspector, 
+            notification.Date,
+            notification.Time,
+            notification.ETag);
     }
 }

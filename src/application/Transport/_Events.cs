@@ -1,6 +1,7 @@
 ﻿using Super.Paula.Application.Administration;
 using Super.Paula.Application.Administration.Events;
 using Super.Paula.Application.Auditing;
+using Super.Paula.Application.Auditing.Events;
 using Super.Paula.Application.Communication;
 using Super.Paula.Application.Guidelines.Events;
 using Super.Paula.Application.Inventory;
@@ -18,7 +19,6 @@ namespace Super.Paula.Application
         {
             eventBus.ConfigureTransportAdministration();
             eventBus.ConfigureTransportAuditing();
-            eventBus.ConfigureTransportInventory();
             eventBus.ConfigureTransportOperation();
             eventBus.ConfigureTransportCommunication();
 
@@ -44,21 +44,26 @@ namespace Super.Paula.Application
 
         private static IEventBus ConfigureTransportAuditing(this IEventBus eventBus)
         {
+            eventBus.Subscribe<InspectionEvent, BusinessObjectInspectionEventHandler>(
+                AllowedSubscribers.AuditingBusinessObjectInspection);
 
-            eventBus.Subscribe<BusinessObjectEvent, BusinessObjectInspectionAuditEventHandler>(
-                AllowedSubscribers.AuditingBusinessObjectInspectionAudit);
+            eventBus.Subscribe<InspectionDeletionEvent, BusinessObjectInspectionEventHandler>(
+                AllowedSubscribers.AuditingBusinessObjectInspection);
 
-            eventBus.Subscribe<BusinessObjectDeletionEvent, BusinessObjectInspectionAuditEventHandler>(
-                AllowedSubscribers.AuditingBusinessObjectInspectionAudit);
+            eventBus.Subscribe<BusinessObjectEvent, BusinessObjectInspectionAuditRecordEventHandler>(
+                AllowedSubscribers.AuditingBusinessObjectInspectionAuditRecord);
 
-            eventBus.Subscribe<BusinessObjectInspectionAuditEvent, BusinessObjectInspectionAuditEventHandler>(
-                AllowedSubscribers.AuditingBusinessObjectInspectionAudit);
+            eventBus.Subscribe<BusinessObjectDeletionEvent, BusinessObjectInspectionAuditRecordEventHandler>(
+                AllowedSubscribers.AuditingBusinessObjectInspectionAuditRecord);
 
-            eventBus.Subscribe<InspectionEvent, BusinessObjectInspectionAuditEventHandler>(
-                AllowedSubscribers.AuditingBusinessObjectInspectionAudit);
+            eventBus.Subscribe<BusinessObjectInspectionAuditEvent, BusinessObjectInspectionAuditRecordEventHandler>(
+                AllowedSubscribers.AuditingBusinessObjectInspectionAuditRecord);
 
-            eventBus.Subscribe<InspectionDeletionEvent, BusinessObjectInspectionAuditEventHandler>(
-                AllowedSubscribers.AuditingBusinessObjectInspectionAudit);
+            eventBus.Subscribe<InspectionEvent, BusinessObjectInspectionAuditRecordEventHandler>(
+                AllowedSubscribers.AuditingBusinessObjectInspectionAuditRecord);
+
+            eventBus.Subscribe<InspectionDeletionEvent, BusinessObjectInspectionAuditRecordEventHandler>(
+                AllowedSubscribers.AuditingBusinessObjectInspectionAuditRecord);
 
             return eventBus;
         }
@@ -71,18 +76,6 @@ namespace Super.Paula.Application
 
             eventBus.Subscribe<InspectorBusinessObjectEvent, NotificationEventHandler>(
                 AllowedSubscribers.CommunicationNotification);
-
-            return eventBus;
-        }
-
-        private static IEventBus ConfigureTransportInventory(this IEventBus eventBus)
-        {
-
-            eventBus.Subscribe<InspectionEvent, BusinessObjectEventHandler>(
-                AllowedSubscribers.InventoryBusinessObject);
-
-            eventBus.Subscribe<InspectionDeletionEvent, BusinessObjectEventHandler>(
-                AllowedSubscribers.InventoryBusinessObject);
 
             return eventBus;
         }

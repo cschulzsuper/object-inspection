@@ -3,7 +3,7 @@
 @inject ITranslator Translator
 @inject NavigationManager NavigationManager
 @inject IInspectionHandler InspectionHandler
-@inject IBusinessObjectHandler BusinessObjectHandler
+@inject IBusinessObjectInspectionHandler BusinessObjectInspectionHandler
 
 @attribute [Authorize("AuditingRead")]
 
@@ -13,7 +13,7 @@
 
 <div class="container-fluid">
 
-@if (_businessObject == null)
+@if (_inspections == null)
 {
     <p><em>Loading...</em></p>
 }
@@ -27,7 +27,7 @@ else
             </tr>
         </thead>
         <tbody>
-            @foreach (var inspection in _businessObject.Inspections.Where(x => x.Activated))
+            @foreach (var inspection in _inspections.Where(x => x.Activated))
             {
                 <tr>
                     <td>
@@ -79,7 +79,7 @@ else
 
 @code {
 
-    private BusinessObjectResponse? _businessObject;
+    private ICollection<BusinessObjectInspectionResponse>? _inspections;
 
     [Parameter]
     public string BusinessObject { get; set; } = null!;
@@ -95,7 +95,14 @@ else
 
     public async Task QueryAsync()
     {
-        _businessObject = await BusinessObjectHandler.GetAsync(BusinessObject);
+        _inspections = new List<BusinessObjectInspectionResponse>();
+
+        await foreach (var inspection in BusinessObjectInspectionHandler.GetAllForBusinessObject(BusinessObject))
+        {
+            _inspections.Add(inspection);
+        }
+
+        StateHasChanged();
     }
 
     private string ToggleCss(BusinessObjectInspectionResponse inspection, string btnClass)
@@ -129,15 +136,17 @@ else
                 ["failed"] = "satisfying"
             };
 
-            var request = new ChangeInspectionAuditRequest
+            var request = new BusinessObjectInspectionAuditRequest
             {
-                Result = nextResult[inspection.AuditResult]
+                Result = nextResult[inspection.AuditResult],
+                ETag = inspection.ETag
             };
 
-            await BusinessObjectHandler.ChangeInspectionAuditAsync(
-                _businessObject!.UniqueName, inspection.UniqueName, request);
+            await BusinessObjectInspectionHandler.ReplaceAuditAsync(
+                inspection.BusinessObject, inspection.Inspection, inspection.AuditDate, inspection.AuditTime, request);
 
             inspection.AuditResult = request.Result;
+            inspection.ETag = request.ETag;
         }
         else
         {
@@ -145,25 +154,26 @@ else
                     ? "satisfying"
                     : inspection.AuditResult;
 
-            var request = new CreateInspectionAuditRequest
+            var request = new BusinessObjectInspectionAuditRequest
             {
-                Inspection = inspection.UniqueName,
-                AuditDate = DateOnly.FromDateTime(utcNow).DayNumber,
-                AuditTime = (int)utcNow.TimeOfDay.TotalMilliseconds,
-                Result = nextResult
+                RequestDate = DateOnly.FromDateTime(utcNow).DayNumber,
+                RequestTime = (int)utcNow.TimeOfDay.TotalMilliseconds,
+                Result = nextResult,
+                ETag = inspection.ETag
             };
 
-            var response = await BusinessObjectHandler.CreateInspectionAuditAsync(
-                _businessObject!.UniqueName, request);
+            var response = await BusinessObjectInspectionHandler.CreateAuditAsync(
+                inspection.BusinessObject, inspection.Inspection, request);
 
-            inspection.AuditDate = request.AuditDate;
-            inspection.AuditTime = request.AuditTime;
+            inspection.AuditDate = request.RequestDate;
+            inspection.AuditTime = request.RequestTime;
             inspection.AuditResult = request.Result;
+            inspection.ETag = request.ETag;
 
             inspection.AuditSchedule.Appointments = response.Appointments;
         }
     }
 
     private void NavigateToAnnotationAsync(BusinessObjectInspectionResponse inspection)
-        => NavigationManager.NavigateTo($"/business-objects/{_businessObject!.UniqueName}/audit/{inspection.UniqueName}/{inspection.AuditDate}/{inspection.AuditTime}/annotation");
+        => NavigationManager.NavigateTo($"/business-objects/{inspection.BusinessObject}/inspections/{inspection.Inspection}/annotation");
 }

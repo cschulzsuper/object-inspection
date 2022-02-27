@@ -32,6 +32,10 @@ namespace Super.Paula.Data.Mappings.Communication
                 .HasDiscriminator<string>("Type");
 
             builder
+                .Property(x => x.ETag)
+                .IsETagConcurrency();
+
+            builder
                 .Property(x => x.Target)
                 .HasMaxLength(140)
                 .IsRequired();

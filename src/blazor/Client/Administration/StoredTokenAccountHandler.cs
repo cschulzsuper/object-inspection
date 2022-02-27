@@ -1,5 +1,6 @@
 ﻿using Super.Paula.Application.Administration;
 using Super.Paula.Application.Administration.Requests;
+using Super.Paula.Application.Administration.Responses;
 using Super.Paula.Authorization;
 using Super.Paula.Client.Storage;
 using System.Threading.Tasks;
@@ -22,7 +23,7 @@ namespace Super.Paula.Client.Administration
         public ValueTask RegisterOrganizationAsync(RegisterOrganizationRequest request)
             => _accountHandler.RegisterOrganizationAsync(request);
 
-        public ValueTask RegisterChiefInspectorAsync(string organization, RegisterChiefInspectorRequest request)
+        public ValueTask<RegisterChiefInspectorResponse> RegisterChiefInspectorAsync(string organization, RegisterChiefInspectorRequest request)
             => _accountHandler.RegisterChiefInspectorAsync(organization, request);
 
         public async ValueTask<string> SignInInspectorAsync(string organization, string inspector)

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Super.Paula.Application.Administration.Requests;
 using System;
@@ -27,32 +28,32 @@ namespace Super.Paula.Application.Administration
 
         private static Delegate Get =>
             [Authorize("Maintainance")]
-        (IIdentityHandler handler, string identity)
+            (IIdentityHandler handler, string identity)
                 => handler.GetAsync(identity);
 
         private static Delegate GetAll =>
             [Authorize("Maintainance")]
-        (IIdentityHandler handler)
+            (IIdentityHandler handler)
                 => handler.GetAll();
 
         private static Delegate Create =>
             [Authorize("Maintainance")]
-        (IIdentityHandler handler, IdentityRequest request)
+            (IIdentityHandler handler, IdentityRequest request)
                 => handler.CreateAsync(request);
 
         private static Delegate Replace =>
             [Authorize("Maintainance")]
-        (IIdentityHandler handler, string identity, IdentityRequest request)
+            (IIdentityHandler handler, string identity, IdentityRequest request)
                 => handler.ReplaceAsync(identity, request);
 
         private static Delegate Delete =>
             [Authorize("Maintainance")]
-        (IIdentityHandler handler, string identity)
-                => handler.DeleteAsync(identity);
+            (IIdentityHandler handler, string identity, [FromHeader(Name = "If-Match")] string etag)
+                => handler.DeleteAsync(identity, etag);
 
         private static Delegate Reset =>
             [Authorize("Maintainance")]
-        (IIdentityHandler handler, string identity)
-                => handler.ResetAsync(identity);
+            (IIdentityHandler handler, string identity, [FromHeader(Name = "If-Match")] string etag)
+                => handler.ResetAsync(identity, etag);
     }
 }

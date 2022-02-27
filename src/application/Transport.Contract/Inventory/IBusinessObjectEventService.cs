@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using Super.Paula.Application.Auditing;
+using System.Threading.Tasks;
 
 namespace Super.Paula.Application.Inventory
 {
@@ -6,8 +7,6 @@ namespace Super.Paula.Application.Inventory
     {
         ValueTask CreateBusinessObjectEventAsync(BusinessObject businessObject);
         ValueTask CreateBusinessObjectDeletionEventAsync(string businessObject);
-        ValueTask CreateBusinessObjectInspectionAuditEventAsync(BusinessObject businessObject, BusinessObjectInspection inspection);
-        ValueTask CreateBusinessObjectInspectionAuditScheduleEventAsync(BusinessObject businessObject);
         ValueTask CreateBusinessObjectInspectorEventAsync(BusinessObject businessObject, string newInspector, string oldInspector);
     }
 }

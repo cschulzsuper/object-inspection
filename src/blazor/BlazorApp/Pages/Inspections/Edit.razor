@@ -71,6 +71,7 @@ else
 
             _request = new InspectionRequest
                 {
+                    ETag = response.ETag,
                     Activated = response.Activated,
                     DisplayName = response.DisplayName,
                     Text = response.Text,

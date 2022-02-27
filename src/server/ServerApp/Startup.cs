@@ -83,7 +83,7 @@ namespace Super.Paula
             app.UseEndpointState();
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapPaulaServer();
+                endpoints.MapServer();
                 endpoints.MapGet("", () => "It works!");
             });
 

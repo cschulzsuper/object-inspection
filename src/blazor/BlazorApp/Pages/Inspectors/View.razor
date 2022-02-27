@@ -73,7 +73,7 @@ else
                                 @if (inspector.UniqueName != _inspector)
                                 {
                                     <AuthorizedButton Policy="ManagementFull" class="btn btn-success btn-block" title="@Translator["Deactivate"]" 
-                                        @onclick="() => DeactivateAsync(inspector.UniqueName)"><span class="oi oi-power-standby"/></AuthorizedButton>
+                                        @onclick="() => DeactivateAsync(inspector)"><span class="oi oi-power-standby"/></AuthorizedButton>
                                 }
                             </td>
                         } else {
@@ -81,7 +81,7 @@ else
                                 @if (inspector.UniqueName != _inspector)
                                 {
                                     <AuthorizedButton Policy="ManagementFull" class="btn btn-outline-danger btn-block" title="@Translator["Activate"]" 
-                                        @onclick="() => ActivateAsync(inspector.UniqueName)"><span class="oi oi-power-standby"/></AuthorizedButton>
+                                        @onclick="() => ActivateAsync(inspector)"><span class="oi oi-power-standby"/></AuthorizedButton>
                                 }
                             </td>
                         }
@@ -93,7 +93,7 @@ else
                             @if (inspector.UniqueName != _inspector)
                             {
                                 <AuthorizedButton Policy="ManagementFull" class="btn btn-outline-danger btn-block" title="@Translator["Delete"]" 
-                                    @onclick="() => DeleteAsync(inspector.UniqueName)"><span class="oi oi-trash"/></AuthorizedButton>
+                                    @onclick="() => DeleteAsync(inspector)"><span class="oi oi-trash"/></AuthorizedButton>
                             }
                         </td>
                     }
@@ -181,28 +181,34 @@ else
         await AccountHandler.RegisterChiefInspectorAsync(_organization.UniqueName ,new RegisterChiefInspectorRequest
         {
             Inspector = _organization.ChiefInspector,
-            Identity = identity
+            Identity = identity,
+            ETag = _organization.ETag
         });  
 
         NavigationManager.NavigateTo(NavigationManager.Uri,true);
     }
 
-    public async Task DeleteAsync(string inspector) 
+    public async Task DeleteAsync(InspectorResponse inspector) 
     {
-        await InspectorHandler.DeleteAsync(inspector);
-        _inspectors!.Remove(inspector);
+        await InspectorHandler.DeleteAsync(inspector.UniqueName, inspector.ETag);
+
+        _inspectors!.Remove(inspector.UniqueName);
     }
 
-    public async Task ActivateAsync(string inspector)
+    public async Task ActivateAsync(InspectorResponse inspector)
     {
-        await InspectorHandler.ActivateAsync(inspector);
-        _inspectors![inspector].Activated = true;
+        var response = await InspectorHandler.ActivateAsync(inspector.UniqueName, inspector.ETag);
+
+        _inspectors![inspector.UniqueName].Activated = true;
+        _inspectors![inspector.UniqueName].ETag = response.ETag;
     }
 
-    public async Task DeactivateAsync(string inspector)
+    public async Task DeactivateAsync(InspectorResponse inspector)
     {
-        await InspectorHandler.DeactivateAsync(inspector);
-        _inspectors![inspector].Activated = false;
+        var response = await InspectorHandler.DeactivateAsync(inspector.UniqueName, inspector.ETag);
+
+        _inspectors![inspector.UniqueName].Activated = false;
+        _inspectors![inspector.UniqueName].ETag = response.ETag;
     }
 
     public async Task ImpersonateAsync(string inspector)

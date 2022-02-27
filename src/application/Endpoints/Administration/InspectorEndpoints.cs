@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Super.Paula.Application.Administration.Requests;
 using System;
@@ -76,17 +77,17 @@ namespace Super.Paula.Application.Administration
 
         private static Delegate Delete =>
             [Authorize("ManagementFull")]
-            (IInspectorHandler handler, string inspector)
-                => handler.DeleteAsync(inspector);
+            (IInspectorHandler handler, string inspector, [FromHeader(Name = "If-Match")] string etag)
+                => handler.DeleteAsync(inspector, etag);
 
         private static Delegate Activate =>
             [Authorize("ManagementFull")]
-            (IInspectorHandler handler, string inspector)
-                => handler.ActivateAsync(inspector);
+            (IInspectorHandler handler, string inspector, [FromHeader(Name = "If-Match")] string etag)
+                => handler.ActivateAsync(inspector, etag);
 
         private static Delegate Deactivate =>
            [Authorize("ManagementFull")]
-           (IInspectorHandler handler, string inspector)
-                => handler.DeactivateAsync(inspector);
+           (IInspectorHandler handler, string inspector, [FromHeader(Name = "If-Match")] string etag)
+                => handler.DeactivateAsync(inspector, etag);
     }
 }

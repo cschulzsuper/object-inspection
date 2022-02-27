@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Super.Paula.Application.Administration.Events;
 using Super.Paula.Application.Administration.Responses;
+using Super.Paula.Application.Auditing.Events;
 using Super.Paula.Application.Inventory.Events;
 using Super.Paula.Application.Orchestration;
 using System;
@@ -121,48 +122,46 @@ namespace Super.Paula.Application.Administration
             var inspectorManager = context.Services.GetRequiredService<IInspectorManager>();
             var inspectorAnnouncer = context.Services.GetRequiredService<IInspectorAnnouncer>();
 
-            var inspector = inspectorManager
-                .GetQueryable()
-                .SingleOrDefault(x => x.UniqueName == @event.Inspector);
+            var inspectors = inspectorManager
+                .GetQueryableWhereBusinessObject(@event.BusinessObject)
+                .AsEnumerable();
 
-            if (inspector == null)
+            foreach (var inspector in inspectors)
             {
-                return;
-            }
+                var inspectorBusinessObject = inspector.BusinessObjects
+                    .Single(x => x.UniqueName == @event.BusinessObject);
 
-            var inspectorBusinessObject = inspector.BusinessObjects
-                .Single(x => x.UniqueName == @event.UniqueName);
+                if (@event.PlannedAuditDate == default)
+                {
+                    inspectorBusinessObject.AuditSchedulePlannedAuditDate = default;
+                    inspectorBusinessObject.AuditSchedulePlannedAuditTime = default;
+                    inspectorBusinessObject.AuditScheduleDelayed = false;
+                    inspectorBusinessObject.AuditSchedulePending = false;
 
-            if (@event.PlannedAuditDate == default)
-            {
-                inspectorBusinessObject.AuditSchedulePlannedAuditDate = default;
-                inspectorBusinessObject.AuditSchedulePlannedAuditTime = default;
-                inspectorBusinessObject.AuditScheduleDelayed = false;
-                inspectorBusinessObject.AuditSchedulePending = false;
+                    await inspectorManager.UpdateAsync(inspector);
+                }
+                else
+                {
+                    var plannedAuditTimestamp = (@event.PlannedAuditDate, @event.PlannedAuditTime).ToDateTime();
 
-                await inspectorManager.UpdateAsync(inspector);
-            }
-            else
-            {
-                var plannedAuditTimestamp = (@event.PlannedAuditDate, @event.PlannedAuditTime).ToDateTime();
+                    var oldDelayed = inspectorBusinessObject.AuditScheduleDelayed;
+                    var oldPending = inspectorBusinessObject.AuditSchedulePending;
 
-                var oldDelayed = inspectorBusinessObject.AuditScheduleDelayed;
-                var oldPending = inspectorBusinessObject.AuditSchedulePending;
+                    inspectorBusinessObject.AuditSchedulePlannedAuditDate = @event.PlannedAuditDate;
+                    inspectorBusinessObject.AuditSchedulePlannedAuditTime = @event.PlannedAuditTime;
 
-                inspectorBusinessObject.AuditSchedulePlannedAuditDate = @event.PlannedAuditDate;
-                inspectorBusinessObject.AuditSchedulePlannedAuditTime = @event.PlannedAuditTime;
+                    var now = DateTime.UtcNow;
+                    var threshold = @event.Threshold;
 
-                var now = DateTime.UtcNow;
-                var threshold = @event.Threshold;
+                    inspectorBusinessObject.AuditScheduleDelayed = now > plannedAuditTimestamp.AddMilliseconds(threshold);
+                    inspectorBusinessObject.AuditSchedulePending = now > plannedAuditTimestamp.AddMilliseconds(-threshold);
 
-                inspectorBusinessObject.AuditScheduleDelayed = now > plannedAuditTimestamp.AddMilliseconds(threshold);
-                inspectorBusinessObject.AuditSchedulePending = now > plannedAuditTimestamp.AddMilliseconds(-threshold);
+                    await inspectorManager.UpdateAsync(inspector);
+                    await inspectorAnnouncer.AnnounceBusinessObjectUpdateAsync(inspector.UniqueName, inspectorBusinessObject.ToResponse());
 
-                await inspectorManager.UpdateAsync(inspector);
-                await inspectorAnnouncer.AnnounceBusinessObjectUpdateAsync(@event.Inspector, inspectorBusinessObject.ToResponse());
-
-                var inspectorEventService = context.Services.GetRequiredService<IInspectorEventService>();
-                await inspectorEventService.CreateInspectorBusinessObjectEventAsync(inspector, inspectorBusinessObject, oldDelayed, oldPending);
+                    var inspectorEventService = context.Services.GetRequiredService<IInspectorEventService>();
+                    await inspectorEventService.CreateInspectorBusinessObjectEventAsync(inspector, inspectorBusinessObject, oldDelayed, oldPending);
+                }
             }
         }
 

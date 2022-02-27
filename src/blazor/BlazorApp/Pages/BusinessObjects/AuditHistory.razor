@@ -2,7 +2,7 @@
 
 @inject ITranslator Translator
 @inject NavigationManager NavigationManager
-@inject IBusinessObjectInspectionAuditHandler BusinessObjectInspectionAuditHandler
+@inject IBusinessObjectInspectionAuditRecordHandler BusinessObjectInspectionAuditRecordHandler
 
 @attribute [Authorize("ManagementRead")]
 
@@ -94,7 +94,7 @@
 
 @code {
 
-    private SearchBusinessObjectInspectionAuditResponse? _initialSearch;
+    private SearchBusinessObjectInspectionAuditRecordResponse? _initialSearch;
 
     private IList<string> _inspectionAuditAnnotationVisibile = new List<string>();
 
@@ -108,7 +108,7 @@
 
     private (int Year, int Week) _calenderWeek = (default, default);
 
-    private Virtualize<BusinessObjectInspectionAuditResponse>? Container { get; set; }
+    private Virtualize<BusinessObjectInspectionAuditRecordResponse>? Container { get; set; }
 
     [Parameter]
     public string BusinessObject { get; set; } = null!;
@@ -181,12 +181,12 @@
         this.StateHasChanged();            
     }
 
-    private async Task<IEnumerable<BusinessObjectInspectionAuditResponse>> QueryAsync(string searchQuery, int skip, int take, 
+    private async Task<IEnumerable<BusinessObjectInspectionAuditRecordResponse>> QueryAsync(string searchQuery, int skip, int take, 
         CancellationToken cancellationToken = default)
     {
-        var response = BusinessObjectInspectionAuditHandler.GetAll(searchQuery, skip, take, cancellationToken);
+        var response = BusinessObjectInspectionAuditRecordHandler.GetAll(searchQuery, skip, take, cancellationToken);
 
-        var result = new List<BusinessObjectInspectionAuditResponse>();
+        var result = new List<BusinessObjectInspectionAuditRecordResponse>();
 
         await foreach (var item in response)
         {
@@ -196,17 +196,17 @@
         return result;
     }
 
-    private async ValueTask<ItemsProviderResult<BusinessObjectInspectionAuditResponse>> GetItemsProviderResultAsync(ItemsProviderRequest request)
+    private async ValueTask<ItemsProviderResult<BusinessObjectInspectionAuditRecordResponse>> GetItemsProviderResultAsync(ItemsProviderRequest request)
     {
         if (request.StartIndex == 0 || _initialSearch == null)
         {
-            _initialSearch = await BusinessObjectInspectionAuditHandler.SearchAsync(SearchQuery());
+            _initialSearch = await BusinessObjectInspectionAuditRecordHandler.SearchAsync(SearchQuery());
             this.StateHasChanged(); 
         }
 
         var totalCount = _initialSearch.TotalCount;
 
-        var inspectionAudit = new List<BusinessObjectInspectionAuditResponse>();
+        var inspectionAudit = new List<BusinessObjectInspectionAuditRecordResponse>();
 
         if (request.StartIndex == 0)
         {
@@ -226,7 +226,7 @@
                     request.CancellationToken));
         }
 
-        return new ItemsProviderResult<BusinessObjectInspectionAuditResponse>(inspectionAudit, totalCount);
+        return new ItemsProviderResult<BusinessObjectInspectionAuditRecordResponse>(inspectionAudit, totalCount);
     }
 
     private async Task ShowSatisfyingChangedAsync(ChangeEventArgs e)
@@ -255,13 +255,13 @@
         }
     }
 
-    private bool ShowAnnotation(BusinessObjectInspectionAuditResponse audit)
+    private bool ShowAnnotation(BusinessObjectInspectionAuditRecordResponse audit)
     {
         string key = $"{audit.BusinessObject}/{audit.Inspection}/{audit.AuditDate}/{audit.AuditTime}";
         return _inspectionAuditAnnotationVisibile.Contains(key) && !string.IsNullOrWhiteSpace(audit.Annotation);
     }
 
-    private void ToggleAnnotationVisibility(BusinessObjectInspectionAuditResponse audit)
+    private void ToggleAnnotationVisibility(BusinessObjectInspectionAuditRecordResponse audit)
     {
         string key = $"{audit.BusinessObject}/{audit.Inspection}/{audit.AuditDate}/{audit.AuditTime}";
 

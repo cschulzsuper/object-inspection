@@ -103,13 +103,15 @@ namespace Super.Paula.Data
             services.AddScoped(RepositoryFactory<Organization, PaulaAdministrationContext>());
 
             services.AddScoped(RepositoryFactory<BusinessObject, PaulaApplicationContext>());
-            services.AddScoped(RepositoryFactory<BusinessObjectInspectionAudit, PaulaApplicationContext>());
+            services.AddScoped(RepositoryFactory<BusinessObjectInspection, PaulaApplicationContext>());
+            services.AddScoped(RepositoryFactory<BusinessObjectInspectionAuditRecord, PaulaApplicationContext>());
             services.AddScoped(RepositoryFactory<Inspection, PaulaApplicationContext>());
             services.AddScoped(RepositoryFactory<Inspector, PaulaApplicationContext>());
             services.AddScoped(RepositoryFactory<Notification, PaulaApplicationContext>());
 
             services.AddScoped<IPartitionKeyValueGenerator<BusinessObject>, BusinessObjectPartitionKeyValueGenerator>();
-            services.AddScoped<IPartitionKeyValueGenerator<BusinessObjectInspectionAudit>, BusinessObjectInspectionAuditPartitionKeyValueGenerator>();
+            services.AddScoped<IPartitionKeyValueGenerator<BusinessObjectInspection>, BusinessObjectInspectionPartitionKeyValueGenerator>();
+            services.AddScoped<IPartitionKeyValueGenerator<BusinessObjectInspectionAuditRecord>, BusinessObjectInspectionAuditRecordPartitionKeyValueGenerator>();
             services.AddScoped<IPartitionKeyValueGenerator<Identity>, IdentityPartitionKeyValueGenerator>();
             services.AddScoped<IPartitionKeyValueGenerator<Inspection>, InspectionPartitionKeyValueGenerator>();
             services.AddScoped<IPartitionKeyValueGenerator<Inspector>, InspectorPartitionKeyValueGenerator>();

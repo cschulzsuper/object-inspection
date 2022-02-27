@@ -5,6 +5,8 @@ namespace Super.Paula.Application.Administration.Requests
 {
     public class IdentityRequest
     {
+        public string ETag { get; set; } = string.Empty;
+
         [Required]
         [KebabCase]
         [StringLength(140)]

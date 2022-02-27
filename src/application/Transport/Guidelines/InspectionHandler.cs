@@ -27,7 +27,8 @@ namespace Super.Paula.Application.Guidelines
                     Activated = entity.Activated,
                     DisplayName = entity.DisplayName,
                     Text = entity.Text,
-                    UniqueName = entity.UniqueName
+                    UniqueName = entity.UniqueName,
+                    ETag = entity.ETag
                 }));
 
         public async ValueTask<InspectionResponse> GetAsync(string inspection)
@@ -39,7 +40,8 @@ namespace Super.Paula.Application.Guidelines
                 Activated = entity.Activated,
                 DisplayName = entity.DisplayName,
                 Text = entity.Text,
-                UniqueName = entity.UniqueName
+                UniqueName = entity.UniqueName,
+                ETag = entity.ETag
             };
         }
 
@@ -61,7 +63,8 @@ namespace Super.Paula.Application.Guidelines
                 Activated = entity.Activated,
                 DisplayName = entity.DisplayName,
                 Text = entity.Text,
-                UniqueName = entity.UniqueName
+                UniqueName = entity.UniqueName,
+                ETag = entity.ETag
             };
         }
 
@@ -80,21 +83,24 @@ namespace Super.Paula.Application.Guidelines
                 entity.DisplayName = request.DisplayName;
                 entity.Text = request.Text;
                 entity.UniqueName = request.UniqueName;
+                entity.ETag = request.ETag;
 
                 await _inspectionManager.UpdateAsync(entity);
                 await _inspectionEventService.CreateInspectionEventAsync(entity);
             }
         }
 
-        public async ValueTask DeleteAsync(string inspection)
+        public async ValueTask DeleteAsync(string inspection, string etag)
         {
             var entity = await _inspectionManager.GetAsync(inspection);
+
+            entity.ETag = etag;
 
             await _inspectionManager.DeleteAsync(entity);
             await _inspectionEventService.CreateInspectionDeletionEventAsync(entity.UniqueName);
         }
 
-        public async ValueTask ActivateAsync(string inspection)
+        public async ValueTask<ActivateInspectionResponse> ActivateAsync(string inspection, string etag)
         {
             var entity = await _inspectionManager.GetAsync(inspection);
 
@@ -103,13 +109,19 @@ namespace Super.Paula.Application.Guidelines
             if (required)
             {
                 entity.Activated = true;
+                entity.ETag = etag;
 
                 await _inspectionManager.UpdateAsync(entity);
                 await _inspectionEventService.CreateInspectionEventAsync(entity);
             }
+
+            return new ActivateInspectionResponse
+            {
+                ETag = entity.ETag
+            };
         }
 
-        public async ValueTask DeactivateAsync(string inspection)
+        public async ValueTask<DeactivateInspectionResponse> DeactivateAsync(string inspection, string etag)
         {
             var entity = await _inspectionManager.GetAsync(inspection);
 
@@ -118,10 +130,17 @@ namespace Super.Paula.Application.Guidelines
             if (required)
             {
                 entity.Activated = false;
+                entity.ETag = etag;
 
                 await _inspectionManager.UpdateAsync(entity);
                 await _inspectionEventService.CreateInspectionEventAsync(entity);
             }
+
+            return new DeactivateInspectionResponse
+            {
+                ETag = entity.ETag
+            };
+
         }
     }
 }

@@ -36,7 +36,8 @@ namespace Super.Paula.Application
 
         private static IServiceCollection AddServerManagementAuditing(this IServiceCollection services)
         {
-            services.AddScoped<IBusinessObjectInspectionAuditManager, BusinessObjectInspectionAuditManager>();
+            services.AddScoped<IBusinessObjectInspectionManager, BusinessObjectInspectionManager>();
+            services.AddScoped<IBusinessObjectInspectionAuditRecordManager, BusinessObjectInspectionAuditRecordManager>();
 
             return services;
         }
