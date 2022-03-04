@@ -7,7 +7,7 @@
 @attribute [Authorize("ManagementRead")]
 
 <div class="container-fluid">
-    <h1>@Translator["Inspection audits"]</h1>
+    <h1>@Translator[$"Inspection audits"]</h1>
 </div>
 
 <div class="container-fluid d-flex align-items-center mt-2 mb-2">
@@ -16,32 +16,32 @@
     </div>
     <div class="custom-control custom-switch mr-4 d-none d-xl-block">
         <input type="checkbox" class="custom-control-input" checked="@_showSatisfying" id="showSatisfying" @onchange="ShowSatisfyingChangedAsync">
-        <label class="custom-control-label" for="showSatisfying">@Translator["Show satisfying"]</label>
+        <label class="custom-control-label" for="showSatisfying">@Translator[$"Show satisfying"]</label>
     </div>
     <div class="custom-control custom-switch mr-4 d-none d-xl-block">
         <input type="checkbox" class="custom-control-input" checked="@_showInsufficient" id="showInsufficient" @onchange="ShowInsufficientChangedAsync">
-        <label class="custom-control-label" for="showInsufficient">@Translator["Show insufficient"]</label>
+        <label class="custom-control-label" for="showInsufficient">@Translator[$"Show insufficient"]</label>
     </div>
     <div class="custom-control custom-switch mr-4 d-none d-xl-block">
         <input type="checkbox" class="custom-control-input" checked="@_showFailed" id="showFailed" @onchange="ShowFailedChangedAsync">
-        <label class="custom-control-label" for="showFailed">@Translator["Show failed"]</label>
+        <label class="custom-control-label" for="showFailed">@Translator[$"Show failed"]</label>
     </div>
 </div>  
 
 <div class="container-fluid">
 
 <hr />
-<CalenderWeekPager NextText="@Translator["Next"]" PreviousText="@Translator["Previous"]" CalenderWeek="@_calenderWeek" CalenderWeekChanged="@OnCalenderWeekChanged"/>
+<CalenderWeekPager NextText="@Translator[$"Next"]" PreviousText="@Translator[$"Previous"]" CalenderWeek="@_calenderWeek" CalenderWeekChanged="@OnCalenderWeekChanged"/>
 
 <table class="table table-sm">
     @if (_initialSearch != null && _initialSearch.TopResults.Count > 0)
     {
         <thead class="table-light table-borderless">
             <tr>
-                <th class="col-2 d-none d-lg-table-cell">@Translator["Audit time"]</th>
-                <th class="col-12 col-lg-8">@Translator["Inspection"]</th>
-                <th class="col-2 d-none d-lg-table-cell">@Translator["Inspector"]</th>
-                <th>@Translator["Result"]</th>
+                <th class="col-2 d-none d-lg-table-cell">@Translator[$"Audit time"]</th>
+                <th class="col-12 col-lg-8">@Translator[$"Inspection"]</th>
+                <th class="col-2 d-none d-lg-table-cell">@Translator[$"Inspector"]</th>
+                <th>@Translator[$"Result"]</th>
             </tr>
         </thead>
     }
@@ -67,15 +67,15 @@
                 @switch(inspectionAudit.Result) 
                 {
                     case "satisfying":
-                        <button class="btn btn-success btn-block" title="@Translator["Satisfying"]" 
+                        <button class="btn btn-success btn-block" title="@Translator[$"Satisfying"]" 
                                 disabled><span class="oi oi-star"/></button>
                             break;
                     case "insufficient": 
-                        <button class="btn btn-warning btn-block" title="@Translator["Insufficient"]" 
+                        <button class="btn btn-warning btn-block" title="@Translator[$"Insufficient"]" 
                                 disabled><span class="oi oi-warning"/></button>
                         break;
                     case "failed": 
-                        <button class="btn btn-danger btn-block" title="@Translator["Failed"]" 
+                        <button class="btn btn-danger btn-block" title="@Translator[$"Failed"]" 
                                 disabled><span class="oi oi-x"/></button>
                         break;
                 } 
@@ -87,7 +87,7 @@
         
 @if (_initialSearch != null && _initialSearch.TopResults.Count > 0)
 {
-    <CalenderWeekPager NextText="@Translator["Next"]" PreviousText="@Translator["Previous"]" CalenderWeek="@_calenderWeek" CalenderWeekChanged="@OnCalenderWeekChanged"/>
+    <CalenderWeekPager NextText="@Translator[$"Next"]" PreviousText="@Translator[$"Previous"]" CalenderWeek="@_calenderWeek" CalenderWeekChanged="@OnCalenderWeekChanged"/>
 }
 
 </div>

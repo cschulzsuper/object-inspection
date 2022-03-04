@@ -27,17 +27,17 @@ namespace Super.Paula.Application.Communication
         }
 
         private static Delegate Get =>
-            [Authorize("AuditingRead")]
+            [Authorize("AuditingLimited")]
             (INotificationHandler handler, string inspector, int date, int time)
                 => handler.GetAsync(inspector, date, time);
 
         private static Delegate GetAll =>
-            [Authorize("AuditingRead")]
+            [Authorize("AuditingLimited")]
             (INotificationHandler handler)
                 => handler.GetAll();
 
         private static Delegate GetAllForInspector =>
-            [Authorize("AuditingRead")]
+            [Authorize("AuditingLimited")]
             (INotificationHandler handler, string inspector)
                 => handler.GetAllForInspector(inspector);
 

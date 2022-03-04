@@ -6,25 +6,25 @@
 @inject IBusinessObjectHandler BusinessObjectHandler
 @inject IBusinessObjectInspectionHandler BusinessObjectInspectionHandler
 
-@attribute [Authorize("AuditingRead")]
+@attribute [Authorize("AuditingLimited")]
 
 <div class="container-fluid">
-    <h1>@Translator["Inspections"]</h1>
+    <h1>@Translator[$"Inspections"]</h1>
 </div>
 
 <AuthorizeView Policy="ManagementRead">
     <Authorized>
         <div class="container-fluid m-2">
             <button id="assignmentMode" class="btn @(_mode == Mode.AssignmentMode ? "btn-primary" : "btn-outline-secondary")"
-                    title="@Translator["Assigment mode"]"
+                    title="@Translator[$"Assigment mode"]"
                     @onclick="ToggleAssignmentMode"><span class="oi oi-list"/></button>
 
             <button id="dropMode" class="d-lg-none btn @(_mode == Mode.DropMode ? "btn-primary" : "btn-outline-secondary")"
-                    title="@Translator["Drop mode"]"
+                    title="@Translator[$"Drop mode"]"
                     @onclick="ToggleDropMode"><span class="oi oi-media-skip-forward"/></button>
 
             <button id="scheduleMode" class=" d-lg-none btn @(_mode == Mode.ScheduleMode ? "btn-primary" : "btn-outline-secondary")" 
-                    title="@Translator["Schedule mode"]"
+                    title="@Translator[$"Schedule mode"]"
                     @onclick="ToggleScheduleMode"><span class="oi oi-clock"/></button>
         </div>
     </Authorized>
@@ -41,8 +41,8 @@ else
     <table class="table table-sm">
         <thead class="table-light table-borderless">
             <tr>
-                <th class="col-2 d-none d-lg-table-cell">@Translator["Unique name"]</th>
-                <th class="col-12 col-lg-10">@Translator["Display name"]</th>
+                <th class="col-2 d-none d-lg-table-cell">@Translator[$"Unique name"]</th>
+                <th class="col-12 col-lg-10">@Translator[$"Display name"]</th>
 
                 <AuthorizeView Policy="ManagementRead">
                     <Authorized>
@@ -69,32 +69,32 @@ else
                                 @if (_inspectionBusinessObjects!.ContainsKey(inspection.Inspection))
                                 {
                                     <AuthorizedButton Policy="ManagementFull" 
-                                            id="@($"unassign{inspection.Inspection}")"
+                                            id="@($"unassign-{inspection.Inspection}")"
                                             class="btn btn-primary btn-block"
-                                            title="@Translator["Unassign"]"
+                                            title="@Translator[$"Unassign"]"
                                             @onclick="() => UnassignAsync(inspection)"><span class="oi oi-minus"/></AuthorizedButton>
                                 }
                                 else
                                 {
                                     <AuthorizedButton Policy="ManagementFull" 
-                                            id="@($"assign{inspection.Inspection}")"
+                                            id="@($"assign-{inspection.Inspection}")"
                                             class="btn btn-primary btn-block"
-                                            title="@Translator["Assign"]"
+                                            title="@Translator[$"Assign"]"
                                             @onclick="() => AssignAsync(inspection)"><span class="oi oi-plus"/></AuthorizedButton>
                                 }
                             </td>
                             <td class=@(_mode == Mode.ScheduleMode ? "" : "d-none d-lg-table-cell")>
                                 <button 
-                                        id="@($"schedule{inspection.Inspection}")"
+                                        id="@($"schedule-{inspection.Inspection}")"
                                         class="btn btn-primary btn-block"
-                                        title="@Translator["Schedule"]"
+                                        title="@Translator[$"Schedule"]"
                                         @onclick="() => Schedule(inspection)"><span class="oi oi-clock"/></button>
                             </td>
                             <td class=@(_mode == Mode.DropMode ? "" : "d-none d-lg-table-cell")>
                                 <AuthorizedButton Policy="ManagementFull" 
-                                        id="@($"drop{inspection.Inspection}")"
+                                        id="@($"drop-{inspection.Inspection}")"
                                         class="btn btn-primary btn-block"
-                                        title="@Translator["Drop"]"
+                                        title="@Translator[$"Drop"]"
                                         @onclick="() => DropAsync(inspection)"><span class="oi oi-media-skip-forward"></span></AuthorizedButton>
                             </td>
                         </Authorized>

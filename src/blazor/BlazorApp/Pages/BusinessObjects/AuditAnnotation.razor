@@ -4,10 +4,10 @@
 @inject NavigationManager NavigationManager
 @inject IBusinessObjectInspectionHandler BusinessObjectInspectionHandler
 
-@attribute [Authorize("AuditingRead")]
+@attribute [Authorize("AuditingLimited")]
 
 <div class="container-fluid">
-    <h1>@Translator["Annotate audit"]</h1>
+    <h1>@Translator[$"Annotate audit"]</h1>
 </div>
 
 @if (_inspection == null)
@@ -21,16 +21,16 @@ else
 
         <div class="container-fluid">
             <div class="form-group">
-                <label>@Translator["Display name"]</label>
+                <label>@Translator[$"Display name"]</label>
                 <InputText class="form-control" id="uniqueName" @bind-Value="_inspection.InspectionDisplayName" readonly/>
             </div>
             <div class="form-group">
-                <label>@Translator["Audit result"]</label>
+                <label>@Translator[$"Audit result"]</label>
                 <InputText class="form-control" id="uniqueName" @bind-Value="_inspection.AuditResult" readonly/>
             </div>
             <div class="form-group">
-                <label>@Translator["Annotation"]</label>
-                <InputTextArea class="form-control" id="text" rows="6" @bind-Value="_inspection.AuditAnnotation" />
+                <label>@Translator[$"Annotation"]</label>
+                <InputTextArea class="form-control" id="auditAnnotation" rows="6" @bind-Value="_inspection.AuditAnnotation" />
             </div>
         </div>
 
@@ -45,7 +45,10 @@ else
         else 
         {
             <div class="container-fluid">
-                <AuthorizedButton Policy="AuditingFull" type="submit" class="btn btn-primary">@Translator["Submit"]</AuthorizedButton>
+                <AuthorizedButton Policy="AuditingLimited" 
+                    id="submit"
+                    type="submit"
+                    class="btn btn-primary">@Translator[$"Submit"]</AuthorizedButton>
             </div>
         }
 

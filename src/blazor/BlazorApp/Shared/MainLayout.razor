@@ -1,5 +1,4 @@
-﻿
-@inherits LayoutComponentBase
+﻿@inherits LayoutComponentBase
 
 @inject IAccountHandler AccountHandler
 @inject IAuthenticationHandler AuthenticationHandler
@@ -7,6 +6,7 @@
 @inject AppEnvironment AppEnvironment
 @inject ITranslator Translator
 @inject ILocalStorage LocalStorage
+@inject BuildInfo BuildInfo
 
 <div class="page">
     <div class="sidebar text-nowrap">
@@ -16,7 +16,7 @@
         <div class="top-row px-4">
             <AuthorizeView Policy="Impersonation">
                 <Authorized>
-                    <button type="button" class="nav-link btn btn-secondary ml-3" title="@Translator["Stop impersonation"]"
+                    <button type="button" class="nav-link btn btn-secondary ml-3" title="@Translator[$"Stop impersonation"]"
                         @onclick="() => StopImpersonationAsync()">
                         <span class="oi oi-power-standby" aria-hidden="true"/></button>
                 </Authorized>
@@ -35,7 +35,7 @@
                     }
 
                     <NavLink class="nav-link" Match="NavLinkMatch.All" href="change-secret">
-                        <span class="oi oi-person" aria-hidden="true"/>@Translator["Change Password"]</NavLink>
+                        <span class="oi oi-person" aria-hidden="true"/>@Translator[$"Change Password"]</NavLink>
 
                     <SignOutButton class="nav-link btn" id="signOut"/>
 
@@ -65,25 +65,43 @@
                                 (requestException.StatusCode == HttpStatusCode.Unauthorized || 
                                  requestException.StatusCode == HttpStatusCode.Forbidden))
                             {
-                                 <a class="alert-link" href="javascript:void(0);" @onclick=RecoverAndGoHome>@Translator["Go to Homepage"]</a>                                
+                                 <a class="alert-link" href="javascript:void(0);" @onclick=RecoverAndGoHome>@Translator[$"Go to Homepage"]</a>                                
                                  <span> - </span>
-                                 <a class="alert-link" href="javascript:void(0);" @onclick=RecoverAndSignOutAsync>@Translator["Sign Out"]</a>                                
+                                 <a class="alert-link" href="javascript:void(0);" @onclick=RecoverAndSignOutAsync>@Translator[$"Sign Out"]</a>                                
                                  <span> - </span>
                             }
-                            <a class="alert-link" href="javascript:void(0);" @onclick=Recover>@Translator["Try Again"]</a>
+                            <a class="alert-link" href="javascript:void(0);" @onclick=Recover>@Translator[$"Try Again"]</a>
                         </p>
                     </div>
                 </ErrorContent>
             </ErrorBoundary>
         </article>
     </main>
+    <footer class="footer fixed-bottom">
+        <div class="copyright">&copy; Copyright @DateTime.Now.Year 
+             <a href="https://github.com/cschulzsuper">Christian Schulz</a>. 
+             @if (_buildString != null) 
+             {
+                <span class="d-none d-md-inline-block">@_buildString.Value</span>
+             }
+        </div>
+    </footer>
 </div>
 
 @code {
 
     private string _authorizationFilter = string.Empty;
 
+    private MarkupString? _buildString = null;
+
     private ErrorBoundary? errorBoundaryArticle = null!;
+
+    protected override void OnInitialized()
+    {
+        GenerateBuildString();
+
+        base.OnInitialized();
+    }
 
     private void Recover()
     {
@@ -134,5 +152,51 @@
             .ToArray();
 
         await LocalStorage.SetItemAsync("authorization-filter", authorizationFilter);
+    }
+
+    private void GenerateBuildString()
+    {
+        if (_buildString != null )
+        {
+            return;
+        }
+
+        var makeRuntimeString =
+           !string.IsNullOrWhiteSpace(BuildInfo.Runtime);
+
+        var makeCommitString = makeRuntimeString &&
+            !string.IsNullOrWhiteSpace(BuildInfo.Branch) &&
+            !string.IsNullOrWhiteSpace(BuildInfo.Hash) &&
+            !string.IsNullOrWhiteSpace(BuildInfo.ShortHash);
+
+        var makeBuildString = makeCommitString &&
+            !string.IsNullOrWhiteSpace(BuildInfo.Build);
+
+        if(makeBuildString)
+        {
+            _buildString = Translator.Markdown(
+                $@"Powered by {BuildInfo.Runtime}, 
+deployed from [{BuildInfo.Branch}](https://github.com/cschulzsuper/paula/tree/{BuildInfo.Branch}) 
+commit [{BuildInfo.ShortHash}](https://github.com/cschulzsuper/paula/commit/{BuildInfo.Hash}) 
+via build [{BuildInfo.Build}](https://github.com/cschulzsuper/paula/actions/runs/{BuildInfo.Build}).");
+
+            return;
+        }
+
+        if(makeCommitString)
+        {
+            _buildString = Translator.Markdown(
+                $@"Powered by {BuildInfo.Runtime} and 
+deployed from [{BuildInfo.Branch}](https://github.com/cschulzsuper/paula/tree/{BuildInfo.Branch}) 
+commit [{BuildInfo.ShortHash}](https://github.com/cschulzsuper/paula/commit/{BuildInfo.Hash}).");
+
+            return;
+        }
+
+        if(makeCommitString)
+        {
+            _buildString = Translator.Markdown($"Powered by {BuildInfo.Runtime}.");
+            return;
+        }
     }
 }

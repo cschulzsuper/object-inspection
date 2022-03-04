@@ -7,7 +7,7 @@
 @attribute [Authorize("ManagementRead")]
 
 <div class="container-fluid">
-    <h1>@Translator["Create inspection"]</h1>
+    <h1>@Translator[$"Create inspection"]</h1>
 </div>
 
 <EditForm Model="@_request" OnValidSubmit="@OnValidSubmitAsync">
@@ -15,20 +15,20 @@
 
     <div class="container-fluid">
         <div class="form-group">
-            <label>@Translator["Display name"]</label>
+            <label>@Translator[$"Display name"]</label>
             <InputText class="form-control" id="inspectionDisplayName" @bind-Value="_request.DisplayName" />
         </div>
         <div class="form-group">
-            <label>@Translator["Unique name"]</label>
+            <label>@Translator[$"Unique name"]</label>
             <InputText class="form-control" id="inspectionUniqueName" @bind-Value="_request.UniqueName" />
         </div>
         <div class="form-group">
-            <label>@Translator["Text"]</label>
+            <label>@Translator[$"Text"]</label>
             <InputTextArea class="form-control" id="inspectionText" rows="6" @bind-Value="_request.Text" />
         </div>
         <div class="form-check">
             <InputCheckbox class="form-check-input" id="inspectionActivated" @bind-Value="_request.Activated"/>
-            <label class="form-check-label" for="inspectionActivated">@Translator["Activated"]</label>     
+            <label class="form-check-label" for="inspectionActivated">@Translator[$"Activated"]</label>     
         </div>
     </div>
 
@@ -46,7 +46,7 @@
             <AuthorizedButton Policy="ManagementFull" 
                 id="submit"
                 type="submit" 
-                class="btn btn-primary">@Translator["Submit"]</AuthorizedButton>
+                class="btn btn-primary">@Translator[$"Submit"]</AuthorizedButton>
         </div>
     }
 

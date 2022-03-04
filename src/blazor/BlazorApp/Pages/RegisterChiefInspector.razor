@@ -7,7 +7,7 @@
 @attribute [Authorize]
 
 <div class="container-fluid">
-    <h1>@Translator["Inspector sign up"]</h1>
+    <h1>@Translator[$"Inspector sign up"]</h1>
 </div>
 
 <EditForm Model="@_model" OnValidSubmit="@OnValidSubmitAsync">
@@ -15,11 +15,11 @@
 
     <div class="container-fluid">
         <div class="form-group">
-            <label>@Translator["Inspector"]</label>
+            <label>@Translator[$"Inspector"]</label>
             <InputText class="form-control" id="inspector" @bind-Value="_model.Inspector" />
         </div>
         <div class="form-group">
-            <label>@Translator["Identity"]</label>
+            <label>@Translator[$"Identity"]</label>
             <InputText class="form-control" id="identity" @bind-Value="_model.Identity" />
         </div>
     </div>
@@ -38,7 +38,7 @@
             <button 
                 id="submit"
                 type="submit"
-                class="btn btn-primary">@Translator["Submit"]</button>
+                class="btn btn-primary">@Translator[$"Submit"]</button>
         </div>
     }
 

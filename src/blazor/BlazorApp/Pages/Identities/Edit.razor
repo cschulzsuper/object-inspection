@@ -7,7 +7,7 @@
 @attribute [Authorize("Maintainance")]
 
 <div class="container-fluid">
-    <h1>@Translator["Edit identity"]</h1>
+    <h1>@Translator[$"Edit identity"]</h1>
 </div>
 
 @if (_request == null)
@@ -21,11 +21,11 @@ else
 
         <div class="container-fluid">
             <div class="form-group">
-                <label>@Translator["Unique name"]</label>
+                <label>@Translator[$"Unique name"]</label>
                 <InputText class="form-control" id="uniqueName" @bind-Value="_request.UniqueName" readonly/>
             </div>
             <div class="form-group">
-                <label>@Translator["Mail address"]</label>
+                <label>@Translator[$"Mail address"]</label>
                 <InputText class="form-control" id="displayName" @bind-Value="_request.MailAddress" />
             </div>
         </div>
@@ -41,7 +41,7 @@ else
         else 
         {
             <div class="container-fluid">
-                <button type="submit" class="btn btn-primary">@Translator["Submit"]</button>
+                <button type="submit" class="btn btn-primary">@Translator[$"Submit"]</button>
             </div>
         }
 

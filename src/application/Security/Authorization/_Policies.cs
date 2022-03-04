@@ -47,7 +47,7 @@ namespace Super.Paula.Authorization
                 .AddRequirements(new AnyAuthorizationClaimRequirement("Chief", "Observer"))
                 .Build();
 
-        public static AuthorizationPolicy AuditingReadPolicy =>
+        public static AuthorizationPolicy AuditingLimitedPolicy =>
             new AuthorizationPolicyBuilder()
                 .AddRequirements(new AnyAuthorizationClaimRequirement("Inspector", "Observer"))
                 .Build();

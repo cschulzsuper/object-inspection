@@ -7,7 +7,7 @@
 @attribute [Authorize("ManagementRead")]
 
 <div class="container-fluid">
-    <h1>@Translator["Create business object"]</h1>
+    <h1>@Translator[$"Create business object"]</h1>
 </div>
 
 <EditForm Model="@_request" OnValidSubmit="@OnValidSubmitAsync">
@@ -15,19 +15,19 @@
 
     <div class="container-fluid">
         <div class="form-group">
-            <label>@Translator["Display name"]</label>
+            <label>@Translator[$"Display name"]</label>
             <InputText 
                 class="form-control" 
                 id="businessObjectDisplayName" @bind-Value="_request.DisplayName" />
         </div>
         <div class="form-group">
-            <label>@Translator["Unique name"]</label>
+            <label>@Translator[$"Unique name"]</label>
             <InputText 
                 class="form-control" 
                 id="businessObjectUniqueName" @bind-Value="_request.UniqueName" />
         </div>
         <div class="form-group">
-            <label>@Translator["Inspector"]</label>
+            <label>@Translator[$"Inspector"]</label>
             <InputText 
                 class="form-control" 
                 id="businessObjectInspector" @bind-Value="_request.Inspector" />
@@ -48,7 +48,7 @@
             <AuthorizedButton Policy="ManagementFull" 
                 id="submit"
                 type="submit"
-                class="btn btn-primary">@Translator["Submit"]</AuthorizedButton>
+                class="btn btn-primary">@Translator[$"Submit"]</AuthorizedButton>
         </div>
     }
 

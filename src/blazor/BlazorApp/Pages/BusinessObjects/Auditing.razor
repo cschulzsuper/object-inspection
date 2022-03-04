@@ -6,10 +6,10 @@
 
 @implements IAsyncDisposable
 
-@attribute [Authorize("AuditingRead")]
+@attribute [Authorize("AuditingLimited")]
 
 <div class="container-fluid">
-    <h1>@Translator["Auditing"]</h1>
+    <h1>@Translator[$"Auditing"]</h1>
 </div>
 
 <div class="container-fluid">
@@ -23,9 +23,9 @@ else
     <table class="table table-sm">
         <thead class="table-light table-borderless">
             <tr>
-                <th class="col-12 col-lg-4">@Translator["Business object"]</th>
-                <th class="col-4 d-none d-lg-table-cell">@Translator["Planned audit time"]</th>
-                <th class="col-4 d-none d-lg-table-cell">@Translator["Unique name"]</th>
+                <th class="col-12 col-lg-4">@Translator[$"Business object"]</th>
+                <th class="col-4 d-none d-lg-table-cell">@Translator[$"Planned audit time"]</th>
+                <th class="col-4 d-none d-lg-table-cell">@Translator[$"Unique name"]</th>
                 <th></th>
             </tr>
         </thead>
@@ -37,7 +37,7 @@ else
                     <td class="d-none d-lg-table-cell">@PlannedAuditTime(businessObject)</td>
                     <td class="d-none d-lg-table-cell">@businessObject.UniqueName</td>
                     <td>
-                        <button class="btn btn-outline-primary btn-block" title="@Translator["Audit"]"
+                        <button class="btn btn-outline-primary btn-block" title="@Translator[$"Audit"]"
                                 @onclick="() => NavigateToInspectionAudit(businessObject.UniqueName)"><span class="oi oi-media-play"/></button>
                     </td>
                 </tr>

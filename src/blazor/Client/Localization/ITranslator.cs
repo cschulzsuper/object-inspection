@@ -1,7 +1,12 @@
-﻿namespace Super.Paula.Client.Localization
+﻿using Microsoft.AspNetCore.Components;
+using System;
+
+namespace Super.Paula.Client.Localization
 {
     public interface ITranslator
     {
-        string this[string value] { get; }
+        string this[FormattableString value] { get; }
+
+        MarkupString Markdown(FormattableString value);
     }
 }

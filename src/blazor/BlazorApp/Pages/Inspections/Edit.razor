@@ -7,7 +7,7 @@
 @attribute [Authorize("ManagementRead")]
 
 <div class="container-fluid">
-    <h1>@Translator["Edit inspection"]</h1>
+    <h1>@Translator[$"Edit inspection"]</h1>
 </div>
 
 @if (_request == null)
@@ -21,20 +21,20 @@ else
 
         <div class="container-fluid">
             <div class="form-group">
-                <label>@Translator["Unique name"]</label>
+                <label>@Translator[$"Unique name"]</label>
                 <InputText class="form-control" id="uniqueName" @bind-Value="_request.UniqueName" readonly/>
             </div>
             <div class="form-group">
-                <label>@Translator["Display name"]</label>
+                <label>@Translator[$"Display name"]</label>
                 <InputText class="form-control" id="displayName" @bind-Value="_request.DisplayName" />
             </div>
             <div class="form-group">
-                <label>@Translator["Text"]</label>
+                <label>@Translator[$"Text"]</label>
                 <InputTextArea class="form-control" id="text" rows="6" @bind-Value="_request.Text" />
             </div>
             <div class="form-check">
                 <InputCheckbox class="form-check-input" id="activated" @bind-Value="_request.Activated"/>
-                <label class="form-check-label" for="activated">@Translator["Activated"]</label>     
+                <label class="form-check-label" for="activated">@Translator[$"Activated"]</label>     
             </div>
         </div>
 
@@ -49,7 +49,7 @@ else
         else 
         {
             <div class="container-fluid">
-                <AuthorizedButton Policy="ManagementFull" type="submit" class="btn btn-primary">@Translator["Submit"]</AuthorizedButton>
+                <AuthorizedButton Policy="ManagementFull" type="submit" class="btn btn-primary">@Translator[$"Submit"]</AuthorizedButton>
             </div>
         }
 

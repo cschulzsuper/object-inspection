@@ -50,7 +50,7 @@ namespace Super.Paula.Client.Communication
             var request = new HttpRequestMessage(HttpMethod.Delete, $"inspectors/{inspector}/notifications/{date}/{time}");
             request.Headers.Add("If-Match", etag);
 
-            var responseMessage = await _httpClient.DeleteAsync($"inspectors/{inspector}/notifications/{date}/{time}");
+            var responseMessage = await _httpClient.SendAsync(request);
 
             responseMessage.RuleOutProblems();
             responseMessage.EnsureSuccessStatusCode();

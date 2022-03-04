@@ -130,7 +130,7 @@
     private string GetAuditString()
     {
         var audit = (Inspection.AuditDate, Inspection.AuditTime).ToLocalTimeString();
-        return string.Format(@Translator["{0} (last audit)"], audit);
+        return Translator[$"{audit} (last audit)"];
     }
 
     private string GetScheduledString()
@@ -143,6 +143,6 @@
         }
 
         var plannedAudit = (appointment.PlannedAuditDate, appointment.PlannedAuditTime).ToLocalTimeString();
-        return string.Format(@Translator["{0} (next audit)"], plannedAudit);
+        return Translator[$"{plannedAudit} (next audit)"];
     }
 }

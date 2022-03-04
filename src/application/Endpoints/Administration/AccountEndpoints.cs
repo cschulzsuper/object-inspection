@@ -43,7 +43,7 @@ namespace Super.Paula.Application.Administration
                     => handler.StartImpersonationAsync(organization, inspector);
 
         private static Delegate StopImpersonation =>
-            [Authorize("AuditingRead")]
+            [Authorize("AuditingLimited")]
             (IAccountHandler handler)
                 => handler.StopImpersonationAsync();
     }

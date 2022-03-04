@@ -32,6 +32,7 @@ namespace Super.Paula.Client
         {
             services.AddAppSettings();
             services.AddAppEnvironment(isDevelopment);
+            services.AddBuildInfo();
 
             services.AddClientAuthorization();
             services.AddClientTransport(isWebAssembly);

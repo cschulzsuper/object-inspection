@@ -1,4 +1,4 @@
-name: Build and run paula-dev-migrator
+name: Build and run migrator
 
 on:
   workflow_dispatch:

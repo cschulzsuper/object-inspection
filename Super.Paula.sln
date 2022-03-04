@@ -79,9 +79,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventureTours", "src\templ
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Playwright.Extensions", "src\templates\Playwright.Extensions\Playwright.Extensions.csproj", "{E52172F3-ACE5-4A7D-9213-F6EC0431C148}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Transport.Client", "src\application\Transport.Client\Transport.Client.csproj", "{BC142FEC-B93B-4252-87A6-D7C67E9DF00E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Transport.Client", "src\application\Transport.Client\Transport.Client.csproj", "{BC142FEC-B93B-4252-87A6-D7C67E9DF00E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Workflows", "src\application\Workflows\Workflows.csproj", "{39F0D676-F25B-4FC8-A8E8-BF6CE8B5F4C1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "github-actions", "github-actions", "{5D882788-5E82-4901-B39F-60B18357CD50}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\deploy-app-preview.yml = .github\workflows\deploy-app-preview.yml
+		.github\workflows\deploy-server-preview.yml = .github\workflows\deploy-server-preview.yml
+		.github\workflows\run-adventure-tours-preview.yml = .github\workflows\run-adventure-tours-preview.yml
+		.github\workflows\run-migrator-preview.yml = .github\workflows\run-migrator-preview.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -254,6 +262,7 @@ Global
 		{E52172F3-ACE5-4A7D-9213-F6EC0431C148} = {88B3DE80-486C-4DCE-BE50-6636E77822A2}
 		{BC142FEC-B93B-4252-87A6-D7C67E9DF00E} = {140CA7C1-13C2-46AF-9A40-7B65C94FF5BC}
 		{39F0D676-F25B-4FC8-A8E8-BF6CE8B5F4C1} = {140CA7C1-13C2-46AF-9A40-7B65C94FF5BC}
+		{5D882788-5E82-4901-B39F-60B18357CD50} = {B6F849B6-1128-41E6-AC19-E1BA48BF9598}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {167D4B81-B91A-4D40-AEEF-6CC3C49F9CD1}
