@@ -28,12 +28,12 @@ namespace Super.Paula.Application.Guidelines
         }
 
         private static Delegate Get =>
-            [Authorize("AuditingRead")]
+            [Authorize("AuditingLimited")]
             (IInspectionHandler handler, string inspection)
                 => handler.GetAsync(inspection);
 
         private static Delegate GetAll =>
-            [Authorize("AuditingRead")]
+            [Authorize("AuditingLimited")]
             (IInspectionHandler handler)
                 => handler.GetAll();
 

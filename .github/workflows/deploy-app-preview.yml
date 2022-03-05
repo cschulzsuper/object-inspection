@@ -1,4 +1,4 @@
-name: Build and deploy paula-dev-app
+name: Build and deploy app
 
 on:
   workflow_dispatch:
@@ -11,6 +11,9 @@ jobs:
         with:
           submodules: true
       
+      - name: github.run_id
+        run: mkdir src/blazor/BlazorApi/bin/Debug/net6.0 && echo ${{ github.run_id }} > "src/blazor/BlazorApi/bin/Debug/net6.0/build__build"
+
       - name: Build and Deploy
         uses: Azure/static-web-apps-deploy@v1
         with:

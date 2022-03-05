@@ -3,9 +3,10 @@
 @inject ITranslator Translator
 @inject IAuthenticationHandler AuthenticationHandler
 @inject NavigationManager NavigationManager
+@inject AppSettings AppSettings
 
 <div class="container-fluid">
-    <h1 id="signInHeadline">@Translator["Sign in"]</h1>
+    <h1 id="signInHeadline">@Translator[$"Sign in"]</h1>
 </div>
 
 <EditForm Model="@request" OnValidSubmit="@OnValidSubmitAsync">
@@ -13,12 +14,20 @@
 
     <div class="container-fluid">
         <div class="form-group">
-            <label>@Translator["Identity"]</label>
+            <label>@Translator[$"Identity"]</label>
             <InputText class="form-control" id="identityUniqueName" @bind-Value="request.Identity" />
+            @if(IsDemo)
+            {
+                <small class="form-text text-muted">@Translator.Markdown($"Please feel free to use the demo identity *{AppSettings.DemoIdentity}*")</small>    
+            }
         </div>
         <div class="form-group">
-            <label>@Translator["Password"]</label>
+            <label>@Translator[$"Password"]</label>
             <InputText class="form-control" id="identitySecret" @bind-Value="request.Secret" type="password"/>
+            @if(IsDemo)
+            {
+                <small class="form-text text-muted">@Translator.Markdown($"The demo identity password is *{AppSettings.DemoPassword}*")</small>    
+            }
         </div>
     </div>
 
@@ -36,7 +45,7 @@
             <button 
                 id="submit"
                 type="submit" 
-                class="btn btn-primary">@Translator["Submit"]</button>
+                class="btn btn-primary">@Translator[$"Submit"]</button>
         </div>
     }
 
@@ -44,6 +53,11 @@
 
 @code {
     private SignInRequest request = new SignInRequest();
+
+    private bool IsDemo =>
+        !string.IsNullOrWhiteSpace(AppSettings.DemoIdentity) &&
+        !string.IsNullOrWhiteSpace(AppSettings.DemoPassword);
+
 
     private async Task OnValidSubmitAsync()
     {

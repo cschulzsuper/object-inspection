@@ -33,12 +33,12 @@ namespace Super.Paula.Application.Auditing
         }
 
         private static Delegate Get =>
-            [Authorize("AuditingRead")]
+            [Authorize("AuditingLimited")]
         (IBusinessObjectInspectionHandler handler, string businessObject, string inspection)
                 => handler.GetAsync(businessObject, inspection);
 
         private static Delegate GetAllForBusinessObject =>
-            [Authorize("AuditingRead")]
+            [Authorize("AuditingLimited")]
         (IBusinessObjectInspectionHandler handler,
                 string businessObject)
                 => handler.GetAllForBusinessObject(businessObject);

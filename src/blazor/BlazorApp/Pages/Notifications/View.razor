@@ -6,10 +6,10 @@
 
 @implements IAsyncDisposable
 
-@attribute [Authorize("AuditingRead")]
+@attribute [Authorize("AuditingLimited")]
 
 <div class="container-fluid">
-    <h1>@Translator["Notification"]</h1>
+    <h1>@Translator[$"Notification"]</h1>
 </div>
 
 <div class="container-fluid">
@@ -25,7 +25,10 @@ else
             <div class="card-body">
                 <h6 class="card-subtitle text-muted mb-1">@((notification.Date, notification.Time).ToLocalTimeString())</h6>
                 <p class="card-text tex-wrap">@notification.Text</p>
-                <AuthorizedButton Policy="AuditingFull" class="btn btn-primary" title="@Translator["Delete"]"
+                <AuthorizedButton Policy="AuditingFull" 
+                    id="@($"delete-{notification.Date}-{notification.Time}")"
+                    class="btn btn-primary delete" 
+                    title="@Translator[$"Delete"]"
                     @onclick="() => RemoveAsync(notification)"><span class="oi oi-trash"/></AuthorizedButton>
             </div>
         </div>

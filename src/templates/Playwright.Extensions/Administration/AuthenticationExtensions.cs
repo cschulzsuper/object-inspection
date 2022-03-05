@@ -27,6 +27,8 @@ namespace Super.Paula.Templates.Playwright.Administration
             await page.Locator("#identitySecret").FillAsync(password);
 
             await page.Locator("#submit").ClickAsync();
+            
+            await Task.Delay(1000);
 
             await (!withAutomaticInspectorLogin
                 ? page.WaitForSelectorAsync("#signInInspectorHeadline")
@@ -35,8 +37,9 @@ namespace Super.Paula.Templates.Playwright.Administration
 
         public static async Task SignOutAsync(this IPage page)
         {
-            await page.Locator("#signOut").ClickAsync();
+            await Task.Delay(1000);
 
+            await page.Locator("#signOut").ClickAsync();
             await page.WaitForSelectorAsync("#signInHeadline");
         }
     }

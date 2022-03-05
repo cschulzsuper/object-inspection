@@ -10,6 +10,11 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\BlazorApp\BlazorApp.csproj" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.KeyPerFile" Version="6.0.2" />
 	</ItemGroup>
+
+	<Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+	  <Exec Command="git rev-parse --abbrev-ref HEAD &gt; &quot;$(TargetDir)build__branch&quot;&#xD;&#xA;git rev-parse HEAD &gt; &quot;$(TargetDir)build__hash&quot;&#xD;&#xA;git rev-parse --short HEAD &gt; &quot;$(TargetDir)build__shorthash&quot;" />
+	</Target>
 
 </Project>

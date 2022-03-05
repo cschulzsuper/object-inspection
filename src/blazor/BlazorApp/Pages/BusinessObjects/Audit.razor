@@ -5,10 +5,10 @@
 @inject IInspectionHandler InspectionHandler
 @inject IBusinessObjectInspectionHandler BusinessObjectInspectionHandler
 
-@attribute [Authorize("AuditingRead")]
+@attribute [Authorize("AuditingLimited")]
 
 <div class="container-fluid">
-    <h1>@Translator["Inspections"]</h1>
+    <h1>@Translator[$"Inspections"]</h1>
 </div>
 
 <div class="container-fluid">
@@ -22,8 +22,8 @@ else
     <table class="table table-sm">
         <thead class="table-light table-borderless">
             <tr>
-                <th class="col-12">@Translator["Inspection"]</th>
-                <th colspan="2">@Translator["Result"]</th>
+                <th class="col-12">@Translator[$"Inspection"]</th>
+                <th colspan="2">@Translator[$"Result"]</th>
             </tr>
         </thead>
         <tbody>
@@ -37,36 +37,40 @@ else
                         @switch (inspection.AuditResult)
                         {
                             case "satisfying":
-                                <AuthorizedButton Policy="AuditingFull" 
+                                <AuthorizedButton Policy="AuditingLimited" 
+                                    id="@($"audit-{inspection.BusinessObject}-{inspection.Inspection}")"
                                     class=@ToggleCss(inspection,"success")
-                                    title="@Translator["Satisfying"]"
+                                    title="@Translator[$"Satisfying"]"
                                     @onclick="() => ToggleAsync(inspection)"><span class="oi oi-star"/></AuthorizedButton>
                                 break;
 
                             case "insufficient":
-                                <AuthorizedButton Policy="AuditingFull" 
+                                <AuthorizedButton Policy="AuditingLimited" 
+                                    id="@($"audit-{inspection.BusinessObject}-{inspection.Inspection}")"
                                     class=@ToggleCss(inspection,"warning") 
-                                    title="@Translator["Insufficient"]"
+                                    title="@Translator[$"Insufficient"]"
                                         @onclick="() => ToggleAsync(inspection)"><span class="oi oi-warning"/></AuthorizedButton>
                                 break;
 
                             case "failed":
-                                <AuthorizedButton Policy="AuditingFull" 
+                                <AuthorizedButton Policy="AuditingLimited" 
+                                    id="@($"audit-{inspection.BusinessObject}-{inspection.Inspection}")"
                                     class=@ToggleCss(inspection,"danger")
-                                    title="@Translator["Failed"]"
+                                    title="@Translator[$"Failed"]"
                                     @onclick="() => ToggleAsync(inspection)"><span class="oi oi-x"/></AuthorizedButton>
                                 break;
 
                             default:
-                                <AuthorizedButton Policy="AuditingFull" 
+                                <AuthorizedButton Policy="AuditingLimited" 
+                                    id="@($"audit-{inspection.BusinessObject}-{inspection.Inspection}")"
                                     class=@ToggleCss(inspection,"secondary")
-                                    title="@Translator["Unset"]"
+                                    title="@Translator[$"Unset"]"
                                     @onclick="() => ToggleAsync(inspection)"><span class="oi oi-ellipses"></span></AuthorizedButton>
                                 break;
                         }
                     </td> 
                     <td>
-                        <button class="btn btn-outline-primary btn-block" title="@Translator["Annotate"]"
+                        <button class="btn btn-outline-primary btn-block" title="@Translator[$"Annotate"]"
                                 @onclick="() => NavigateToAnnotationAsync(inspection)"><span class="oi oi-copywriting"/></button>
                     </td>
                 </tr>

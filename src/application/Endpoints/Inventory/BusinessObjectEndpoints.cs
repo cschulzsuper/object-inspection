@@ -28,7 +28,7 @@ namespace Super.Paula.Application.Inventory
         }
 
         private static Delegate Get =>
-            [Authorize("AuditingRead")]
+            [Authorize("AuditingLimited")]
             (IBusinessObjectHandler handler, string businessObject)
                 => handler.GetAsync(businessObject);
 

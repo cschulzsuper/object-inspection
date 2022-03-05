@@ -11,7 +11,8 @@ namespace Super.Paula.Templates.Playwright.Guidelines
 
             await page.Locator("#inspectionDisplayName").FillAsync(displayName);
             await page.Locator("#inspectionUniqueName").FillAsync(uniqueName);
-            await page.Locator("#inspectionActivated").CheckAsync();
+            await page.Locator("#inspectionText").FillAsync(Faker.Lorem.Paragraph());
+            await page.Locator("#inspectionActivated").SetCheckedAsync(true);
 
             // Click text=Submit
             await page.RunAndWaitForNavigationAsync(async () =>

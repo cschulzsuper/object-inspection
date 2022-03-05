@@ -11,13 +11,13 @@
 @attribute [Authorize("ManagementRead")]
 
 <div class="container-fluid">
-    <h1>@Translator["Inspectors"]</h1>
+    <h1>@Translator[$"Inspectors"]</h1>
 </div>
 
 @if (_organization == null)
 {
     <div class="container-fluid m-2">
-        <button class="btn btn-primary" title="@Translator["Create"]" 
+        <button class="btn btn-primary" title="@Translator[$"Create"]" 
             @onclick="Create"><span class="oi oi-plus"/></button>
     </div>
 
@@ -27,7 +27,7 @@ else
     @if (_inspectors?.Any() == false)
     {
         <div class="container-fluid m-2">
-            <button id="repair" class="btn btn-primary" title="@Translator["Repair"]" 
+            <button id="repair" class="btn btn-primary" title="@Translator[$"Repair"]" 
                 @onclick="RepairAsync"><span class="oi oi-wrench"/></button>
         </div>
     }
@@ -44,8 +44,8 @@ else
     <table class="table table-sm">
         <thead class="table-light table-borderless">
             <tr>
-                <th class="col-6">@Translator["Unique name"]</th>
-                <th class="col-6">@Translator["Identity"]</th>
+                <th class="col-6">@Translator[$"Unique name"]</th>
+                <th class="col-6">@Translator[$"Identity"]</th>
                 @if (Organization == null)
                 {
                     <th></th>
@@ -72,7 +72,7 @@ else
                             <td>
                                 @if (inspector.UniqueName != _inspector)
                                 {
-                                    <AuthorizedButton Policy="ManagementFull" class="btn btn-success btn-block" title="@Translator["Deactivate"]" 
+                                    <AuthorizedButton Policy="ManagementFull" class="btn btn-success btn-block" title="@Translator[$"Deactivate"]" 
                                         @onclick="() => DeactivateAsync(inspector)"><span class="oi oi-power-standby"/></AuthorizedButton>
                                 }
                             </td>
@@ -80,19 +80,19 @@ else
                             <td>
                                 @if (inspector.UniqueName != _inspector)
                                 {
-                                    <AuthorizedButton Policy="ManagementFull" class="btn btn-outline-danger btn-block" title="@Translator["Activate"]" 
+                                    <AuthorizedButton Policy="ManagementFull" class="btn btn-outline-danger btn-block" title="@Translator[$"Activate"]" 
                                         @onclick="() => ActivateAsync(inspector)"><span class="oi oi-power-standby"/></AuthorizedButton>
                                 }
                             </td>
                         }
                         <td>
-                            <button class="btn btn-outline-info btn-block" title="@Translator["Edit"]" 
+                            <button class="btn btn-outline-info btn-block" title="@Translator[$"Edit"]" 
                                 @onclick="() => Edit(inspector.UniqueName)"><span class="oi oi-pencil"/></button>
                         </td>
                         <td>
                             @if (inspector.UniqueName != _inspector)
                             {
-                                <AuthorizedButton Policy="ManagementFull" class="btn btn-outline-danger btn-block" title="@Translator["Delete"]" 
+                                <AuthorizedButton Policy="ManagementFull" class="btn btn-outline-danger btn-block" title="@Translator[$"Delete"]" 
                                     @onclick="() => DeleteAsync(inspector)"><span class="oi oi-trash"/></AuthorizedButton>
                             }
                         </td>
@@ -104,7 +104,7 @@ else
                                      _organization?.Activated == true &&
                                      inspector.UniqueName != _inspector)
                                 {
-                                    <button class="btn btn-outline-danger btn-block" title="@Translator["Impersonate"]"
+                                    <button class="btn btn-outline-danger btn-block" title="@Translator[$"Impersonate"]"
                                     @onclick="() => ImpersonateAsync(inspector.UniqueName)"><span class="oi oi-eye"/></button>
                                 }
                             </td>

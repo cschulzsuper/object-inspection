@@ -7,7 +7,7 @@
 @attribute [Authorize("ManagementRead")]
 
 <div class="container-fluid3">
-    <h1>@Translator["Create inspector"]</h1>
+    <h1>@Translator[$"Create inspector"]</h1>
 </div>
 
 <EditForm Model="@_request" OnValidSubmit="@OnValidSubmitAsync">
@@ -15,16 +15,16 @@
 
     <div class="container-fluid">
         <div class="form-group">
-            <label>@Translator["Unique name"]</label>
-            <InputText class="form-control" id="uniqueName" @bind-Value="_request.UniqueName" />
+            <label>@Translator[$"Unique name"]</label>
+            <InputText class="form-control" id="inspectorUniqueName" @bind-Value="_request.UniqueName" />
         </div>
         <div class="form-group">
-            <label>@Translator["Identity"]</label>
-            <InputText class="form-control" id="mailAddress" @bind-Value="_request.Identity" />
+            <label>@Translator[$"Identity"]</label>
+            <InputText class="form-control" id="inspectorIdentity" @bind-Value="_request.Identity" />
         </div>
         <div class="form-check">
-            <InputCheckbox class="form-check-input" id="activated" @bind-Value="_request.Activated"/>
-            <label class="form-check-label" for="activated">@Translator["Activated"]</label>     
+            <InputCheckbox class="form-check-input" id="inspectorActivated" @bind-Value="_request.Activated"/>
+            <label class="form-check-label" for="inspectorActivated">@Translator[$"Activated"]</label>     
         </div>
     </div>
 
@@ -39,7 +39,10 @@
     else 
     {
         <div class="container-fluid">
-            <AuthorizedButton Policy="ManagementFull" type="submit" class="btn btn-primary">@Translator["Submit"]</AuthorizedButton>
+            <AuthorizedButton Policy="ManagementFull" 
+                id="submit"
+                type="submit" 
+                class="btn btn-primary">@Translator[$"Submit"]</AuthorizedButton>
         </div>
     }
 

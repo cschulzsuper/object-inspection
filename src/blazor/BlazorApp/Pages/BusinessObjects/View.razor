@@ -7,18 +7,18 @@
 @attribute [Authorize("ManagementRead")]
 
 <div class="container-fluid">
-    <h1>@Translator["Business objects"]</h1>
+    <h1>@Translator[$"Business objects"]</h1>
 </div>
 
 <div class="container-fluid d-flex align-items-center mt-2 mb-2">
-    <button class="btn btn-primary mr-4" title="@Translator["Create"]"
+    <button class="btn btn-primary mr-4" title="@Translator[$"Create"]"
             @onclick="Create"><span class="oi oi-plus"/></button>
     <div class="input-group mr-xl-4">
         <input type="text" class="form-control" placeholder="Search term" @bind="_searchQuery" @onkeyup="SearchTermKeyDownAsync">
     </div>
     <div class="custom-control custom-switch d-none d-xl-block">
         <input type="checkbox" class="custom-control-input" id="onlyUnassigned" checked="@_onlyUnassigned" @onchange="OnlyUnassignedChangedAsync">
-        <label class="custom-control-label" for="onlyUnassigned">@Translator["Unassigned"]</label>
+        <label class="custom-control-label" for="onlyUnassigned">@Translator[$"Unassigned"]</label>
     </div>
 </div>  
 
@@ -29,9 +29,9 @@
     {
         <thead class="table-light table-borderless">
             <tr>
-                <th class="col-3 d-none d-lg-table-cell">@Translator["Unique name"]</th>
-                <th class="col-6">@Translator["Display name"]</th>
-                <th class="col-3 d-none d-lg-table-cell">@Translator["Inspector"]</th>
+                <th class="col-3 d-none d-lg-table-cell">@Translator[$"Unique name"]</th>
+                <th class="col-6">@Translator[$"Display name"]</th>
+                <th class="col-3 d-none d-lg-table-cell">@Translator[$"Inspector"]</th>
                 <th></th>
                 <th></th>
                 <th></th>
@@ -46,19 +46,19 @@
                 <td>@businessObject.DisplayName</td>
                 <td class="d-none d-lg-table-cell">@businessObject.Inspector</td>
                 <td>
-                    <button class="btn btn-outline-info btn-block" title="@Translator["Edit"]"
+                    <button class="btn btn-outline-info btn-block" title="@Translator[$"Edit"]"
                         @onclick="() => Edit(businessObject.UniqueName)"><span class="oi oi-pencil"/></button>
                 </td>
                 <td>
-                    <AuthorizedButton Policy="ManagementFull" class="btn btn-outline-danger btn-block" title="@Translator["Delete"]"
+                    <AuthorizedButton Policy="ManagementFull" class="btn btn-outline-danger btn-block" title="@Translator[$"Delete"]"
                         @onclick="() => DeleteAsync(businessObject)"><span class="oi oi-trash"/></AuthorizedButton>
                 </td>
                 <td>
-                    <button class="btn btn-outline-info btn-block" title="@Translator["Inspections"]"
+                    <button class="btn btn-outline-info btn-block" title="@Translator[$"Inspections"]"
                         @onclick="() => NavigateToInspections(businessObject.UniqueName)"><span class="oi oi-list"/></button>
                 </td>
                 <td>
-                    <button class="btn btn-outline-info btn-block" title="@Translator["Audit history"]"
+                    <button class="btn btn-outline-info btn-block" title="@Translator[$"Audit history"]"
                         @onclick="() => NavigateToInspectionAuditHistory(businessObject.UniqueName)"><span class="oi oi-clipboard"/></button>
                 </td>
             </tr>

@@ -19,22 +19,22 @@
                 {
                     <div class="nav-item px-3">
                         <NavLink class="nav-link" Match="NavLinkMatch.All" href="register">
-                            <span class="oi oi-person" aria-hidden="true"/>@Translator["Sign up"]
+                            <span class="oi oi-person" aria-hidden="true"/>@Translator[$"Sign up"]
                         </NavLink>
                     </div>
                 }
             </NotAuthorized>
         </AuthorizeView>
-        <AuthorizeView Policy="AuditingRead">
+        <AuthorizeView Policy="AuditingLimited">
             <Authorized>
                 <div class="nav-item px-3 text-center h-100">
                     <div class="nav-link">
-                        <span class="d-none d-md-block">@Translator["Information"]</span>
+                        <span class="d-none d-md-block">@Translator[$"Information"]</span>
                     </div>
                 </div>
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" Match="NavLinkMatch.All" href="notifications">
-                        <span class="oi oi-bell" aria-hidden="true"/>@Translator["Notifications"]
+                        <span class="oi oi-bell" aria-hidden="true"/>@Translator[$"Notifications"]
                         <ErrorBoundary Context="notificationBadgeErrorBoundary">
                             <ChildContent>
                                 <NotificationBadge/>
@@ -49,17 +49,17 @@
             <Authorized >
                 <div class="nav-item px-3 text-center">
                     <div class="nav-link">
-                        <span class="d-none d-md-block">@Translator["Administration"]</span>
+                        <span class="d-none d-md-block">@Translator[$"Administration"]</span>
                     </div>
                 </div>
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" Match="NavLinkMatch.All" href="organizations">
-                        <span class="oi oi-people" aria-hidden="true"/>@Translator["Organizations"]
+                        <span class="oi oi-people" aria-hidden="true"/>@Translator[$"Organizations"]
                     </NavLink>
                 </div>
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" Match="NavLinkMatch.All" href="identities">
-                        <span class="oi oi-credit-card" aria-hidden="true"/>@Translator["Identities"]
+                        <span class="oi oi-credit-card" aria-hidden="true"/>@Translator[$"Identities"]
                     </NavLink>
                 </div>
             </Authorized>
@@ -68,22 +68,22 @@
             <Authorized>
                 <div class="nav-item px-3 text-center">
                     <div class="nav-link">
-                        <span class="d-none d-md-block">@Translator["Management"]</span>
+                        <span class="d-none d-md-block">@Translator[$"Management"]</span>
                     </div>
                 </div>
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" Match="NavLinkMatch.All" href="inspectors">
-                        <span class="oi oi-person" aria-hidden="true"/>@Translator["Inspectors"]
+                        <span class="oi oi-person" aria-hidden="true"/>@Translator[$"Inspectors"]
                     </NavLink>
                 </div>
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" Match="NavLinkMatch.All" href="business-objects">
-                        <span class="oi oi-briefcase" aria-hidden="true"/>@Translator["Business Objects"]
+                        <span class="oi oi-briefcase" aria-hidden="true"/>@Translator[$"Business Objects"]
                     </NavLink>
                 </div>
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" Match="NavLinkMatch.All" href="inspections">
-                        <span class="oi oi-list" aria-hidden="true"/>@Translator["Inspections"]
+                        <span class="oi oi-list" aria-hidden="true"/>@Translator[$"Inspections"]
                     </NavLink>
                 </div>
             </Authorized>
@@ -92,26 +92,26 @@
             <Authorized>
                 <div class="nav-item px-3 text-center">
                     <div class="nav-link">
-                        <span class="d-none d-md-block">@Translator["Timeline"]</span>
+                        <span class="d-none d-md-block">@Translator[$"Timeline"]</span>
                     </div>
                 </div>
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" Match="NavLinkMatch.All" href="audit-history">
-                        <span class="oi oi-clipboard" aria-hidden="true"/>@Translator["Audit History"] 
+                        <span class="oi oi-clipboard" aria-hidden="true"/>@Translator[$"Audit History"] 
                     </NavLink>
                 </div>
             </Authorized>
         </AuthorizeView>
-        <AuthorizeView Policy="AuditingRead">
+        <AuthorizeView Policy="AuditingLimited">
             <Authorized>
                 <div class="nav-item px-3 text-center">
                     <div class="nav-link">
-                        <span class="d-none d-md-block">@Translator["Tasks"]</span>
+                        <span class="d-none d-md-block">@Translator[$"Tasks"]</span>
                     </div>
                 </div>
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" Match="NavLinkMatch.All" href="business-objects/auditing">
-                        <span class="oi oi-clipboard" aria-hidden="true"/>@Translator["Auditing"]
+                        <span class="oi oi-clipboard" aria-hidden="true"/>@Translator[$"Auditing"]
                         <ErrorBoundary Context="auditingBadgeErrorBoundary">
                             <ChildContent>
                                 <AuditingBadge/>
@@ -126,15 +126,15 @@
             <Authorized>
                 <div class="nav-item px-3 text-center d-md-none">
                     <div class="nav-link">
-                        <span class="d-none d-md-block">@Translator["Account"]</span>
+                        <span class="d-none d-md-block">@Translator[$"Account"]</span>
                     </div>
                 </div>
                 <div class="nav-item px-3 d-md-none">
-                    <NavLink class="nav-link" Match="NavLinkMatch.All" href="change-secret" title="@Translator["Change Password"]">
-                        <span class="oi oi-person" aria-hidden="true"/>@Translator["Change Password"]</NavLink>
+                    <NavLink class="nav-link" Match="NavLinkMatch.All" href="change-secret" title="@Translator[$"Change Password"]">
+                        <span class="oi oi-person" aria-hidden="true"/>@Translator[$"Change Password"]</NavLink>
                 </div>
                 <div class="nav-item px-3 d-md-none">
-                    <SignOutButton class="nav-link" title="@Translator["Sign out"]"/>
+                    <SignOutButton class="nav-link" title="@Translator[$"Sign out"]"/>
                 </div>
             </Authorized>
         </AuthorizeView>

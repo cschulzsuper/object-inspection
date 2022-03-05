@@ -30,19 +30,25 @@ namespace Super.Paula.Templates.AdventureTours.Steps
 
             var page = await context.NewPageAsync();
 
+            var maintainerOrganization = "super";
+            var maintainerOrganizationDisplayName = "Super";
             var maintainerIdentity = _appSettings.MaintainerIdentity;
             var maintainerMailAddress = "cschulz@super.local";
             var maintainerPassword = "super";
-            var maintainerInspector = "cschulzsuper";
-            var maintainerOrganization = "super";
-            var maintainerOrganizationDisplayName = "Super";
+            var maintainerInspector = _appSettings.MaintainerIdentity;
 
-            var adventureToursIdentity = "bknightingale";
-            var adventureToursMailAddress = "bknightingale@adventure-tours.local";
-            var adventureToursPassword = "barnabus";
-            var adventureToursInspector = "bknightingale";
             var adventureToursOrganization = "adventure-tours";
             var adventureToursOrganizationDisplayName = "Adventure Tours";
+            
+            var adventureToursMaintainerIdentity = "bknightingale";
+            var adventureToursMaintainerMailAddress = "bknightingale@adventure-tours.local";
+            var adventureToursMaintainerPassword = "barnabus";
+            var adventureToursMaintainerInspector = "bknightingale";
+
+            var adventureToursDemoIdentity = _appSettings.DemoIdentity;
+            var adventureToursDemoMailAddress = "fdemos@adventure-tours.local";
+            var adventureToursDemoPassword = _appSettings.DemoPassword;
+            var adventureToursDemoInspector = _appSettings.DemoIdentity;
 
             await page.RegisterAsync(
                 maintainerIdentity,
@@ -50,9 +56,14 @@ namespace Super.Paula.Templates.AdventureTours.Steps
                 maintainerPassword);
 
             await page.RegisterAsync(
-                adventureToursIdentity,
-                adventureToursMailAddress,
-                adventureToursPassword);
+                adventureToursMaintainerIdentity,
+                adventureToursMaintainerMailAddress,
+                adventureToursMaintainerPassword);
+
+            await page.RegisterAsync(
+                adventureToursDemoIdentity,
+                adventureToursDemoMailAddress,
+                adventureToursDemoPassword);
 
             await page.SignInAsync(
                 maintainerIdentity,
@@ -63,27 +74,19 @@ namespace Super.Paula.Templates.AdventureTours.Steps
                 maintainerOrganization,
                 maintainerOrganizationDisplayName);
 
-            await Task.Delay(6000);
-
             await page.RegisterChiefInspectorAsync(
                 maintainerOrganization,
                 maintainerInspector,
                 maintainerIdentity,
-                withAutomaticInspectorLogin: false);
-
-            await page.SignInInspectorAsync(null, null);
+                withAutomaticInspectorLogin: true);
 
             await page.CreateOrganizationAsync(
                 adventureToursOrganizationDisplayName,
                 adventureToursOrganization,
-                adventureToursInspector);
-
-            await Task.Delay(6000);
+                adventureToursMaintainerInspector);
 
             await page.RepairOrganizationAsync(
                 adventureToursOrganization);
-
-            await Task.Delay(6000);
 
             await page.SignOutAsync();
 
@@ -94,11 +97,15 @@ namespace Super.Paula.Templates.AdventureTours.Steps
 
             await page.SignInInspectorAsync(
                 adventureToursOrganization,
-                adventureToursInspector);
+                adventureToursMaintainerInspector);
 
-            await page.EditInspectorIdentityAsync(
-                adventureToursInspector,
-                adventureToursIdentity);
+            await page.EditInspectorAsync(
+                adventureToursMaintainerInspector,
+                adventureToursMaintainerIdentity);
+
+            await page.CreateInspectorAsync(
+                adventureToursDemoInspector,
+                adventureToursDemoIdentity);
 
             await page.SignOutAsync();
         }

@@ -18,7 +18,7 @@ namespace BlazorApi
         [FunctionName("settings")]
         public IActionResult Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "settings/{key}")] HttpRequest request, string key)
         {
-
+            key= key.Replace("__",":");
             return new OkObjectResult(_configuration[key]);
         }
     }

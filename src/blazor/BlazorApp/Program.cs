@@ -4,6 +4,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Super.Paula.Client.Configuration;
 using Super.Paula.Client.Storage;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.FileProviders;
+
+using assembly = System.Reflection.Assembly;
 
 namespace Super.Paula.Client
 {

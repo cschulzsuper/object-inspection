@@ -45,7 +45,7 @@ namespace Super.Paula.Application.Administration
                 => handler.GetAsync(inspector);
 
         private static Delegate GetCurrent =>
-            [Authorize("AuditingRead")]
+            [Authorize("AuditingLimited")]
             (IInspectorHandler handler)
                 => handler.GetCurrentAsync();
 

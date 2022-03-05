@@ -14,6 +14,8 @@
 
         public string DemoIdentity { get; set; } = string.Empty;
 
+        public string DemoPassword { get; set; } = string.Empty;
+
         public string Server { get; set; } = string.Empty;
 
         public string Client { get; set; } = string.Empty;

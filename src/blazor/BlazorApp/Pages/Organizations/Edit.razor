@@ -8,7 +8,7 @@
 @attribute [Authorize("Maintainance")]
 
 <div class="container-fluid">
-    <h1>@Translator["Edit organization"]</h1>
+    <h1>@Translator[$"Edit organization"]</h1>
 </div>
 
 @if (_request == null)
@@ -22,21 +22,21 @@ else
 
         <div class="container-fluid">
             <div class="form-group">
-                <label>@Translator["Unique name"]</label>
+                <label>@Translator[$"Unique name"]</label>
                 <InputText class="form-control" id="uniqueName" @bind-Value="_request.UniqueName" readonly />
             </div>
             <div class="form-group">
-                <label>@Translator["Display name"]</label>
+                <label>@Translator[$"Display name"]</label>
                 <InputText class="form-control" id="displayName" @bind-Value="_request.DisplayName" />
             </div>
             <div class="form-group">
-                <label>@Translator["Chief inspector"]</label>
+                <label>@Translator[$"Chief inspector"]</label>
                 <InputText class="form-control" id="chiefInspector" @bind-Value="_request.ChiefInspector" />
             </div>
             <div class="form-check">
                 <InputCheckbox class="form-check-input" id="activated" @bind-Value="_request.Activated"
                     disabled="@(_request.UniqueName == _organization)"/>
-                <label class="form-check-label" for="activated">@Translator["Activated"]</label>     
+                <label class="form-check-label" for="activated">@Translator[$"Activated"]</label>     
             </div>
         </div>
 
@@ -51,7 +51,7 @@ else
         else 
         {
             <div class="container-fluid">
-                <button type="submit" class="btn btn-primary">@Translator["Submit"]</button>
+                <button type="submit" class="btn btn-primary">@Translator[$"Submit"]</button>
             </div>
         }
 

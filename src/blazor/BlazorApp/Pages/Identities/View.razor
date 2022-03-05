@@ -7,11 +7,11 @@
 @attribute [Authorize("Maintainance")]
 
 <div class="container-fluid">
-    <h1>@Translator["Identities"]</h1>
+    <h1>@Translator[$"Identities"]</h1>
 </div>
 
 <div class="container-fluid m-2">
-    <button class="btn btn-primary" title="@Translator["Create"]"
+    <button class="btn btn-primary" title="@Translator[$"Create"]"
             @onclick="Create"><span class="oi oi-plus"/></button>
 </div>
 
@@ -26,8 +26,8 @@ else
     <table class="table table-sm">
         <thead class="table-light table-borderless">
             <tr>
-                <th class="col-6">@Translator["Unique name"]</th>
-                <th class="col-6">@Translator["Mail address"]</th>
+                <th class="col-6">@Translator[$"Unique name"]</th>
+                <th class="col-6">@Translator[$"Mail address"]</th>
                 <th></th>
                 <th></th>
                 <th></th>
@@ -40,15 +40,15 @@ else
                     <td>@identity.UniqueName</td>
                     <td>@identity.MailAddress</td>
                     <td>
-                        <button class="btn btn-outline-warning btn-block" title="@Translator["Reset"]"
+                        <button class="btn btn-outline-warning btn-block" title="@Translator[$"Reset"]"
                             @onclick="() => ResetAsync(identity)"><span class="oi oi-action-undo"/></button>
                     </td>
                     <td>
-                        <button class="btn btn-outline-info btn-block" title="@Translator["Edit"]"
+                        <button class="btn btn-outline-info btn-block" title="@Translator[$"Edit"]"
                             @onclick="() => Edit(identity.UniqueName)"><span class="oi oi-pencil"/></button>
                     </td>
                     <td>
-                        <button class="btn btn-outline-danger btn-block" title="@Translator["Delete"]"
+                        <button class="btn btn-outline-danger btn-block" title="@Translator[$"Delete"]"
                             @onclick="() => DeleteAsync(identity)"><span class="oi oi-trash"/></button>
                     </td>
                     

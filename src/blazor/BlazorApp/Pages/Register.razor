@@ -5,7 +5,7 @@
 @inject NavigationManager NavigationManager
 
 <div class="container-fluid">
-    <h1>@Translator["Sign up"]</h1>
+    <h1>@Translator[$"Sign up"]</h1>
 </div>
 
 <EditForm Model="@model" OnValidSubmit="@OnValidSubmitAsync">
@@ -13,15 +13,15 @@
 
     <div class="container-fluid">
         <div class="form-group">
-            <label>@Translator["Username"]</label>
+            <label>@Translator[$"Username"]</label>
             <InputText class="form-control" id="identityUniqueName" @bind-Value="model.UniqueName" />
         </div>
         <div class="form-group">
-            <label>@Translator["Mail address"]</label>
+            <label>@Translator[$"Mail address"]</label>
             <InputText class="form-control" id="identityMailAddress" @bind-Value="model.MailAddress" />
         </div>
         <div class="form-group">
-            <label>@Translator["Password"]</label>
+            <label>@Translator[$"Password"]</label>
             <InputText class="form-control" id="identitySecret" @bind-Value="model.Secret" type="password"/>
         </div>
     </div>
@@ -40,7 +40,7 @@
             <button 
                 id="submit"
                 type="submit" 
-                class="btn btn-primary">@Translator["Submit"]</button>
+                class="btn btn-primary">@Translator[$"Submit"]</button>
         </div>
     }
 

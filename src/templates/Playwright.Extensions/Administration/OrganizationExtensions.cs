@@ -18,6 +18,8 @@ namespace Super.Paula.Templates.Playwright.Administration
             {
                 await page.Locator("#submit").ClickAsync();
             });
+
+            await Task.Delay(1000);
         }
     }
 }

@@ -29,7 +29,7 @@ namespace Super.Paula.Application.Auditing
         }
 
         private static Delegate Get =>
-            [Authorize("AuditingRead")]
+            [Authorize("AuditingLimited")]
             (IBusinessObjectInspectionAuditRecordHandler handler,
                 string businessObject, 
                 string inspection,
@@ -39,7 +39,7 @@ namespace Super.Paula.Application.Auditing
                 => handler.GetAsync(businessObject, inspection, date, time);
 
         private static Delegate GetAll =>
-            [Authorize("AuditingRead")]
+            [Authorize("AuditingLimited")]
             (IBusinessObjectInspectionAuditRecordHandler handler,
                 [FromQuery(Name = "q")] string query,
                 [FromQuery(Name = "s")] int? skip,
@@ -49,7 +49,7 @@ namespace Super.Paula.Application.Auditing
                 => handler.GetAll(query, skip ?? 0, take, cancellationToken);
 
         private static Delegate GetAllForBusinessObject =>
-            [Authorize("AuditingRead")]
+            [Authorize("AuditingLimited")]
             (IBusinessObjectInspectionAuditRecordHandler handler,
                 string businessObject,
                 [FromQuery(Name = "s")] int? skip,
@@ -58,7 +58,7 @@ namespace Super.Paula.Application.Auditing
                 => handler.GetAllForBusinessObject(businessObject, skip ?? 0, take);
 
         private static Delegate Create =>
-            [Authorize("AuditingFull")]
+            [Authorize("AuditingLimited")]
             (IBusinessObjectInspectionAuditRecordHandler handler,
                 string businessObject,
                 BusinessObjectInspectionAuditRecordRequest request)
@@ -66,7 +66,7 @@ namespace Super.Paula.Application.Auditing
                 => handler.CreateAsync(businessObject, request);
 
         private static Delegate Replace =>
-            [Authorize("AuditingFull")]
+            [Authorize("AuditingLimited")]
             (IBusinessObjectInspectionAuditRecordHandler handler, 
                 string businessObject, 
                 string inspection,
@@ -77,7 +77,7 @@ namespace Super.Paula.Application.Auditing
                 => handler.ReplaceAsync(businessObject, inspection, date, time, request);
 
         private static Delegate Delete =>
-            [Authorize("AuditingFull")]
+            [Authorize("AuditingLimited")]
             (IBusinessObjectInspectionAuditRecordHandler handler, 
                 string businessObject,
                 string inspection, 
@@ -88,7 +88,7 @@ namespace Super.Paula.Application.Auditing
                 => handler.DeleteAsync(businessObject, inspection, date, time, etag);
 
         private static Delegate Search =>
-            [Authorize("AuditingRead")]
+            [Authorize("AuditingLimited")]
             (IBusinessObjectInspectionAuditRecordHandler handler,
                 [FromQuery(Name = "q")] string query)
 

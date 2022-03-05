@@ -21,7 +21,7 @@ namespace Super.Paula.Authorization
                     "ManagementFull" => _Policies.ManagementFullPolicy,
                     "ManagementRead" => _Policies.ManagementReadPolicy,
                     "AuditingFull" => _Policies.AuditingFullPolicy,
-                    "AuditingRead" => _Policies.AuditingReadPolicy,
+                    "AuditingLimited" => _Policies.AuditingLimitedPolicy,
 
                     "Impersonation" => _Policies.ImpersonationPolicy,
                     "Streaming" => _Policies.StreamingPolicy,

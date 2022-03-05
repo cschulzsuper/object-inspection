@@ -7,7 +7,7 @@
 @attribute [Authorize("Maintainance")]
 
 <div class="container-fluid">
-    <h1>@Translator["Create organization"]</h1>
+    <h1>@Translator[$"Create organization"]</h1>
 </div>
 
 <EditForm Model="@_request" OnValidSubmit="@OnValidSubmitAsync">
@@ -15,20 +15,20 @@
 
     <div class="container-fluid">
         <div class="form-group">
-            <label>@Translator["Display name"]</label>
+            <label>@Translator[$"Display name"]</label>
             <InputText class="form-control" id="organizationDisplayName" @bind-Value="_request.DisplayName" />
         </div>
         <div class="form-group">
-            <label>@Translator["Unique name"]</label>
+            <label>@Translator[$"Unique name"]</label>
             <InputText class="form-control" id="organizationUniqueName" @bind-Value="_request.UniqueName" />
         </div>
         <div class="form-group">
-            <label>@Translator["Chief inspector"]</label>
+            <label>@Translator[$"Chief inspector"]</label>
             <InputText class="form-control" id="organizationChiefInspector" @bind-Value="_request.ChiefInspector" />
         </div>
         <div class="form-check">
             <InputCheckbox class="form-check-input" id="organizationActivated" @bind-Value="_request.Activated"/>
-            <label class="form-check-label" for="organizationActivated">@Translator["Activated"]</label>     
+            <label class="form-check-label" for="organizationActivated">@Translator[$"Activated"]</label>     
         </div>
     </div>
 
@@ -46,7 +46,7 @@
             <button
                 id="submit"
                 type="submit"
-                class="btn btn-primary">@Translator["Submit"]</button>
+                class="btn btn-primary">@Translator[$"Submit"]</button>
         </div>
     }
 
