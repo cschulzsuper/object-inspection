@@ -32,9 +32,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     env:
-      CosmosEndpoint: ${{secrets.AZURE_COSMOS_DB_PAULA_DEV_ENDPOINT}}
-      CosmosKey: ${{secrets.AZURE_COSMOS_DB_PAULA_DEV_KEY}}
-      CosmosDatabase: 'Paula'
+      Paula__CosmosEndpoint: ${{secrets.AZURE_COSMOS_DB_PAULA_DEV_ENDPOINT}}
+      Paula__CosmosKey: ${{secrets.AZURE_COSMOS_DB_PAULA_DEV_KEY}}
+      Paula__CosmosDatabase: 'Paula'
 
     steps:
       - name: Set up .NET Core
