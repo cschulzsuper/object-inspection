@@ -14,18 +14,18 @@ namespace Super.Paula.Templates.Playwright.Administration
                 await page.Locator("#repair").ClickAsync();
             });
 
-            await Task.Delay(1000);
+            await Task.Delay(1200);
         }
 
         public static async Task SignInInspectorAsync(this IPage page, string? organization, string? inspector)
         {
             await page.GotoAsync($"sign-in-inspector");
-            await Task.Delay(1000);
+            await Task.Delay(1200);
 
             if (inspector != null && organization != null)
             {
                 await page.Locator($"#signIn{inspector}For{organization}").ClickAsync();
-                await Task.Delay(1000);
+                await Task.Delay(1200);
             }
 
             await page.WaitForSelectorAsync("#indexHeadline");
@@ -43,7 +43,7 @@ namespace Super.Paula.Templates.Playwright.Administration
                 await page.Locator("#submit").ClickAsync();
             });
 
-            await Task.Delay(1000);
+            await Task.Delay(12_000);
         }
 
         public static async Task RegisterChiefInspectorAsync(this IPage page, string organization, string inspector, string identity, bool withAutomaticInspectorLogin)
@@ -55,7 +55,7 @@ namespace Super.Paula.Templates.Playwright.Administration
 
             await page.Locator("#submit").ClickAsync();
 
-            await Task.Delay(1000);
+            await Task.Delay(1200);
 
             await (!withAutomaticInspectorLogin
                 ? page.WaitForSelectorAsync("#signInInspectorHeadline")

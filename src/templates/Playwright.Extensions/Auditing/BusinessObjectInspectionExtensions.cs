@@ -11,6 +11,8 @@ namespace Super.Paula.Templates.Playwright.Auditing
 
             await page.Locator("#assignmentMode").ClickAsync();
             await page.Locator($"#assign-{inspection}").ClickAsync();
+
+            await Task.Delay(1200);
         }
 
         public static async Task DeleteBusinessObjectInspectionAsync(this IPage page, string businessObject, string inspection)
@@ -19,6 +21,8 @@ namespace Super.Paula.Templates.Playwright.Auditing
 
             await page.Locator("#assignmentMode").ClickAsync();
             await page.Locator($"#unassign-{inspection}").ClickAsync();
+
+            await Task.Delay(1200);
         }
 
         public static async Task ScheduleBusinessObjectInspectionAuditAsync(this IPage page, string businessObject, string inspection, string schedule, string threshold)
@@ -32,18 +36,24 @@ namespace Super.Paula.Templates.Playwright.Auditing
             {
                 await page.Locator("#submit").ClickAsync();
             });
+
+            await Task.Delay(1200);
         }
 
         public static async Task AuditBusinessObjectInspectionAsync(this IPage page, string businessObject, string inspection)
         {
             await page.GotoAsync($"business-objects/{businessObject}/audit");
             await page.Locator($"#audit-{businessObject}-{inspection}").ClickAsync();
+
+            await Task.Delay(1200);
         }
 
         public static async Task OmitBusinessObjectInspectionAuditAsync(this IPage page, string businessObject, string inspection)
         {
             await page.GotoAsync($"business-objects/{businessObject}/inspections");
             await page.Locator($"#drop-{inspection}").ClickAsync();
+
+            await Task.Delay(1200);
         }
 
         public static async Task AnnotateBusinessObjectInspectionAuditAsync(this IPage page, string businessObject, string inspection)
@@ -55,6 +65,8 @@ namespace Super.Paula.Templates.Playwright.Auditing
             {
                 await page.Locator("#submit").ClickAsync();
             });
+
+            await Task.Delay(1200);
         }
     }
 }

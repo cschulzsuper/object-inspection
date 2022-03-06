@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.ValueGeneration;
 using Super.Paula.Application.Auditing;
-using Super.Paula.Application.Inventory;
 using System.Collections.Generic;
 
 namespace Super.Paula.Data.Mappings.Auditing

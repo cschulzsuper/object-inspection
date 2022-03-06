@@ -13,12 +13,12 @@
 		<PackageReference Include="Microsoft.Extensions.Configuration.KeyPerFile" Version="6.0.2" />
 	</ItemGroup>
 
-	<Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(Configuration)' == 'Debug' ">
-		<Exec Command="git rev-parse --abbrev-ref HEAD &gt; &quot;$(TargetDir)build__branch&quot;&#xD;&#xA;git rev-parse HEAD &gt; &quot;$(TargetDir)build__hash&quot;&#xD;&#xA;git rev-parse --short HEAD &gt; &quot;$(TargetDir)build__shorthash&quot;&#xD;&#xA;&#xD;&#xA;" />
-	</Target>
-
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(Configuration)' == 'Release' ">
 		<Exec Command="echo $(GitBuild) &gt; &quot;$(PublishDir)/build__build&quot;&#xD;&#xA;echo $(GitBranch) &gt; &quot;$(PublishDir)/build__branch&quot;&#xD;&#xA;echo $(GitHash) &gt; &quot;$(PublishDir)/build__hash&quot;&#xD;&#xA;echo $(GitShortHash) &gt; &quot;$(PublishDir)/build__shorthash&quot;&#xD;&#xA;&#xD;&#xA;" />
+	</Target>
+
+	<Target Name="PreBuild" BeforeTargets="PreBuildEvent" Condition="'$(Configuration)' == 'Debug' ">
+		<Exec Command="git rev-parse --abbrev-ref HEAD &gt; &quot;$(TargetDir)build__branch&quot;&#xD;&#xA;git rev-parse HEAD &gt; &quot;$(TargetDir)build__hash&quot;&#xD;&#xA;git rev-parse --short HEAD &gt; &quot;$(TargetDir)build__shorthash&quot;&#xD;&#xA;&#xD;&#xA;" />
 	</Target>
 
 </Project>

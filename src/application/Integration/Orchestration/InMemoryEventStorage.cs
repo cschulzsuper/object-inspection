@@ -44,7 +44,7 @@ namespace Super.Paula.Application.Orchestration
 
             if (found && entry != null)
             {
-                _logger.LogInformation("An event has been marked as in progress ({event}, {user})", entry.Event, entry.Event);
+                _logger.LogInformation("An event has been marked as in progress ({event}, {user})", entry.Event, entry.User);
             }
             else
             {
@@ -60,7 +60,7 @@ namespace Super.Paula.Application.Orchestration
 
             if (removed && entry != null)
             {
-                _logger.LogInformation("An event has been marked as completed ({event}, {user})", entry.Event, entry.Event);
+                _logger.LogInformation("An event has been marked as completed ({event}, {user})", entry.Event, entry.User);
             }
             else
             {
@@ -76,7 +76,7 @@ namespace Super.Paula.Application.Orchestration
 
             if (removed && entry != null)
             {
-                _logger.LogWarning(exception, "An event has been marked as failed ({event}, {user})", entry.Event, entry.Event);
+                _logger.LogWarning(exception, "An event has been marked as failed ({event}, {user})", entry.Event, entry.User);
                
             }
             else

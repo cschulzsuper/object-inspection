@@ -2,9 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Super.Paula.Application.Auditing.Requests;
-using Super.Paula.Application.Inventory.Requests;
 using System;
-using System.Threading;
 
 namespace Super.Paula.Application.Auditing
 {

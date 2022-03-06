@@ -5,7 +5,6 @@ using Super.Paula.Application.Auditing;
 using Super.Paula.Application.Communication;
 using Super.Paula.Application.Guidelines;
 using Super.Paula.Application.Inventory;
-using Super.Paula.Application.Operation;
 using Super.Paula.Application.Streaming;
 using System;
 using System.Diagnostics.CodeAnalysis;

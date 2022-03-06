@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Collections.Immutable;
-
-namespace Super.Paula.Application.Inventory.Responses
+﻿namespace Super.Paula.Application.Inventory.Responses
 {
     public partial class BusinessObjectResponse
     {

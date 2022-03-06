@@ -5,7 +5,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Super.Paula.Application;
 using Super.Paula.Application.Operation;
 using Super.Paula.Application.Orchestration;
-using Super.Paula.Authorization;
 using Super.Paula.Data;
 using System.Diagnostics.CodeAnalysis;
 using System.Net;

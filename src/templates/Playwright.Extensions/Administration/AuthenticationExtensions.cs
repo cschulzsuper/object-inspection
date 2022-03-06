@@ -13,10 +13,12 @@ namespace Super.Paula.Templates.Playwright.Administration
             await page.Locator("#identityMailAddress").FillAsync(mailAddress);
             await page.Locator("#identitySecret").FillAsync(password);
 
-              await page.RunAndWaitForNavigationAsync(async () =>
+            await page.RunAndWaitForNavigationAsync(async () =>
             {
                 await page.Locator("#submit").ClickAsync();
             });
+
+            await Task.Delay(1200);
         }
 
         public static async Task SignInAsync(this IPage page, string identity, string password, bool withAutomaticInspectorLogin)
@@ -28,7 +30,7 @@ namespace Super.Paula.Templates.Playwright.Administration
 
             await page.Locator("#submit").ClickAsync();
             
-            await Task.Delay(1000);
+            await Task.Delay(1200);
 
             await (!withAutomaticInspectorLogin
                 ? page.WaitForSelectorAsync("#signInInspectorHeadline")
@@ -37,7 +39,7 @@ namespace Super.Paula.Templates.Playwright.Administration
 
         public static async Task SignOutAsync(this IPage page)
         {
-            await Task.Delay(1000);
+            await Task.Delay(1200);
 
             await page.Locator("#signOut").ClickAsync();
             await page.WaitForSelectorAsync("#signInHeadline");

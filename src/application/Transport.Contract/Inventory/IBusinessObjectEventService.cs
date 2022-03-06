@@ -1,5 +1,4 @@
-﻿using Super.Paula.Application.Auditing;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace Super.Paula.Application.Inventory
 {

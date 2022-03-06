@@ -1,8 +1,6 @@
 ﻿using Super.Paula.Application.Auditing.Requests;
 using Super.Paula.Application.Auditing.Responses;
-using Super.Paula.Application.Inventory.Requests;
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Super.Paula.Application.Auditing

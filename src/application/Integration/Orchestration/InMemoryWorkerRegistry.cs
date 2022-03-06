@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Super.Paula.Application.Orchestration
@@ -27,7 +26,7 @@ namespace Super.Paula.Application.Orchestration
 
         public bool HasUnstartedWorker()
         { 
-            return _workers.Count > 0;
+            return !_workers.IsEmpty;
         }
 
         public async IAsyncEnumerable<WorkerRegistryEntry> GetUnstartedWorkerAsync()

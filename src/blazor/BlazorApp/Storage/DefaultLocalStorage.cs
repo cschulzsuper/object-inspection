@@ -19,9 +19,7 @@ namespace Super.Paula.Client.Storage
         public event EventHandler<LocalStorageEventArgs>? Changed;
 
         private void OnChanged(object? sender, ChangedEventArgs e)
-        {
-            Changed?.Invoke(this, new LocalStorageEventArgs(e.Key));
-        }
+            => RaiseOnChanged(e.Key);
 
         public ValueTask<bool> ContainKeyAsync(string key, CancellationToken? cancellationToken = null)
             => _localStorageService.ContainKeyAsync(key);
@@ -37,13 +35,22 @@ namespace Super.Paula.Client.Storage
             return deserializedResult;
         }
 
-        public ValueTask RemoveItemAsync(string key, CancellationToken? cancellationToken = null)
-            => _localStorageService.RemoveItemAsync(key);
+        public async ValueTask RemoveItemAsync(string key, CancellationToken? cancellationToken = null)
+        {
+            await _localStorageService.RemoveItemAsync(key);
+            RaiseOnChanged(key);
+        }
 
         public async ValueTask SetItemAsync<T>(string key, T data, CancellationToken? cancellationToken = null)
         {
             var serializedData = JsonSerializer.Serialize(data);
             await _localStorageService.SetItemAsStringAsync(key, serializedData);
+        }
+
+        private void RaiseOnChanged(string key)
+        {
+            var eventArgs = new LocalStorageEventArgs(key);
+            Changed?.Invoke(this, eventArgs);
         }
     }
 }

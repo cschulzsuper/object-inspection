@@ -10,6 +10,7 @@ namespace Super.Paula.Application
         public static IWorkerRegistry ConfigureIntegration(this IWorkerRegistry workerRegistry)
         {
             workerRegistry.Register<EventStorageWorker>();
+            workerRegistry.Register<ContinuationStorageWorker>();
 
             return workerRegistry;
         }

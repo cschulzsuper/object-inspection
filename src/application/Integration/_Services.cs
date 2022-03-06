@@ -22,12 +22,15 @@ namespace Super.Paula.Application
         {
             services
                 .AddSingleton<IEventStorage, InMemoryEventStorage>()
-                .AddSingleton<IEventBus, LocalEventBus>()
-                .AddScoped<EventStorageWorker>();
+                .AddSingleton<IEventBus, LocalEventBus>();
 
             services
                 .AddSingleton<IWorkerHost, LocalWorkerHost>()
                 .AddSingleton<IWorkerRegistry, InMemoryWorkerRegistry>();
+
+            services
+                .AddSingleton<IContinuationStorage, InMemoryContinuationStorage>()
+                .AddSingleton<IContinuator, Continuator>();
 
             return services;
         }

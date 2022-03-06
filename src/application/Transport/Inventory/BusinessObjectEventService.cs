@@ -1,7 +1,5 @@
-﻿using Super.Paula.Application.Auditing;
-using Super.Paula.Application.Inventory.Events;
+﻿using Super.Paula.Application.Inventory.Events;
 using Super.Paula.Application.Orchestration;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
