@@ -26,6 +26,7 @@ namespace Super.Paula.Application.Administration
 
             return endpoints;
         }
+
         private static Delegate Get =>
             [Authorize("Maintainance")]
             (IOrganizationHandler handler, string organization)

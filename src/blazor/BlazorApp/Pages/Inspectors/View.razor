@@ -1,11 +1,12 @@
 ﻿@page "/inspectors"
 @page "/organizations/{organization}/inspectors"
 
+@inject Application.Administration.IAuthorizationHandler AuthorizationHandler
+@inject Application.Administration.IInspectorHandler InspectorHandler
+@inject Application.Administration.IOrganizationHandler OrganizationHandler
+
 @inject ITranslator Translator
 @inject NavigationManager NavigationManager
-@inject IAccountHandler AccountHandler
-@inject IInspectorHandler InspectorHandler
-@inject IOrganizationHandler OrganizationHandler
 
 
 @attribute [Authorize("ManagementRead")]
@@ -176,12 +177,9 @@ else
             return;
         }
 
-        var identity = (await AuthenticationState).User.GetInspector();
-
-        await AccountHandler.RegisterChiefInspectorAsync(_organization.UniqueName ,new RegisterChiefInspectorRequest
+        await OrganizationHandler.InitializeAsync(_organization.UniqueName, new InitializeOrganizationRequest
         {
             Inspector = _organization.ChiefInspector,
-            Identity = identity,
             ETag = _organization.ETag
         });  
 
@@ -215,7 +213,7 @@ else
     {
         var organization = (await AuthenticationState).User.GetOrganization();
 
-        await AccountHandler.StartImpersonationAsync(
+        await AuthorizationHandler.StartImpersonationAsync(
             Organization ?? organization,
             inspector);
 

@@ -16,6 +16,8 @@ namespace Super.Paula.Application.Administration
 
         ValueTask<ActivateOrganizationResponse> ActivateAsync(string organization, string etag);
         ValueTask<DeactivateOrganizationResponse> DeactivateAsync(string organization, string etag);
-        
+        ValueTask<OrganizationResponse> RegisterAsync(RegisterOrganizationRequest request);
+        ValueTask<InitializeOrganizationResponse> InitializeAsync(string organization, InitializeOrganizationRequest request);
+
     }
 }

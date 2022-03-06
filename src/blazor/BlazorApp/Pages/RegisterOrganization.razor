@@ -1,7 +1,7 @@
 ﻿@page "/register-organization"
 
 @inject ITranslator Translator
-@inject IAccountHandler AccountHandler
+@inject IOrganizationHandler OrganizationHandler
 @inject NavigationManager NavigationManager
 
 @attribute [Authorize]
@@ -50,7 +50,7 @@
 
     private async Task OnValidSubmitAsync()
     {
-        await AccountHandler.RegisterOrganizationAsync(_model);
+        await OrganizationHandler.RegisterAsync(_model);
         NavigationManager.NavigateTo("/");
     }
 }

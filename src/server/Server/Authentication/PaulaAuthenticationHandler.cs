@@ -71,13 +71,6 @@ namespace Super.Paula.Authentication
                 return null;
             }
 
-            if (token.StreamerSecret != null)
-            {
-                _tokenAuthorizationFilter?.Apply(token);
-                return token;
-            }
-
-
             if (token.Identity == null ||
                 token.Proof == null)
             {
@@ -112,10 +105,9 @@ namespace Super.Paula.Authentication
                 {
                     return null;
                 }
-
-                _tokenAuthorizationFilter?.Apply(token);
             }
 
+            _tokenAuthorizationFilter?.Apply(token);
 
             return token;
         }

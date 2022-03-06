@@ -1,7 +1,8 @@
 ﻿@inherits LayoutComponentBase
 
-@inject IAccountHandler AccountHandler
-@inject IAuthenticationHandler AuthenticationHandler
+@inject Application.Administration.IAuthorizationHandler AuthorizationHandler
+@inject Application.Administration.IAuthenticationHandler AuthenticationHandler
+
 @inject NavigationManager NavigationManager   
 @inject AppEnvironment AppEnvironment
 @inject ITranslator Translator
@@ -125,7 +126,7 @@
     {
         try
         {
-            await AccountHandler.StopImpersonationAsync();
+            await AuthorizationHandler.StopImpersonationAsync();
         }
         catch(HttpRequestException e) when (e.StatusCode == HttpStatusCode.Unauthorized)
         {

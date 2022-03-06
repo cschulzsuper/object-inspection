@@ -1,8 +1,9 @@
 ﻿@page "/sign-in-inspector"
 
+@inject Application.Administration.IAuthorizationHandler AuthorizationHandler
+@inject Application.Administration.IInspectorHandler InspectorHandler
+
 @inject ITranslator Translator
-@inject IAccountHandler AccountHandler
-@inject IInspectorHandler InspectorHandler
 @inject NavigationManager NavigationManager
 
 @attribute [Authorize]
@@ -66,7 +67,7 @@ else
 
     private async Task SignInAsync(IdentityInspectorResponse inspector)
     {
-        await AccountHandler.SignInInspectorAsync(
+        await AuthorizationHandler.AuthorizeAsync(
             inspector.Organization,
             inspector.UniqueName);
 

@@ -2,8 +2,6 @@
 {
     public class AppSettings
     {
-        public string StreamerSecret { get; set; } = string.Empty;
-
         public string CosmosEndpoint { get; set; } = string.Empty;
 
         public string CosmosKey { get; set; } = string.Empty;

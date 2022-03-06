@@ -41,11 +41,6 @@ namespace Super.Paula.Application.Administration
                     authorizations.Add("Chief");
                 }
 
-                if (_appSettings.MaintainerIdentity == token.Identity)
-                {
-                    authorizations.Add("Maintainer");
-                }
-
                 if (!string.IsNullOrWhiteSpace(token.ImpersonatorOrganization) &&
                     !string.IsNullOrWhiteSpace(token.ImpersonatorInspector))
                 {
@@ -53,10 +48,11 @@ namespace Super.Paula.Application.Administration
                 }
             }
 
-            if (!string.IsNullOrWhiteSpace(_appSettings.StreamerSecret) &&
-                _appSettings.StreamerSecret == token.StreamerSecret)
+            if (_appSettings.MaintainerIdentity == token.Identity &&
+                !authorizations.Contains("Observer") &&
+                !authorizations.Contains("Impersonator"))
             {
-                authorizations.Add("Streamer");
+                authorizations.Add("Maintainer");
             }
 
             token.Authorizations = authorizations.ToArray();

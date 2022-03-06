@@ -20,6 +20,9 @@ using Super.Paula.Client.Streaming;
 using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
 
+using paulaAdministration = Super.Paula.Application.Administration;
+using msftAuthorization = Microsoft.AspNetCore.Authorization;
+
 namespace Super.Paula.Client
 {
     [SuppressMessage("Style", "IDE1006")]
@@ -47,7 +50,7 @@ namespace Super.Paula.Client
         {
             services.AddAuthorizationCore();
             services.AddSingleton<IAuthorizationPolicyProvider, PaulaAuthorizationPolicyProvider>();
-            services.AddScoped<IAuthorizationHandler, AnyAuthorizationClaimHandler>();
+            services.AddScoped<msftAuthorization::IAuthorizationHandler, AnyAuthorizationClaimHandler>();
             services.AddScoped<AuthenticationStateProvider, AuthenticationStateManager>();
 
             return services;
@@ -128,17 +131,17 @@ namespace Super.Paula.Client
                     .AddHttpMessageHandler<AuthenticationMessageHandler>();
 
                 services
-                    .AddHttpClient<AccountHandler>()
+                    .AddHttpClient<AuthenticationHandler>()
                     .AddHttpMessageHandler<AuthenticationMessageHandler>();
 
                 services
-                    .AddHttpClient<AuthenticationHandler>()
+                    .AddHttpClient<AuthorizationHandler>()
                     .AddHttpMessageHandler<AuthenticationMessageHandler>();
             }
             else
             {
-                services.AddHttpClientHandler<AccountHandler>();
                 services.AddHttpClientHandler<AuthenticationHandler>();
+                services.AddHttpClientHandler<AuthorizationHandler>();
                 services.AddHttpClientHandler<InspectorHandler>();
                 services.AddHttpClientHandler<IOrganizationHandler, OrganizationHandler>();
                 services.AddHttpClientHandler<IIdentityHandler, IdentityHandler>();
@@ -149,9 +152,9 @@ namespace Super.Paula.Client
                     provider.GetRequiredService<AuthenticationHandler>(),
                     provider.GetRequiredService<ILocalStorage>()));
 
-            services.AddScoped<IAccountHandler>(provider =>
-                new StoredTokenAccountHandler(
-                    provider.GetRequiredService<AccountHandler>(),
+            services.AddScoped<paulaAdministration::IAuthorizationHandler>(provider =>
+                new StoredTokenAuthorizationHandler(
+                    provider.GetRequiredService<AuthorizationHandler>(),
                     provider.GetRequiredService<ILocalStorage>()));
 
             services.AddScoped<IInspectorHandler>(provider =>

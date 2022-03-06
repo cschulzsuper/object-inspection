@@ -30,8 +30,8 @@ namespace Super.Paula.Application.Administration
                 () => (nameof(displayName), $"Display name '{displayName}' can not have more than 140 characters"));
 
         public static (bool, Func<(string, FormattableString)>) ChiefInspectorIsNotEmpty(string chiefInspector)
-            => (!string.IsNullOrWhiteSpace(chiefInspector),
-                () => (nameof(chiefInspector), $"Chief inspector can not be empty"));
+            => (chiefInspector != null,
+                () => (nameof(chiefInspector), $"Chief inspector can not be null"));
 
         public static (bool, Func<(string, FormattableString)>) ChiefInspectorHasKebabCase(string chiefInspector)
             => (string.IsNullOrWhiteSpace(chiefInspector) || KebabCaseValidator.IsValid(chiefInspector),
