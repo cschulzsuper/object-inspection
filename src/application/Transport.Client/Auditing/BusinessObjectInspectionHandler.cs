@@ -1,17 +1,13 @@
 ﻿using Super.Paula.Application.Auditing;
 using Super.Paula.Application.Auditing.Requests;
 using Super.Paula.Application.Auditing.Responses;
-using Super.Paula.Application.Inventory.Requests;
 using Super.Paula.Environment;
 using Super.Paula.ErrorHandling;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
-using System.Runtime.CompilerServices;
 using System.Text.Json;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Super.Paula.Client.Auditing

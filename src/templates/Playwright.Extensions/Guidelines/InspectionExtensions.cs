@@ -14,11 +14,12 @@ namespace Super.Paula.Templates.Playwright.Guidelines
             await page.Locator("#inspectionText").FillAsync(Faker.Lorem.Paragraph());
             await page.Locator("#inspectionActivated").SetCheckedAsync(true);
 
-            // Click text=Submit
             await page.RunAndWaitForNavigationAsync(async () =>
             {
                 await page.Locator("#submit").ClickAsync();
             });
+
+            await Task.Delay(1200);
         }
     }
 }

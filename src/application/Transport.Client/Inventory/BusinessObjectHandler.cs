@@ -1,5 +1,4 @@
-﻿using Super.Paula.Application.Auditing.Responses;
-using Super.Paula.Application.Inventory;
+﻿using Super.Paula.Application.Inventory;
 using Super.Paula.Application.Inventory.Requests;
 using Super.Paula.Application.Inventory.Responses;
 using Super.Paula.Environment;

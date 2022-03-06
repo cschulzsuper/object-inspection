@@ -1,8 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Super.Paula.Application.Auditing;
-using Super.Paula.Application.Inventory;
-using Super.Paula.Data.Mappings.Inventory;
 
 namespace Super.Paula.Data.Mappings.Auditing
 {

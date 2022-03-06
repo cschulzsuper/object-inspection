@@ -96,6 +96,10 @@ namespace Super.Paula.Application.Administration
                 UniqueName = request.Identity
             });
 
+            //_continuationStorage
+            //    .AddCreateIdentityInspectorContinuation(inespector)
+            //    .AddUpdateOrganizationInspectorContinuation(organizationEntity.ChiefInspector);
+
             return new RegisterChiefInspectorResponse
             {
                 ETag = organizationEntity.ETag

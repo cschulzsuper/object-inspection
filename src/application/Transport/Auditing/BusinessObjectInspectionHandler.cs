@@ -1,14 +1,11 @@
 ﻿using Super.Paula.Application.Administration.Responses;
 using Super.Paula.Application.Auditing.Requests;
 using Super.Paula.Application.Auditing.Responses;
-using Super.Paula.Application.Guidelines;
-using Super.Paula.Application.Inventory.Requests;
 using Super.Paula.Authorization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Super.Paula.Application.Auditing

@@ -1,9 +1,5 @@
 ﻿using Super.Paula.Application.Guidelines.Events;
-using Super.Paula.Application.Guidelines.Requests;
-using Super.Paula.Application.Guidelines.Responses;
 using Super.Paula.Application.Orchestration;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 

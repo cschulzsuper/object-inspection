@@ -3,8 +3,6 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -17,7 +15,7 @@ namespace Super.Paula.Application.Orchestration
         private readonly ILogger<LocalWorkerHost> _logger;
 
         private readonly int restartWorkerDelay = 60_000; // 1 minutes
-        private readonly int startUpWorkerDelay = 1_000; // 1 second
+        private readonly int startUpWorkerDelay = 2_500; // 2 second
 
         public LocalWorkerHost(
             IWorkerRegistry workerRegistry, 

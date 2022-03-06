@@ -17,6 +17,8 @@ namespace Super.Paula.Templates.Playwright.Inventory
             {
                 await page.Locator("#submit").ClickAsync();
             });
+
+            await Task.Delay(1200);
         }
     }
 }

@@ -20,7 +20,7 @@
 		</None>
 	</ItemGroup>
 
-	<Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(Configuration)' == 'Debug' ">
+	<Target Name="PreBuild" BeforeTargets="PreBuildEvent" Condition="'$(Configuration)' == 'Debug' ">
 		<Exec Command="git rev-parse --abbrev-ref HEAD &gt; &quot;$(TargetDir)build__branch&quot;&#xD;&#xA;git rev-parse HEAD &gt; &quot;$(TargetDir)build__hash&quot;&#xD;&#xA;git rev-parse --short HEAD &gt; &quot;$(TargetDir)build__shorthash&quot;&#xD;&#xA;&#xD;&#xA;" />
 	</Target>
 

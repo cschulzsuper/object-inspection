@@ -1,18 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
-using Super.Paula.Application.Administration;
-using Super.Paula.Application.Auditing;
-using Super.Paula.Application.Communication;
-using Super.Paula.Application.Guidelines;
-using Super.Paula.Application.Inventory;
-using Super.Paula.Authorization;
-using Super.Paula.Environment;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace Super.Paula.Data.Steps
 {

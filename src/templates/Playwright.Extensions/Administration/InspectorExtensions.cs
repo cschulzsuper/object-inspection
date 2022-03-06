@@ -15,6 +15,8 @@ namespace Super.Paula.Templates.Playwright.Administration
             {
                 await page.Locator("#submit").ClickAsync();
             });
+
+            await Task.Delay(1200);
         }
 
         public static async Task CreateInspectorAsync(this IPage page, string inspector, string identity)
@@ -29,6 +31,8 @@ namespace Super.Paula.Templates.Playwright.Administration
             {
                 await page.Locator("#submit").ClickAsync();
             });
+
+            await Task.Delay(1200);
         }
     }
 }

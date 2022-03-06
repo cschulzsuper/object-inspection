@@ -1,5 +1,4 @@
-﻿using Super.Paula.Application.Auditing;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace Super.Paula.Application.Auditing.Responses
