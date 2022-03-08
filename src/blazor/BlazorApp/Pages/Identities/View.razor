@@ -3,6 +3,7 @@
 @inject ITranslator Translator
 @inject NavigationManager NavigationManager
 @inject IIdentityHandler IdentityHandler
+@inject IAuthenticationHandler AuthenticationHandler
 
 @attribute [Authorize("Maintainance")]
 
@@ -101,7 +102,7 @@ else
 
     public async Task ResetAsync(IdentityResponse identity) 
     {
-        var reponse = await IdentityHandler.ResetAsync(identity.UniqueName, identity.ETag);
+        var reponse = await AuthenticationHandler.ResetAsync(identity.UniqueName, identity.ETag);
         identity.ETag = reponse.ETag;
     }
 }

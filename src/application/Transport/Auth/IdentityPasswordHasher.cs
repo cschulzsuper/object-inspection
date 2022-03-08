@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System;
 
-namespace Super.Paula.Application.Administration
+namespace Super.Paula.Application.Auth
 {
     public class IdentityPasswordHasher : PasswordHasher<Identity>
     {

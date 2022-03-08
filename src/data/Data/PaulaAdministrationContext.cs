@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Super.Paula.Data.Mappings.Administration;
+using Super.Paula.Data.Mappings.Auth;
 
 namespace Super.Paula.Data
 {

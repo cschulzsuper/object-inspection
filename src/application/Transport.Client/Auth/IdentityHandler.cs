@@ -1,6 +1,6 @@
-﻿using Super.Paula.Application.Administration;
-using Super.Paula.Application.Administration.Requests;
-using Super.Paula.Application.Administration.Responses;
+﻿using Super.Paula.Application.Auth;
+using Super.Paula.Application.Auth.Requests;
+using Super.Paula.Application.Auth.Responses;
 using Super.Paula.Environment;
 using Super.Paula.ErrorHandling;
 using System;
@@ -10,7 +10,7 @@ using System.Net.Http.Json;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace Super.Paula.Client.Administration
+namespace Super.Paula.Client.Auth
 {
     public class IdentityHandler : IIdentityHandler
     {
@@ -82,19 +82,6 @@ namespace Super.Paula.Client.Administration
 
             responseMessage.RuleOutProblems();
             responseMessage.EnsureSuccessStatusCode();
-        }
-
-        public async ValueTask<ResetIdentityResponse> ResetAsync(string identity, string etag)
-        {
-            var request = new HttpRequestMessage(HttpMethod.Post, $"identities/{identity}/reset");
-            request.Headers.Add("If-Match", etag);
-
-            var responseMessage = await _httpClient.SendAsync(request);
-
-            responseMessage.RuleOutProblems();
-            responseMessage.EnsureSuccessStatusCode();
-
-            return (await responseMessage.Content.ReadFromJsonAsync<ResetIdentityResponse>())!;
         }
     }
 }

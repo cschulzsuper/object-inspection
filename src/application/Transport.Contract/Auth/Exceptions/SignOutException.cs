@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Super.Paula.Application.Administration.Exceptions
+namespace Super.Paula.Application.Auth.Exceptions
 {
     public class SignOutException : Exception
     {

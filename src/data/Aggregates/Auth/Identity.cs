@@ -1,4 +1,4 @@
-﻿namespace Super.Paula.Application.Administration
+﻿namespace Super.Paula.Application.Auth
 {
     public class Identity
     {

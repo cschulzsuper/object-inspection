@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Super.Paula.Application.Administration.Exceptions;
-using Super.Paula.Application.Administration.Requests;
+using Super.Paula.Application.Auth.Exceptions;
+using Super.Paula.Application.Auth.Requests;
+using Super.Paula.Application.Auth.Responses;
 using Super.Paula.Application.Operation;
 using Super.Paula.Authorization;
 using System;
@@ -9,7 +10,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Super.Paula.Application.Administration
+namespace Super.Paula.Application.Auth
 {
     public class AuthenticationHandler : IAuthenticationHandler
     {
@@ -30,7 +31,7 @@ namespace Super.Paula.Application.Administration
             _user = principal;
         }
 
-        public async ValueTask ChangeSecretAsync(ChangeSecretRequest request)
+        public async ValueTask ChangeSecretAsync(ChangeIdentitySecretRequest request)
         {
             var identity = _identityManager.GetQueryable()
                 .Single(x => x.UniqueName == _user.GetIdentity());
@@ -46,7 +47,7 @@ namespace Super.Paula.Application.Administration
             await _identityManager.UpdateAsync(identity);
         }
 
-        public async ValueTask RegisterAsync(RegisterRequest request)
+        public async ValueTask RegisterAsync(RegisterIdentityRequest request)
         {
             var identity = new Identity
             {
@@ -59,12 +60,12 @@ namespace Super.Paula.Application.Administration
             await _identityManager.InsertAsync(identity);
         }
 
-        public async ValueTask<string> SignInAsync(SignInRequest request)
+        public async ValueTask<string> SignInAsync(string identity, SignInIdentityRequest request)
         {
-            var identity = _identityManager.GetQueryable()
-                .Single(x => x.UniqueName == request.Identity);
+            var entity = _identityManager.GetQueryable()
+                .Single(x => x.UniqueName == identity);
 
-            var secretVerification = _passwordHasher.VerifyHashedPassword(identity, identity.Secret, request.Secret);
+            var secretVerification = _passwordHasher.VerifyHashedPassword(entity, entity.Secret, request.Secret);
 
             switch (secretVerification)
             {
@@ -72,8 +73,8 @@ namespace Super.Paula.Application.Administration
                     break;
 
                 case PasswordVerificationResult.SuccessRehashNeeded:
-                    identity.Secret = _passwordHasher.HashPassword(identity, request.Secret);
-                    await _identityManager.UpdateAsync(identity);
+                    entity.Secret = _passwordHasher.HashPassword(entity, request.Secret);
+                    await _identityManager.UpdateAsync(entity);
                     break;
 
                 case PasswordVerificationResult.Failed:
@@ -84,12 +85,12 @@ namespace Super.Paula.Application.Administration
                 Encoding.UTF8.GetBytes($"{Guid.NewGuid()}"));
 
             _connectionManager.Trace(
-                identity.UniqueName,
+                entity.UniqueName,
                 connectionProof);
 
             var token = new Token
             {
-                Identity = identity.UniqueName,
+                Identity = entity.UniqueName,
                 Proof = connectionProof
             };
 
@@ -112,6 +113,21 @@ namespace Super.Paula.Application.Administration
             {
                 throw new SignOutException($"Could not sign out.", exception);
             }
+        }
+
+        public async ValueTask<ResetIdentityResponse> ResetAsync(string identity, string etag)
+        {
+            var entity = await _identityManager.GetAsync(identity);
+
+            entity.Secret = _passwordHasher.HashPassword(entity, "default");
+            entity.ETag = etag;
+
+            await _identityManager.UpdateAsync(entity);
+
+            return new ResetIdentityResponse
+            {
+                ETag = entity.ETag
+            };
         }
     }
 }

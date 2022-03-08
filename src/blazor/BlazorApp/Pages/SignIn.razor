@@ -1,5 +1,6 @@
 ﻿@page "/sign-in"
 
+
 @inject ITranslator Translator
 @inject IAuthenticationHandler AuthenticationHandler
 @inject NavigationManager NavigationManager
@@ -9,13 +10,13 @@
     <h1 id="signInHeadline">@Translator[$"Sign in"]</h1>
 </div>
 
-<EditForm Model="@request" OnValidSubmit="@OnValidSubmitAsync">
+<EditForm Model="@_model" OnValidSubmit="@OnValidSubmitAsync">
     <DataAnnotationsValidator />
 
     <div class="container-fluid">
         <div class="form-group">
             <label>@Translator[$"Identity"]</label>
-            <InputText class="form-control" id="identityUniqueName" @bind-Value="request.Identity" />
+            <InputText class="form-control" id="identityUniqueName" @bind-Value="_model.Identity" />
             @if(IsDemo)
             {
                 <small class="form-text text-muted">@Translator.Markdown($"Please feel free to use the demo identity *{AppSettings.DemoIdentity}*")</small>    
@@ -23,7 +24,7 @@
         </div>
         <div class="form-group">
             <label>@Translator[$"Password"]</label>
-            <InputText class="form-control" id="identitySecret" @bind-Value="request.Secret" type="password"/>
+            <InputText class="form-control" id="identitySecret" @bind-Value="_model.Secret" type="password"/>
             @if(IsDemo)
             {
                 <small class="form-text text-muted">@Translator.Markdown($"The demo identity password is *{AppSettings.DemoPassword}*")</small>    
@@ -52,7 +53,21 @@
 </EditForm>
 
 @code {
-    private SignInRequest request = new SignInRequest();
+
+    public class SignInModel
+    {
+        [Required]
+        [KebabCase]
+        [StringLength(140)]
+        [UniqueName]
+        public string Identity { get; set; } = string.Empty;
+
+        [Required]
+        [StringLength(140)]
+        public string Secret { get; set; } = string.Empty;
+    }
+
+    private SignInModel _model = new SignInModel();
 
     private bool IsDemo =>
         !string.IsNullOrWhiteSpace(AppSettings.DemoIdentity) &&
@@ -61,10 +76,13 @@
 
     private async Task OnValidSubmitAsync()
     {
-        await AuthenticationHandler.SignInAsync(request);
-        if (NavigationManager.Uri.Contains("sign-in"))
-        {
-            NavigationManager.NavigateTo("/sign-in-inspector");
-        }
+        var request = new SignInIdentityRequest
+            {
+                Secret = _model.Secret
+            };
+
+        await AuthenticationHandler.SignInAsync(_model.Identity,request);
+
+        NavigationManager.NavigateTo("/sign-in-inspector");
     }
 }

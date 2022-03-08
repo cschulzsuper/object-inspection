@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Super.Paula.Application.Administration.Requests;
-using Super.Paula.Application.Administration.Responses;
+using Super.Paula.Application.Auth.Requests;
+using Super.Paula.Application.Auth.Responses;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Super.Paula.Application.Administration
+namespace Super.Paula.Application.Auth
 {
     public class IdentityHandler : IIdentityHandler
     {
@@ -80,21 +80,6 @@ namespace Super.Paula.Application.Administration
             entity.ETag = request.ETag;
 
             await _identityManager.UpdateAsync(entity);
-        }
-
-        public async ValueTask<ResetIdentityResponse> ResetAsync(string identity, string etag)
-        {
-            var entity = await _identityManager.GetAsync(identity);
-
-            entity.Secret = _passwordHasher.HashPassword(entity, "default");
-            entity.ETag = etag;
-
-            await _identityManager.UpdateAsync(entity);
-
-            return new ResetIdentityResponse
-            {
-                ETag = entity.ETag
-            };
         }
     }
 }
