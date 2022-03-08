@@ -1,10 +1,12 @@
 ﻿using Super.Paula.Validation;
 using System.ComponentModel.DataAnnotations;
 
-namespace Super.Paula.Application.Administration.Requests
+namespace Super.Paula.Application.Auth.Requests
 {
-    public class RegisterRequest
+    public class IdentityRequest
     {
+        public string ETag { get; set; } = string.Empty;
+
         [Required]
         [KebabCase]
         [StringLength(140)]
@@ -14,9 +16,5 @@ namespace Super.Paula.Application.Administration.Requests
         [EmailAddress]
         [StringLength(140)]
         public string MailAddress { get; set; } = string.Empty;
-
-        [Required]
-        [StringLength(140)]
-        public string Secret { get; set; } = string.Empty;
     }
 }

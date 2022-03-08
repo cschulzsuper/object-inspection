@@ -2,7 +2,7 @@
 using System;
 using System.Net.Mail;
 
-namespace Super.Paula.Application.Administration
+namespace Super.Paula.Application.Auth
 {
     public static class IdentityValidator
     {

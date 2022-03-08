@@ -1,4 +1,4 @@
-﻿namespace Super.Paula.Application.Administration.Responses
+﻿namespace Super.Paula.Application.Auth.Responses
 {
     public class IdentityResponse
     {

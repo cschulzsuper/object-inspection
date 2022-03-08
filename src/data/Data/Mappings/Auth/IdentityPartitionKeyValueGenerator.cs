@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.ValueGeneration;
-using Super.Paula.Application.Administration;
+using Super.Paula.Application.Auth;
 using System.Collections.Generic;
 
-namespace Super.Paula.Data.Mappings.Administration
+namespace Super.Paula.Data.Mappings.Auth
 {
     public class IdentityPartitionKeyValueGenerator : ValueGenerator<string>, IPartitionKeyValueGenerator<Identity>
     {

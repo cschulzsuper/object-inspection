@@ -1,9 +1,9 @@
-﻿using Super.Paula.Application.Administration.Requests;
-using Super.Paula.Application.Administration.Responses;
+﻿using Super.Paula.Application.Auth.Requests;
+using Super.Paula.Application.Auth.Responses;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Super.Paula.Application.Administration
+namespace Super.Paula.Application.Auth
 {
     public interface IIdentityHandler
     {
@@ -13,7 +13,5 @@ namespace Super.Paula.Application.Administration
         ValueTask<IdentityResponse> CreateAsync(IdentityRequest request);
         ValueTask ReplaceAsync(string identity, IdentityRequest request);
         ValueTask DeleteAsync(string identity, string etag);
-
-        ValueTask<ResetIdentityResponse> ResetAsync(string identity, string etag);
     }
 }

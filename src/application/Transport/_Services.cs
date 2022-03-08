@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Super.Paula.Application.Administration;
 using Super.Paula.Application.Auditing;
+using Super.Paula.Application.Auth;
 using Super.Paula.Application.Communication;
 using Super.Paula.Application.Guidelines;
 using Super.Paula.Application.Inventory;
@@ -18,6 +19,7 @@ namespace Super.Paula.Application
         {
             services.AddServerTransportAdministration();
             services.AddServerTransportAuditing();
+            services.AddServerTransportAuth();
             services.AddServerTransportCommunication();
             services.AddServerTransportGuidelines();
             services.AddServerTransportInventory();
@@ -27,11 +29,7 @@ namespace Super.Paula.Application
 
         private static IServiceCollection AddServerTransportAdministration(this IServiceCollection services)
         {
-            services.AddScoped<IPasswordHasher<Identity>, IdentityPasswordHasher>();
-            services.AddScoped<IIdentityHandler, IdentityHandler>();
-
             services.AddScoped<IAuthorizationHandler, AuthorizationHandler>();
-            services.AddScoped<IAuthenticationHandler, AuthenticationHandler>();
 
             services.AddScoped<IInspectorAnnouncer>(InspectorAnnouncerFactory);
             services.AddScoped<IInspectorHandler, InspectorHandler>();
@@ -51,6 +49,15 @@ namespace Super.Paula.Application
             services.AddScoped<IBusinessObjectInspectionAuditRecordHandler, BusinessObjectInspectionAuditRecordHandler>();
             services.AddScoped<IBusinessObjectInspectionHandler, BusinessObjectInspectionHandler>();
             services.AddScoped<IBusinessObjectInspectionEventService, BusinessObjectInspectionEventService>();
+
+            return services;
+        }
+
+        private static IServiceCollection AddServerTransportAuth(this IServiceCollection services)
+        {
+            services.AddScoped<IPasswordHasher<Identity>, IdentityPasswordHasher>();
+            services.AddScoped<IIdentityHandler, IdentityHandler>();
+            services.AddScoped<IAuthenticationHandler, AuthenticationHandler>();
 
             return services;
         }

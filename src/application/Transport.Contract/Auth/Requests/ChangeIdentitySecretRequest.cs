@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Super.Paula.Application.Administration.Requests
+namespace Super.Paula.Application.Auth.Requests
 {
-    public class ChangeSecretRequest
+    public class ChangeIdentitySecretRequest
     {
         [Required]
         [StringLength(140)]

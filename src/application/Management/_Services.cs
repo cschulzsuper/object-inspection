@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Super.Paula.Application.Administration;
 using Super.Paula.Application.Auditing;
+using Super.Paula.Application.Auth;
 using Super.Paula.Application.Communication;
 using Super.Paula.Application.Guidelines;
 using Super.Paula.Application.Inventory;
@@ -16,6 +17,7 @@ namespace Super.Paula.Application
         {
             services.AddServerManagementAdministration();
             services.AddServerManagementAuditing();
+            services.AddServerManagementAuth();
             services.AddServerManagementCommunication();
             services.AddServerManagementGuidelines();
             services.AddServerManagementInventory();
@@ -28,7 +30,6 @@ namespace Super.Paula.Application
         {
             services.AddScoped<IInspectorManager, InspectorManager>();
             services.AddScoped<IIdentityInspectorManager, IdentityInspectorManager>();
-            services.AddScoped<IIdentityManager, IdentityManager>();
             services.AddScoped<IOrganizationManager, OrganizationManager>();
 
             return services;
@@ -38,6 +39,13 @@ namespace Super.Paula.Application
         {
             services.AddScoped<IBusinessObjectInspectionManager, BusinessObjectInspectionManager>();
             services.AddScoped<IBusinessObjectInspectionAuditRecordManager, BusinessObjectInspectionAuditRecordManager>();
+
+            return services;
+        }
+
+        private static IServiceCollection AddServerManagementAuth(this IServiceCollection services)
+        {
+            services.AddScoped<IIdentityManager, IdentityManager>();
 
             return services;
         }
