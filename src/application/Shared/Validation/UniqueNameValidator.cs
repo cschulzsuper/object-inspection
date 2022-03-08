@@ -24,6 +24,7 @@
                 "organiztation",
                 "reset",
                 "repaire",
+                "register",
                 "null",
                 "me", 
                 "search");

@@ -30,16 +30,18 @@ namespace Super.Paula.Application
             services.AddScoped<IPasswordHasher<Identity>, IdentityPasswordHasher>();
             services.AddScoped<IIdentityHandler, IdentityHandler>();
 
-            services.AddScoped<IAccountHandler, AccountHandler>();
+            services.AddScoped<IAuthorizationHandler, AuthorizationHandler>();
             services.AddScoped<IAuthenticationHandler, AuthenticationHandler>();
 
             services.AddScoped<IInspectorAnnouncer>(InspectorAnnouncerFactory);
             services.AddScoped<IInspectorHandler, InspectorHandler>();
             services.AddScoped<IInspectorEventService, InspectorEventService>();
+            services.AddScoped<IInspectorContinuationService, InspectorContinuationService>();
 
             services.AddScoped<IOrganizationHandler, OrganizationHandler>();
             services.AddScoped<IOrganizations, Organizations>();
             services.AddScoped<IOrganizationEventService, OrganizationEventService>();
+            services.AddScoped<IOrganizationContinuationService, OrganizationContinuationService>();
 
             return services;
         }

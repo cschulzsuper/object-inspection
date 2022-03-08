@@ -102,6 +102,26 @@ namespace Super.Paula.Client.Administration
             return (await responseMessage.Content.ReadFromJsonAsync<OrganizationResponse>())!;
         }
 
+        public async ValueTask<InitializeOrganizationResponse> InitializeAsync(string organization, InitializeOrganizationRequest request)
+        {
+            var responseMessage = await _httpClient.PostAsJsonAsync($"organizations/{organization}/initialize", request);
+
+            responseMessage.RuleOutProblems();
+            responseMessage.EnsureSuccessStatusCode();
+
+            return (await responseMessage.Content.ReadFromJsonAsync<InitializeOrganizationResponse>())!;
+        }
+
+        public async ValueTask<OrganizationResponse> RegisterAsync(RegisterOrganizationRequest request)
+        {
+            var responseMessage = await _httpClient.PostAsJsonAsync("organizations/register", request);
+
+            responseMessage.RuleOutProblems();
+            responseMessage.EnsureSuccessStatusCode();
+
+            return (await responseMessage.Content.ReadFromJsonAsync<OrganizationResponse>())!;
+        }
+
         public async ValueTask ReplaceAsync(string organization, OrganizationRequest request)
         {
             var responseMessage = await _httpClient.PutAsJsonAsync($"organizations/{organization}", request);

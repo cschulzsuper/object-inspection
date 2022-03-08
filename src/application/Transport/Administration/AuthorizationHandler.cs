@@ -2,111 +2,35 @@
 using Super.Paula.Application.Administration.Responses;
 using Super.Paula.Application.Operation;
 using Super.Paula.Authorization;
-using Super.Paula.Environment;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Super.Paula.Application.Administration
 {
-    public class AccountHandler : IAccountHandler
+    public class AuthorizationHandler : IAuthorizationHandler
     {
         private readonly IInspectorManager _inspectorManager;
         private readonly IIdentityInspectorManager _identityInspectorManager;
-        private readonly IOrganizationManager _organizationManager;
-        private readonly AppSettings _appSettings;
         private readonly ITokenAuthorizationFilter _tokenAuthorizatioFilter;
         private readonly IConnectionManager _connectionManager;
         private readonly ClaimsPrincipal _user;
-        private readonly IOrganizationEventService _organizationEvents;
 
-        public AccountHandler(
+        public AuthorizationHandler(
             IInspectorManager inspectorManager,
             IIdentityInspectorManager identityInspectorManager,
-            IOrganizationManager organizationManager,
-            AppSettings appSettings,
             ITokenAuthorizationFilter tokenAuthorizatioFilter,
             IConnectionManager connectionManager,
-            ClaimsPrincipal user,
-            IOrganizationEventService organizationEvents)
+            ClaimsPrincipal user)
         {
             _inspectorManager = inspectorManager;
             _identityInspectorManager = identityInspectorManager;
-            _organizationManager = organizationManager;
-            _appSettings = appSettings;
             _tokenAuthorizatioFilter = tokenAuthorizatioFilter;
             _connectionManager = connectionManager;
             _user = user;
-            _organizationEvents = organizationEvents;
         }
 
-        public async ValueTask RegisterOrganizationAsync(RegisterOrganizationRequest request)
-        {
-            if (_appSettings.MaintainerIdentity != _user.GetIdentity())
-            {
-                throw new TransportException($"Only the maintainer organization can be registered.");
-            }
-
-            var organization = new Organization
-            {
-                ChiefInspector = request.UniqueName,
-                UniqueName = request.UniqueName,
-                DisplayName = request.DisplayName,
-                Activated = true
-            };
-
-            await _organizationManager.InsertAsync(organization);
-
-            await _organizationEvents.CreateOrganizationCreationEventAsync(organization);
-        }
-
-        public async ValueTask<RegisterChiefInspectorResponse> RegisterChiefInspectorAsync(string organization, RegisterChiefInspectorRequest request)
-        {
-            if (_appSettings.MaintainerIdentity != _user.GetIdentity())
-            { 
-                throw new TransportException($"Only the maintainer can register the chief inspectors.");
-            }
-
-            var organizationEntity = await _organizationManager.GetAsync(organization);
-
-            if (!string.IsNullOrWhiteSpace(organizationEntity.ChiefInspector))
-            {
-                organizationEntity.ETag =  request.ETag;
-            }
-
-            organizationEntity.ChiefInspector =  request.Inspector;
-
-            await _organizationManager.UpdateAsync(organizationEntity);
-
-            await _inspectorManager.InsertAsync(new Inspector
-            {
-                Identity = request.Identity,
-                Organization = organization,
-                OrganizationActivated = true,
-                OrganizationDisplayName = organizationEntity.DisplayName,
-                UniqueName = request.Inspector,
-                Activated = true
-            });
-
-            await _identityInspectorManager.InsertAsync(new IdentityInspector
-            {
-                Activated = true,
-                Inspector = request.Inspector,
-                Organization = organization,
-                UniqueName = request.Identity
-            });
-
-            //_continuationStorage
-            //    .AddCreateIdentityInspectorContinuation(inespector)
-            //    .AddUpdateOrganizationInspectorContinuation(organizationEntity.ChiefInspector);
-
-            return new RegisterChiefInspectorResponse
-            {
-                ETag = organizationEntity.ETag
-            };
-        }
-
-        public ValueTask<string> SignInInspectorAsync(string organization, string inspector)
+        public ValueTask<string> AuthorizeAsync(string organization, string inspector)
         {
             var identityInspector = _identityInspectorManager
                 .GetIdentityBasedQueryable(_user.GetIdentity())

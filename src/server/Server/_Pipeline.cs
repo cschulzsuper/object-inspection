@@ -34,6 +34,16 @@ namespace Super.Paula
             return app;
         }
 
+        public static IApplicationBuilder ConfigureContinutations(this IApplicationBuilder app)
+        {
+            var continuator = app.ApplicationServices.GetRequiredService<IContinuator>();
+
+            continuator.Configure((context) => context.Services.ConfigureData());
+            continuator.ConfigureTransport();
+
+            return app;
+        }
+
         public static IApplicationBuilder UseRequestUser(this IApplicationBuilder app)
         {
             app.Use(async (context, next) =>

@@ -16,19 +16,22 @@ namespace Super.Paula.Application.Administration
         private readonly IIdentityInspectorManager _identityInspectorManager;
         private readonly ClaimsPrincipal _user;
         private readonly IInspectorAnnouncer _inspectorAnnouncer;
+        private readonly IInspectorContinuationService _inspectorContinuationService;
 
         public InspectorHandler(
             IInspectorManager inspectorManager,
             IOrganizationManager organizationManager,
             IIdentityInspectorManager identityInspectorManager,
             ClaimsPrincipal claimsPrincipal,
-            IInspectorAnnouncer inspectorAnnouncer)
+            IInspectorAnnouncer inspectorAnnouncer,
+            IInspectorContinuationService inspectorContinuationService)
         {
             _inspectorManager = inspectorManager;
             _organizationManager = organizationManager;
             _identityInspectorManager = identityInspectorManager;
             _user = claimsPrincipal;
             _inspectorAnnouncer = inspectorAnnouncer;
+            _inspectorContinuationService = inspectorContinuationService;
         }
 
         public async ValueTask<InspectorResponse> CreateAsync(InspectorRequest request)
@@ -46,16 +49,7 @@ namespace Super.Paula.Application.Administration
             };
 
             await _inspectorManager.InsertAsync(entity);
-
-            var identity = new IdentityInspector
-            {
-                Activated = entity.Activated && organization.Activated,
-                Inspector = entity.UniqueName,
-                Organization = organization.UniqueName,
-                UniqueName = entity.Identity
-            };
-
-            await _identityInspectorManager.InsertAsync(identity);
+            await _inspectorContinuationService.AddCreateIdentityInspectorContinuationAsync(entity);
 
             return new InspectorResponse
             {
@@ -74,6 +68,7 @@ namespace Super.Paula.Application.Administration
             entity.ETag = etag;
 
             await _inspectorManager.DeleteAsync(entity);
+            await _inspectorContinuationService.AddDeleteIdentityInspectorContinuationAsync(entity);
 
             var identity = await _identityInspectorManager.GetAsync(
                 entity.Identity,
@@ -134,23 +129,8 @@ namespace Super.Paula.Application.Administration
             entity.ETag = request.ETag;
 
             await _inspectorManager.UpdateAsync(entity);
-
-            var identity = await _identityInspectorManager.GetAsync(
-                oldIdentity,
-                entity.Organization,
-                entity.UniqueName);
-
-            await _identityInspectorManager.DeleteAsync(identity);
-
-            identity = new IdentityInspector
-            {
-                Activated = entity.Activated && entity.OrganizationActivated,
-                Inspector = entity.UniqueName,
-                Organization = entity.Organization,
-                UniqueName = entity.Identity
-            };
-
-            await _identityInspectorManager.InsertAsync(identity);
+            await _inspectorContinuationService.AddCreateIdentityInspectorContinuationAsync(entity);
+            await _inspectorContinuationService.AddDeleteIdentityInspectorContinuationAsync(oldIdentity, entity.Organization, entity.UniqueName);
         }
 
         public async ValueTask<ActivateInspectorResponse> ActivateAsync(string inspector, string etag)
@@ -161,6 +141,7 @@ namespace Super.Paula.Application.Administration
             entity.ETag = etag;
 
             await _inspectorManager.UpdateAsync(entity);
+            await _inspectorContinuationService.AddActivateIdentityInspectorContinuationAsync(entity);
 
             var identity = await _identityInspectorManager.GetAsync(
                 entity.Identity,
@@ -185,6 +166,7 @@ namespace Super.Paula.Application.Administration
             entity.ETag = etag;
 
             await _inspectorManager.UpdateAsync(entity);
+            await _inspectorContinuationService.AddDeactivateIdentityInspectorContinuationAsync(entity);
 
             var identity = await _identityInspectorManager.GetAsync(
                 entity.Identity,

@@ -1,7 +1,10 @@
 ﻿using Super.Paula.Application.Administration.Requests;
 using Super.Paula.Application.Administration.Responses;
+using Super.Paula.Authorization;
+using Super.Paula.Environment;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Super.Paula.Application.Administration
@@ -11,15 +14,18 @@ namespace Super.Paula.Application.Administration
         private readonly IOrganizationManager _organizationManager;
         private readonly IIdentityInspectorManager _identityInspectorManager;
         private readonly IOrganizationEventService _organizationEventService;
+        private readonly IOrganizationContinuationService _organizationContinuationService;
 
         public OrganizationHandler(
             IOrganizationManager organizationManager,
             IIdentityInspectorManager identityInspectorManager,
-            IOrganizationEventService organizationEventService)
+            IOrganizationEventService organizationEventService,
+            IOrganizationContinuationService organizationContinuationService)
         {
             _organizationManager = organizationManager;
             _identityInspectorManager = identityInspectorManager;
             _organizationEventService = organizationEventService;
+            _organizationContinuationService = organizationContinuationService;
         }
 
         public async ValueTask<OrganizationResponse> CreateAsync(OrganizationRequest request)
@@ -154,6 +160,46 @@ namespace Super.Paula.Application.Administration
                 ETag = entity.ETag
             };
 
+        }
+
+        public async ValueTask<OrganizationResponse> RegisterAsync(RegisterOrganizationRequest request)
+        {
+            var entity = new Organization
+            {
+                ChiefInspector = string.Empty,
+                UniqueName = request.UniqueName,
+                DisplayName = request.DisplayName,
+                Activated = false
+            };
+
+            await _organizationManager.InsertAsync(entity);
+            await _organizationEventService.CreateOrganizationCreationEventAsync(entity);
+
+            return new OrganizationResponse
+            {
+                ChiefInspector = entity.ChiefInspector,
+                DisplayName = entity.DisplayName,
+                UniqueName = entity.UniqueName,
+                Activated = entity.Activated,
+                ETag = entity.ETag
+            };
+        }
+
+        public async ValueTask<InitializeOrganizationResponse> InitializeAsync(string organization, InitializeOrganizationRequest request)
+        {
+            var entity = await _organizationManager.GetAsync(organization);
+
+            entity.ChiefInspector =  request.Inspector;
+            entity.ETag =  request.ETag;
+            entity.Activated = true;
+
+            await _organizationManager.UpdateAsync(entity);
+            await _organizationContinuationService.AddCreateInspectorContinuationForChiefInspectorAsync(entity);
+            
+            return new InitializeOrganizationResponse
+            {
+                ETag = entity.ETag
+            };
         }
     }
 }

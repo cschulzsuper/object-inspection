@@ -14,8 +14,8 @@ namespace Super.Paula
     {
         public static IEndpointRouteBuilder MapServer(this IEndpointRouteBuilder endpoints)
             => endpoints
-                .MapAccount()
                 .MapAuthentication()
+                .MapAuthorization()
                 .MapBusinessObject()
                 .MapBusinessObjectInspection()
                 .MapBusinessObjectInspectionAuditRecord()
