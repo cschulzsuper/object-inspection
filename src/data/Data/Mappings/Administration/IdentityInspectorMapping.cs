@@ -6,7 +6,7 @@ namespace Super.Paula.Data.Mappings.Administration
 {
     public class IdentityInspectorMapping : IEntityTypeConfiguration<IdentityInspector>
     {
-        public string PartitionKey = "UniqueName";
+        public string PartitionKey = nameof(PartitionKey);
 
         public void Configure(EntityTypeBuilder<IdentityInspector> builder)
         {
@@ -15,12 +15,17 @@ namespace Super.Paula.Data.Mappings.Administration
                 .HasValueGenerator<IdentityInspectorPartitionKeyValueGenerator>();
 
             builder
-                 .HasKey(PartitionKey, nameof(IdentityInspector.Organization), nameof(IdentityInspector.Inspector));
+                 .HasKey(PartitionKey,
+                    nameof(IdentityInspector.Organization), 
+                    nameof(IdentityInspector.Inspector));
 
             builder
-                .ToContainer(nameof(IdentityInspector))
-                .HasPartitionKey(PartitionKey)
-                .HasNoDiscriminator();
+                .ToContainer("_administration")
+                .HasPartitionKey(PartitionKey);
+
+            builder
+                .HasDiscriminator<string>("discriminator")
+                .HasValue("identity-inspector");
 
             builder
                 .Property(x => x.ETag)

@@ -26,8 +26,11 @@ namespace Super.Paula.Data.Mappings.Inventory
 
             builder
                 .ToContainer(_state.CurrentOrganization)
-                .HasPartitionKey(PartitionKey)
-                .HasDiscriminator<string>("Type");
+                .HasPartitionKey(PartitionKey);
+
+            builder
+                .HasDiscriminator<string>("discriminator")
+                .HasValue("business-object");
 
             builder
                 .Property(x => x.ETag)

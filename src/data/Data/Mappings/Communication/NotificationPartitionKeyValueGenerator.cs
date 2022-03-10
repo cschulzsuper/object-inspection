@@ -15,9 +15,9 @@ namespace Super.Paula.Data.Mappings.Communication
                 (entry.Entity as Notification)!);
 
         public string Value(PaulaContextState state, Notification entity)
-            => $"notification/{entity.Inspector}";
+            => $"notification|{entity.Inspector}";
 
         public string Value(PaulaContextState state, Queue<object> partitionKeyComponents)
-            => $"notification/{partitionKeyComponents.Dequeue()}";
+            => $"notification|{partitionKeyComponents.Dequeue()}";
     }
 }

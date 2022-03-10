@@ -28,8 +28,11 @@ namespace Super.Paula.Data.Mappings.Communication
 
             builder
                 .ToContainer(_state.CurrentOrganization)
-                .HasPartitionKey(PartitionKey)
-                .HasDiscriminator<string>("Type");
+                .HasPartitionKey(PartitionKey);
+
+            builder
+                .HasDiscriminator<string>("discriminator")
+                .HasValue("notification");
 
             builder
                 .Property(x => x.ETag)

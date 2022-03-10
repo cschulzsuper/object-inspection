@@ -18,9 +18,12 @@ namespace Super.Paula.Data.Mappings.Administration
                 .HasKey(PartitionKey, nameof(Organization.UniqueName));
 
             builder
-                .ToContainer(nameof(Organization))
-                .HasPartitionKey(PartitionKey)
-                .HasNoDiscriminator();
+                .ToContainer("_administration")
+                .HasPartitionKey(PartitionKey);
+
+            builder
+                .HasDiscriminator<string>("discriminator")
+                .HasValue("organization");
 
             builder
                 .Property(x => x.ETag)

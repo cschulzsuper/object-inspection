@@ -15,9 +15,9 @@ namespace Super.Paula.Data.Mappings.Administration
                 (entry.Entity as IdentityInspector)!);
 
         public string Value(PaulaContextState state, IdentityInspector entity)
-            => entity.UniqueName;
+            => $"identity-inspector|{entity.UniqueName}";
 
         public string Value(PaulaContextState state, Queue<object> partitionKeyComponents)
-            => $"{partitionKeyComponents.Dequeue()}";
+            => $"identity-inspector|{partitionKeyComponents.Dequeue()}";
     }
 }

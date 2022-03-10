@@ -29,8 +29,11 @@ namespace Super.Paula.Data.Mappings.Auditing
 
             builder
                 .ToContainer(_state.CurrentOrganization)
-                .HasPartitionKey(PartitionKey)
-                .HasDiscriminator<string>("Type");
+                .HasPartitionKey(PartitionKey);
+
+            builder
+                .HasDiscriminator<string>("discriminator")
+                .HasValue("business-object-inspection-audit-record");
 
             builder
                 .Property(x => x.ETag)

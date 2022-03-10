@@ -18,9 +18,12 @@ namespace Super.Paula.Data.Mappings.Auth
                 .HasKey(PartitionKey, nameof(Identity.UniqueName));
 
             builder
-                .ToContainer(nameof(Identity))
-                .HasPartitionKey(PartitionKey)
-                .HasNoDiscriminator();
+                .ToContainer("_auth")
+                .HasPartitionKey(PartitionKey);
+
+            builder
+                .HasDiscriminator<string>("discriminator")
+                .HasValue("identity");
 
             builder
                 .Property(x => x.ETag)

@@ -49,19 +49,20 @@ namespace Super.Paula.Templates.Playwright.Administration
             await Task.Delay(12_000);
         }
 
-        public static async Task RegisterChiefInspectorAsync(this IPage page, string organization, string inspector, bool withAutomaticInspectorLogin)
+        public static async Task RegisterChiefInspectorAsync(this IPage page, string organization, string inspector)
         {
             await page.GotoAsync($"register-chief-inspector/{organization}");
 
             await page.Locator("#inspector").FillAsync(inspector);
 
-            await page.Locator("#submit").ClickAsync();
+            await page.RunAndWaitForNavigationAsync(async () =>
+            {
+                await page.Locator("#submit").ClickAsync();
+            });
 
-            await Task.Delay(1200);
+            await Task.Delay(2400);
 
-            await (!withAutomaticInspectorLogin
-                ? page.WaitForSelectorAsync("#signInInspectorHeadline")
-                : page.WaitForSelectorAsync("#indexHeadline"));
+            await page.GotoAsync($"");
         }
     }
 }

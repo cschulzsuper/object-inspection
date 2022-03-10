@@ -15,9 +15,9 @@ namespace Super.Paula.Data.Mappings.Auditing
                 (entry.Entity as BusinessObjectInspectionAuditRecord)!);
 
         public string Value(PaulaContextState state, BusinessObjectInspectionAuditRecord entity)
-            => $"business-object-inspection-audit-record/{entity.AuditDate}";
+            => $"business-object-inspection-audit-record|{entity.AuditDate}";
 
         public string Value(PaulaContextState state, Queue<object> partitionKeyComponents)
-            => $"business-object-inspection-audit-record/{partitionKeyComponents.Dequeue()}";
+            => $"business-object-inspection-audit-record|{partitionKeyComponents.Dequeue()}";
     }
 }
