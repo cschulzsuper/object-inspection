@@ -15,9 +15,9 @@ namespace Super.Paula.Data.Mappings.Administration
                 (entry.Entity as Organization)!);
 
         public string Value(PaulaContextState state, Organization entity)
-            => "default";
+            => "organization";
 
         public string Value(PaulaContextState state, Queue<object> partitionKeyComponents)
-            => "default";
+            => "organization";
     }
 }

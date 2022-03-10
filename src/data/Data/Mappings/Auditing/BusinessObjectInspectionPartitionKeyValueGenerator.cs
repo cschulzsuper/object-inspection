@@ -15,10 +15,10 @@ namespace Super.Paula.Data.Mappings.Auditing
                 (entry.Entity as BusinessObjectInspection)!);
 
         public string Value(PaulaContextState state, BusinessObjectInspection entity)
-            => $"business-object-inspection/{entity.BusinessObject}";
+            => $"business-object-inspection|{entity.BusinessObject}";
 
         public string Value(PaulaContextState state, Queue<object> partitionKeyComponents)
-            => $"business-object-inspection/{partitionKeyComponents.Dequeue()}";
+            => $"business-object-inspection|{partitionKeyComponents.Dequeue()}";
 
     }
 }
