@@ -147,7 +147,7 @@ else
             };
 
             await BusinessObjectInspectionHandler.ReplaceAuditAsync(
-                inspection.BusinessObject, inspection.Inspection, inspection.AuditDate, inspection.AuditTime, request);
+                inspection.BusinessObject, inspection.Inspection, request);
 
             inspection.AuditResult = request.Result;
             inspection.ETag = request.ETag;

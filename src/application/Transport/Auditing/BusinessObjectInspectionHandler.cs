@@ -265,7 +265,7 @@ namespace Super.Paula.Application.Auditing
             };
         }
 
-        public async ValueTask<BusinessObjectInspectionAuditResponse> ReplaceAuditAsync(string businessObject, string inspection, int date, int time, BusinessObjectInspectionAuditRequest request)
+        public async ValueTask<BusinessObjectInspectionAuditResponse> ReplaceAuditAsync(string businessObject, string inspection, BusinessObjectInspectionAuditRequest request)
         {
             var entity = await _businessObjectInspectionManager.GetAsync(businessObject, inspection);
 

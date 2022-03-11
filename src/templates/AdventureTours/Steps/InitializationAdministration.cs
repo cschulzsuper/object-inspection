@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.Playwright;
 
 using playwright = Microsoft.Playwright;
+using Super.Paula.Templates.Playwright.Auth;
 
 namespace Super.Paula.Templates.AdventureTours.Steps
 {

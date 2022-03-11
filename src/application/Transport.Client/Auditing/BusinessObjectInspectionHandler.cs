@@ -114,7 +114,7 @@ namespace Super.Paula.Client.Auditing
             return (await responseMessage.Content.ReadFromJsonAsync<BusinessObjectInspectionAuditAnnotationResponse>())!;
         }
 
-        public async ValueTask<BusinessObjectInspectionAuditResponse> ReplaceAuditAsync(string businessObject, string inspection, int date, int time, BusinessObjectInspectionAuditRequest request)
+        public async ValueTask<BusinessObjectInspectionAuditResponse> ReplaceAuditAsync(string businessObject, string inspection, BusinessObjectInspectionAuditRequest request)
         {
             var responseMessage = await _httpClient.PostAsJsonAsync($"business-objects/{businessObject}/inspections/{inspection}/replace-audit", request);
 

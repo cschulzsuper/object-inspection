@@ -1,7 +1,7 @@
 ﻿using Microsoft.Playwright;
 using System.Threading.Tasks;
 
-namespace Super.Paula.Templates.Playwright.Administration
+namespace Super.Paula.Templates.Playwright.Auth
 {
     public static class AuthenticationExtensions
     {
@@ -29,7 +29,7 @@ namespace Super.Paula.Templates.Playwright.Administration
             await page.Locator("#identitySecret").FillAsync(password);
 
             await page.Locator("#submit").ClickAsync();
-            
+
             await Task.Delay(1200);
 
             await (!withAutomaticInspectorLogin
