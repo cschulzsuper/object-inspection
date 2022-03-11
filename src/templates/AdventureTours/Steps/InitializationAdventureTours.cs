@@ -1,7 +1,7 @@
 ﻿using Microsoft.Playwright;
 using Super.Paula.Environment;
-using Super.Paula.Templates.Playwright.Administration;
 using Super.Paula.Templates.Playwright.Auditing;
+using Super.Paula.Templates.Playwright.Auth;
 using Super.Paula.Templates.Playwright.Guidelines;
 using Super.Paula.Templates.Playwright.Inventory;
 using System.Threading.Tasks;
@@ -130,61 +130,6 @@ namespace Super.Paula.Templates.AdventureTours.Steps
             await page.OmitBusinessObjectInspectionAuditAsync("flashlight-142", "charged");
             await page.OmitBusinessObjectInspectionAuditAsync("flashlight-142", "operational");
             await page.OmitBusinessObjectInspectionAuditAsync("flashlight-142", "condition");
-
-            await page.SignOutAsync();
-
-            await page.SignInAsync(
-                adventureToursDemoIdentity,
-                adventureToursDemoPassword,
-                withAutomaticInspectorLogin: true);
-
-            await page.AuditBusinessObjectInspectionAsync("radio-1234", "charged");
-            await page.AuditBusinessObjectInspectionAsync("radio-1234", "operational");
-            await page.AuditBusinessObjectInspectionAsync("radio-1234", "condition");
-
-            await page.AuditBusinessObjectInspectionAsync("radio-1424", "charged");
-            await page.AuditBusinessObjectInspectionAsync("radio-1424", "operational");
-            await page.AuditBusinessObjectInspectionAsync("radio-1424", "condition");
-
-            await page.AuditBusinessObjectInspectionAsync("gps-tracker-2234", "charged");
-            await page.AuditBusinessObjectInspectionAsync("gps-tracker-2234", "operational");
-            await page.AuditBusinessObjectInspectionAsync("gps-tracker-2234", "condition");
-
-            await page.AuditBusinessObjectInspectionAsync("gps-tracker-2424", "charged");
-            await page.AuditBusinessObjectInspectionAsync("gps-tracker-2424", "operational");
-            await page.AuditBusinessObjectInspectionAsync("gps-tracker-2424", "condition");
-
-            await page.AuditBusinessObjectInspectionAsync("flashlight-134", "charged");
-            await page.AuditBusinessObjectInspectionAsync("flashlight-134", "operational");
-            await page.AuditBusinessObjectInspectionAsync("flashlight-134", "condition");
-
-            await page.AuditBusinessObjectInspectionAsync("flashlight-142", "charged");
-            await page.AuditBusinessObjectInspectionAsync("flashlight-142", "operational");
-            await page.AuditBusinessObjectInspectionAsync("flashlight-142", "condition");
-
-            await page.AnnotateBusinessObjectInspectionAuditAsync("radio-1234", "charged");
-            await page.AnnotateBusinessObjectInspectionAuditAsync("radio-1234", "operational");
-            await page.AnnotateBusinessObjectInspectionAuditAsync("radio-1234", "condition");
-
-            await page.AnnotateBusinessObjectInspectionAuditAsync("radio-1424", "charged");
-            await page.AnnotateBusinessObjectInspectionAuditAsync("radio-1424", "operational");
-            await page.AnnotateBusinessObjectInspectionAuditAsync("radio-1424", "condition");
-
-            await page.AnnotateBusinessObjectInspectionAuditAsync("gps-tracker-2234", "charged");
-            await page.AnnotateBusinessObjectInspectionAuditAsync("gps-tracker-2234", "operational");
-            await page.AnnotateBusinessObjectInspectionAuditAsync("gps-tracker-2234", "condition");
-
-            await page.AnnotateBusinessObjectInspectionAuditAsync("gps-tracker-2424", "charged");
-            await page.AnnotateBusinessObjectInspectionAuditAsync("gps-tracker-2424", "operational");
-            await page.AnnotateBusinessObjectInspectionAuditAsync("gps-tracker-2424", "condition");
-
-            await page.AnnotateBusinessObjectInspectionAuditAsync("flashlight-134", "charged");
-            await page.AnnotateBusinessObjectInspectionAuditAsync("flashlight-134", "operational");
-            await page.AnnotateBusinessObjectInspectionAuditAsync("flashlight-134", "condition");
-
-            await page.AnnotateBusinessObjectInspectionAuditAsync("flashlight-142", "charged");
-            await page.AnnotateBusinessObjectInspectionAuditAsync("flashlight-142", "operational");
-            await page.AnnotateBusinessObjectInspectionAuditAsync("flashlight-142", "condition");
 
             await page.SignOutAsync();
         }

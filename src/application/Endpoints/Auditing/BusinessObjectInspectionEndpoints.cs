@@ -95,11 +95,9 @@ namespace Super.Paula.Application.Auditing
             (IBusinessObjectInspectionHandler handler,
                 string businessObject,
                 string inspection,
-                int date,
-                int time,
                 BusinessObjectInspectionAuditRequest request)
 
-                => handler.ReplaceAuditAsync(businessObject, inspection, date, time, request);
+                => handler.ReplaceAuditAsync(businessObject, inspection, request);
 
         private static Delegate ReplaceAuditAnnotation =>
             (IBusinessObjectInspectionHandler handler,
