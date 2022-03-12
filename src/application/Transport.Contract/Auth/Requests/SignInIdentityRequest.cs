@@ -1,5 +1,4 @@
-﻿using Super.Paula.Validation;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Super.Paula.Application.Auth.Requests
 {

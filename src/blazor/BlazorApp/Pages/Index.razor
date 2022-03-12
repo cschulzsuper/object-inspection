@@ -2,6 +2,10 @@
 
 @inject ITranslator Translator
 
+<DemoNote>
+    @Translator.Markdown($"*{"Paula"}* is a simple auditing app, that does not follow any official workflow. You can click around, but the demo mode will prevent wrongdoing.")
+</DemoNote>
+
 @if(_mode == Mode.SignIn)
 {
     <SignIn/>

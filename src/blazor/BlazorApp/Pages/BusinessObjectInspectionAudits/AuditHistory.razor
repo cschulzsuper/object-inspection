@@ -6,6 +6,10 @@
 
 @attribute [Authorize("ManagementRead")]
 
+<DemoNote>
+    @Translator.Markdown($"The audit history is visible to the chief. It gives an overview on the conducted audits.")
+</DemoNote>
+
 <div class="container-fluid">
     <h1>@Translator[$"Inspection audits"]</h1>
 </div>

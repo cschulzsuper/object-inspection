@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Super.Paula.Data;
+using Super.Paula.Templates.AdventureTours.Environment;
 using Super.Paula.Templates.AdventureTours.Steps;
 using System.Threading.Tasks;
 
@@ -22,6 +23,17 @@ namespace Super.Paula.Templates.AdventureTours
                     services.AddHostedService<HostedService>();
                     services.AddAppSettings();
 
+                    services.AddSingleton(serviceProvider =>
+                    {
+                        var configuration = serviceProvider.GetRequiredService<IConfiguration>();
+
+                        return new AdventureToursSettings
+                        {
+                            MaintainerPassword = configuration["Paula:MaintainerPassword"],
+                            ChiefPassword = configuration["Paula:ChiefPassword"]
+                         };
+                    });
+
                     services.AddServerData(context.HostingEnvironment.IsDevelopment());
 
                     services
@@ -33,6 +45,7 @@ namespace Super.Paula.Templates.AdventureTours
                 })
                 .ConfigureAppConfiguration((context, builder) =>
                 {
+                    builder.AddEnvironmentVariables();
                     builder.AddUserSecrets<Program>(true);
                 });
     }

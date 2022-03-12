@@ -1,6 +1,4 @@
 ﻿using Super.Paula.Application.Administration;
-using Super.Paula.Application.Administration.Requests;
-using Super.Paula.Application.Administration.Responses;
 using Super.Paula.Environment;
 using Super.Paula.ErrorHandling;
 using System;

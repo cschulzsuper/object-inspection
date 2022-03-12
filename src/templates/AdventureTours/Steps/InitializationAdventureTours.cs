@@ -1,5 +1,6 @@
 ﻿using Microsoft.Playwright;
 using Super.Paula.Environment;
+using Super.Paula.Templates.AdventureTours.Environment;
 using Super.Paula.Templates.Playwright.Auditing;
 using Super.Paula.Templates.Playwright.Auth;
 using Super.Paula.Templates.Playwright.Guidelines;
@@ -13,10 +14,14 @@ namespace Super.Paula.Templates.AdventureTours.Steps
     public class InitializationAdventureTours : IStep
     {
         private readonly AppSettings _appSettings;
+        private readonly AdventureToursSettings _adventureToursSettings;
 
-        public InitializationAdventureTours(AppSettings appSettings)
+        public InitializationAdventureTours(
+            AppSettings appSettings,
+            AdventureToursSettings adventureToursSettings)
         {
             _appSettings = appSettings;
+            _adventureToursSettings = adventureToursSettings;
         }
 
         public async Task ExecuteAsync()
@@ -33,16 +38,16 @@ namespace Super.Paula.Templates.AdventureTours.Steps
 
             var page = await context.NewPageAsync();
 
-            var adventureToursMaintainerIdentity = "bknightingale";
-            var adventureToursMaintainerPassword = "barnabus";
+            var adventureToursChiefIdentity = "bknightingale";
+            var adventureToursChiefPassword = _adventureToursSettings.ChiefPassword;
 
             var adventureToursDemoIdentity = _appSettings.DemoIdentity;
             var adventureToursDemoPassword = _appSettings.DemoPassword;
             var adventureToursDemoInspector = _appSettings.DemoIdentity;
 
             await page.SignInAsync(
-                adventureToursMaintainerIdentity,
-                adventureToursMaintainerPassword,
+                adventureToursChiefIdentity,
+                adventureToursChiefPassword,
                 withAutomaticInspectorLogin: true);
 
             await page.CreateBusinessObjectAsync("Radio #1234", "radio-1234", adventureToursDemoInspector);

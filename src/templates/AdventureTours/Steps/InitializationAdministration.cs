@@ -5,16 +5,21 @@ using Microsoft.Playwright;
 
 using playwright = Microsoft.Playwright;
 using Super.Paula.Templates.Playwright.Auth;
+using Super.Paula.Templates.AdventureTours.Environment;
 
 namespace Super.Paula.Templates.AdventureTours.Steps
 {
     public sealed class InitializationAdministration : IStep
     {
         private readonly AppSettings _appSettings;
+        private readonly AdventureToursSettings _adventureToursSettings;
 
-        public InitializationAdministration(AppSettings appSettings)
+        public InitializationAdministration(
+            AppSettings appSettings,
+            AdventureToursSettings adventureToursSettings)
         {
             _appSettings = appSettings;
+            _adventureToursSettings = adventureToursSettings;
         }
 
         public async Task ExecuteAsync()
@@ -35,16 +40,16 @@ namespace Super.Paula.Templates.AdventureTours.Steps
             var maintainerOrganizationDisplayName = "Super";
             var maintainerIdentity = _appSettings.MaintainerIdentity;
             var maintainerMailAddress = "cschulz@super.local";
-            var maintainerPassword = "super";
+            var maintainerPassword = _adventureToursSettings.MaintainerPassword;
             var maintainerInspector = _appSettings.MaintainerIdentity;
 
             var adventureToursOrganization = "adventure-tours";
             var adventureToursOrganizationDisplayName = "Adventure Tours";
             
-            var adventureToursMaintainerIdentity = "bknightingale";
-            var adventureToursMaintainerMailAddress = "bknightingale@adventure-tours.local";
-            var adventureToursMaintainerPassword = "barnabus";
-            var adventureToursMaintainerInspector = "bknightingale";
+            var adventureToursChiefIdentity = "bknightingale";
+            var adventureToursChiefMailAddress = "bknightingale@adventure-tours.local";
+            var adventureToursChiefPassword = _adventureToursSettings.ChiefPassword;
+            var adventureToursChiefInspector = "bknightingale";
 
             var adventureToursDemoIdentity = _appSettings.DemoIdentity;
             var adventureToursDemoMailAddress = "fdemos@adventure-tours.local";
@@ -57,9 +62,9 @@ namespace Super.Paula.Templates.AdventureTours.Steps
                 maintainerPassword);
 
             await page.RegisterAsync(
-                adventureToursMaintainerIdentity,
-                adventureToursMaintainerMailAddress,
-                adventureToursMaintainerPassword);
+                adventureToursChiefIdentity,
+                adventureToursChiefMailAddress,
+                adventureToursChiefPassword);
 
             await page.RegisterAsync(
                 adventureToursDemoIdentity,
@@ -82,7 +87,7 @@ namespace Super.Paula.Templates.AdventureTours.Steps
             await page.CreateOrganizationAsync(
                 adventureToursOrganizationDisplayName,
                 adventureToursOrganization,
-                adventureToursMaintainerInspector);
+                adventureToursChiefInspector);
 
             await page.RepairOrganizationAsync(
                 adventureToursOrganization);
@@ -96,11 +101,11 @@ namespace Super.Paula.Templates.AdventureTours.Steps
 
             await page.SignInInspectorAsync(
                 adventureToursOrganization,
-                adventureToursMaintainerInspector);
+                adventureToursChiefInspector);
 
             await page.EditInspectorAsync(
-                adventureToursMaintainerInspector,
-                adventureToursMaintainerIdentity);
+                adventureToursChiefInspector,
+                adventureToursChiefIdentity);
 
             await page.CreateInspectorAsync(
                 adventureToursDemoInspector,

@@ -1,6 +1,4 @@
-﻿using Super.Paula.Application.Administration.Requests;
-using Super.Paula.Application.Administration.Responses;
-using Super.Paula.Application.Operation;
+﻿using Super.Paula.Application.Operation;
 using Super.Paula.Authorization;
 using System.Linq;
 using System.Security.Claims;

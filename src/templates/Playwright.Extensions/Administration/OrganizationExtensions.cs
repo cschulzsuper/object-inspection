@@ -60,9 +60,9 @@ namespace Super.Paula.Templates.Playwright.Administration
                 await page.Locator("#submit").ClickAsync();
             });
 
-            await Task.Delay(2400);
+            await Task.Delay(4_800);
 
-            await page.GotoAsync($"");
+            await page.GotoAsync($"sign-in-inspector");
         }
     }
 }
