@@ -12,7 +12,7 @@
   * Tom: _"Mh, but can I have some information about the progress?"_
   * Peter: _"Sure, just have a look in the [project board](https://trello.com/b/xUlXP4Rm/paula) on trello?"_
 
-![Introduction](/docs/bucket/42e8bf7e-3b56-475b-a9d6-d6773c822326.gif)
+![Introduction](/docs/bucket/56f32e7d-0648-4b75-a035-e6c56da6662f.gif)
 
 ## Getting Started
 
@@ -56,19 +56,19 @@ A couple of things need to be setup, if you want to start Paula yourself.
 * Create the first identity. 
   * `https://localhost:5002/sign-up`
 * Create the first organization. 
-  * `https://localhost:5002/register-organiztation`
+  * `https://localhost:5002/register-organization`
 * Create the chief inspector of the first organization. 
   * `https://localhost:5002/register-chief-inspector/{organization}`
 
 ## Adventure Tours
 
-Instead of the `data/Migrator` you might want to look at the `templates/AdventureTours` project. 
-It resets and initializes the database with a set of example data.
+Instead of the `data/Migrator` you might want to look at the `templates/AdventureTours` and `templates/AdventureToursAuditing` projects. 
+* `templates/AdventureTours` resets and initializes the database with an example.
+* `templates/AdventureToursAuditing` executes an auditing on the example.
 
-This initialization uses [playwright](https://github.com/microsoft/playwright) to create the example data.
+Both projects use [playwright](https://github.com/microsoft/playwright).
 
-A more elaborate explanation will follow soon. 
-
+A more elaborate explanation will follow at a later date.
 
 ## Currenty Status
 
