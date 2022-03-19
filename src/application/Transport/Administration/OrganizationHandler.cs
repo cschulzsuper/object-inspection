@@ -1,10 +1,7 @@
 ﻿using Super.Paula.Application.Administration.Requests;
 using Super.Paula.Application.Administration.Responses;
-using Super.Paula.Authorization;
-using Super.Paula.Environment;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Super.Paula.Application.Administration

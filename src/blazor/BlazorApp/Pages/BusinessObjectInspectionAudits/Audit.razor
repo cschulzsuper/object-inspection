@@ -7,6 +7,10 @@
 
 @attribute [Authorize("AuditingLimited")]
 
+<DemoNote>
+    @Translator.Markdown($"An audit can result in three different states (`satisfying`, `insufficient`, `failed`). The current state can be changed for 10 minutes. After 10 minutes a new audit history entry will be created. An optional annotation can be defined.")
+</DemoNote>
+
 <div class="container-fluid">
     <h1>@Translator[$"Inspections"]</h1>
 </div>
@@ -70,7 +74,7 @@ else
                         }
                     </td> 
                     <td>
-                        <button class="btn btn-outline-primary btn-block" title="@Translator[$"Annotate"]"
+                        <button class=@AnnotationCss(inspection,"primary") title="@Translator[$"Annotate"]"
                                 @onclick="() => NavigateToAnnotationAsync(inspection)"><span class="oi oi-copywriting"/></button>
                     </td>
                 </tr>
@@ -121,6 +125,13 @@ else
             : $"btn btn-{btnClass} btn-block";
     }
 
+    private string AnnotationCss(BusinessObjectInspectionResponse inspection, string btnClass)
+    {
+        return string.IsNullOrWhiteSpace(inspection.AuditAnnotation)
+            ? $"btn btn-outline-{btnClass} btn-block"
+            : $"btn btn-{btnClass} btn-block";
+    }
+
     private async Task ToggleAsync(BusinessObjectInspectionResponse inspection)
     {
         var utcNow = DateTime.UtcNow;
@@ -146,11 +157,11 @@ else
                 ETag = inspection.ETag
             };
 
-            await BusinessObjectInspectionHandler.ReplaceAuditAsync(
+            var response = await BusinessObjectInspectionHandler.ReplaceAuditAsync(
                 inspection.BusinessObject, inspection.Inspection, request);
 
             inspection.AuditResult = request.Result;
-            inspection.ETag = request.ETag;
+            inspection.ETag = response.ETag;
         }
         else
         {
@@ -169,10 +180,11 @@ else
             var response = await BusinessObjectInspectionHandler.CreateAuditAsync(
                 inspection.BusinessObject, inspection.Inspection, request);
 
+            inspection.AuditAnnotation = string.Empty;
             inspection.AuditDate = request.RequestDate;
             inspection.AuditTime = request.RequestTime;
             inspection.AuditResult = request.Result;
-            inspection.ETag = request.ETag;
+            inspection.ETag = response.ETag;
 
             inspection.AuditSchedule.Appointments = response.Appointments;
         }

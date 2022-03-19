@@ -1,10 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Super.Paula.Application.Administration.Continuation;
-using Super.Paula.Application.Administration.Events;
 using Super.Paula.Application.Orchestration;
-using Super.Paula.Authorization;
-using System.Collections.Generic;
-using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Super.Paula.Application.Administration

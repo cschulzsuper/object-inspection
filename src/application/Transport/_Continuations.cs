@@ -1,12 +1,5 @@
 ﻿using Super.Paula.Application.Administration;
 using Super.Paula.Application.Administration.Continuation;
-using Super.Paula.Application.Administration.Events;
-using Super.Paula.Application.Auditing;
-using Super.Paula.Application.Auditing.Events;
-using Super.Paula.Application.Communication;
-using Super.Paula.Application.Guidelines.Events;
-using Super.Paula.Application.Inventory.Events;
-using Super.Paula.Application.Operation;
 using Super.Paula.Application.Orchestration;
 using System.Diagnostics.CodeAnalysis;
 

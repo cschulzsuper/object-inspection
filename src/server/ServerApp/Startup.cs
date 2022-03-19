@@ -53,6 +53,7 @@ namespace Super.Paula
                         .AllowAnyHeader()));
 
             services.AddServer(_environment.IsDevelopment());
+            services.AddApplicationInsightsTelemetry();
         }
 
         public void Configure(IApplicationBuilder app)

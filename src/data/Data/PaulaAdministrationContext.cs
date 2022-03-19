@@ -15,6 +15,8 @@ namespace Super.Paula.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.HasManualThroughput(1000);
+
             modelBuilder.ApplyConfiguration(new IdentityMapping());
             modelBuilder.ApplyConfiguration(new IdentityInspectorMapping());
             modelBuilder.ApplyConfiguration(new OrganizationMapping());

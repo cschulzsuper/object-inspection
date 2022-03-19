@@ -8,8 +8,11 @@
 @inject ITranslator Translator
 @inject NavigationManager NavigationManager
 
-
 @attribute [Authorize("ManagementRead")]
+
+<DemoNote>
+    @Translator.Markdown($"An inspector is a person that can be assigned to a business object. Assigned inspectors conduct the auditing of the business object.")
+</DemoNote>
 
 <div class="container-fluid">
     <h1>@Translator[$"Inspectors"]</h1>

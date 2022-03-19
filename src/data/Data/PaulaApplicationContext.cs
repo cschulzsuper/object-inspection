@@ -20,6 +20,8 @@ namespace Super.Paula.Data
 
             if (!string.IsNullOrWhiteSpace(State.CurrentOrganization))
             {
+                modelBuilder.HasManualThroughput(1000);
+
                 // Inventory
                 modelBuilder.ApplyConfiguration(new BusinessObjectMapping(State));
                
