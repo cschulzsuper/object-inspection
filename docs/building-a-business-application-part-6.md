@@ -16,10 +16,10 @@ From the beginning of this project I had a minimal use case, which I extended on
 
 Last week I finally decided that a presentable preview is basically done. (The term preview form might be a stretch as I lack the proper amount of UI/UX mojo.) A demo account allows users to view all the features and play around.
 
-* https://agreeable-meadow-01b252003.azurestaticapps.net/
-  * Tested with Microsoft Edge
-  * Features related to SignalR/WebSockets do not work (App Service FAQ)[https://docs.microsoft.com/de-de/azure/app-service/faq-app-service-linux#web-sockets]
-  * **Use at your own risk!**
+* Demo deployed to **[agreeable-meadow-01b252003](https://agreeable-meadow-01b252003.azurestaticapps.net/)**
+* Tested with Microsoft Edge
+* Features related to SignalR/WebSockets do not work [App Service FAQ](https://docs.microsoft.com/de-de/azure/app-service/faq-app-service-linux#web-sockets)
+* **Use at your own risk!**
 
 The target group of this application is me, as the purpose is me learning more about *.NET* and self organization. For this reason I did not elaborate on the application itself in this post.
 
