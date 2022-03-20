@@ -27,7 +27,7 @@ namespace Super.Paula.Application.Operation
         }
 
         public bool Verify(string violator)
-            => _connectionViolationRuntimeCache.Get(violator)?.ViolationCounter >= 3;
+            => _connectionViolationRuntimeCache.Get(violator)?.ViolationCounter >= 0b_1111_1111;
 
     }
 }
