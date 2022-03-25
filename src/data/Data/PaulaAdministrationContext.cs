@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Super.Paula.Data.Mappings.Administration;
 using Super.Paula.Data.Mappings.Auth;
+using Super.Paula.Data.Mappings.Orchestration;
 
 namespace Super.Paula.Data
 {
@@ -20,6 +21,8 @@ namespace Super.Paula.Data
             modelBuilder.ApplyConfiguration(new IdentityMapping());
             modelBuilder.ApplyConfiguration(new IdentityInspectorMapping());
             modelBuilder.ApplyConfiguration(new OrganizationMapping());
+
+            modelBuilder.ApplyConfiguration(new WorkerMapping());
         }
     }
 }

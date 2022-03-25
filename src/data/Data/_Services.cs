@@ -8,6 +8,7 @@ using Super.Paula.Application.Auth;
 using Super.Paula.Application.Communication;
 using Super.Paula.Application.Guidelines;
 using Super.Paula.Application.Inventory;
+using Super.Paula.Application.Orchestration;
 using Super.Paula.Authorization;
 using Super.Paula.Data.Mappings;
 using Super.Paula.Data.Mappings.Administration;
@@ -16,6 +17,7 @@ using Super.Paula.Data.Mappings.Auth;
 using Super.Paula.Data.Mappings.Communication;
 using Super.Paula.Data.Mappings.Guidelines;
 using Super.Paula.Data.Mappings.Inventory;
+using Super.Paula.Data.Mappings.Orchestration;
 using Super.Paula.Environment;
 using System;
 using System.Diagnostics.CodeAnalysis;
@@ -103,6 +105,7 @@ namespace Super.Paula.Data
             services.AddScoped(RepositoryFactory<Identity,PaulaAdministrationContext>());
             services.AddScoped(RepositoryFactory<IdentityInspector, PaulaAdministrationContext>());
             services.AddScoped(RepositoryFactory<Organization, PaulaAdministrationContext>());
+            services.AddScoped(RepositoryFactory<Worker, PaulaAdministrationContext>());
 
             services.AddScoped(RepositoryFactory<BusinessObject, PaulaApplicationContext>());
             services.AddScoped(RepositoryFactory<BusinessObjectInspection, PaulaApplicationContext>());
@@ -120,6 +123,7 @@ namespace Super.Paula.Data
             services.AddScoped<IPartitionKeyValueGenerator<IdentityInspector>, IdentityInspectorPartitionKeyValueGenerator>();
             services.AddScoped<IPartitionKeyValueGenerator<Notification>, NotificationPartitionKeyValueGenerator>();
             services.AddScoped<IPartitionKeyValueGenerator<Organization>, OrganizationPartitionKeyValueGenerator>();
+            services.AddScoped<IPartitionKeyValueGenerator<Worker>, WorkerPartitionKeyValueGenerator>();
 
             return services;
         }

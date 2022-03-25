@@ -29,11 +29,11 @@ namespace Super.Paula.Application.Orchestration
 
         public async Task StartAllWorkerAsync(CancellationToken cancellationToken)
         {
-            var tasks = new Dictionary<Guid, Task?>();
+            var tasks = new Dictionary<string, Task?>();
 
             while (
                 !cancellationToken.IsCancellationRequested &&
-                !_workerRegistry.HasUnstartedWorker())
+                _workerRegistry.Empty())
             {
                 await Task.Delay(startUpWorkerDelay, cancellationToken);
             }
@@ -43,18 +43,18 @@ namespace Super.Paula.Application.Orchestration
 
                 await foreach (var worker in _workerRegistry.GetUnstartedWorkerAsync())
                 {
-                    await _workerRegistry.SetWorkerAsStartedAsync(worker.Id);
+                    await _workerRegistry.SetWorkerAsStartedAsync(worker.WorkerName);
 
-                    tasks[worker.Id] = StartWorkerAsync(worker, cancellationToken)?
+                    tasks[worker.WorkerName] = StartWorkerAsync(worker, cancellationToken)?
                         .ContinueWith(async (task, state) =>
                         {
                             if (task.IsCompletedSuccessfully)
                             {
-                                await _workerRegistry.SetWorkerAsFinishedAsync(worker.Id);
+                                await _workerRegistry.SetWorkerAsFinishedAsync(worker.WorkerName);
                             }
                             else
                             {
-                                await _workerRegistry.SetWorkerAsFailedAsync(worker.Id, task.Exception);
+                                await _workerRegistry.SetWorkerAsFailedAsync(worker.WorkerName, task.Exception);
                             }
                         }, worker);
                 }
@@ -76,17 +76,17 @@ namespace Super.Paula.Application.Orchestration
             }
         }
 
-        private Task? StartWorkerAsync(WorkerRegistryEntry workerEntry, CancellationToken cancellationToken)
+        private Task? StartWorkerAsync(WorkerRegistration workerRegistration, CancellationToken cancellationToken)
         {
             var scope = _services.CreateScope();
 
-            var context = new WorkerContext(scope.ServiceProvider);
+            var context = new WorkerContext(scope.ServiceProvider, workerRegistration.IterationDelay);
 
-            var worker = (IWorker?)Activator.CreateInstance(workerEntry.WorkerType);
+            var worker = (IWorker?)Activator.CreateInstance(workerRegistration.WorkerType);
 
             if (worker == null)
             {
-                _logger.LogWarning("Could not create worker ({workerType})", workerEntry.WorkerType);
+                _logger.LogWarning("Could not create worker ({workerType})", workerRegistration.WorkerType);
                 return Task.CompletedTask;
             }
 
