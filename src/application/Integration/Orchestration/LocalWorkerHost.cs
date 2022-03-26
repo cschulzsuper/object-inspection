@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.IO.Pipes;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -14,8 +15,7 @@ namespace Super.Paula.Application.Orchestration
         private readonly IServiceProvider _services;
         private readonly ILogger<LocalWorkerHost> _logger;
 
-        private readonly int restartWorkerDelay = 60_000; // 1 minutes
-        private readonly int startUpWorkerDelay = 2_500; // 2 second
+        private readonly int processWorkerDelay = 2_000; // 2 second
 
         public LocalWorkerHost(
             IWorkerRegistry workerRegistry, 
@@ -29,13 +29,13 @@ namespace Super.Paula.Application.Orchestration
 
         public async Task StartAllWorkerAsync(CancellationToken cancellationToken)
         {
-            var tasks = new Dictionary<string, Task?>();
+            var tasks = new Dictionary<string, Task>();
 
             while (
                 !cancellationToken.IsCancellationRequested &&
-                _workerRegistry.Empty())
+                !_workerRegistry.HasWorkers())
             {
-                await Task.Delay(startUpWorkerDelay, cancellationToken);
+                await Task.Delay(processWorkerDelay, cancellationToken);
             }
 
             while (!cancellationToken.IsCancellationRequested)
@@ -43,40 +43,58 @@ namespace Super.Paula.Application.Orchestration
 
                 await foreach (var worker in _workerRegistry.GetUnstartedWorkerAsync())
                 {
-                    await _workerRegistry.SetWorkerAsStartedAsync(worker.WorkerName);
+                    var successful = await _workerRegistry.SetWorkerAsStartingAsync(worker.WorkerName);
 
-                    tasks[worker.WorkerName] = StartWorkerAsync(worker, cancellationToken)?
-                        .ContinueWith(async (task, state) =>
-                        {
-                            if (task.IsCompletedSuccessfully)
+                    if (successful)
+                    {
+                        tasks[worker.WorkerName] = StartWorkerAsync(worker, cancellationToken)
+                            .ContinueWith(async (task, state) =>
                             {
-                                await _workerRegistry.SetWorkerAsFinishedAsync(worker.WorkerName);
-                            }
-                            else
-                            {
-                                await _workerRegistry.SetWorkerAsFailedAsync(worker.WorkerName, task.Exception);
-                            }
-                        }, worker);
+                                if (task.IsCompletedSuccessfully)
+                                {
+                                    await _workerRegistry.SetWorkerAsFinishedAsync(worker.WorkerName);
+                                }
+                                else
+                                {
+                                    await _workerRegistry.SetWorkerAsFailedAsync(worker.WorkerName, task.Exception);
+                                }
+                            }, worker);
+
+                        await _workerRegistry.SetWorkerAsRunningAsync(worker.WorkerName);
+                    }
                 }
 
-                var currentTasks = tasks.Values
-                    .Where(x => x != null)
-                    .ToArray();
-
-                if (currentTasks.Any())
+                if (tasks.Any())
                 {
-                    var completedTask = await Task.WhenAny(currentTasks!);
+                    while (tasks.Values.All(x => !x.IsCompleted))
+                    {
+                        foreach (var workerName in tasks.Keys)
+                        {
+                            await _workerRegistry.SetWorkerAsRunningAsync(workerName);
+                        }
+
+                        await Task.Delay(processWorkerDelay, cancellationToken);
+                    }
+
+                    var completedTask = await Task.WhenAny(tasks.Values);
                     var completedWorkerId = tasks.Single(x => completedTask.Equals(x.Value))
                         .Key;
 
                     _logger.LogWarning("A worker ran to completion ({workerId}).", completedWorkerId);
-                }
 
-                await Task.Delay(restartWorkerDelay, cancellationToken);
+                    await Task.Delay(processWorkerDelay, cancellationToken);
+                }
+                else
+                {
+                    while (!_workerRegistry.HasUnstartedWorkers())
+                    {
+                        await Task.Delay(processWorkerDelay, cancellationToken);
+                    }
+                }
             }
         }
 
-        private Task? StartWorkerAsync(WorkerRegistration workerRegistration, CancellationToken cancellationToken)
+        private Task StartWorkerAsync(WorkerRegistration workerRegistration, CancellationToken cancellationToken)
         {
             var scope = _services.CreateScope();
 

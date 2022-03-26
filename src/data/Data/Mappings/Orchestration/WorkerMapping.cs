@@ -37,11 +37,6 @@ namespace Super.Paula.Data.Mappings.Orchestration
             builder
                 .Property(x => x.IterationDelay)
                 .IsRequired();
-
-            builder
-                .Property(x => x.State)
-                .HasMaxLength(140)
-                .IsRequired();
         }
     }
 }

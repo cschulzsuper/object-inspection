@@ -93,8 +93,6 @@ namespace Super.Paula.Application.Orchestration
                 WorkerValidator.UniqueNameHasKebabCase(worker.UniqueName),
                 WorkerValidator.UniqueNameIsNotTooLong(worker.UniqueName),
                 WorkerValidator.UniqueNameHasValidValue(worker.UniqueName),
-                WorkerValidator.StateIsNotNull(worker.State),
-                WorkerValidator.StateHasValidValue(worker.State),
                 WorkerValidator.IterationDelayIsInDayTimeRange(worker.IterationDelay));
 
         private static void EnsureUpdateable(Worker worker)
@@ -103,8 +101,6 @@ namespace Super.Paula.Application.Orchestration
                 WorkerValidator.UniqueNameHasKebabCase(worker.UniqueName),
                 WorkerValidator.UniqueNameIsNotTooLong(worker.UniqueName),
                 WorkerValidator.UniqueNameHasValidValue(worker.UniqueName),
-                WorkerValidator.StateIsNotNull(worker.State),
-                WorkerValidator.StateHasValidValue(worker.State),
                 WorkerValidator.IterationDelayIsInDayTimeRange(worker.IterationDelay));
 
         private static void EnsureDeletable(Worker worker)

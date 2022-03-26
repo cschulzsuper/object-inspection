@@ -48,8 +48,17 @@ namespace Super.Paula.Application.Orchestration
             _workerRegistrations.AddOrUpdate(workerRegistration.WorkerName, workerRegistration, (_, _) => workerRegistration);
         }
 
-        public bool Empty()
-            => !_workerRegistrations.Any();
+        public bool HasWorkers()
+            => _workerRegistrations.Any();
+
+        public bool HasUnstartedWorkers()
+        {
+            using var scope = _serviceProvider.CreateScope();
+
+            var workerRuntimeManager = scope.ServiceProvider.GetRequiredService<IWorkerRuntimeManager>();
+
+            return _workerRegistrations.Any(x => string.IsNullOrWhiteSpace(workerRuntimeManager.GetState(x.Key)));
+        }
 
         public async IAsyncEnumerable<WorkerRegistration> GetUnstartedWorkerAsync()
         {
@@ -58,116 +67,123 @@ namespace Super.Paula.Application.Orchestration
             foreach (var workerRegistration in _workerRegistrations.Values)
             {
                 var workerManager = scope.ServiceProvider.GetRequiredService<IWorkerManager>();
+                var workerRuntimeManager = scope.ServiceProvider.GetRequiredService<IWorkerRuntimeManager>();
 
-                var unstartedWorker = workerManager
-                    .GetQueryable()
-                    .SingleOrDefault(x => x.UniqueName == workerRegistration.WorkerName);
+                var workerState = workerRuntimeManager.GetState(workerRegistration.WorkerName);
 
-                if (unstartedWorker == null)
+                if (workerState != "starting" &&
+                    workerState != "running")
                 {
-                    unstartedWorker = new Worker
-                    {
-                        UniqueName = workerRegistration.WorkerName,
-                        IterationDelay = workerRegistration.IterationDelay
-                    };
+                    var unstartedWorker = workerManager
+                        .GetQueryable()
+                        .SingleOrDefault(x => x.UniqueName == workerRegistration.WorkerName);
 
-                    await workerManager.InsertAsync(unstartedWorker);
-                } 
-                else
-                {
-                    if (unstartedWorker.State == "started" &&
-                        unstartedWorker.ETag == workerRegistration.ETag)
+                    if (unstartedWorker == null)
                     {
-                        continue;
+                        unstartedWorker = new Worker
+                        {
+                            UniqueName = workerRegistration.WorkerName,
+                            IterationDelay = workerRegistration.IterationDelay
+                        };
+
+                        await workerManager.InsertAsync(unstartedWorker);
                     }
 
-                    unstartedWorker.State = string.Empty;
-
-                    await workerManager.UpdateAsync(unstartedWorker);
-
                     workerRegistration.IterationDelay = unstartedWorker.IterationDelay;
-                }
 
-                yield return workerRegistration;
+                    yield return workerRegistration;
+                } 
             }
         }
 
-        public async ValueTask SetWorkerAsStartedAsync(string workerName)
+        public async ValueTask<bool> SetWorkerAsStartingAsync(string workerName)
         {
             using var scope = _serviceProvider.CreateScope();
 
             var workerManager = scope.ServiceProvider.GetRequiredService<IWorkerManager>();
+            var workerRuntimeManager = scope.ServiceProvider.GetRequiredService<IWorkerRuntimeManager>();
 
             var unstartedWorker = workerManager
                 .GetQueryable()
-                .SingleOrDefault(x =>
-                    x.UniqueName == workerName &&
-                    x.State != "started");
+                .SingleOrDefault(x => x.UniqueName == workerName);
 
             if (unstartedWorker != null)
             {
-                unstartedWorker.State = "started";
-                await workerManager.UpdateAsync(unstartedWorker);
-                _workerRegistrations[unstartedWorker.UniqueName].ETag = unstartedWorker.ETag;
-
-                _logger.LogInformation("A worker has been marked as started ({worker})", unstartedWorker);
+                var successful = workerRuntimeManager.TrySetState(workerName, "starting");
+                if(successful)
+                {
+                    await workerManager.UpdateAsync(unstartedWorker);
+                    _logger.LogInformation("A worker has been marked as starting ({worker})", unstartedWorker);
+                    return true;
+                } 
+                else
+                {
+                    _logger.LogWarning("A worker is already starting ({worker})", unstartedWorker);
+                    return false;
+                }
             }
             else
             {
-                _logger.LogWarning("An unkown worker has been marked as started ({workerName})", workerName);
+                _logger.LogWarning("An unkown worker has been marked as starting ({workerName})", workerName);
+                return false;
             }
         }
 
-        public async ValueTask SetWorkerAsFinishedAsync(string workerName)
+        public ValueTask SetWorkerAsRunningAsync(string workerName)
         {
             using var scope = _serviceProvider.CreateScope();
 
-            var workerManager = scope.ServiceProvider.GetRequiredService<IWorkerManager>();
+            var workerRuntimeManager = scope.ServiceProvider.GetRequiredService<IWorkerRuntimeManager>();
 
-            var startedWorker = workerManager
-                .GetQueryable()
-                .SingleOrDefault(x =>
-                    x.UniqueName == workerName &&
-                    x.State == "started");
-
-            if (startedWorker != null)
+            var successful = workerRuntimeManager.TrySetState(workerName, "running");
+            if (successful)
             {
-                startedWorker.State = "finished";
-                await workerManager.UpdateAsync(startedWorker);
-                _workerRegistrations[startedWorker.UniqueName].ETag = startedWorker.ETag;
-
-                _logger.LogInformation("A worker has been marked as finished ({worker})", startedWorker);
+                _logger.LogInformation("A worker has been marked as running ({worker})", workerName);
             }
             else
             {
-                _logger.LogWarning("An unkown worker has been marked as finished ({workerName})", workerName);
+                _logger.LogWarning("Could not set worker to running ({worker})", workerName);
             }
+
+            return ValueTask.CompletedTask;
         }
 
-        public async ValueTask SetWorkerAsFailedAsync(string workerName, Exception? exception)
+        public ValueTask SetWorkerAsFinishedAsync(string workerName)
         {
             using var scope = _serviceProvider.CreateScope();
 
-            var workerManager = scope.ServiceProvider.GetRequiredService<IWorkerManager>();
+            var workerRuntimeManager = scope.ServiceProvider.GetRequiredService<IWorkerRuntimeManager>();
 
-            var startedWorker = workerManager
-                .GetQueryable()
-                .SingleOrDefault(x =>
-                    x.UniqueName == workerName &&
-                    x.State == "started");
-
-            if (startedWorker != null)
+            var successful = workerRuntimeManager.TrySetState(workerName, "finished");
+            if (successful)
             {
-                startedWorker.State = "failed";
-                await workerManager.UpdateAsync(startedWorker);
-                _workerRegistrations[startedWorker.UniqueName].ETag = startedWorker.ETag;
-
-                _logger.LogWarning(exception, "An worker has been marked as failed ({worker})", startedWorker);
+                _logger.LogInformation("A worker has been marked as finished ({worker})", workerName);
             }
             else
             {
-                _logger.LogWarning(exception, "An unkown worker has been marked as failed ({workerName})", workerName);
+                _logger.LogWarning("A worker has already finished ({worker})", workerName);
             }
+
+            return ValueTask.CompletedTask;
+        }
+
+        public ValueTask SetWorkerAsFailedAsync(string workerName, Exception? exception)
+        {
+            using var scope = _serviceProvider.CreateScope();
+
+            var workerRuntimeManager = scope.ServiceProvider.GetRequiredService<IWorkerRuntimeManager>();
+
+            var successful = workerRuntimeManager.TrySetState(workerName, "failed");
+            if (successful)
+            {
+                _logger.LogWarning(exception, "An worker has been marked as failed ({worker})", workerName);
+            }
+            else
+            {
+                _logger.LogWarning(exception, "A worker has already failed ({worker})", workerName);
+            }
+
+            return ValueTask.CompletedTask;
         }
     }
 }

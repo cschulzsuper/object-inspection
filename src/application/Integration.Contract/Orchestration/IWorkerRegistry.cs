@@ -8,11 +8,15 @@ namespace Super.Paula.Application.Orchestration
     {
         void Register<TWorker>(Action<WorkerOptions> configure);
 
-        bool Empty();
+        bool HasWorkers();
+
+        bool HasUnstartedWorkers();
 
         IAsyncEnumerable<WorkerRegistration> GetUnstartedWorkerAsync();
 
-        ValueTask SetWorkerAsStartedAsync(string workerName);
+        ValueTask<bool> SetWorkerAsStartingAsync(string workerName);
+
+        ValueTask SetWorkerAsRunningAsync(string workerName);
 
         ValueTask SetWorkerAsFinishedAsync(string workerName);
 

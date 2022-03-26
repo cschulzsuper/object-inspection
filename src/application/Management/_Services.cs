@@ -85,6 +85,7 @@ namespace Super.Paula.Application
         private static IServiceCollection AddServerManagementOrchestration(this IServiceCollection services)
         {
             services.AddScoped<IWorkerManager, WorkerManager>();
+            services.AddScoped<IWorkerRuntimeManager, WorkerRuntimeManager>();
 
             return services;
         }

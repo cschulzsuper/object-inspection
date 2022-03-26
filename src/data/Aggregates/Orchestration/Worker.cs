@@ -7,7 +7,5 @@
         public string UniqueName { get; set; } = string.Empty;
 
         public int IterationDelay { get; set; }
-
-        public string State { get; set; } = string.Empty;
     }
 }

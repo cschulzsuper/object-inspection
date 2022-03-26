@@ -21,14 +21,6 @@ namespace Super.Paula.Application.Orchestration
             => (string.IsNullOrWhiteSpace(uniqueName) || UniqueNameValidator.IsValid(uniqueName),
                 () => (nameof(uniqueName), $"Unique name '{uniqueName}' has an invalid value"));
 
-        public static (bool, Func<(string, FormattableString)>) StateIsNotNull(string state)
-            => (state != null,
-                () => (nameof(state), $"State can not be null"));
-
-        public static (bool, Func<(string, FormattableString)>) StateHasValidValue(string state)
-            => (state == null || WorkerStateValidator.IsValid(state),
-                () => (nameof(state), $"State '{state}' is not a valid value"));
-
         public static (bool, Func<(string, FormattableString)>) IterationDelayIsInDayTimeRange(int iterationDelay)
             => (MillisecondsValidator.IsValid(iterationDelay),
                 () => (nameof(iterationDelay), $"Iteration delay '{iterationDelay}' must be positive and less than 86400000"));
