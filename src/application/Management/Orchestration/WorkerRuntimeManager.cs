@@ -47,8 +47,8 @@ namespace Super.Paula.Application.Orchestration
                             var numbers = DateTime.UtcNow.ToNumbers();
 
                             workerRuntime.State = state;
-                            workerRuntime.Date = numbers.day;
-                            workerRuntime.Time = numbers.milliseconds;
+                            workerRuntime.HeartbeatDate = numbers.day;
+                            workerRuntime.HeartbeatTime = numbers.milliseconds;
                         }
                     },
                     worker);
@@ -65,7 +65,7 @@ namespace Super.Paula.Application.Orchestration
                 return string.Empty;
             }
 
-            var workerRuntimeTimestamp = (workerRuntime.Date, workerRuntime.Time).ToDateTime();
+            var workerRuntimeTimestamp = (workerRuntime.HeartbeatDate, workerRuntime.HeartbeatTime).ToDateTime();
 
             var tenSecondsAgo = DateTime.UtcNow.AddSeconds(-10);
 

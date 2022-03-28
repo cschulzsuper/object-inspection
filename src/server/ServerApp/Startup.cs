@@ -90,7 +90,7 @@ namespace Super.Paula
 
             app.ConfigureEvents();
             app.ConfigureWorker();
-            app.ConfigureContinutations();
+            app.ConfigureContinuations();
         }
 
         public async Task HandleError(HttpContext context)

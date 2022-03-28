@@ -110,7 +110,15 @@ namespace Super.Paula.Application.Orchestration
 
             return worker
                 .ExecuteAsync(context, cancellationToken)
-                .ContinueWith((_, __) => scope.Dispose(), null, cancellationToken);
+                .ContinueWith((task, __) => 
+                {
+                    scope.Dispose();
+
+                    if(task.Exception != null)
+                    {
+                        throw task.Exception;
+                    }
+                }, null, cancellationToken);
         }
     }
 }

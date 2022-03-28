@@ -28,45 +28,6 @@ namespace Super.Paula.Application.Auditing
             }
         }
 
-        public async Task HandleAsync(EventHandlerContext context, BusinessObjectInspectionAuditEvent @event)
-        {
-            var businessObjectInspectionAuditRecordManager = context.Services.GetRequiredService<IBusinessObjectInspectionAuditRecordManager>();
-
-            var businessObjectInspectionAuditRecord = await businessObjectInspectionAuditRecordManager.GetOrDefaultAsync(
-                    @event.BusinessObject,
-                    @event.Inspection,
-                    @event.AuditDate,
-                    @event.AuditTime);
-
-            if (businessObjectInspectionAuditRecord != null)
-            {
-                businessObjectInspectionAuditRecord.InspectionDisplayName = @event.InspectionDisplayName;
-                businessObjectInspectionAuditRecord.Annotation = @event.AuditAnnotation;
-                businessObjectInspectionAuditRecord.Result = @event.AuditResult;
-                businessObjectInspectionAuditRecord.BusinessObjectDisplayName = @event.BusinessObjectDisplayName;
-                businessObjectInspectionAuditRecord.Inspector = @event.AuditInspector;
-
-                await businessObjectInspectionAuditRecordManager.UpdateAsync(businessObjectInspectionAuditRecord);
-            }
-            else
-            {
-                businessObjectInspectionAuditRecord = new BusinessObjectInspectionAuditRecord
-                {
-                    Annotation = @event.AuditAnnotation,
-                    AuditDate = @event.AuditDate,
-                    AuditTime = @event.AuditTime,
-                    BusinessObject = @event.BusinessObject,
-                    BusinessObjectDisplayName = @event.BusinessObjectDisplayName,
-                    Inspection = @event.Inspection,
-                    InspectionDisplayName = @event.InspectionDisplayName,
-                    Inspector = @event.AuditInspector,
-                    Result = @event.AuditResult
-                };
-
-                await businessObjectInspectionAuditRecordManager.InsertAsync(businessObjectInspectionAuditRecord);
-            }
-        }
-
         public async Task HandleAsync(EventHandlerContext context, InspectionEvent @event)
         {
             var businessObjectInspectionAuditRecordManager = context.Services.GetRequiredService<IBusinessObjectInspectionAuditRecordManager>();

@@ -20,27 +20,6 @@ namespace Super.Paula.Application.Auditing
             _eventStorage = eventStorage;
         }
 
-        public async ValueTask CreateBusinessObjectInspectionAuditEventAsync(BusinessObjectInspection inspection)
-        {
-            if (inspection.Audit.AuditDate == default)
-            {
-                return;
-            }
-
-            var @event = new BusinessObjectInspectionAuditEvent(
-                inspection.BusinessObject,
-                inspection.BusinessObjectDisplayName,
-                inspection.Audit.Inspector,
-                inspection.Inspection,
-                inspection.InspectionDisplayName,
-                inspection.Audit.Annotation,
-                inspection.Audit.Result,
-                inspection.Audit.AuditDate,
-                inspection.Audit.AuditTime);
-
-            await _eventStorage.AddAsync(@event, _user);
-        }
-
         public async ValueTask CreateBusinessObjectInspectionAuditScheduleEventAsync(ICollection<BusinessObjectInspection> inspections)
         {
             var inspection = inspections

@@ -10,8 +10,8 @@ namespace Super.Paula.Application.Orchestration
 
         public string State { get; set; } = string.Empty;
 
-        public int Date { get; set; }
+        public int HeartbeatDate { get; set; }
 
-        public int Time { get; set; }
+        public int HeartbeatTime { get; set; }
     }
 }

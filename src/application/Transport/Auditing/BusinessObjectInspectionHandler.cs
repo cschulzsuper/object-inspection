@@ -14,17 +14,20 @@ namespace Super.Paula.Application.Auditing
     {
         private readonly IBusinessObjectInspectionManager _businessObjectInspectionManager;
         private readonly IBusinessObjectInspectionEventService _businessObjectInspectionEventService;
+        private readonly IBusinessObjectInspectionContinuationService _businessObjectInspectionContinuationService;
         private readonly IBusinessObjectInspectionAuditScheduleFilter _businessObjectInspectionAuditScheduleFilter;
         private readonly ClaimsPrincipal _user;
 
         public BusinessObjectInspectionHandler(
             IBusinessObjectInspectionManager businessObjectInspectionManager,
             IBusinessObjectInspectionEventService businessObjectInspectionEventService,
+            IBusinessObjectInspectionContinuationService businessObjectInspectionContinuationService,
             IBusinessObjectInspectionAuditScheduleFilter businessObjectInspectionAuditScheduleFilter,
             ClaimsPrincipal user)
         {
             _businessObjectInspectionManager = businessObjectInspectionManager;
             _businessObjectInspectionEventService = businessObjectInspectionEventService;
+            _businessObjectInspectionContinuationService = businessObjectInspectionContinuationService;
             _businessObjectInspectionAuditScheduleFilter = businessObjectInspectionAuditScheduleFilter;
             _user = user;
         }
@@ -255,7 +258,7 @@ namespace Super.Paula.Application.Auditing
                 .Where(x => x.BusinessObject == businessObject)
                 .ToList();
 
-            await _businessObjectInspectionEventService.CreateBusinessObjectInspectionAuditEventAsync(entity);
+            await _businessObjectInspectionContinuationService.AddCreateBusinessObjectInspectionAuditRecordContinuationAsync(entity);
             await _businessObjectInspectionEventService.CreateBusinessObjectInspectionAuditScheduleEventAsync(inspections);
 
             return new BusinessObjectInspectionAuditResponse
@@ -275,7 +278,7 @@ namespace Super.Paula.Application.Auditing
             entity.Audit.Result = request.Result;
 
             await _businessObjectInspectionManager.UpdateAsync(entity);
-            await _businessObjectInspectionEventService.CreateBusinessObjectInspectionAuditEventAsync(entity);
+            await _businessObjectInspectionContinuationService.AddCreateBusinessObjectInspectionAuditRecordContinuationAsync(entity);
 
             return new BusinessObjectInspectionAuditResponse
             {
@@ -294,7 +297,7 @@ namespace Super.Paula.Application.Auditing
             entity.Audit.Annotation = request.Annotation;
 
             await _businessObjectInspectionManager.UpdateAsync(entity);
-            await _businessObjectInspectionEventService.CreateBusinessObjectInspectionAuditEventAsync(entity);
+            await _businessObjectInspectionContinuationService.AddCreateBusinessObjectInspectionAuditRecordContinuationAsync(entity);
 
             return new BusinessObjectInspectionAuditAnnotationResponse
             {

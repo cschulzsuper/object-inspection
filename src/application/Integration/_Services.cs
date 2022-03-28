@@ -27,7 +27,8 @@ namespace Super.Paula.Application
                 .AddSingleton<IWorkerRegistry, PersistentWorkerRegistry>();
 
             services
-                .AddSingleton<IContinuationStorage, InMemoryContinuationStorage>()
+                .AddSingleton<IContinuationRegistry, InMemoryContinuationRegistry>()
+                .AddScoped<IContinuationStorage, PersistentContinuationStorage>()
                 .AddSingleton<IContinuator, Continuator>();
 
             return services;

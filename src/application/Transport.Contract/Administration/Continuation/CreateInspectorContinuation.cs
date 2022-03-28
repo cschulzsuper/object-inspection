@@ -26,5 +26,7 @@ namespace Super.Paula.Application.Administration.Continuation
         [StringLength(140)]
         string OrganizationDisplayName,
 
-        bool Activated) : ContinuationBase(Guid.Empty);
+        bool Activated) 
+        
+        : ContinuationBase("create-inspector");
 }

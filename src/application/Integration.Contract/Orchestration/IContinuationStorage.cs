@@ -9,7 +9,7 @@ namespace Super.Paula.Application.Orchestration
     {
         ValueTask AddAsync(ContinuationBase continuation, ClaimsPrincipal user);
 
-        IAsyncEnumerable<ContinuationStorageEntry> GetPendingContinuationsAsync();
+        IAsyncEnumerable<(ContinuationBase Continuation, ClaimsPrincipal User)> GetPendingContinuationsAsync();
 
         ValueTask SetContinuationAsInProgressAsync(Guid continuationId);
 

@@ -10,13 +10,5 @@ namespace Super.Paula.Application.Orchestration
 
         Task ExecuteAsync<TContinuation>(TContinuation continuation, ClaimsPrincipal? user = null)
             where TContinuation : ContinuationBase;
-
-        void Register<TContinuation, THandler>()
-            where TContinuation : ContinuationBase
-            where THandler : IContinuationHandler<TContinuation>;
-
-        void Unregister<TContinuation, THandler>()
-            where TContinuation : ContinuationBase
-            where THandler : IContinuationHandler<TContinuation>;
     }
 }

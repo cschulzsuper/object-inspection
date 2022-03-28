@@ -22,6 +22,7 @@ namespace Super.Paula.Data
             modelBuilder.ApplyConfiguration(new IdentityInspectorMapping());
             modelBuilder.ApplyConfiguration(new OrganizationMapping());
 
+            modelBuilder.ApplyConfiguration(new ContinuationMapping());
             modelBuilder.ApplyConfiguration(new WorkerMapping());
         }
     }
