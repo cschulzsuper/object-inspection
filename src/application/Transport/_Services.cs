@@ -30,6 +30,7 @@ namespace Super.Paula.Application
         private static IServiceCollection AddServerTransportAdministration(this IServiceCollection services)
         {
             services.AddScoped<IAuthorizationHandler, AuthorizationHandler>();
+            services.AddScoped<IAuthorizationTokenHandler, AuthorizationTokenHandler>();
 
             services.AddScoped<IInspectorAnnouncer>(InspectorAnnouncerFactory);
             services.AddScoped<IInspectorHandler, InspectorHandler>();

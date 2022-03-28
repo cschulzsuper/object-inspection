@@ -6,17 +6,21 @@ namespace Super.Paula.Application.Orchestration
 {
     public interface IWorkerRegistry
     {
-        void Register<TWorker>();
+        void Register<TWorker>(Action<WorkerOptions> configure);
 
-        bool HasUnstartedWorker();
+        bool HasWorkers();
 
-        IAsyncEnumerable<WorkerRegistryEntry> GetUnstartedWorkerAsync();
+        bool HasUnstartedWorkers();
 
-        ValueTask SetWorkerAsStartedAsync(Guid workerId);
+        IAsyncEnumerable<WorkerRegistration> GetUnstartedWorkerAsync();
 
-        ValueTask SetWorkerAsFinishedAsync(Guid workerId);
+        ValueTask<bool> SetWorkerAsStartingAsync(string workerName);
 
-        ValueTask SetWorkerAsFailedAsync(Guid eventId, Exception? exception);
+        ValueTask SetWorkerAsRunningAsync(string workerName);
+
+        ValueTask SetWorkerAsFinishedAsync(string workerName);
+
+        ValueTask SetWorkerAsFailedAsync(string workerName, Exception? exception);
         
     }
 }

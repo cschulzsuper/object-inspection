@@ -7,9 +7,6 @@ namespace Super.Paula.Application.Orchestration
 {
     public class ContinuationStorageWorker : IWorker
     {
-
-        private readonly int continuationStorageIterationDelay = 1_000;  // 1 second
-
         public async Task ExecuteAsync(WorkerContext context, CancellationToken cancellationToken)
         {
             var continuationStorage = context.Services.GetRequiredService<IContinuationStorage>();
@@ -31,7 +28,7 @@ namespace Super.Paula.Application.Orchestration
                     }
                 }
 
-                await Task.Delay(continuationStorageIterationDelay, cancellationToken);
+                await Task.Delay(context.IterationDelay, cancellationToken);
             }
         }
     }

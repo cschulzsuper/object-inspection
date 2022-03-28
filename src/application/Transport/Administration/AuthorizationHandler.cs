@@ -10,14 +10,14 @@ namespace Super.Paula.Application.Administration
     {
         private readonly IInspectorManager _inspectorManager;
         private readonly IIdentityInspectorManager _identityInspectorManager;
-        private readonly ITokenAuthorizationFilter _tokenAuthorizatioFilter;
+        private readonly IAuthorizationTokenHandler _tokenAuthorizatioFilter;
         private readonly IConnectionManager _connectionManager;
         private readonly ClaimsPrincipal _user;
 
         public AuthorizationHandler(
             IInspectorManager inspectorManager,
             IIdentityInspectorManager identityInspectorManager,
-            ITokenAuthorizationFilter tokenAuthorizatioFilter,
+            IAuthorizationTokenHandler tokenAuthorizatioFilter,
             IConnectionManager connectionManager,
             ClaimsPrincipal user)
         {
@@ -46,7 +46,7 @@ namespace Super.Paula.Application.Administration
                 $"{token.Organization}:{token.Inspector}",
                 token.Proof!);
 
-            _tokenAuthorizatioFilter.Apply(token);
+            _tokenAuthorizatioFilter.RewriteAuthorizations(token);
 
             return ValueTask.FromResult(token.ToBase64String());
         }
@@ -68,7 +68,7 @@ namespace Super.Paula.Application.Administration
             token.ImpersonatorInspector = _user.GetInspector();
             token.ImpersonatorOrganization = _user.GetOrganization();
 
-            _tokenAuthorizatioFilter.Apply(token);
+            _tokenAuthorizatioFilter.RewriteAuthorizations(token);
 
             return ValueTask.FromResult(token.ToBase64String());
         }
@@ -89,7 +89,7 @@ namespace Super.Paula.Application.Administration
             token.ImpersonatorInspector = null;
             token.ImpersonatorOrganization = null;
 
-            _tokenAuthorizatioFilter.Apply(token);
+            _tokenAuthorizatioFilter.RewriteAuthorizations(token);
 
             return ValueTask.FromResult(token.ToBase64String());
         }

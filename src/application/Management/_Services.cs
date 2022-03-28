@@ -6,6 +6,7 @@ using Super.Paula.Application.Communication;
 using Super.Paula.Application.Guidelines;
 using Super.Paula.Application.Inventory;
 using Super.Paula.Application.Operation;
+using Super.Paula.Application.Orchestration;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Super.Paula.Application
@@ -22,6 +23,7 @@ namespace Super.Paula.Application
             services.AddServerManagementGuidelines();
             services.AddServerManagementInventory();
             services.AddServerManagementOperation();
+            services.AddServerManagementOrchestration();
 
             return services;
         }
@@ -76,6 +78,14 @@ namespace Super.Paula.Application
             services.AddScoped<IApplicationManager, ApplicationManager>();
             services.AddScoped<IConnectionManager, ConnectionManager>();
             services.AddScoped<IConnectionViolationManager, ConnectionViolationManager>();
+
+            return services;
+        }
+
+        private static IServiceCollection AddServerManagementOrchestration(this IServiceCollection services)
+        {
+            services.AddScoped<IWorkerManager, WorkerManager>();
+            services.AddScoped<IWorkerRuntimeManager, WorkerRuntimeManager>();
 
             return services;
         }

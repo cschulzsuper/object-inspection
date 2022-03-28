@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Super.Paula.Application.Administration;
 using Super.Paula.Application.Auditing;
 using Super.Paula.Application.Orchestration;
 using System.Diagnostics.CodeAnalysis;
@@ -11,7 +10,6 @@ namespace Super.Paula.Application
     {
         public static IServiceCollection AddServerIntegration(this IServiceCollection services)
         {
-            services.AddServerIntegrationAdministration();
             services.AddServerIntegrationInventory();
             services.AddServerIntegrationOrchestration();
 
@@ -26,18 +24,11 @@ namespace Super.Paula.Application
 
             services
                 .AddSingleton<IWorkerHost, LocalWorkerHost>()
-                .AddSingleton<IWorkerRegistry, InMemoryWorkerRegistry>();
+                .AddSingleton<IWorkerRegistry, PersistentWorkerRegistry>();
 
             services
                 .AddSingleton<IContinuationStorage, InMemoryContinuationStorage>()
                 .AddSingleton<IContinuator, Continuator>();
-
-            return services;
-        }
-
-        private static IServiceCollection AddServerIntegrationAdministration(this IServiceCollection services)
-        {
-            services.AddScoped<ITokenAuthorizationFilter, TokenAuthorizationFilter>();
 
             return services;
         }

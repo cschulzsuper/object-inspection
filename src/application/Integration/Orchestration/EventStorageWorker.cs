@@ -7,9 +7,6 @@ namespace Super.Paula.Application.Orchestration
 {
     public class EventStorageWorker : IWorker
     {
-
-        private readonly int eventStorageIterationDelay = 1_000;  // 1 second
-
         public async Task ExecuteAsync(WorkerContext context, CancellationToken cancellationToken)
         {
             var eventStorage = context.Services.GetRequiredService<IEventStorage>();
@@ -31,7 +28,7 @@ namespace Super.Paula.Application.Orchestration
                     }
                 }
 
-                await Task.Delay(eventStorageIterationDelay, cancellationToken);
+                await Task.Delay(context.IterationDelay, cancellationToken);
             }
         }
     }

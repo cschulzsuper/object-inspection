@@ -3,5 +3,6 @@
 namespace Super.Paula.Application.Orchestration
 {
     public record WorkerContext(
-        IServiceProvider Services);
+        IServiceProvider Services,
+        int IterationDelay);
 }

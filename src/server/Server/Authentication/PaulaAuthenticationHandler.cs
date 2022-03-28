@@ -17,7 +17,7 @@ namespace Super.Paula.Authentication
         private AuthenticationScheme? _scheme;
         private HttpContext? _context;
         private AppSettings? _appSettings;
-        private ITokenAuthorizationFilter? _tokenAuthorizationFilter;
+        private IAuthorizationTokenHandler? _tokenAuthorizationFilter;
 
         public Task InitializeAsync(AuthenticationScheme scheme, HttpContext context)
         {
@@ -25,7 +25,7 @@ namespace Super.Paula.Authentication
             _context = context;
             _connectionManager = context.RequestServices.GetRequiredService<IConnectionManager>();
             _appSettings = context.RequestServices.GetRequiredService<AppSettings>();
-            _tokenAuthorizationFilter = context.RequestServices.GetRequiredService<ITokenAuthorizationFilter>();
+            _tokenAuthorizationFilter = context.RequestServices.GetRequiredService<IAuthorizationTokenHandler>();
 
             return Task.CompletedTask;
         }
@@ -107,7 +107,7 @@ namespace Super.Paula.Authentication
                 }
             }
 
-            _tokenAuthorizationFilter?.Apply(token);
+            _tokenAuthorizationFilter?.RewriteAuthorizations(token);
 
             return token;
         }

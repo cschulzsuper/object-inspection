@@ -13,21 +13,18 @@ namespace Super.Paula.Application.Operation
         }
 
         public void Trace(string violator)
-        {
-            var violation = _connectionViolationRuntimeCache.Get(violator)
-                ?? new ConnectionViolation
-                {
-                    Violator = violator,
-                    ViolationCounter = 0
-                };
-
-            violation.ViolationCounter++;
-
-            _connectionViolationRuntimeCache.Set(violation);
-        }
+            => _connectionViolationRuntimeCache
+                .CreateOrUpdate(
+                    () => new ConnectionViolation
+                    {
+                        Violator = violator,
+                        ViolationCounter = 1
+                    },
+                    connectionViolation => connectionViolation.ViolationCounter++,
+                    violator);
 
         public bool Verify(string violator)
-            => _connectionViolationRuntimeCache.Get(violator)?.ViolationCounter >= 0b_1111_1111;
+            => _connectionViolationRuntimeCache.GetOrDefault(violator)?.ViolationCounter >= 0b_1111_1111;
 
     }
 }

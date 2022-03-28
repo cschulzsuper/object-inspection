@@ -5,12 +5,12 @@ using System.Linq;
 
 namespace Super.Paula.Application.Administration
 {
-    public class TokenAuthorizationFilter : ITokenAuthorizationFilter
+    public class AuthorizationTokenHandler : IAuthorizationTokenHandler
     {
         private readonly IOrganizationManager _organizationManager;
         private readonly AppSettings _appSettings;
 
-        public TokenAuthorizationFilter(
+        public AuthorizationTokenHandler(
             IOrganizationManager organizationManager,
             AppSettings appSettings)
         {
@@ -18,7 +18,7 @@ namespace Super.Paula.Application.Administration
             _appSettings = appSettings;
         }
 
-        public void Apply(Token token)
+        public void RewriteAuthorizations(Token token)
         {
             var authorizations = new HashSet<string>();
 

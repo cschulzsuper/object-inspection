@@ -12,8 +12,6 @@ namespace Super.Paula.Application.Inventory
 {
     public class BusinessObjectWorker : IWorker
     {
-        private readonly int timeInspectionAuditIterationDelay = 3600_000; // 1 hour
-
         public async Task ExecuteAsync(WorkerContext context, CancellationToken cancellationToken)
         {
             var organizations = context.Services.GetRequiredService<IOrganizations>();
@@ -40,7 +38,7 @@ namespace Super.Paula.Application.Inventory
                     }
                 }
 
-                await Task.Delay(timeInspectionAuditIterationDelay, cancellationToken);
+                await Task.Delay(context.IterationDelay, cancellationToken);
             }
         }
 
