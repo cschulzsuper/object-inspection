@@ -34,12 +34,15 @@ namespace Super.Paula
             return app;
         }
 
-        public static IApplicationBuilder ConfigureContinutations(this IApplicationBuilder app)
+        public static IApplicationBuilder ConfigureContinuations(this IApplicationBuilder app)
         {
             var continuator = app.ApplicationServices.GetRequiredService<IContinuator>();
 
             continuator.Configure((context) => context.Services.ConfigureData());
-            continuator.ConfigureTransport();
+
+            var continuationRegistry = app.ApplicationServices.GetRequiredService<IContinuationRegistry>();
+
+            continuationRegistry.ConfigureTransport();
 
             return app;
         }

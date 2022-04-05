@@ -1,5 +1,7 @@
 ﻿using Super.Paula.Application.Administration;
 using Super.Paula.Application.Administration.Continuation;
+using Super.Paula.Application.Auditing;
+using Super.Paula.Application.Auditing.Continuations;
 using Super.Paula.Application.Orchestration;
 using System.Diagnostics.CodeAnalysis;
 
@@ -8,23 +10,31 @@ namespace Super.Paula.Application
     [SuppressMessage("Style", "IDE1006")]
     public static class _Continuations
     {
-        public static IContinuator ConfigureTransport(this IContinuator continuator)
+        public static IContinuationRegistry ConfigureTransport(this IContinuationRegistry continuationRegistry)
         {
-            continuator.ConfigureTransportAdministration();
+            continuationRegistry.ConfigureTransportAdministration();
+            continuationRegistry.ConfigureTransportAuditing();
 
-            return continuator;
+            return continuationRegistry;
         }
 
-        private static IContinuator ConfigureTransportAdministration(this IContinuator continuator)
+        private static IContinuationRegistry ConfigureTransportAdministration(this IContinuationRegistry continuationRegistry)
         {
-            continuator.Register<CreateInspectorContinuation, InspectorContinuationHandler>();
+            continuationRegistry.Register<CreateInspectorContinuation, InspectorContinuationHandler>("create-inspector");
 
-            continuator.Register<CreateIdentityInspectorContinuation, IdentityInspectorContinuationHandler>();
-            continuator.Register<DeleteIdentityInspectorContinuation, IdentityInspectorContinuationHandler>();
-            continuator.Register<ActivateIdentityInspectorContinuation, IdentityInspectorContinuationHandler>();
-            continuator.Register<DeactivateIdentityInspectorContinuation, IdentityInspectorContinuationHandler>();
+            continuationRegistry.Register<CreateIdentityInspectorContinuation, IdentityInspectorContinuationHandler>("create-identity-inspector");
+            continuationRegistry.Register<DeleteIdentityInspectorContinuation, IdentityInspectorContinuationHandler>("delete-identity-inspector");
+            continuationRegistry.Register<ActivateIdentityInspectorContinuation, IdentityInspectorContinuationHandler>("activate-identity-inspector");
+            continuationRegistry.Register<DeactivateIdentityInspectorContinuation, IdentityInspectorContinuationHandler>("deactivate-identity-inspector");
 
-            return continuator;
+            return continuationRegistry;
+        }
+
+        private static IContinuationRegistry ConfigureTransportAuditing(this IContinuationRegistry continuationRegistry)
+        {
+            continuationRegistry.Register<CreateBusinessObjectInspectionAuditRecordContinuation, BusinessObjectInspectionAuditRecordContinuationHandler>("create-business-object-inspection-audit-record");
+
+            return continuationRegistry;
         }
     }
 }

@@ -55,9 +55,6 @@ namespace Super.Paula.Application
             eventBus.Subscribe<BusinessObjectDeletionEvent, BusinessObjectInspectionAuditRecordEventHandler>(
                 AllowedSubscribers.AuditingBusinessObjectInspectionAuditRecord);
 
-            eventBus.Subscribe<BusinessObjectInspectionAuditEvent, BusinessObjectInspectionAuditRecordEventHandler>(
-                AllowedSubscribers.AuditingBusinessObjectInspectionAuditRecord);
-
             eventBus.Subscribe<InspectionEvent, BusinessObjectInspectionAuditRecordEventHandler>(
                 AllowedSubscribers.AuditingBusinessObjectInspectionAuditRecord);
 

@@ -2,10 +2,9 @@
 using Super.Paula.Validation;
 using System.ComponentModel.DataAnnotations;
 
-namespace Super.Paula.Application.Auditing.Events
+namespace Super.Paula.Application.Auditing.Continuations
 {
-    [AllowedSubscriber(AllowedSubscribers.AuditingBusinessObjectInspectionAuditRecord)]
-    public record BusinessObjectInspectionAuditEvent(
+    public record CreateBusinessObjectInspectionAuditRecordContinuation(
 
         [KebabCase]
         [StringLength(140)]
@@ -40,5 +39,5 @@ namespace Super.Paula.Application.Auditing.Events
         [Milliseconds]
         int AuditTime)
 
-        : EventBase;
+        : ContinuationBase("create-business-object-inspection-audit-record");
 }
