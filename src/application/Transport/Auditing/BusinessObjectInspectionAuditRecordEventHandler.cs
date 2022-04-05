@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Super.Paula.Application.Auditing.Events;
 using Super.Paula.Application.Guidelines.Events;
 using Super.Paula.Application.Inventory.Events;
 using Super.Paula.Application.Orchestration;

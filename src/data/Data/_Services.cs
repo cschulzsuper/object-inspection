@@ -107,6 +107,8 @@ namespace Super.Paula.Data
             services.AddScoped(RepositoryFactory<Organization, PaulaAdministrationContext>());
 
             services.AddScoped(RepositoryFactory<Continuation, PaulaAdministrationContext>());
+            services.AddScoped(RepositoryFactory<Event, PaulaAdministrationContext>());
+            services.AddScoped(RepositoryFactory<EventProcessing, PaulaAdministrationContext>());
             services.AddScoped(RepositoryFactory<Worker, PaulaAdministrationContext>());
 
             services.AddScoped(RepositoryFactory<BusinessObject, PaulaApplicationContext>());
@@ -127,6 +129,8 @@ namespace Super.Paula.Data
             services.AddScoped<IPartitionKeyValueGenerator<Organization>, OrganizationPartitionKeyValueGenerator>();
 
             services.AddScoped<IPartitionKeyValueGenerator<Continuation>, ContinuationPartitionKeyValueGenerator>();
+            services.AddScoped<IPartitionKeyValueGenerator<Event>, EventPartitionKeyValueGenerator>();
+            services.AddScoped<IPartitionKeyValueGenerator<EventProcessing>, EventProcessingPartitionKeyValueGenerator>();
             services.AddScoped<IPartitionKeyValueGenerator<Worker>, WorkerPartitionKeyValueGenerator>();
 
             return services;

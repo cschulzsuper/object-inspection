@@ -4,8 +4,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Super.Paula.Application.Inventory.Events
 {
-    [AllowedSubscriber(AllowedSubscribers.AuditingBusinessObjectInspectionAuditRecord)]
-    [AllowedSubscriber(AllowedSubscribers.AdministrationInspector)]
+    [AllowedSubscriber(AllowedSubscribers.BusinessObjectInspectionAuditRecord)]
+    [AllowedSubscriber(AllowedSubscribers.Inspector)]
     public record BusinessObjectDeletionEvent(
 
         [StringLength(140)]
@@ -13,5 +13,5 @@ namespace Super.Paula.Application.Inventory.Events
         [KebabCase]
         string UniqueName)
 
-        : EventBase;
+        : EventBase("event-business-object-deletion");
 }

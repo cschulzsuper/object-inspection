@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Super.Paula.Application.Auditing.Events
 {
-    [AllowedSubscriber(AllowedSubscribers.AdministrationInspector)]
+    [AllowedSubscriber(AllowedSubscribers.Inspector)]
     public record BusinessObjectInspectionAuditScheduleEvent(
 
         [KebabCase]
@@ -21,5 +21,5 @@ namespace Super.Paula.Application.Auditing.Events
         [Milliseconds]
         int Threshold)
 
-        : EventBase;
+        : EventBase("event-business-object-inspection-audit-schedule");
 }

@@ -23,6 +23,8 @@ namespace Super.Paula.Data
             modelBuilder.ApplyConfiguration(new OrganizationMapping());
 
             modelBuilder.ApplyConfiguration(new ContinuationMapping());
+            modelBuilder.ApplyConfiguration(new EventMapping());
+            modelBuilder.ApplyConfiguration(new EventProcessingMapping());
             modelBuilder.ApplyConfiguration(new WorkerMapping());
         }
     }

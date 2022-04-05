@@ -49,6 +49,7 @@ namespace Super.Paula.Application
         {
             services.AddScoped<IBusinessObjectInspectionAuditRecordHandler, BusinessObjectInspectionAuditRecordHandler>();
             services.AddScoped<IBusinessObjectInspectionContinuationService, BusinessObjectInspectionContinuationService>();
+            services.AddScoped<IBusinessObjectInspectionAuditScheduler, BusinessObjectInspectionAuditScheduler>();
             services.AddScoped<IBusinessObjectInspectionHandler, BusinessObjectInspectionHandler>();
             services.AddScoped<IBusinessObjectInspectionEventService, BusinessObjectInspectionEventService>();
 

@@ -29,7 +29,6 @@ namespace Super.Paula.Application.Auditing
         public async Task HandleAsync(EventHandlerContext context, InspectionDeletionEvent @event)
         {
             var businessObjectInspectionManager = context.Services.GetRequiredService<IBusinessObjectInspectionManager>();
-            var businessObjectInspectionAuditScheduleFilter = context.Services.GetRequiredService<IBusinessObjectInspectionAuditScheduleFilter>();
 
             var businessObjects = businessObjectInspectionManager.GetQueryable()
                 .Where(x => x.Inspection == @event.UniqueName)

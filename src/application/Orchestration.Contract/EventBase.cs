@@ -1,0 +1,27 @@
+﻿using System;
+using System.Text.Json.Serialization;
+
+namespace Super.Paula.Application.Orchestration
+{
+    public record EventBase
+    {
+        public EventBase(string name)
+        {
+            Id = Guid.NewGuid();
+            Name = name;
+            (CreationDate, CreationTime) = DateTime.UtcNow.ToNumbers();
+        }
+
+        [JsonInclude]
+        public string Name { get; private init; }
+
+        [JsonInclude]
+        public Guid Id { get; private init; }
+
+        [JsonInclude]
+        public int CreationDate { get; private init; }
+
+        [JsonInclude]
+        public int CreationTime { get; private init; }
+    }
+}

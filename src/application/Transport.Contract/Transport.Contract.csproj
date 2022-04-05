@@ -13,7 +13,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\data\Aggregates\Aggregates.csproj" />
-    <ProjectReference Include="..\Integration.Contract\Integration.Contract.csproj" />
+    <ProjectReference Include="..\Orchestration.Contract\Orchestration.Contract.csproj" />
+    <ProjectReference Include="..\Security.Contract\Security.Contract.csproj" />
     <ProjectReference Include="..\Shared\Shared.csproj" />
   </ItemGroup>
 
