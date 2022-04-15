@@ -107,8 +107,8 @@ else
             return string.Empty;
         }
 
-        return (businessObject.AuditSchedulePlannedAuditDate, businessObject.AuditSchedulePlannedAuditTime)
-            .ToLocalTimeString();
+        return new DateTimeNumbers(businessObject.AuditSchedulePlannedAuditDate, businessObject.AuditSchedulePlannedAuditTime)
+            .ToLocalDateTimeString();
     }
 
     public async Task QueryAsync()

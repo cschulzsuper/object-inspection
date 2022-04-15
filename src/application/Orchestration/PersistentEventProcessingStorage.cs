@@ -46,14 +46,22 @@ namespace Super.Paula.Application.Orchestration
 
         public async IAsyncEnumerable<(string, EventBase, ClaimsPrincipal)> GetPendingEventProcessingsAsync()
         {
-            var events = _eventProcessingManager
-                .GetAsyncEnumerable(query => query
-                    .Where(x => x.State == string.Empty)
-                    .OrderBy(x => x.CreationDate)
-                    .ThenBy(x => x.CreationTime));
+            // As soon as the ef core cosmos db provider can create composite indices this can be refactored.
+            // The refactoring will put the order by into a call of GetAsyncEnumerable().
+            //
+            // https://github.com/dotnet/efcore/issues/17303 
 
-            await foreach(var @event in events)
+            var events = _eventProcessingManager
+                .GetQueryable()
+                .Where(x => x.State == string.Empty)
+                .AsEnumerable()
+                .OrderBy(x => x.CreationDate)
+                .ThenBy(x => x.CreationTime);
+
+            foreach (var @event in events)
             {
+                await Task.CompletedTask;
+
                 var eventType = _eventRegistry.GetEventType(@event.Name);
 
                 if (eventType == null)

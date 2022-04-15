@@ -95,7 +95,7 @@ namespace Super.Paula.Application.Orchestration
 
         private Task StartWorkerAsync(WorkerRegistration workerRegistration, CancellationToken cancellationToken)
         {
-            using var scope = _services.CreateScope();
+            var scope = _services.CreateScope();
 
             var context = new WorkerContext(scope.ServiceProvider, workerRegistration.IterationDelay);
 

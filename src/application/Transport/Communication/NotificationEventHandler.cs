@@ -15,7 +15,7 @@ namespace Super.Paula.Application.Communication
             var notificationManager = context.Services.GetRequiredService<INotificationManager>();
             var notificationAnnouncer = context.Services.GetRequiredService<INotificationAnnouncer>();
 
-            var (date, time) = DateTime.UtcNow.ToNumbers();
+            var (date, time) = DateTimeNumbers.GlobalNow;
 
             if (!string.IsNullOrWhiteSpace(@event.OldInspector) &&
                 @event.OldInspector != @event.NewInspector)
@@ -80,7 +80,7 @@ namespace Super.Paula.Application.Communication
                 @event.NewAuditScheduleDelayed == false &&
                 @event.OldAuditScheduleDelayed == false)
             {
-                var (date, time) = DateTime.UtcNow.ToNumbers();
+                var (date, time) = DateTimeNumbers.GlobalNow;
 
                 var notification = new Notification
                 {
@@ -109,7 +109,7 @@ namespace Super.Paula.Application.Communication
                 @event.NewAuditScheduleDelayed != @event.OldAuditScheduleDelayed)
             {
 
-                var (date, time) = DateTime.UtcNow.ToNumbers();
+                var (date, time) = DateTimeNumbers.GlobalNow;
 
                 var notification = new Notification
                 {

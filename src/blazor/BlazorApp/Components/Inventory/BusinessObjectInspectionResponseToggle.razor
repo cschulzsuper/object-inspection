@@ -72,8 +72,8 @@
                 return false;
             }
 
-            var auditDelay = (appointments.PlannedAuditDate, appointments.PlannedAuditTime)
-                .ToDateTime()
+            var auditDelay = new DateTimeNumbers(appointments.PlannedAuditDate, appointments.PlannedAuditTime)
+                .ToGlobalDateTime()
                 .AddMilliseconds(Inspection.AuditSchedule.Threshold);
 
             return auditDelay < DateTime.UtcNow;
@@ -94,8 +94,8 @@
                 return false;
             }
 
-            var plannedAudit = (appointment.PlannedAuditDate, appointment.PlannedAuditTime)
-                .ToDateTime();
+            var plannedAudit = new DateTimeNumbers(appointment.PlannedAuditDate, appointment.PlannedAuditTime)
+                .ToGlobalDateTime();
 
             return plannedAudit < DateTime.UtcNow;
         }
@@ -112,8 +112,8 @@
                 return false;
             }
 
-            var upcomingAudit = (appointment.PlannedAuditDate, appointment.PlannedAuditTime)
-                .ToDateTime()
+            var upcomingAudit = new DateTimeNumbers(appointment.PlannedAuditDate, appointment.PlannedAuditTime)
+                .ToGlobalDateTime()
                 .AddMilliseconds(-Inspection.AuditSchedule.Threshold);
 
             return upcomingAudit < DateTime.UtcNow;
@@ -129,7 +129,7 @@
 
     private string GetAuditString()
     {
-        var audit = (Inspection.AuditDate, Inspection.AuditTime).ToLocalTimeString();
+        var audit = new DateTimeNumbers(Inspection.AuditDate, Inspection.AuditTime).ToLocalDateTimeString();
         return Translator[$"{audit} (last audit)"];
     }
 
@@ -142,7 +142,7 @@
             return string.Empty;
         }
 
-        var plannedAudit = (appointment.PlannedAuditDate, appointment.PlannedAuditTime).ToLocalTimeString();
+        var plannedAudit = new DateTimeNumbers(appointment.PlannedAuditDate, appointment.PlannedAuditTime).ToLocalDateTimeString();
         return Translator[$"{plannedAudit} (next audit)"];
     }
 }

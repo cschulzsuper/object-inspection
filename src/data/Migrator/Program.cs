@@ -24,8 +24,7 @@ namespace Super.Paula.Data
                     services.AddServerData(context.HostingEnvironment.IsDevelopment());
 
                     services
-                        .AddScoped<Initialization>()
-                        .AddScoped<Reset>();
+                        .AddScoped<Initialization>();
 
                 })
                 .ConfigureAppConfiguration((context, builder) =>

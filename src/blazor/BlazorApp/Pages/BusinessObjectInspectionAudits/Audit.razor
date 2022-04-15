@@ -117,8 +117,11 @@ else
     {
         var utcNow = DateTime.UtcNow;
 
-        var audit = (inspection.AuditDate, inspection.AuditTime)
-            .ToDateTime();
+        var audit = 
+            new DateTimeNumbers(
+                inspection.AuditDate,
+                inspection.AuditTime)
+            .ToGlobalDateTime();
 
         return audit < utcNow.AddMinutes(-10)
             ? $"btn btn-outline-{btnClass} btn-block"
@@ -136,8 +139,11 @@ else
     {
         var utcNow = DateTime.UtcNow;
 
-        var audit = (inspection.AuditDate, inspection.AuditTime)
-            .ToDateTime();
+        var audit = 
+            new DateTimeNumbers(
+                inspection.AuditDate,
+                inspection.AuditTime)
+            .ToGlobalDateTime();
 
         var inspectionToOld = audit < utcNow.AddMinutes(-10);
 

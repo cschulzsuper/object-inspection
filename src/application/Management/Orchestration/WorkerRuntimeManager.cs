@@ -44,11 +44,11 @@ namespace Super.Paula.Application.Orchestration
                         }
                         else
                         {
-                            var numbers = DateTime.UtcNow.ToNumbers();
+                            var globalNow = DateTimeNumbers.GlobalNow;
 
                             workerRuntime.State = state;
-                            workerRuntime.HeartbeatDate = numbers.day;
-                            workerRuntime.HeartbeatTime = numbers.milliseconds;
+                            workerRuntime.HeartbeatDate = globalNow.Date;
+                            workerRuntime.HeartbeatTime = globalNow.Time;
                         }
                     },
                     worker);
@@ -65,7 +65,11 @@ namespace Super.Paula.Application.Orchestration
                 return string.Empty;
             }
 
-            var workerRuntimeTimestamp = (workerRuntime.HeartbeatDate, workerRuntime.HeartbeatTime).ToDateTime();
+            var workerRuntimeTimestamp = 
+                new DateTimeNumbers(
+                    workerRuntime.HeartbeatDate, 
+                    workerRuntime.HeartbeatTime)
+                .ToGlobalDateTime();
 
             var tenSecondsAgo = DateTime.UtcNow.AddSeconds(-10);
 
