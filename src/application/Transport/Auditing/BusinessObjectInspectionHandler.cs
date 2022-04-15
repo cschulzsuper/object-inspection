@@ -77,7 +77,7 @@ namespace Super.Paula.Application.Auditing
 
         public async ValueTask<BusinessObjectInspectionResponse> CreateAsync(string businessObject, BusinessObjectInspectionRequest request)
         {
-            var (assignmentDate, assignmentTime) = DateTime.UtcNow.ToNumbers();
+            var (assignmentDate, assignmentTime) = DateTimeNumbers.GlobalNow;
 
             var entity = new BusinessObjectInspection
             {
@@ -166,9 +166,7 @@ namespace Super.Paula.Application.Auditing
                 entity.AuditSchedule.Expressions.Add(auditSchedule);
             }
 
-            _businessObjectInspectionAuditScheduler.Schedule(
-                    entity, DateTime.UtcNow.AddMonths(1).ToNumbers());
-
+            _businessObjectInspectionAuditScheduler.Schedule(entity);
             await _businessObjectInspectionManager.UpdateAsync(entity);
 
             var inspections = _businessObjectInspectionManager.GetQueryable()
@@ -190,8 +188,7 @@ namespace Super.Paula.Application.Auditing
 
             foreach (var entity in inspections)
             {
-                _businessObjectInspectionAuditScheduler.Schedule(
-                        entity, DateTime.UtcNow.AddMonths(1).ToNumbers());
+                _businessObjectInspectionAuditScheduler.Schedule(entity);
 
                 await _businessObjectInspectionManager.UpdateAsync(entity);
             }
@@ -211,9 +208,7 @@ namespace Super.Paula.Application.Auditing
 
             entity.AuditSchedule.Omissions.Add(omission);
 
-            _businessObjectInspectionAuditScheduler.Schedule(
-                    entity, DateTime.UtcNow.AddMonths(1).ToNumbers());
-
+            _businessObjectInspectionAuditScheduler.Schedule(entity);
             await _businessObjectInspectionManager.UpdateAsync(entity);
 
             var inspections = _businessObjectInspectionManager.GetQueryable()
@@ -241,9 +236,7 @@ namespace Super.Paula.Application.Auditing
             entity.Audit.Result = request.Result;
             entity.ETag = request.ETag;
 
-            _businessObjectInspectionAuditScheduler.Schedule(
-                    entity, DateTime.UtcNow.AddMonths(1).ToNumbers());
-
+            _businessObjectInspectionAuditScheduler.Schedule(entity);
             await _businessObjectInspectionManager.UpdateAsync(entity);
 
             var inspections = _businessObjectInspectionManager.GetQueryable()

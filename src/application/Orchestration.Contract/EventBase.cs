@@ -9,7 +9,7 @@ namespace Super.Paula.Application.Orchestration
         {
             Id = Guid.NewGuid();
             Name = name;
-            (CreationDate, CreationTime) = DateTime.UtcNow.ToNumbers();
+            (CreationDate, CreationTime) = DateTimeNumbers.GlobalNow;
         }
 
         [JsonInclude]

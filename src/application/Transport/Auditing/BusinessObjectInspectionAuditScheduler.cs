@@ -7,12 +7,13 @@ namespace Super.Paula.Application.Auditing
 {
     internal class BusinessObjectInspectionAuditScheduler : IBusinessObjectInspectionAuditScheduler
     {
-        public void Schedule(BusinessObjectInspection inspection, (int Date, int Time) limit)
+        public void Schedule(BusinessObjectInspection inspection)
         {
+            var auditScheduleLimit = new DateTimeNumbers(DateTime.UtcNow.AddMonths(1));
             var auditSchedule = inspection.AuditSchedule;
 
             var appointmentsFromExpressions = auditSchedule.Expressions
-                .SelectMany(expression => CalculateAppointmentsFromExpression(inspection, limit, expression))
+                .SelectMany(expression => CalculateAppointmentsFromExpression(inspection, auditScheduleLimit, expression))
                 .ToList();
 
             var appointmentsWithOmissions = appointmentsFromExpressions
@@ -34,7 +35,7 @@ namespace Super.Paula.Application.Auditing
         }
 
         private static IEnumerable<BusinessObjectInspectionAuditScheduleTimestamp> CalculateAppointmentsFromExpression(
-            BusinessObjectInspection inspection, (int Date, int Time) limit,
+            BusinessObjectInspection inspection, DateTimeNumbers auditScheduleLimit,
             BusinessObjectInspectionAuditScheduleExpression expression)
         {
             var cronExpression = expression?.CronExpression;
@@ -48,18 +49,18 @@ namespace Super.Paula.Application.Auditing
                 .Parse(cronExpression)
                 .GetOccurrences(
                     GetIntervalBegin(inspection),
-                    GetIntervalEnd(limit),
+                    GetIntervalEnd(auditScheduleLimit),
                     fromInclusive: false,
                     toInclusive: true);
 
             return occurrences.Select(occurrence =>
             {
-                var occurrenceNumbers = occurrence.ToNumbers();
+                var occurrenceNumbers = new DateTimeNumbers(occurrence);
 
                 return new BusinessObjectInspectionAuditScheduleTimestamp
                 {
-                    PlannedAuditDate = occurrenceNumbers.day,
-                    PlannedAuditTime = occurrenceNumbers.milliseconds
+                    PlannedAuditDate = occurrenceNumbers.Date,
+                    PlannedAuditTime = occurrenceNumbers.Time
                 };
             });
 
@@ -69,14 +70,15 @@ namespace Super.Paula.Application.Auditing
         private static DateTime GetIntervalBegin(BusinessObjectInspection inspection)
         {
             var plannedAuditOriginNumbers = inspection.Audit.AuditDate != default
-                ? (inspection.Audit.AuditDate, inspection.Audit.AuditTime)
-                : (inspection.AssignmentDate, inspection.AssignmentTime);
+                ? new DateTimeNumbers(inspection.Audit.AuditDate, inspection.Audit.AuditTime)
+                : new DateTimeNumbers(inspection.AssignmentDate, inspection.AssignmentTime);
 
-            return plannedAuditOriginNumbers.ToDateTime()
+            return plannedAuditOriginNumbers
+                .ToGlobalDateTime()
                 .AddMilliseconds(inspection.AuditSchedule.Threshold);
         }
 
-        private static DateTime GetIntervalEnd((int Date, int Time) limit)
-            => limit.ToDateTime();
+        private static DateTime GetIntervalEnd(DateTimeNumbers auditScheduleLimit)
+            => auditScheduleLimit.ToGlobalDateTime();
     }
 }

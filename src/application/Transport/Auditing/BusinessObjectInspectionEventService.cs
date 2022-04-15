@@ -25,7 +25,11 @@ namespace Super.Paula.Application.Auditing
             var inspection = inspections
                 .Where(x => x.AuditSchedule.Appointments.Any())
                 .OrderBy(x => x.AuditSchedule.Appointments
-                    .Min(y => (y.PlannedAuditDate, y.PlannedAuditTime).ToDateTime()))
+                    .Min(y => 
+                        new DateTimeNumbers(
+                            y.PlannedAuditDate, 
+                            y.PlannedAuditTime)
+                        .ToGlobalDateTime()))
                 .FirstOrDefault();
 
             if (inspection == null)

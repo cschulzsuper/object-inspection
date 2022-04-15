@@ -27,7 +27,7 @@ else
     {
         <div class="card mb-3">
             <div class="card-body">
-                <h6 class="card-subtitle text-muted mb-1">@((notification.Date, notification.Time).ToLocalTimeString())</h6>
+                <h6 class="card-subtitle text-muted mb-1">@(new DateTimeNumbers(notification.Date, notification.Time).ToLocalDateTimeString())</h6>
                 <p class="card-text tex-wrap">@notification.Text</p>
                 <AuthorizedButton Policy="AuditingFull" 
                     id="@($"delete-{notification.Date}-{notification.Time}")"

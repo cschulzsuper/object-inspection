@@ -45,14 +45,22 @@ namespace Super.Paula.Application.Orchestration
 
         public async IAsyncEnumerable<(ContinuationBase, ClaimsPrincipal)> GetPendingContinuationsAsync()
         {
-            var continuations = _continuationManager
-                .GetAsyncEnumerable(query => query
-                    .Where(x => x.State == string.Empty)
-                    .OrderBy(x => x.CreationDate)
-                    .ThenBy(x => x.CreationTime));
+            // As soon as the ef core cosmos db provider can create composite indices this can be refactored.
+            // The refactoring will put the order by into a call of GetAsyncEnumerable().
+            //
+            // https://github.com/dotnet/efcore/issues/17303 
 
-            await foreach(var continuation in continuations)
+            var continuations = _continuationManager
+                .GetQueryable()
+                .Where(x => x.State == string.Empty)
+                .AsEnumerable()
+                .OrderBy(x => x.CreationDate)
+                .ThenBy(x => x.CreationTime);
+
+            foreach(var continuation in continuations)
             {
+                await Task.CompletedTask;
+
                 var continuationType = _continuationRegistry.GetContinuationType(continuation.Name);
 
                 if (continuationType == null)

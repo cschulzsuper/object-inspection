@@ -142,7 +142,11 @@ namespace Super.Paula.Application.Administration
                 }
                 else
                 {
-                    var plannedAuditTimestamp = (@event.PlannedAuditDate, @event.PlannedAuditTime).ToDateTime();
+                    var plannedAuditTimestamp = 
+                        new DateTimeNumbers(
+                            @event.PlannedAuditDate,
+                            @event.PlannedAuditTime)
+                        .ToGlobalDateTime();
 
                     var oldDelayed = inspectorBusinessObject.AuditScheduleDelayed;
                     var oldPending = inspectorBusinessObject.AuditSchedulePending;

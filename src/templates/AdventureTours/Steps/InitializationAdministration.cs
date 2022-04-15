@@ -84,6 +84,8 @@ namespace Super.Paula.Templates.AdventureTours.Steps
                 maintainerOrganization,
                 maintainerInspector);
 
+            await page.SignInInspectorAsync(null, null);
+
             await page.CreateOrganizationAsync(
                 adventureToursOrganizationDisplayName,
                 adventureToursOrganization,

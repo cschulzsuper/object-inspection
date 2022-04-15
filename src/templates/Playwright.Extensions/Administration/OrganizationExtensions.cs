@@ -60,9 +60,7 @@ namespace Super.Paula.Templates.Playwright.Administration
                 await page.Locator("#submit").ClickAsync();
             });
 
-            await Task.Delay(6_000);
-
-            await page.GotoAsync($"");
+            await Task.Delay(4_800);
         }
     }
 }

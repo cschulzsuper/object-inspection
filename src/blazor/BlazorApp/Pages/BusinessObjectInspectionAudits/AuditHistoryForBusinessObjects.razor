@@ -48,11 +48,11 @@
     <tbody>
         <Virtualize @ref="Container" Context="inspectionAudit" ItemsProvider="@GetItemsProviderResultAsync">
             <tr>
-                <td class="d-none d-lg-table-cell">@((inspectionAudit.AuditDate, inspectionAudit.AuditTime).ToLocalTimeString())</td>
+                <td class="d-none d-lg-table-cell">@(new DateTimeNumbers(inspectionAudit.AuditDate, inspectionAudit.AuditTime).ToLocalDateTimeString())</td>
                 <td>
                     <button class="btn btn-outline-secondary btn-block text-left" @onclick="() => ToggleAnnotationVisibility(inspectionAudit)">
                         <div>@inspectionAudit.InspectionDisplayName</div>
-                        <small class="d-lg-none">@((inspectionAudit.AuditDate, inspectionAudit.AuditTime).ToLocalTimeString()) - @inspectionAudit.Inspector</small>
+                        <small class="d-lg-none">@(new DateTimeNumbers(inspectionAudit.AuditDate, inspectionAudit.AuditTime).ToLocalDateTimeString()) - @inspectionAudit.Inspector</small>
                     </button>
 
                     @if (ShowAnnotation(inspectionAudit))
@@ -149,17 +149,15 @@
             searchQuery += "+result:failed";
         }
 
-        var calenderWeekFrom = ISOWeek
+        var calenderWeekFrom = new DateTimeNumbers(ISOWeek
             .ToDateTime(_calenderWeek.Year, _calenderWeek.Week, DayOfWeek.Monday)
-            .ToUniversalTime()
-            .ToNumbers();
+            .ToUniversalTime());
 
-        var calenderWeekTo = ISOWeek
+        var calenderWeekTo = new DateTimeNumbers(ISOWeek
             .ToDateTime(_calenderWeek.Year, _calenderWeek.Week, DayOfWeek.Monday).AddDays(7).AddMilliseconds(-1)
-            .ToUniversalTime()
-            .ToNumbers();
+            .ToUniversalTime());
 
-        searchQuery += $"+from-date:{calenderWeekFrom.day}+from-time:{calenderWeekFrom.milliseconds}+to-date:{calenderWeekTo.day}+to-time:{calenderWeekTo.milliseconds}";
+        searchQuery += $"+from-date:{calenderWeekFrom.Date}+from-time:{calenderWeekFrom.Time}+to-date:{calenderWeekTo.Date}+to-time:{calenderWeekTo.Time}";
 
         searchQuery += $"+business-object:{BusinessObject}";
 

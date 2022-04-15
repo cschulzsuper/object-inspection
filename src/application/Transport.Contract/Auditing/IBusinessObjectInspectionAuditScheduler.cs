@@ -2,6 +2,6 @@
 {
     public interface IBusinessObjectInspectionAuditScheduler
     {
-        public void Schedule(BusinessObjectInspection inspection, (int Date, int Time) limit);
+        public void Schedule(BusinessObjectInspection inspection);
     }
 }
