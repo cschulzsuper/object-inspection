@@ -4,8 +4,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Super.Paula.Application.Administration.Events
 {
-    [AllowedSubscriber(AllowedSubscribers.AdministrationInspector)]
-    [AllowedSubscriber(AllowedSubscribers.OperationApplication)]
+    [AllowedSubscriber(AllowedSubscribers.Inspector)]
+    [AllowedSubscriber(AllowedSubscribers.Application)]
     public record OrganizationDeletionEvent(
 
         [KebabCase]
@@ -13,5 +13,5 @@ namespace Super.Paula.Application.Administration.Events
         [UniqueName]
         string UniqueName)
 
-        : EventBase;
+        : EventBase("event-organization-deletion");
 }

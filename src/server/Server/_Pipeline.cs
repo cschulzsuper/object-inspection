@@ -18,8 +18,16 @@ namespace Super.Paula
         {
             var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
 
-            eventBus.Configure((context) => context.Services.ConfigureData());
+            eventBus.Configure((services) => services.ConfigureData());
             eventBus.ConfigureTransport();
+
+            var eventTypeRegistry = app.ApplicationServices.GetRequiredService<IEventTypeRegistry>();
+
+            eventTypeRegistry.ConfigureTransport();
+
+            var eventProcessor = app.ApplicationServices.GetRequiredService<IEventProcessor>();
+
+            eventProcessor.Configure((context) => context.Services.ConfigureData());
 
             return app;
         }

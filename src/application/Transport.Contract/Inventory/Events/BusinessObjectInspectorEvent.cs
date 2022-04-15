@@ -4,8 +4,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Super.Paula.Application.Inventory.Events
 {
-    [AllowedSubscriber(AllowedSubscribers.AdministrationInspector)]
-    [AllowedSubscriber(AllowedSubscribers.CommunicationNotification)]
+    [AllowedSubscriber(AllowedSubscribers.Inspector)]
+    [AllowedSubscriber(AllowedSubscribers.Notification)]
     public record BusinessObjectInspectorEvent(
 
         [KebabCase]
@@ -26,5 +26,5 @@ namespace Super.Paula.Application.Inventory.Events
         [UniqueName]
         string OldInspector)
 
-        : EventBase;
+        : EventBase("event-business-object-inspector");
 }

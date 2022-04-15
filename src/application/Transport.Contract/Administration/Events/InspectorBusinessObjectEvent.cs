@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Super.Paula.Application.Administration.Events
 {
-    [AllowedSubscriber(AllowedSubscribers.CommunicationNotification)]
+    [AllowedSubscriber(AllowedSubscribers.Notification)]
     public record InspectorBusinessObjectEvent
     (
         [StringLength(140)]
@@ -28,6 +28,6 @@ namespace Super.Paula.Application.Administration.Events
 
         bool OldAuditScheduleDelayed)
 
-        : EventBase;
+        : EventBase("event-inspector-business-object");
 
 }

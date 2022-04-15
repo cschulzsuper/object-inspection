@@ -4,8 +4,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Super.Paula.Application.Guidelines.Events
 {
-    [AllowedSubscriber(AllowedSubscribers.AuditingBusinessObjectInspection)]
-    [AllowedSubscriber(AllowedSubscribers.AuditingBusinessObjectInspectionAuditRecord)]
+    [AllowedSubscriber(AllowedSubscribers.BusinessObjectInspection)]
+    [AllowedSubscriber(AllowedSubscribers.BusinessObjectInspectionAuditRecord)]
     public record InspectionEvent(
 
         [StringLength(140)]
@@ -21,6 +21,6 @@ namespace Super.Paula.Application.Guidelines.Events
 
         bool Activated)
 
-        : EventBase;
+        : EventBase("event-inspection");
 
 }

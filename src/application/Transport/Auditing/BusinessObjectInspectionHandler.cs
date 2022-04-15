@@ -15,20 +15,20 @@ namespace Super.Paula.Application.Auditing
         private readonly IBusinessObjectInspectionManager _businessObjectInspectionManager;
         private readonly IBusinessObjectInspectionEventService _businessObjectInspectionEventService;
         private readonly IBusinessObjectInspectionContinuationService _businessObjectInspectionContinuationService;
-        private readonly IBusinessObjectInspectionAuditScheduleFilter _businessObjectInspectionAuditScheduleFilter;
+        private readonly IBusinessObjectInspectionAuditScheduler _businessObjectInspectionAuditScheduler;
         private readonly ClaimsPrincipal _user;
 
         public BusinessObjectInspectionHandler(
             IBusinessObjectInspectionManager businessObjectInspectionManager,
             IBusinessObjectInspectionEventService businessObjectInspectionEventService,
             IBusinessObjectInspectionContinuationService businessObjectInspectionContinuationService,
-            IBusinessObjectInspectionAuditScheduleFilter businessObjectInspectionAuditScheduleFilter,
+            IBusinessObjectInspectionAuditScheduler businessObjectInspectionAuditScheduler,
             ClaimsPrincipal user)
         {
             _businessObjectInspectionManager = businessObjectInspectionManager;
             _businessObjectInspectionEventService = businessObjectInspectionEventService;
             _businessObjectInspectionContinuationService = businessObjectInspectionContinuationService;
-            _businessObjectInspectionAuditScheduleFilter = businessObjectInspectionAuditScheduleFilter;
+            _businessObjectInspectionAuditScheduler = businessObjectInspectionAuditScheduler;
             _user = user;
         }
 
@@ -166,10 +166,8 @@ namespace Super.Paula.Application.Auditing
                 entity.AuditSchedule.Expressions.Add(auditSchedule);
             }
 
-            _businessObjectInspectionAuditScheduleFilter.Apply(
-                new BusinessObjectInspectionAuditScheduleFilterContext(
-                    Inspection: entity,
-                    Limit: DateTime.UtcNow.AddMonths(1).ToNumbers()));
+            _businessObjectInspectionAuditScheduler.Schedule(
+                    entity, DateTime.UtcNow.AddMonths(1).ToNumbers());
 
             await _businessObjectInspectionManager.UpdateAsync(entity);
 
@@ -192,10 +190,8 @@ namespace Super.Paula.Application.Auditing
 
             foreach (var entity in inspections)
             {
-                _businessObjectInspectionAuditScheduleFilter.Apply(
-                    new BusinessObjectInspectionAuditScheduleFilterContext(
-                        Inspection: entity,
-                        Limit: DateTime.UtcNow.AddMonths(1).ToNumbers()));
+                _businessObjectInspectionAuditScheduler.Schedule(
+                        entity, DateTime.UtcNow.AddMonths(1).ToNumbers());
 
                 await _businessObjectInspectionManager.UpdateAsync(entity);
             }
@@ -215,10 +211,8 @@ namespace Super.Paula.Application.Auditing
 
             entity.AuditSchedule.Omissions.Add(omission);
 
-            _businessObjectInspectionAuditScheduleFilter.Apply(
-                new BusinessObjectInspectionAuditScheduleFilterContext(
-                    Inspection: entity,
-                    Limit: DateTime.UtcNow.AddMonths(1).ToNumbers()));
+            _businessObjectInspectionAuditScheduler.Schedule(
+                    entity, DateTime.UtcNow.AddMonths(1).ToNumbers());
 
             await _businessObjectInspectionManager.UpdateAsync(entity);
 
@@ -247,10 +241,8 @@ namespace Super.Paula.Application.Auditing
             entity.Audit.Result = request.Result;
             entity.ETag = request.ETag;
 
-            _businessObjectInspectionAuditScheduleFilter.Apply(
-                new BusinessObjectInspectionAuditScheduleFilterContext(
-                    Inspection: entity,
-                    Limit: DateTime.UtcNow.AddMonths(1).ToNumbers()));
+            _businessObjectInspectionAuditScheduler.Schedule(
+                    entity, DateTime.UtcNow.AddMonths(1).ToNumbers());
 
             await _businessObjectInspectionManager.UpdateAsync(entity);
 

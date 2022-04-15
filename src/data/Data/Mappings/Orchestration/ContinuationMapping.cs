@@ -12,7 +12,7 @@ namespace Super.Paula.Data.Mappings.Orchestration
         {
             builder
                 .Property<string>(PartitionKey)
-                .HasValueGenerator<WorkerPartitionKeyValueGenerator>();
+                .HasValueGenerator<ContinuationPartitionKeyValueGenerator>();
 
             builder
                  .HasKey(PartitionKey, nameof(Continuation.Id));

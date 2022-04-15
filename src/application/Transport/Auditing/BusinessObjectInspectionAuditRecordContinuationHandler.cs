@@ -1,9 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Super.Paula.Application.Auditing.Continuations;
-using Super.Paula.Application.Guidelines.Events;
-using Super.Paula.Application.Inventory.Events;
 using Super.Paula.Application.Orchestration;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Super.Paula.Application.Auditing
