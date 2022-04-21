@@ -41,9 +41,9 @@ namespace Super.Paula.Client
 
             services.AddClientAuthorization();
             services.AddClientTransport(isWebAssembly);
+            services.AddClientLocalization();
 
             services.AddScoped<ILocalStorage, TStorage>();
-            services.AddSingleton<ITranslator, Translator>();
 
             return services;
         }
@@ -249,6 +249,15 @@ namespace Super.Paula.Client
             {
                 services.AddHttpClientHandler<IBusinessObjectHandler, BusinessObjectHandler>();
             }
+
+            return services;
+        }
+
+        private static IServiceCollection AddClientLocalization(this IServiceCollection services)
+        {
+            services.AddSingleton<ITranslationHandler>(_ => TranslationHandlerFactory.Create());
+            services.AddSingleton(typeof(ITranslator<>), typeof(Translator<>));
+            services.AddSingleton<TranslationCategoryProvider>();
 
             return services;
         }

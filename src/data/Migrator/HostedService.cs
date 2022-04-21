@@ -23,8 +23,6 @@ namespace Super.Paula.Data
         {
             await IStep.ExecuteAsync<Initialization>(_serviceProvider);
 
-            await IStep.ExecuteAsync<Reset>(_serviceProvider);
-
             _applicationLifetime.StopApplication();
         }
 

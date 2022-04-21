@@ -4,6 +4,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Super.Paula.Client.Configuration;
 using Super.Paula.Client.Storage;
 using System.Threading.Tasks;
+using System.Globalization;
+using Microsoft.JSInterop;
+using Super.Paula.Client.Localization;
 
 namespace Super.Paula.Client
 {
@@ -23,13 +26,30 @@ namespace Super.Paula.Client
             await builder.Configuration.AddBlazorApiConfigurationAsync(blazorApiUrl);
 
             var host = builder.Build();
+
+            CultureInfo culture;
+            var jsRuntime = host.Services.GetRequiredService<IJSRuntime>();
+            var cultureName = await jsRuntime.InvokeAsync<string>("blazorCulture.get");
+
+            if (cultureName != null)
+            {
+                culture = new CultureInfo(cultureName);
+            }
+            else
+            {
+                culture = new CultureInfo("en-US");
+                await jsRuntime.InvokeVoidAsync("blazorCulture.set", "en-US");
+            }
+
+            CultureInfo.DefaultThreadCurrentCulture = culture;
+            CultureInfo.DefaultThreadCurrentUICulture = culture;
+
             await host.RunAsync();
         }
 
         public static void ConfigureServices(this IServiceCollection services, IWebAssemblyHostEnvironment environment)
         {
             services.AddBlazoredLocalStorage();
-
             services.AddClient<DefaultLocalStorage>(environment.IsDevelopment(), isWebAssembly: true);
         }
     }
