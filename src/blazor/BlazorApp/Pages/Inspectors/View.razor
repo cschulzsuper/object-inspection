@@ -5,7 +5,7 @@
 @inject Application.Administration.IInspectorHandler InspectorHandler
 @inject Application.Administration.IOrganizationHandler OrganizationHandler
 
-@inject ITranslator Translator
+@inject ITranslator<View> Translator
 @inject NavigationManager NavigationManager
 
 @attribute [Authorize("ManagementRead")]

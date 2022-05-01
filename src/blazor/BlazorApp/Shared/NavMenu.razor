@@ -1,5 +1,5 @@
 ﻿@inject AppEnvironment AppEnvironment
-@inject ITranslator Translator
+@inject ITranslator<NavMenu> Translator
 @inject IAuthenticationHandler AuthenticationHandler
 @inject ILocalStorage LocalStorage
 @inject NavigationManager NavigationManager   
@@ -43,6 +43,14 @@
                         </ErrorBoundary>
                     </NavLink>
                 </div>
+                @if(AppEnvironment.IsDevelopment)
+                {
+                    <div class="nav-item px-3">
+                        <NavLink class="nav-link" Match="NavLinkMatch.All" href="missing-translations">
+                            <span class="oi oi-globe" aria-hidden="true"/>@Translator[$"Missing Translations"]
+                        </NavLink>
+                    </div>
+                }
             </Authorized>
         </AuthorizeView>
         <AuthorizeView Policy="Maintainance">
