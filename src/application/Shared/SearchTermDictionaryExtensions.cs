@@ -36,6 +36,14 @@ namespace Super.Paula
                     }
                 }
 
+                if (typeof(T) == typeof(bool))
+                {
+                    if (bool.TryParse($"{dictionaryValue}", out var parsedValue))
+                    {
+                        searchTermValueSet.Add(parsedValue);
+                    }
+                }
+
             }
 
             return searchTermValueSet

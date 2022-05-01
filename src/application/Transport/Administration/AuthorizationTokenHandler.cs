@@ -24,8 +24,7 @@ namespace Super.Paula.Application.Administration
 
             if (!string.IsNullOrWhiteSpace(token.Organization))
             {
-                var organization = _organizationManager.GetQueryable()
-                    .Single(x => x.UniqueName == token.Organization);
+                var organization = _organizationManager.Get(token.Organization);
 
                 if (_appSettings.DemoIdentity == token.Identity)
                 {

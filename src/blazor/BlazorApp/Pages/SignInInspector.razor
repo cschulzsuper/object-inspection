@@ -3,7 +3,7 @@
 @inject Application.Administration.IAuthorizationHandler AuthorizationHandler
 @inject Application.Administration.IInspectorHandler InspectorHandler
 
-@inject ITranslator Translator
+@inject ITranslator<SignInInspector> Translator
 @inject NavigationManager NavigationManager
 
 @attribute [Authorize]

@@ -7,6 +7,7 @@ namespace Super.Paula.Application.Administration
 {
     public interface IOrganizationManager
     {
+        Organization Get(string organization);
         ValueTask<Organization> GetAsync(string organization);
         IQueryable<Organization> GetQueryable();
         IAsyncEnumerable<Organization> GetAsyncEnumerable();

@@ -32,20 +32,14 @@ namespace Super.Paula.Data
                throw new RepositoryException($"Entity with id ({id}) was not found.");
             }
 
-            _repositoryContext.Entry(entity).State = EntityState.Detached;
-
+            DetachEntity(entity);
             return entity;
         }
 
         public async ValueTask<TEntity?> GetByIdOrDefaultAsync(object id)
         {
             var entity = await _repositoryContext.FindAsync<TEntity>(AdjustForPartitionKey(id));
-
-            if (entity != null)
-            {
-                _repositoryContext.Entry(entity).State = EntityState.Detached;
-            }
-
+            DetachEntity(entity);
             return entity;
         }
 
@@ -58,20 +52,21 @@ namespace Super.Paula.Data
                 throw new RepositoryException($"Entity with ids ({string.Join(',', ids)}) was not found."); ;
             }
 
-            _repositoryContext.Entry(entity).State = EntityState.Detached;
+            DetachEntity(entity);
+            return entity;
+        }
 
+        public TEntity? GetByIdsOrDefault(params object[] ids)
+        {
+            var entity = _repositoryContext.Find<TEntity>(AdjustForPartitionKey(ids));
+            DetachEntity(entity);
             return entity;
         }
 
         public async ValueTask<TEntity?> GetByIdsOrDefaultAsync(params object[] ids)
         {
             var entity = await _repositoryContext.FindAsync<TEntity>(AdjustForPartitionKey(ids));
-
-            if (entity != null)
-            {
-                _repositoryContext.Entry(entity).State = EntityState.Detached;
-            }
-
+            DetachEntity(entity);
             return entity;
         }
 
@@ -231,5 +226,14 @@ namespace Super.Paula.Data
                 .Prepend(partitionKey)
                 .ToArray();
         }
+
+        private void DetachEntity(TEntity? entity)
+        {
+            if (entity != null)
+            {
+                _repositoryContext.Entry(entity).State = EntityState.Detached;
+            }
+        }
+
     }
 }

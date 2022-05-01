@@ -1,19 +1,25 @@
-﻿using System;
+﻿using Super.Paula.Validation;
+using System;
 
 namespace Super.Paula.Application
 {
-    public class ManagementException : Exception
+    public class ManagementException : Exception, IFormattableException
     {
+        public string MessageFormat { get; }
+        public object?[] MessageArguments { get; }
+
         public ManagementException(FormattableString message)
             : base(message.ToString())
         {
-
+            MessageFormat = message.Format;
+            MessageArguments = message.GetArguments();
         }
 
         public ManagementException(FormattableString message, Exception innerException)
             : base(message.ToString(), innerException)
         {
-
+            MessageFormat = message.Format;
+            MessageArguments = message.GetArguments();
         }
     }
 }

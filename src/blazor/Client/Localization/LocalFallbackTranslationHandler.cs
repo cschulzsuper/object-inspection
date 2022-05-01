@@ -1,0 +1,31 @@
+﻿using Super.Paula.Application.Auth.Exceptions;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace Super.Paula.Client.Localization
+{
+    public class LocalFallbackTranslationHandler : ITranslationHandler
+    {
+        public TranslationResponse Get(string hash)
+            => throw new TranslationNotFoundException($"Translation for hash '{hash}' not found.");
+        public TranslationResponse Get(string category, string hash)
+            => throw new TranslationNotFoundException($"Translation in category '{category}' for hash '{hash}' not found.");
+
+        public TranslationResponse Create(TranslationRequest request)
+        {
+            return new TranslationResponse
+            {
+                Category = request.Category,
+                Hash = request.Hash,
+                Value = request.Value
+            };
+        }
+
+        public IEnumerable<TranslationResponse> GetAll(string query, int skip, int take)
+            => Enumerable.Empty<TranslationResponse>();
+
+        public SearchTranslationResponse Search(string query)
+            => new();
+    }
+}

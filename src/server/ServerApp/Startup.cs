@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,8 +17,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
-using ProblemDetails = Super.Paula.ErrorHandling.ProblemDetails;
 
 namespace Super.Paula
 {
@@ -109,11 +108,13 @@ namespace Super.Paula
             if (exceptionHandlerPathFeature == null)
             {
                 context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-                await context.Response.WriteAsJsonAsync(new ProblemDetails(null)
+
+                await context.Response.WriteAsJsonAsync(new ProblemDetails
                 {
                     Status = StatusCodes.Status500InternalServerError,
                     Instance = context.Request.Path
                 });
+
                 return;
             }
 
@@ -133,36 +134,30 @@ namespace Super.Paula
 
             context.Response.StatusCode = statusCode;
 
+            var problemDetails = new ProblemDetails
+            {
+                Detail = exception.StackTrace ?? string.Empty,
+                Title = exception.Message,
+                Status = statusCode,
+                Instance = context.Request.Path
+            };
+
             if (exception is ValidationException validationException)
             {
-                var errors = validationException.Errors;
-                var problemDetails = new ProblemDetails(errors)
-                {
-                    Detail = exception.StackTrace ?? string.Empty,
-                    Title = exception.Message,
-                    Status = statusCode,
-                    Instance = context.Request.Path
-                };
-
-                await context.Response.WriteAsJsonAsync(problemDetails, null, "application/problem+json");
+                problemDetails.Extensions["erros"] = validationException.Errors?
+                    .ToDictionary(
+                        x => x.Key,
+                        x => x.Value.Select(y => y.ToString())
+                    .ToArray());
             }
-            else
+
+            if (exception is IFormattableException formattableException)
             {
-                var errors = new Dictionary<string, FormattableString[]>
-                {
-                    [string.Empty] = GetInnerExceptions(exception).ToArray()
-                };
-
-                var problemDetails = new ProblemDetails(errors)
-                {
-                    Detail = exception.StackTrace ?? string.Empty,
-                    Title = exception.Message,
-                    Status = statusCode,
-                    Instance = context.Request.Path
-                };
-
-                await context.Response.WriteAsJsonAsync(problemDetails, null, "application/problem+json");
+                problemDetails.Extensions["titleFormat"] = formattableException.MessageFormat;
+                problemDetails.Extensions["titleArguments"] = formattableException.MessageArguments;
             }
+
+            await context.Response.WriteAsJsonAsync(problemDetails, null, "application/problem+json");
         }
 
         public IEnumerable<FormattableString> GetInnerExceptions(Exception exception)
