@@ -20,6 +20,9 @@ namespace Super.Paula.Data
         ValueTask<TEntity> GetByIdsAsync(params object[] ids);
 
         [ErrorMessage("Could not query entity by ids")]
+        TEntity? GetByIdsOrDefault(params object[] ids);
+
+        [ErrorMessage("Could not query entity by ids")]
         ValueTask<TEntity?> GetByIdsOrDefaultAsync(params object[] ids);
 
         [ErrorMessage("Could not query entity list")]

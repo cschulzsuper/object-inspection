@@ -1,7 +1,7 @@
 ﻿@inherits LayoutComponentBase
 
 @inject Application.Administration.IAuthorizationHandler AuthorizationHandler
-@inject             IAuthenticationHandler AuthenticationHandler
+@inject Application.Auth.IAuthenticationHandler AuthenticationHandler
 
 @inject NavigationManager NavigationManager   
 @inject AppEnvironment AppEnvironment
@@ -51,11 +51,11 @@
                 </ChildContent>
                 <ErrorContent>
                     <div class="alert alert-danger">
-                        <p>@context.Message</p>
+                        <p>@Translate(context)</p>
                         @if(context is ProblemDetailsException problems && problems.Errors != null)
                         {
                             <ul>
-                            @foreach(var problem in problems.Errors.SelectMany(x => x.Key))
+                            @foreach(var problem in problems.Errors.SelectMany(x => x.Value))
                             {
                                 <li>@problem</li>
                             }
@@ -120,6 +120,18 @@
         await AuthenticationHandler.SignOutAsync();
         errorBoundaryArticle?.Recover();
         NavigationManager.NavigateTo("/", true);
+    }
+
+    private string Translate(Exception exception)
+    {
+        if(exception is ProblemDetailsException problems && 
+            problems.TitleFormat != null &&
+            problems.TitleArguments != null)
+        {
+            return Translator[problems.TitleFormat, problems.TitleArguments];
+        }
+
+        return Translator[exception.Message];
     }
 
     public async Task StopImpersonationAsync()

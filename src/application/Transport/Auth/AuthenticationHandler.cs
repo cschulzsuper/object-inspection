@@ -5,7 +5,6 @@ using Super.Paula.Application.Auth.Responses;
 using Super.Paula.Application.Operation;
 using Super.Paula.Authorization;
 using System;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -33,8 +32,7 @@ namespace Super.Paula.Application.Auth
 
         public async ValueTask ChangeSecretAsync(ChangeIdentitySecretRequest request)
         {
-            var identity = _identityManager.GetQueryable()
-                .Single(x => x.UniqueName == _user.GetIdentity());
+            var identity = await _identityManager.GetAsync(_user.GetIdentity());
 
             var oldSecretVerification = _passwordHasher.VerifyHashedPassword(identity, identity.Secret, request.OldSecret);
             if (oldSecretVerification == PasswordVerificationResult.Failed)
@@ -62,8 +60,7 @@ namespace Super.Paula.Application.Auth
 
         public async ValueTask<string> SignInAsync(string identity, SignInIdentityRequest request)
         {
-            var entity = _identityManager.GetQueryable()
-                .Single(x => x.UniqueName == identity);
+            var entity = await _identityManager.GetAsync(identity);
 
             var secretVerification = _passwordHasher.VerifyHashedPassword(entity, entity.Secret, request.Secret);
 
@@ -101,9 +98,7 @@ namespace Super.Paula.Application.Auth
         {
             try
             {
-                var inspector = _identityManager
-                    .GetQueryable()
-                    .Single(x => x.UniqueName == _user.GetIdentity());
+                var inspector = await _identityManager.GetAsync(_user.GetIdentity());
 
                 _connectionManager.Forget(inspector.UniqueName);
 

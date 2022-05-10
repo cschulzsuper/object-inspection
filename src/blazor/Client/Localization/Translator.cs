@@ -24,12 +24,15 @@ namespace Super.Paula.Client.Localization
         }
 
         public string this[FormattableString value]
+            => this[value.Format, value.GetArguments()];
+
+        public string this[string format, params object?[] arguments]
         {
             get
             {
                 using var sha1 = SHA1.Create();
 
-                var valueBytes = Encoding.UTF8.GetBytes(value.Format);
+                var valueBytes = Encoding.UTF8.GetBytes(format);
                 var hashBytes = sha1.ComputeHash(valueBytes);
 
                 var translationCategory = _translationCategoryProvider.Get<T>();
@@ -41,7 +44,7 @@ namespace Super.Paula.Client.Localization
                         ? _translationHandler.Get(translationCategory, hashString)
                         : _translationHandler.Get(hashString);
 
-                    return string.Format(translation.Value, value.GetArguments());
+                    return string.Format(translation.Value, arguments);
                 }
                 catch (TranslationNotFoundException)
                 {
@@ -51,10 +54,10 @@ namespace Super.Paula.Client.Localization
                         {
                             Category = translationCategory,
                             Hash = hashString,
-                            Value = value.Format
+                            Value = format
                         });
                     }
-                    return value.ToString();
+                    return string.Format(format,arguments);
                 }
             }
         }

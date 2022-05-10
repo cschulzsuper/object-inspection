@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Text.Json;
 
@@ -13,17 +14,32 @@ namespace Super.Paula.ErrorHandling
                 responseMessage.Content.Headers.ContentType?.MediaType == "application/problem+json")
             {
                 var responseStream = responseMessage.Content.ReadAsStream();
-                var response = JsonSerializer.Deserialize<ProblemDetails>(responseStream, new JsonSerializerOptions
+                var response = JsonSerializer.Deserialize<ClientProblemDetails>(responseStream, new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true
                 });
 
                 if (response != null)
                 {
-                    throw new ProblemDetailsException(
-                        response.Title,
-                        response.Errors,
-                        responseMessage.StatusCode);
+                    var formattable =
+                        response.Extensions?.ContainsKey("titleFormat") == true &&
+                        response.Extensions?.ContainsKey("titleArguments") == true;
+
+                    var errors = response.Extensions?.ContainsKey("errors") == true
+                        ? (IDictionary<string,string[]>)response.Extensions["errors"]!
+                        : null;
+
+                    return !formattable
+                        ? throw new ProblemDetailsException(
+                            response.Title ?? string.Empty,
+                            errors,
+                            responseMessage.StatusCode)
+
+                        : throw new ProblemDetailsException(
+                            (string)response.Extensions!["titleFormat"]!,
+                            (object?[])response.Extensions["titleArguments"]!,
+                            errors,
+                            responseMessage.StatusCode);
                 }
             }
 

@@ -16,6 +16,19 @@ namespace Super.Paula.Application.Administration
             _organizationRepository = organizationRepository;
         }
 
+        public Organization Get(string organization)
+        {
+            EnsureGetable(organization);
+
+            var entity = _organizationRepository.GetByIdsOrDefault(organization);
+            if (entity == null)
+            {
+                throw new ManagementException($"Organization '{organization}' was not found.");
+            }
+
+            return entity;
+        }
+
         public async ValueTask<Organization> GetAsync(string organization)
         {
             EnsureGetable(organization);
