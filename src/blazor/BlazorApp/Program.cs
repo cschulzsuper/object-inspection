@@ -6,7 +6,6 @@ using Super.Paula.Client.Storage;
 using System.Threading.Tasks;
 using System.Globalization;
 using Microsoft.JSInterop;
-using Super.Paula.Client.Localization;
 
 namespace Super.Paula.Client
 {

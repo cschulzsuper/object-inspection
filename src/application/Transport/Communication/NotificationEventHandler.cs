@@ -3,7 +3,6 @@ using Super.Paula.Application.Administration.Events;
 using Super.Paula.Application.Communication.Responses;
 using Super.Paula.Application.Inventory.Events;
 using Super.Paula.Application.Orchestration;
-using System;
 using System.Threading.Tasks;
 
 namespace Super.Paula.Application.Communication

@@ -5,7 +5,6 @@ using Super.Paula.Application.Auth.Responses;
 using Super.Paula.Application.Operation;
 using Super.Paula.Authorization;
 using System;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
