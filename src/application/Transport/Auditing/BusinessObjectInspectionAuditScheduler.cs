@@ -9,11 +9,13 @@ namespace Super.Paula.Application.Auditing
     {
         public void Schedule(BusinessObjectInspection inspection)
         {
-            var auditScheduleLimit = new DateTimeNumbers(DateTime.UtcNow.AddMonths(1));
+            var auditScheduleDateTimeNumbersLimit = new DateTimeNumbers(DateTime.UtcNow.AddMonths(1));
+            var auditScheduleCountLimit = 20;
+
             var auditSchedule = inspection.AuditSchedule;
 
             var appointmentsFromExpressions = auditSchedule.Expressions
-                .SelectMany(expression => CalculateAppointmentsFromExpression(inspection, auditScheduleLimit, expression))
+                .SelectMany(expression => CalculateAppointmentsFromExpression(inspection, auditScheduleDateTimeNumbersLimit, auditScheduleCountLimit, expression))
                 .ToList();
 
             var appointmentsWithOmissions = appointmentsFromExpressions
@@ -35,7 +37,7 @@ namespace Super.Paula.Application.Auditing
         }
 
         private static IEnumerable<BusinessObjectInspectionAuditScheduleTimestamp> CalculateAppointmentsFromExpression(
-            BusinessObjectInspection inspection, DateTimeNumbers auditScheduleLimit,
+            BusinessObjectInspection inspection, DateTimeNumbers auditScheduleDateTimeNumbersLimit, int auditScheduleCountLimit,
             BusinessObjectInspectionAuditScheduleExpression expression)
         {
             var cronExpression = expression?.CronExpression;
@@ -49,9 +51,11 @@ namespace Super.Paula.Application.Auditing
                 .Parse(cronExpression)
                 .GetOccurrences(
                     GetIntervalBegin(inspection),
-                    GetIntervalEnd(auditScheduleLimit),
+                    GetIntervalEnd(auditScheduleDateTimeNumbersLimit),
                     fromInclusive: false,
-                    toInclusive: true);
+                    toInclusive: true)
+                .OrderBy(x => x)
+                .Take(auditScheduleCountLimit);
 
             return occurrences.Select(occurrence =>
             {

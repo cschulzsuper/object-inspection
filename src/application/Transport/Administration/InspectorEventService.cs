@@ -29,10 +29,10 @@ namespace Super.Paula.Application.Administration
                 inspector.UniqueName,
                 inspectorBusinessObject.UniqueName,
                 inspectorBusinessObject.DisplayName,
-                inspectorBusinessObject.AuditScheduleDelayed,
                 inspectorBusinessObject.AuditSchedulePending,
-                oldDelayed,
-                oldPending);
+                oldPending,
+                inspectorBusinessObject.AuditScheduleDelayed,
+                oldDelayed);
 
             await _eventStorage.AddAsync(@event, _user);
         }
