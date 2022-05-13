@@ -49,7 +49,7 @@ namespace Super.Paula
                     policy
                         .WithOrigins(_configuration["Paula:Client"])
                         .AllowAnyMethod()
-                        .AllowAnyHeader()));
+                        .AllowAnyHeader())); 
 
             services.AddServer(_environment.IsDevelopment());
             services.AddApplicationInsightsTelemetry();
