@@ -28,6 +28,6 @@ namespace Super.Paula.Application.Administration.Events
 
         bool OldAuditScheduleDelayed)
 
-        : EventBase("event-inspector-business-object");
+        : EventBase();
 
 }

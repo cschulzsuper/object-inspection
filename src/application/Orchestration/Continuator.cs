@@ -39,8 +39,9 @@ namespace Super.Paula.Application.Orchestration
 
         public async Task ExecuteAsync<TContinuation>(TContinuation continuation, ClaimsPrincipal? user = null)
             where TContinuation : ContinuationBase
-        { 
-            var continuationCall = _continuationRegistry.GetContinuationHandlerCall(continuation.Name);
+        {
+            var continuationName = TypeNameConverter.ToKebabCase(typeof(TContinuation));
+            var continuationCall = _continuationRegistry.GetContinuationHandlerCall(continuationName);
 
             if (continuationCall == null)
             {

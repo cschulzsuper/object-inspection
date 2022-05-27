@@ -41,12 +41,13 @@ namespace Super.Paula.Application.Orchestration
             return exists ? continuationRegistration?.ContinuationHandlerCall : null;
         }
 
-        public void Register<TContinuation, THandler>(string continuationName)
+        public void Register<TContinuation, THandler>()
             where TContinuation : ContinuationBase
             where THandler : IContinuationHandler<TContinuation>
         {
             var continuationType = typeof(TContinuation);
             var continuationHandlerType = typeof(THandler);
+            var continuationName = TypeNameConverter.ToKebabCase(continuationType);
 
             var continuationHandler = (IContinuationHandler<TContinuation>?)Activator.CreateInstance(typeof(THandler));
             if (continuationHandler == null)
@@ -59,7 +60,6 @@ namespace Super.Paula.Application.Orchestration
                 => continuationHandler.HandleAsync(context, (TContinuation)continuation);
 
             var continuationHandlerRegistration = new ContinuationRegistration(
-                continuationName,
                 typeof(TContinuation),
                 typeof(THandler),
                 continuationHandler,
@@ -68,13 +68,17 @@ namespace Super.Paula.Application.Orchestration
             _continuationRegistrations.AddOrUpdate(continuationName, continuationHandlerRegistration,
                 (_, exitingRegistration) =>
                 {
-                    _logger.LogWarning("n continuation registration with the same name ({continuationName}) already exists.", continuationName);
+                    _logger.LogWarning("A continuation registration with the same name ({continuationName}) already exists.", continuationName);
                     return exitingRegistration;
                 });
         }
 
-        public void Unregister(string continuationName)
+        public void Unregister<TContinuation>()
+            where TContinuation : ContinuationBase
         {
+            var continuationType = typeof(TContinuation);
+            var continuationName = TypeNameConverter.ToKebabCase(continuationType);
+
             var removed = _continuationRegistrations.TryRemove(continuationName, out _);
 
             if (!removed)

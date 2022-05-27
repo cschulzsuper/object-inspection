@@ -27,9 +27,12 @@ namespace Super.Paula.Application.Orchestration
 
         public async ValueTask AddAsync(string subscriberName, EventBase @event, ClaimsPrincipal user)
         {
+            var eventType = @event.GetType();
+            var eventName = TypeNameConverter.ToKebabCase(eventType);
+
             var entity = new EventProcessing
             {
-                Name = @event.Name,
+                Name = eventName,
                 Subscriber = subscriberName,
                 CreationTime = @event.CreationTime,
                 CreationDate = @event.CreationDate,

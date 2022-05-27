@@ -21,6 +21,6 @@ namespace Super.Paula.Application.Guidelines.Events
 
         bool Activated)
 
-        : EventBase("event-inspection");
+        : EventBase();
 
 }

@@ -21,5 +21,5 @@ namespace Super.Paula.Application.Auditing.Events
         [Milliseconds]
         int Threshold)
 
-        : EventBase("event-business-object-inspection-audit-schedule");
+        : EventBase();
 }

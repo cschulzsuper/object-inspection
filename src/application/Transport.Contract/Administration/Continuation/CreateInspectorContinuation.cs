@@ -27,5 +27,5 @@ namespace Super.Paula.Application.Administration.Continuation
 
         bool Activated) 
         
-        : ContinuationBase("create-inspector");
+        : ContinuationBase();
 }

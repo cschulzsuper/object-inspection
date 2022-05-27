@@ -26,5 +26,5 @@ namespace Super.Paula.Application.Inventory.Events
         [UniqueName]
         string OldInspector)
 
-        : EventBase("event-business-object-inspector");
+        : EventBase();
 }

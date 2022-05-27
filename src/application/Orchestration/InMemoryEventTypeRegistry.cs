@@ -28,13 +28,13 @@ namespace Super.Paula.Application.Orchestration
             return exists ? eventRegistration?.EventType : null;
         }
 
-        public void Register<TEvent>(string eventName)
+        public void Register<TEvent>()
             where TEvent : EventBase
         {
             var eventType = typeof(TEvent);
+            var eventName = TypeNameConverter.ToKebabCase(eventType);
 
             var eventRegistration = new EventRegistration(
-                eventName,
                 typeof(TEvent));
 
             _eventRegistrations.AddOrUpdate(eventName, eventRegistration,
@@ -45,8 +45,12 @@ namespace Super.Paula.Application.Orchestration
                 });
         }
 
-        public void Unregister(string eventName)
+        public void Unregister<TEvent>()
+            where TEvent : EventBase
         {
+            var eventType = typeof(TEvent);
+            var eventName = TypeNameConverter.ToKebabCase(eventType);
+
             var removed = _eventRegistrations.TryRemove(eventName, out _);
 
             if (!removed)

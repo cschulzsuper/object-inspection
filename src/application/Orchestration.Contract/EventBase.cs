@@ -5,15 +5,11 @@ namespace Super.Paula.Application.Orchestration
 {
     public record EventBase
     {
-        public EventBase(string name)
+        public EventBase()
         {
             Id = Guid.NewGuid();
-            Name = name;
             (CreationDate, CreationTime) = DateTimeNumbers.GlobalNow;
         }
-
-        [JsonInclude]
-        public string Name { get; private init; }
 
         [JsonInclude]
         public Guid Id { get; private init; }

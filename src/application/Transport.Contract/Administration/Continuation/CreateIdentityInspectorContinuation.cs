@@ -22,5 +22,5 @@ namespace Super.Paula.Application.Administration.Continuation
 
         bool Activated) 
         
-        : ContinuationBase("create-identity-inspector");
+        : ContinuationBase();
 }

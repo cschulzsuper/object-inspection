@@ -20,5 +20,5 @@ namespace Super.Paula.Application.Administration.Continuation
         [KebabCase]
         string Inspector) 
         
-        : ContinuationBase("deactivate-identity-inspector");
+        : ContinuationBase();
 }

@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 namespace Super.Paula.Application.Orchestration
 {
     public record ContinuationRegistration(
-        string ContinuationName,
         Type ContinuationType,
         Type ContinuationHandlerType,
         IContinuationHandler ContinuationHandler,

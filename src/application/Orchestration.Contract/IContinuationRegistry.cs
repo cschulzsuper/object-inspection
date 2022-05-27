@@ -9,10 +9,11 @@ namespace Super.Paula.Application.Orchestration
 
         Type? GetContinuationType(string continuationName);
 
-        void Register<TContinuation, THandler>(string continuationName)
+        void Register<TContinuation, THandler>()
             where TContinuation : ContinuationBase
             where THandler : IContinuationHandler<TContinuation>;
 
-        void Unregister(string continuationName);
+        void Unregister<TContinuation>()
+            where TContinuation : ContinuationBase;
     }
 }
