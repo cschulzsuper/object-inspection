@@ -6,9 +6,10 @@ namespace Super.Paula.Application.Orchestration
     {
         Type? GetEventType(string eventName);
 
-        void Register<TEvent>(string eventName)
+        void Register<TEvent>()
             where TEvent : EventBase;
 
-        void Unregister(string eventName);
+        void Unregister<TEvent>()
+            where TEvent : EventBase;
     }
 }

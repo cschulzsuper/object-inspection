@@ -13,5 +13,5 @@ namespace Super.Paula.Application.Guidelines.Events
         [KebabCase]
         string UniqueName)
 
-        : EventBase("event-inspection-deletion");
+        : EventBase();
 }

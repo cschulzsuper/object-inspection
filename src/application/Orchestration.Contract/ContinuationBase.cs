@@ -5,15 +5,11 @@ namespace Super.Paula.Application.Orchestration
 {
     public record ContinuationBase
     {
-        public ContinuationBase(string name)
+        public ContinuationBase()
         {
             Id = Guid.NewGuid();
-            Name = name;
             (CreationDate, CreationTime) = DateTimeNumbers.GlobalNow;
         }
-
-        [JsonInclude]
-        public string Name { get; private init; }
 
         [JsonInclude]
         public Guid Id { get; private init; }

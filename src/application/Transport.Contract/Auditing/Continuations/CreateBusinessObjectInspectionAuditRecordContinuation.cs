@@ -39,5 +39,5 @@ namespace Super.Paula.Application.Auditing.Continuations
         [Milliseconds]
         int AuditTime)
 
-        : ContinuationBase("create-business-object-inspection-audit-record");
+        : ContinuationBase();
 }

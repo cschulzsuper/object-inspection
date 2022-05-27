@@ -13,5 +13,5 @@ namespace Super.Paula.Application.Administration.Events
         [UniqueName]
         string UniqueName)
 
-        : EventBase("event-organization-deletion");
+        : EventBase();
 }

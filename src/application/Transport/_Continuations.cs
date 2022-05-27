@@ -20,19 +20,19 @@ namespace Super.Paula.Application
 
         private static IContinuationRegistry ConfigureTransportAdministration(this IContinuationRegistry continuationRegistry)
         {
-            continuationRegistry.Register<CreateInspectorContinuation, InspectorContinuationHandler>("create-inspector");
+            continuationRegistry.Register<CreateInspectorContinuation, InspectorContinuationHandler>();
 
-            continuationRegistry.Register<CreateIdentityInspectorContinuation, IdentityInspectorContinuationHandler>("create-identity-inspector");
-            continuationRegistry.Register<DeleteIdentityInspectorContinuation, IdentityInspectorContinuationHandler>("delete-identity-inspector");
-            continuationRegistry.Register<ActivateIdentityInspectorContinuation, IdentityInspectorContinuationHandler>("activate-identity-inspector");
-            continuationRegistry.Register<DeactivateIdentityInspectorContinuation, IdentityInspectorContinuationHandler>("deactivate-identity-inspector");
+            continuationRegistry.Register<CreateIdentityInspectorContinuation, IdentityInspectorContinuationHandler>();
+            continuationRegistry.Register<DeleteIdentityInspectorContinuation, IdentityInspectorContinuationHandler>();
+            continuationRegistry.Register<ActivateIdentityInspectorContinuation, IdentityInspectorContinuationHandler>();
+            continuationRegistry.Register<DeactivateIdentityInspectorContinuation, IdentityInspectorContinuationHandler>();
 
             return continuationRegistry;
         }
 
         private static IContinuationRegistry ConfigureTransportAuditing(this IContinuationRegistry continuationRegistry)
         {
-            continuationRegistry.Register<CreateBusinessObjectInspectionAuditRecordContinuation, BusinessObjectInspectionAuditRecordContinuationHandler>("create-business-object-inspection-audit-record");
+            continuationRegistry.Register<CreateBusinessObjectInspectionAuditRecordContinuation, BusinessObjectInspectionAuditRecordContinuationHandler>();
 
             return continuationRegistry;
         }

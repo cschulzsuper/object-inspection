@@ -17,5 +17,5 @@ namespace Super.Paula.Application.Administration.Events
 
         bool Activated)
 
-        : EventBase("event-organization-creation");
+        : EventBase();
 }

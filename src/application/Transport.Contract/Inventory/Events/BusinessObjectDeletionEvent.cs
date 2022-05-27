@@ -13,5 +13,5 @@ namespace Super.Paula.Application.Inventory.Events
         [KebabCase]
         string UniqueName)
 
-        : EventBase("event-business-object-deletion");
+        : EventBase();
 }

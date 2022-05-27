@@ -15,5 +15,5 @@ namespace Super.Paula.Application.Inventory.Events
         [StringLength(140)]
         string DisplayName)
 
-        : EventBase("event-business-object");
+        : EventBase();
 }

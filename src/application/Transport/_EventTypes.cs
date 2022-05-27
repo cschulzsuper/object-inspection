@@ -22,34 +22,34 @@ namespace Super.Paula.Application
 
         private static IEventTypeRegistry ConfigureTransportAdministration(this IEventTypeRegistry eventTypeRegistry)
         {
-            eventTypeRegistry.Register<OrganizationCreationEvent>("event-organization-creation");
-            eventTypeRegistry.Register<OrganizationDeletionEvent>("event-organization-deletion");
-            eventTypeRegistry.Register<OrganizationUpdateEvent>("event-organization-update");
-            eventTypeRegistry.Register<InspectorBusinessObjectEvent>("event-inspector-business-object");
+            eventTypeRegistry.Register<OrganizationCreationEvent>();
+            eventTypeRegistry.Register<OrganizationDeletionEvent>();
+            eventTypeRegistry.Register<OrganizationUpdateEvent>();
+            eventTypeRegistry.Register<InspectorBusinessObjectEvent>();
 
             return eventTypeRegistry;
         }
 
         private static IEventTypeRegistry ConfigureTransportAuditing(this IEventTypeRegistry eventTypeRegistry)
         {
-            eventTypeRegistry.Register<BusinessObjectInspectionAuditScheduleEvent>("event-business-object-inspection-audit-schedule");
+            eventTypeRegistry.Register<BusinessObjectInspectionAuditScheduleEvent>();
 
             return eventTypeRegistry;
         }
 
         private static IEventTypeRegistry ConfigureTransportGuidlines(this IEventTypeRegistry eventTypeRegistry)
         {
-            eventTypeRegistry.Register<InspectionDeletionEvent>("event-inspection-deletion");
-            eventTypeRegistry.Register<InspectionEvent>("event-inspection");
+            eventTypeRegistry.Register<InspectionDeletionEvent>();
+            eventTypeRegistry.Register<InspectionEvent>();
 
             return eventTypeRegistry;
         }
 
         private static IEventTypeRegistry ConfigureTransportInventory(this IEventTypeRegistry eventTypeRegistry)
         {
-            eventTypeRegistry.Register<BusinessObjectInspectorEvent>("event-business-object-inspector");
-            eventTypeRegistry.Register<BusinessObjectEvent>("event-business-object");
-            eventTypeRegistry.Register<BusinessObjectDeletionEvent>("event-business-object-deletion");
+            eventTypeRegistry.Register<BusinessObjectInspectorEvent>();
+            eventTypeRegistry.Register<BusinessObjectEvent>();
+            eventTypeRegistry.Register<BusinessObjectDeletionEvent>();
 
             return eventTypeRegistry;
         }

@@ -29,7 +29,7 @@ namespace Super.Paula.Application.Orchestration
         {
             var entity = new Continuation
             {
-                Name = continuation.Name,
+                Name = TypeNameConverter.ToKebabCase(continuation.GetType()),
                 CreationTime = continuation.CreationTime,
                 CreationDate = continuation.CreationDate,
                 Id = continuation.Id.ToString(),
