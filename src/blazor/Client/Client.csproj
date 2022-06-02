@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net6.0</TargetFramework>
+		<TargetFramework>net7.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<LangVersion>Preview</LangVersion>
 		<RootNamespace>Super.Paula.Client</RootNamespace>
@@ -9,9 +9,9 @@
 
 	<ItemGroup>
 		<PackageReference Include="Markdig" Version="0.30.2" />
-		<PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="6.0.5" />
-		<PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
-		<PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="6.0.5" />
+		<PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="7.0.0-preview.4.22251.1" />
+		<PackageReference Include="Microsoft.Extensions.Http" Version="7.0.0-preview.4.22229.4" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="7.0.0-preview.4.22251.1" />
 	</ItemGroup>
 
 	<ItemGroup>
