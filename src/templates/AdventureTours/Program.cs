@@ -29,9 +29,9 @@ namespace Super.Paula.Templates.AdventureTours
 
                         return new AdventureToursSettings
                         {
-                            MaintainerPassword = configuration["Paula:MaintainerPassword"],
-                            ChiefPassword = configuration["Paula:ChiefPassword"]
-                         };
+                            MaintainerPassword = configuration["Paula:MaintainerPassword"] ?? string.Empty,
+                            ChiefPassword = configuration["Paula:ChiefPassword"] ?? string.Empty
+                        };
                     });
 
                     services.AddServerData(context.HostingEnvironment.IsDevelopment());

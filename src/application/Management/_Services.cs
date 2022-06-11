@@ -7,6 +7,7 @@ using Super.Paula.Application.Guidelines;
 using Super.Paula.Application.Inventory;
 using Super.Paula.Application.Operation;
 using Super.Paula.Application.Orchestration;
+using Super.Paula.Application.Storage;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Super.Paula.Application
@@ -24,6 +25,7 @@ namespace Super.Paula.Application
             services.AddServerManagementInventory();
             services.AddServerManagementOperation();
             services.AddServerManagementOrchestration();
+            services.AddServerManagementStorage();
 
             return services;
         }
@@ -89,6 +91,13 @@ namespace Super.Paula.Application
             services.AddScoped<IEventProcessingManager, EventProcessingManager>();
             services.AddScoped<IWorkerManager, WorkerManager>();
             services.AddScoped<IWorkerRuntimeManager, WorkerRuntimeManager>();
+
+            return services;
+        }
+
+        private static IServiceCollection AddServerManagementStorage(this IServiceCollection services)
+        {
+            services.AddScoped<IFileBlobManager, FileBlobManager>();
 
             return services;
         }
