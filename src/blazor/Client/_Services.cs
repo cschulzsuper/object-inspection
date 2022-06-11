@@ -24,6 +24,7 @@ using paulaAdministration = Super.Paula.Application.Administration;
 using msftAuthorization = Microsoft.AspNetCore.Authorization;
 using Super.Paula.Client.Auth;
 using Super.Paula.Application.Auth;
+using Super.Paula.Application.Storage;
 
 namespace Super.Paula.Client
 {
@@ -113,6 +114,7 @@ namespace Super.Paula.Client
             services.AddClientTransportCommunication(isWebAssembly);
             services.AddClientTransportGuidelines(isWebAssembly);
             services.AddClientTransportInventory(isWebAssembly);
+            services.AddClientTransportStorage(isWebAssembly);
 
             return services;
         }
@@ -248,6 +250,22 @@ namespace Super.Paula.Client
             else
             {
                 services.AddHttpClientHandler<IBusinessObjectHandler, BusinessObjectHandler>();
+            }
+
+            return services;
+        }
+
+        private static IServiceCollection AddClientTransportStorage(this IServiceCollection services, bool isWebAssembly)
+        {
+            if (isWebAssembly)
+            {
+                services
+                    .AddHttpClient<IFileBlobHandler, FileBlobHandler>()
+                    .AddHttpMessageHandler<AuthenticationMessageHandler>();
+            }
+            else
+            {
+                services.AddHttpClientHandler<IFileBlobHandler, FileBlobHandler>();
             }
 
             return services;
