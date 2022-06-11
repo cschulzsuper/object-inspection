@@ -57,7 +57,7 @@ namespace Super.Paula.Application.Storage
             return ValueTask.CompletedTask;
         }
 
-        public ValueTask<string> ReplaceAsync(Stream stream, string path, string btag)
+        public async ValueTask<string> ReplaceAsync(Stream stream, string path, string btag)
         {
             var entity = _fileBlobRuntimeCache.GetOrDefault(path);
 
@@ -75,7 +75,7 @@ namespace Super.Paula.Application.Storage
             var newTag = Guid.NewGuid().ToString();
 
             var dataStream = new MemoryStream();
-            stream.CopyTo(dataStream);;
+            await stream.CopyToAsync(dataStream);;
 
             _fileBlobRuntimeCache.CreateOrUpdate(
                 () => new FileBlob(path)
@@ -89,10 +89,10 @@ namespace Super.Paula.Application.Storage
                     x.Data = dataStream.ToArray();
                 });
 
-            return ValueTask.FromResult(newTag);
+            return newTag;
         }
 
-        public ValueTask<string> WriteAsync(Stream stream, string path)
+        public async ValueTask<string> WriteAsync(Stream stream, string path)
         {
             var entity = _fileBlobRuntimeCache.GetOrDefault(path);
 
@@ -104,7 +104,7 @@ namespace Super.Paula.Application.Storage
             var newTag = Guid.NewGuid().ToString();
 
             var dataStream = new MemoryStream();
-            stream.CopyTo(dataStream);
+            await stream.CopyToAsync(dataStream);
 
             _fileBlobRuntimeCache.Set(
                 new FileBlob(path)
@@ -113,7 +113,7 @@ namespace Super.Paula.Application.Storage
                     Data = dataStream.ToArray(),
                 });
 
-            return ValueTask.FromResult(newTag);
+            return newTag;
         }
     }
 }

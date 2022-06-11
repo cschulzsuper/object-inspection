@@ -16,6 +16,7 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Super.Paula
@@ -46,10 +47,18 @@ namespace Super.Paula
 
             services.AddCors(options =>
                 options.AddDefaultPolicy(policy =>
+                {
+                    var client = _configuration["Paula:Client"];
+
+                    if (client != null)
+                    {
+                        policy.WithOrigins(client);
+                    }
+
                     policy
-                        .WithOrigins(_configuration["Paula:Client"])
                         .AllowAnyMethod()
-                        .AllowAnyHeader())); 
+                        .AllowAnyHeader();
+                })); 
 
             services.AddServer(_environment.IsDevelopment());
             services.AddApplicationInsightsTelemetry();
@@ -157,7 +166,7 @@ namespace Super.Paula
                 problemDetails.Extensions["titleArguments"] = formattableException.MessageArguments;
             }
 
-            await context.Response.WriteAsJsonAsync(problemDetails, null, "application/problem+json");
+            await context.Response.WriteAsJsonAsync(problemDetails, (JsonSerializerOptions?)null, "application/problem+json");
         }
 
         public IEnumerable<FormattableString> GetInnerExceptions(Exception exception)

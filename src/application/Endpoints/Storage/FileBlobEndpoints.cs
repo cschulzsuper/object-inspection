@@ -4,45 +4,47 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Builder;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
+using System.Security.Claims;
+using Super.Paula.Authorization;
 
 namespace Super.Paula.Application.Storage
 {
     public static class FileBlobEndpoints
     {
-        public static IEndpointRouteBuilder MapBusinessObject(this IEndpointRouteBuilder endpoints)
+        public static IEndpointRouteBuilder MapInspectorAvatar(this IEndpointRouteBuilder endpoints)
         {
-            endpoints.MapPut(
-                "/inspectors/{inspector}/avatar", 
-                Put);
+            endpoints.MapResource(
+                "/inspectors/{inspector}/avatar",
+                Get, null, null);
 
-            endpoints.MapGet(
-                "/inspectors/{inspector}/avatar", 
-                Get);
-
-            endpoints.MapDelete(
-                "/inspectors/{inspector}/avatar", 
-                Delete);
+            endpoints.MapResource(
+                "/inspectors/me/avatar",
+                GetCurrent, 
+                PutCurrent, 
+                DeleteCurrent);
 
             return endpoints;
         }
 
-        private static Delegate Put =>
-            [Authorize("AuditingLimited")]
-            (IFileBlobHandler handler, string inspector, [FromHeader(Name = "If-Match")] string? btag, IFormFile formFile )
-                    => handler.WriteAsync(formFile.OpenReadStream(), "inspector-avatars", inspector, btag);
-
         private static Delegate Get =>
             [Authorize("AuditingLimited")]
-            (IFileBlobHandler handler, string inspector)
-                    => handler.ReadAsync("inspector-avatars", inspector);
+            async (IFileBlobHandler handler, string inspector)
+                    => Results.File(await handler.ReadAsync("inspector-avatars", inspector));
 
-        private static Delegate Delete =>
+        private static Delegate GetCurrent =>
             [Authorize("AuditingLimited")]
-            (IFileBlobHandler handler, string inspector, [FromHeader(Name = "If-Match")] string btag)
-                    => handler.DeleteAsync("inspector-avatars", inspector, btag);
+            async (IFileBlobHandler handler, ClaimsPrincipal user)
+                    => Results.File(await handler.ReadAsync("inspector-avatars", user.GetInspector()));
+
+        private static Delegate PutCurrent =>
+            [Authorize("AuditingFull")]
+            (IFileBlobHandler handler, ClaimsPrincipal user, [FromHeader(Name = "If-Match")] string? btag, Stream body)
+                    => handler.WriteAsync(body, "inspector-avatars", user.GetInspector(), btag);
+
+        private static Delegate DeleteCurrent =>
+            [Authorize("AuditingFull")]
+            (IFileBlobHandler handler, ClaimsPrincipal user, [FromHeader(Name = "If-Match")] string btag)
+                    => handler.DeleteAsync("inspector-avatars", user.GetInspector(), btag);
     }
 }

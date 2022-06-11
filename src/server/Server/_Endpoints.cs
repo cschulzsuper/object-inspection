@@ -5,6 +5,7 @@ using Super.Paula.Application.Auth;
 using Super.Paula.Application.Communication;
 using Super.Paula.Application.Guidelines;
 using Super.Paula.Application.Inventory;
+using Super.Paula.Application.Storage;
 using Super.Paula.Application.Streaming;
 using System.Diagnostics.CodeAnalysis;
 
@@ -23,6 +24,7 @@ namespace Super.Paula
                 .MapIdentity()
                 .MapInspection()
                 .MapInspector()
+                .MapInspectorAvatar()
                 .MapNotification()
                 .MapOrganization()
                 .MapStreaming();

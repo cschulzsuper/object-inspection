@@ -32,19 +32,13 @@ namespace Super.Paula.Authentication
 
         public Task<AuthenticateResult> AuthenticateAsync()
         {
-            var authorizationHeader = _context?.Request.Headers.Authorization.ToString();
+            var encodedAuthorizationToken = 
+                GetTokenFromHeaders() ??
+                GetTokenFromCookies() ??
+                GetTokenFromQuery();
 
-            if (string.IsNullOrWhiteSpace(authorizationHeader))
-                if (_context?.Request.Query.ContainsKey("access_token") == true)
-                {
-                    authorizationHeader = $"Bearer {_context.Request.Query["access_token"]}";
-                }
-
-            if (authorizationHeader != null &&
-                authorizationHeader.StartsWith("Bearer "))
+            if (!string.IsNullOrWhiteSpace(encodedAuthorizationToken))
             {
-                var encodedAuthorizationToken = authorizationHeader.Replace("Bearer ", string.Empty);
-
                 var token = DecodeToken(encodedAuthorizationToken);
                 if (token == null)
                 {
@@ -60,6 +54,35 @@ namespace Super.Paula.Authentication
             }
 
             return Task.FromResult(AuthenticateResult.Fail("Authentication failed"));
+        }
+
+        private string? GetTokenFromHeaders()
+        {
+            var authorizationHeader = _context!.Request.Headers.Authorization.ToString();
+
+            return !string.IsNullOrWhiteSpace(authorizationHeader)
+                ? authorizationHeader.Replace("Bearer ", string.Empty)
+                : null;
+        }
+
+        private string? GetTokenFromCookies()
+        {
+            var hasAuthorizatioCookie = _context!.Request.Cookies
+                .TryGetValue("access_token", out var authorizationCookie);
+
+            return hasAuthorizatioCookie == true && !string.IsNullOrWhiteSpace(authorizationCookie)
+                ? authorizationCookie
+                : null;
+        }
+
+        private string? GetTokenFromQuery()
+        {
+            var hasAuthorizationQuery = _context!.Request.Query
+                .TryGetValue("access_token", out var authorizationQuery);
+
+            return hasAuthorizationQuery == true && !string.IsNullOrWhiteSpace(authorizationQuery)
+                ? authorizationQuery.ToString()
+                : null;
         }
 
         private Token? DecodeToken(string encodedAuthorizationToken)

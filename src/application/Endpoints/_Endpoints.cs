@@ -11,18 +11,44 @@ namespace Super.Paula.Application
         public static IEndpointRouteBuilder MapCollection(this IEndpointRouteBuilder endpoints,
             string collection,
             string collectionResource,
-            Delegate get,
-            Delegate getAll,
-            Delegate create,
-            Delegate replace,
-            Delegate delete)
+            Delegate? get,
+            Delegate? getAll,
+            Delegate? create,
+            Delegate? replace,
+            Delegate? delete)
         {
+            if (get != null)
+                endpoints.MapGet(collectionResource, get);
 
-            endpoints.MapGet(collectionResource, get);
-            endpoints.MapGet(collection, getAll);
-            endpoints.MapPost(collection, create);
-            endpoints.MapPut(collectionResource, replace);
-            endpoints.MapDelete(collectionResource, delete);
+            if (getAll != null)
+                endpoints.MapGet(collection, getAll);
+
+            if (create != null)
+                endpoints.MapPost(collection, create);
+
+            if (replace != null)
+                endpoints.MapPut(collectionResource, replace);
+
+            if (delete != null)
+                endpoints.MapDelete(collectionResource, delete);
+
+            return endpoints;
+        }
+
+        public static IEndpointRouteBuilder MapResource(this IEndpointRouteBuilder endpoints,
+            string collection,
+            Delegate? get,
+            Delegate? replace,
+            Delegate? delete)
+        {
+            if (get != null)
+                endpoints.MapGet(collection, get);
+
+            if (replace != null)
+                endpoints.MapPut(collection, replace);
+
+            if (delete != null)
+                endpoints.MapDelete(collection, delete);
 
             return endpoints;
         }

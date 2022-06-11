@@ -1,0 +1,41 @@
+﻿@page "/change-avatar"
+
+@inject ITranslator<ChangeAvatar> Translator
+@inject IFileBlobHandler FileBlobHandler
+@inject NavigationManager NavigationManager
+
+@attribute [Authorize]
+
+<div class="container-fluid">
+    <h1>@Translator[$"Change avatar"]</h1>
+</div>
+
+<div class="container-fluid">
+    <div class="form-group">
+        <label>@Translator[$"Select picture"]</label>
+        <InputFile class="form-control" id="oldSecret" OnChange="@OnValidSubmitAsync" />         
+    </div>
+</div>
+
+@if(_browserFile != null)
+{
+    <div class="container-fluid">
+        <AuthorizedButton Policy="AuditingFull" type="submit" class="btn btn-primary">@Translator[$"Submit"]</AuthorizedButton>
+    </div>
+}
+
+@code {
+
+    private IBrowserFile? _browserFile;
+
+    private void OnInputFileChanged(InputFileChangeEventArgs e)
+    {
+        _browserFile = e.File;
+    }
+
+    private async Task OnValidSubmitAsync()
+    {
+        await FileBlobHandler.WriteAsync(_browserFile.OpenReadStream(),"inspectors/me", "avatar", null);
+        NavigationManager.NavigateTo("/", true);
+    }
+}
