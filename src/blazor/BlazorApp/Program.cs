@@ -28,7 +28,7 @@ namespace Super.Paula.Client
 
             CultureInfo culture;
             var jsRuntime = host.Services.GetRequiredService<IJSRuntime>();
-            var cultureName = await jsRuntime.InvokeAsync<string>("blazorCulture.get");
+            var cultureName = await jsRuntime.InvokeAsync<string>("culture.get");
 
             if (cultureName != null)
             {
@@ -37,7 +37,7 @@ namespace Super.Paula.Client
             else
             {
                 culture = new CultureInfo("en-US");
-                await jsRuntime.InvokeVoidAsync("blazorCulture.set", "en-US");
+                await jsRuntime.InvokeVoidAsync("culture.set", "en-US");
             }
 
             CultureInfo.DefaultThreadCurrentCulture = culture;

@@ -7,6 +7,7 @@
 @inject AppEnvironment AppEnvironment
 @inject ITranslator<MainLayout> Translator
 @inject ILocalStorage LocalStorage
+@inject IFileBlobHandler FileBlobHandler
 @inject BuildInfo BuildInfo
 
 <div class="page">
@@ -35,8 +36,11 @@
                         </select>
                     }
 
+                    <NavLink class="nav-link" Match="NavLinkMatch.All" href="change-avatar">
+                        <img id="avatar" alt="@Translator[$"Change Avatar"]" class="w-25 rounded-circle" src="@_avatar"/></NavLink>
+
                     <NavLink class="nav-link" Match="NavLinkMatch.All" href="change-secret">
-                        <span class="oi oi-person" aria-hidden="true"/>@Translator[$"Change Password"]</NavLink>
+                        <span class="oi oi-key" aria-hidden="true"/>@Translator[$"Change Password"]</NavLink>
 
                     <SignOutButton class="nav-link btn" id="signOut"/>
 
@@ -97,11 +101,14 @@
 
     private ErrorBoundary? errorBoundaryArticle = null!;
 
-    protected override void OnInitialized()
+    private string _avatar = string.Empty;
+
+    protected override async Task OnInitializedAsync()
     {
         GenerateBuildString();
-
-        base.OnInitialized();
+        await GenerateAvatarAsync();
+        
+        await base.OnInitializedAsync();
     }
 
     private void Recover()
@@ -165,6 +172,18 @@
             .ToArray();
 
         await LocalStorage.SetItemAsync("authorization-filter", authorizationFilter);
+    }
+
+    private async Task GenerateAvatarAsync()
+    {
+        using var serverStream = await FileBlobHandler.ReadAsync("inspectors/me","avatar");
+        using var memoryStream = new MemoryStream();
+
+        await serverStream.CopyToAsync(memoryStream);
+
+        var imageBytes = memoryStream.ToArray();
+        var imageSrc = Convert.ToBase64String(imageBytes);
+        _avatar = string.Format("data:image/jpg;base64,{0}", imageSrc);
     }
 
     private void GenerateBuildString()

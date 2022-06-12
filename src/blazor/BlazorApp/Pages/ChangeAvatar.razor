@@ -35,7 +35,10 @@
 
     private async Task OnValidSubmitAsync()
     {
-        await FileBlobHandler.WriteAsync(_browserFile.OpenReadStream(),"inspectors/me", "avatar", null);
-        NavigationManager.NavigateTo("/", true);
+        if(_browserFile != null)
+        {
+            await FileBlobHandler.WriteAsync(_browserFile.OpenReadStream(),"inspectors/me", "avatar", null);
+            NavigationManager.NavigateTo("/", true);
+        }
     }
 }

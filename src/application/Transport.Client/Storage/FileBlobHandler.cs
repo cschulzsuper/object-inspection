@@ -37,9 +37,14 @@ namespace Super.Paula.Client.Storage
             responseMessage.EnsureSuccessStatusCode();
         }
 
-        public ValueTask<Stream> ReadAsync(string container, string uniqueName)
+        public async ValueTask<Stream> ReadAsync(string container, string uniqueName)
         {
-            throw new NotImplementedException();
+            var responseMessage = await _httpClient.GetAsync($"{container}/{uniqueName}");
+
+            responseMessage.RuleOutProblems();
+            responseMessage.EnsureSuccessStatusCode();
+
+            return await responseMessage.Content.ReadAsStreamAsync();
         }
 
         public ValueTask<FileBlobResponse> WriteAsync(Stream stream, string container)
@@ -50,17 +55,13 @@ namespace Super.Paula.Client.Storage
         public async ValueTask<FileBlobResponse> WriteAsync(Stream stream, string container, string uniqueName, string? btag)
         {
             using var streamContent = new StreamContent(stream);
-            streamContent.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
-
-            using var multipartFormDataContent = new MultipartFormDataContent();
-            multipartFormDataContent.Add(streamContent);
             
             if (btag != null)
             {
-                multipartFormDataContent.Headers.Add("If-Match", btag);
+                streamContent.Headers.Add("If-Match", btag);
             }
 
-            var responseMessage = await _httpClient.PutAsync($"{container}/{uniqueName}", multipartFormDataContent);
+            var responseMessage = await _httpClient.PutAsync($"{container}/{uniqueName}", streamContent);
 
             responseMessage.RuleOutProblems();
             responseMessage.EnsureSuccessStatusCode();

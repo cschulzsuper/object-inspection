@@ -31,7 +31,6 @@ namespace Super.Paula.Application.Storage
             return new FileBlobResponse
             {
                 BTag = btag,
-                Container = container,
                 UniqueName = uniqueName
             };
         }
@@ -50,7 +49,6 @@ namespace Super.Paula.Application.Storage
             return new FileBlobResponse
             {
                 BTag = btag,
-                Container = container,
                 UniqueName = uniqueName
             };
         }
