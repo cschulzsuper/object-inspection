@@ -20,6 +20,6 @@ namespace Super.Paula.ErrorHandling
             };
 
         public override void Write(Utf8JsonWriter writer, object? objectToWrite, JsonSerializerOptions options) 
-            => JsonSerializer.Serialize(writer, objectToWrite, objectToWrite.GetType(), options);
+            => JsonSerializer.Serialize(writer, objectToWrite, objectToWrite?.GetType() ?? typeof(object), options);
     }
 }

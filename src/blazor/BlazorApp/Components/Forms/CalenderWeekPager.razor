@@ -26,12 +26,12 @@
     public string NextText  { get; set; } = null!;
 
     [Parameter]
-    public (int Year, int Week) CalenderWeek { get; set; }
+    public CalenderWeek CalenderWeek { get; set; }
 
     [Parameter]
-    public EventCallback<(int Year, int Week)> CalenderWeekChanged { get; set; }
+    public EventCallback<CalenderWeek> CalenderWeekChanged { get; set; }
 
-    private async Task OnCalenderWeekChanged((int Year, int Week) calenderWeek)
+    private async Task OnCalenderWeekChanged(CalenderWeek calenderWeek)
     {
         CalenderWeek = calenderWeek;
         await CalenderWeekChanged.InvokeAsync(CalenderWeek);
@@ -44,7 +44,7 @@
         if (date > new DateTime(1000, 1, 1))
         {
             date = date.AddDays(-7);
-            CalenderWeek = (ISOWeek.GetYear(date),ISOWeek.GetWeekOfYear(date));
+            CalenderWeek = new CalenderWeek(date);
 
             await CalenderWeekChanged.InvokeAsync(CalenderWeek);
         }
@@ -57,7 +57,7 @@
         if (date < new DateTime(9999,1,1))
         {
             date = date.AddDays(7);
-            CalenderWeek = (ISOWeek.GetYear(date),ISOWeek.GetWeekOfYear(date));
+            CalenderWeek = new CalenderWeek(date);
 
             await CalenderWeekChanged.InvokeAsync(CalenderWeek);
         }

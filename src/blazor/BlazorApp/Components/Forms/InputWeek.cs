@@ -6,7 +6,7 @@ using System.Globalization;
 
 namespace Super.Paula.Client.Components.Forms
 {
-    public class InputWeek : InputBase<(int Year, int Week)>
+    public class InputWeek : InputBase<CalenderWeek>
     {
         private readonly string _typeAttributeValue = "week";
 
@@ -38,15 +38,15 @@ namespace Super.Paula.Client.Components.Forms
             builder.CloseElement();
         }
 
-        protected override string FormatValueAsString((int Year, int Week) value)
+        protected override string FormatValueAsString(CalenderWeek value)
             => $"{value.Year}-W{value.Week:00}";
 
-        protected override bool TryParseValueFromString(string? value, out (int Year, int Week) result, [NotNullWhen(false)] out string? validationErrorMessage)
+        protected override bool TryParseValueFromString(string? value, out CalenderWeek result, [NotNullWhen(false)] out string? validationErrorMessage)
         {
             if (value == null)
             {
                 validationErrorMessage = string.Format(CultureInfo.InvariantCulture, _parsingErrorMessage, DisplayName ?? FieldIdentifier.FieldName);
-                result = (0, 0);
+                result = CalenderWeek.Zero;
                 return false;
             }
 
@@ -54,7 +54,7 @@ namespace Super.Paula.Client.Components.Forms
             if (calenderWeek.Length != 2)
             {
                 validationErrorMessage = string.Format(CultureInfo.InvariantCulture, _parsingErrorMessage, DisplayName ?? FieldIdentifier.FieldName);
-                result = (0, 0);
+                result = CalenderWeek.Zero;
                 return false;
             }
 
@@ -64,12 +64,12 @@ namespace Super.Paula.Client.Components.Forms
             if (!yearIsValid || !weekIsValid)
             {
                 validationErrorMessage = string.Format(CultureInfo.InvariantCulture, _parsingErrorMessage, DisplayName ?? FieldIdentifier.FieldName);
-                result = (0, 0);
+                result = CalenderWeek.Zero;
                 return false;
             }
 
             validationErrorMessage = string.Format(CultureInfo.InvariantCulture, _parsingErrorMessage, DisplayName ?? FieldIdentifier.FieldName);
-            result = (year, week);
+            result = new CalenderWeek(year, week);
             return true;
         }
     }

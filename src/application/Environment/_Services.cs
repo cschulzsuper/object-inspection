@@ -23,14 +23,14 @@ namespace Super.Paula
 
                     return new AppSettings
                     {
-                        CosmosEndpoint = configuration["Paula:CosmosEndpoint"],
-                        CosmosKey = configuration["Paula:CosmosKey"],
-                        CosmosDatabase = configuration["Paula:CosmosDatabase"],
-                        MaintainerIdentity = configuration["Paula:MaintainerIdentity"],
-                        DemoIdentity = configuration["Paula:DemoIdentity"],
-                        DemoPassword = configuration["Paula:DemoPassword"],
-                        Server = configuration["Paula:Server"],
-                        Client = configuration["Paula:Client"]
+                        CosmosEndpoint = configuration["Paula:CosmosEndpoint"] ?? string.Empty,
+                        CosmosKey = configuration["Paula:CosmosKey"] ?? string.Empty,
+                        CosmosDatabase = configuration["Paula:CosmosDatabase"] ?? string.Empty,
+                        MaintainerIdentity = configuration["Paula:MaintainerIdentity"] ?? string.Empty,
+                        DemoIdentity = configuration["Paula:DemoIdentity"] ?? string.Empty,
+                        DemoPassword = configuration["Paula:DemoPassword"] ?? string.Empty,
+                        Server = configuration["Paula:Server"] ?? string.Empty,
+                        Client = configuration["Paula:Client"] ?? string.Empty
                     };
                 });
 

@@ -3,7 +3,7 @@ using Super.Paula.Templates.Playwright.Administration;
 using System.Threading.Tasks;
 using Microsoft.Playwright;
 
-using playwright = Microsoft.Playwright;
+using Playwright = Microsoft.Playwright;
 using Super.Paula.Templates.Playwright.Auth;
 using Super.Paula.Templates.AdventureTours.Environment;
 
@@ -24,7 +24,7 @@ namespace Super.Paula.Templates.AdventureTours.Steps
 
         public async Task ExecuteAsync()
         {
-            using var playwright = await playwright::Playwright.CreateAsync();
+            using var playwright = await Playwright::Playwright.CreateAsync();
             await using var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
             {
                 Headless = false,
