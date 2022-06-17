@@ -11,7 +11,7 @@ namespace Super.Paula
         public static SearchTermDictionary Parse(string searchQuery)
             => new(ParseInternal(searchQuery));
 
-        private static IEnumerable<KeyValuePair<string, object>> ParseInternal(string searchQuery)
+        public static IEnumerable<KeyValuePair<string, object>> ParseInternal(string searchQuery)
         {
             var matches = Regex.Matches(searchQuery, RegularExpression);
 
@@ -47,7 +47,7 @@ namespace Super.Paula
             }
         }
 
-        public static string[] SplitAt(string source, params int[] index)
+        private static string[] SplitAt(string source, params int[] index)
         {
             index = index.Distinct().OrderBy(x => x).ToArray();
             string[] output = new string[index.Length + 1];

@@ -87,9 +87,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "github-actions", "github-ac
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventureToursAuditing", "src\templates\AdventureToursAuditing\AdventureToursAuditing.csproj", "{122432C0-374E-4BEA-948D-F9FD58811C69}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchestration", "src\application\Orchestration\Orchestration.csproj", "{759185CC-E763-491E-A8FB-64194488B1CA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orchestration", "src\application\Orchestration\Orchestration.csproj", "{759185CC-E763-491E-A8FB-64194488B1CA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchestration.Contract", "src\application\Orchestration.Contract\Orchestration.Contract.csproj", "{934AFC41-5628-4827-9217-079B56797805}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orchestration.Contract", "src\application\Orchestration.Contract\Orchestration.Contract.csproj", "{934AFC41-5628-4827-9217-079B56797805}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.Benchmarks", "src\application\Shared.Benchmarks\Shared.Benchmarks.csproj", "{7F472716-7F45-477E-B4B1-3F0F685144A6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -225,6 +227,10 @@ Global
 		{934AFC41-5628-4827-9217-079B56797805}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{934AFC41-5628-4827-9217-079B56797805}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{934AFC41-5628-4827-9217-079B56797805}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7F472716-7F45-477E-B4B1-3F0F685144A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F472716-7F45-477E-B4B1-3F0F685144A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F472716-7F45-477E-B4B1-3F0F685144A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F472716-7F45-477E-B4B1-3F0F685144A6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -263,6 +269,7 @@ Global
 		{122432C0-374E-4BEA-948D-F9FD58811C69} = {88B3DE80-486C-4DCE-BE50-6636E77822A2}
 		{759185CC-E763-491E-A8FB-64194488B1CA} = {140CA7C1-13C2-46AF-9A40-7B65C94FF5BC}
 		{934AFC41-5628-4827-9217-079B56797805} = {140CA7C1-13C2-46AF-9A40-7B65C94FF5BC}
+		{7F472716-7F45-477E-B4B1-3F0F685144A6} = {140CA7C1-13C2-46AF-9A40-7B65C94FF5BC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {167D4B81-B91A-4D40-AEEF-6CC3C49F9CD1}
