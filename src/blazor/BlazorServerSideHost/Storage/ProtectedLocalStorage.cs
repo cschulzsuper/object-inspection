@@ -3,15 +3,15 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
-using msft = Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+using Microsoft = Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 
 namespace Super.Paula.Client.Storage
 {
     public class ProtectedLocalStorage : ILocalStorage
     {
-        private readonly msft::ProtectedLocalStorage _protectedLocalStorage;
+        private readonly Microsoft::ProtectedLocalStorage _protectedLocalStorage;
 
-        public ProtectedLocalStorage(msft::ProtectedLocalStorage protectedLocalStorage)
+        public ProtectedLocalStorage(Microsoft::ProtectedLocalStorage protectedLocalStorage)
         {
             _protectedLocalStorage = protectedLocalStorage;
         }

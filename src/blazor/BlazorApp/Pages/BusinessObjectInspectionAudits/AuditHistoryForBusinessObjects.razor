@@ -106,7 +106,7 @@
 
     private string _searchQuery = string.Empty;
 
-    private (int Year, int Week) _calenderWeek = (default, default);
+    private CalenderWeek _calenderWeek = CalenderWeek.Zero;
 
     private Virtualize<BusinessObjectInspectionAuditRecordResponse>? Container { get; set; }
 
@@ -116,7 +116,7 @@
     protected override void OnInitialized()
     {
         var today = DateTime.Today;
-        _calenderWeek = (ISOWeek.GetYear(today), ISOWeek.GetWeekOfYear(today));
+        _calenderWeek = new CalenderWeek(today);
     }
 
     protected override async Task OnParametersSetAsync()
@@ -124,7 +124,7 @@
         await ResetAsync();
     }
 
-    private async Task OnCalenderWeekChanged((int Year, int Week) calenderWeek)
+    private async Task OnCalenderWeekChanged(CalenderWeek calenderWeek)
     {
         _calenderWeek = calenderWeek;
         await ResetAsync();
