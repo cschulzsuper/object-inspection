@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Super.Paula.Client.Administration
 {
-    public sealed class CachedInspectorHandler : IInspectorHandler, IDisposable
+    public sealed class ExtendedInspectorHandler : IInspectorHandler, IDisposable
     {
         private readonly IInspectorHandler _inspectorHandler;
 
@@ -20,7 +20,7 @@ namespace Super.Paula.Client.Administration
 
         private readonly AuthenticationStateProvider _AuthenticationStateProvider;
 
-        public CachedInspectorHandler(
+        public ExtendedInspectorHandler(
             IInspectorHandler inspectorHandler,
             AuthenticationStateProvider AuthenticationStateProvider)
         {

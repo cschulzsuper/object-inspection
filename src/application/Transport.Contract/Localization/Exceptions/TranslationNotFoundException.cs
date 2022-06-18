@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Super.Paula.Application.Auth.Exceptions
+namespace Super.Paula.Application.Localization.Exceptions
 {
     public class TranslationNotFoundException : Exception
     {

@@ -1,16 +1,16 @@
 ﻿using Super.Paula.Application.Administration;
 using Super.Paula.Authorization;
-using Super.Paula.Client.Storage;
+using Super.Paula.Client.Local;
 using System.Threading.Tasks;
 
 namespace Super.Paula.Client.Administration
 {
-    public class StoredTokenAuthorizationHandler : IAuthorizationHandler
+    public class ExtendedAuthorizationHandler : IAuthorizationHandler
     {
         private readonly IAuthorizationHandler _authorizationHandler;
         private readonly ILocalStorage _localStorage;
 
-        public StoredTokenAuthorizationHandler(
+        public ExtendedAuthorizationHandler(
             IAuthorizationHandler authorizationHandler,
             ILocalStorage localStorage)
         {

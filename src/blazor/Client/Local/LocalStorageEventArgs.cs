@@ -1,4 +1,4 @@
-﻿namespace Super.Paula.Client.Storage
+﻿namespace Super.Paula.Client.Local
 {
     public record LocalStorageEventArgs(string Key);
 }

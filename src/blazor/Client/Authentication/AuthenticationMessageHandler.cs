@@ -1,5 +1,5 @@
 ﻿using Super.Paula.Authorization;
-using Super.Paula.Client.Storage;
+using Super.Paula.Client.Local;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;

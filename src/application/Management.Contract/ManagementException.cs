@@ -1,4 +1,4 @@
-﻿using Super.Paula.Validation;
+﻿using Super.Paula.ErrorHandling;
 using System;
 
 namespace Super.Paula.Application

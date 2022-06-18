@@ -12,15 +12,17 @@
 
 <div class="container-fluid">
     <div class="form-group">
-        <label>@Translator[$"Select picture"]</label>
-        <InputFile class="form-control" id="oldSecret" OnChange="@OnValidSubmitAsync" />         
+        <Avatar Inspector="Me" Size="128" Src="_browserFile"/>
+    </div>
+    <div class="form-group">
+        <InputFile OnChange="@OnInputFileChanged" class="form-control-file" />
     </div>
 </div>
 
 @if(_browserFile != null)
 {
     <div class="container-fluid">
-        <AuthorizedButton Policy="AuditingFull" type="submit" class="btn btn-primary">@Translator[$"Submit"]</AuthorizedButton>
+        <AuthorizedButton Policy="AuditingFull" @onclick="OnSubmitAsync" class="btn btn-primary">@Translator[$"Submit"]</AuthorizedButton>
     </div>
 }
 
@@ -31,9 +33,10 @@
     private void OnInputFileChanged(InputFileChangeEventArgs e)
     {
         _browserFile = e.File;
+        StateHasChanged();
     }
 
-    private async Task OnValidSubmitAsync()
+    private async Task OnSubmitAsync()
     {
         if(_browserFile != null)
         {

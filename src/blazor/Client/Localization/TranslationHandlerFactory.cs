@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using Super.Paula.Application.Localization;
+using System.Globalization;
 
 namespace Super.Paula.Client.Localization
 {

@@ -1,15 +1,12 @@
 ﻿using Super.Paula.Application.Storage;
+using Super.Paula.Application.Storage.Exceptions;
 using Super.Paula.Application.Storage.Responses;
 using Super.Paula.Environment;
 using Super.Paula.ErrorHandling;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Super.Paula.Client.Storage
@@ -39,12 +36,19 @@ namespace Super.Paula.Client.Storage
 
         public async ValueTask<Stream> ReadAsync(string container, string uniqueName)
         {
-            var responseMessage = await _httpClient.GetAsync($"{container}/{uniqueName}");
+            try
+            {
+                var responseMessage = await _httpClient.GetAsync($"{container}/{uniqueName}");
 
-            responseMessage.RuleOutProblems();
-            responseMessage.EnsureSuccessStatusCode();
+                responseMessage.RuleOutProblems();
+                responseMessage.EnsureSuccessStatusCode();
 
-            return await responseMessage.Content.ReadAsStreamAsync();
+                return await responseMessage.Content.ReadAsStreamAsync();
+            } 
+            catch(HttpRequestException exception)
+            {
+                throw new FileBlobReadException($"Could not read file blob.", exception);
+            }
         }
 
         public ValueTask<FileBlobResponse> WriteAsync(Stream stream, string container)
@@ -55,7 +59,7 @@ namespace Super.Paula.Client.Storage
         public async ValueTask<FileBlobResponse> WriteAsync(Stream stream, string container, string uniqueName, string? btag)
         {
             using var streamContent = new StreamContent(stream);
-            
+
             if (btag != null)
             {
                 streamContent.Headers.Add("If-Match", btag);

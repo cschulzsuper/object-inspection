@@ -1,4 +1,7 @@
-﻿using Super.Paula.Application.Auth.Exceptions;
+﻿using Super.Paula.Application.Localization;
+using Super.Paula.Application.Localization.Exceptions;
+using Super.Paula.Application.Localization.Requests;
+using Super.Paula.Application.Localization.Responses;
 using System.Collections.Generic;
 using System.Linq;
 

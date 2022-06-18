@@ -1,9 +1,6 @@
 ﻿using Super.Paula.Application.Storage.Responses;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Super.Paula.Application.Storage
