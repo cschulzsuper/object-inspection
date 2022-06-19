@@ -1,38 +1,47 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
-// https://github.com/microsoft/vscode-dev-containers/tree/v0.194.0/containers/dotnet-mssql
+// https://github.com/microsoft/vscode-dev-containers/tree/v0.238.0/containers/dapr-dotnet
 {
-	"name": "Super Paula power by .NET and Azure Comsmos DB",
+	"name": "Dapr with C# (Community)",
 	"dockerComposeFile": "docker-compose.yml",
 	"service": "app",
 	"workspaceFolder": "/workspace",
 
-	// Add the IDs of extensions you want installed when the container is created.
-	"extensions": [
-		"ms-dotnettools.csharp",
-		"ms-azuretools.vscode-cosmosdb"
-	],
+	// Use this environment variable if you need to bind mount your local source code into a new container.
+	"remoteEnv": {
+		"LOCAL_WORKSPACE_FOLDER": "${localWorkspaceFolder}",
+
+		"ASPNETCORE_ENVIRONMENT": "Development",
+		"Paula__CosmosEndpoint": "https://cosmos:8081",
+		"Paula__CosmosKey": "C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==",
+		"Paula__CosmosDatabase": "Paula",
+		"Paula__MaintainerIdentity": "cschulzsuper",
+		"Paula__MaintainerPassword": "super",
+		"Paula__ChiefPassword": "barnabus",
+		"Paula__DemoIdentity": "fdemos",
+		"Paula__DemoPassword": "florence",
+		"Paula__Server": "https://localhost:5001",
+		"Paula__Client": "https://localhost:5002"
+	},
+
+	// Configure tool-specific properties.
+	"customizations": {
+		// Configure properties specific to VS Code.
+		"vscode": {	
+			// Add the IDs of extensions you want installed when the container is created.
+			"extensions": [
+				"ms-azuretools.vscode-dapr",
+				"ms-azuretools.vscode-docker",
+				"ms-dotnettools.csharp"
+			]
+		}
+	},
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	// "forwardPorts": [5000, 5001],
+	// "forwardPorts": [],
 
-	"postCreateCommand": "bash -i ${containerWorkspaceFolder}/.devcontainer/scripts/container-creation.sh",
+	// Ensure Dapr is running on opening the container
+	"postCreateCommand": "dapr uninstall --all && dapr init && bash -i ${containerWorkspaceFolder}/.devcontainer/scripts/container-creation.sh",
 
-	"remoteEnv": {
-		// Add the locally installed dotnet to the path to ensure that it is used
-		"PATH": "${containerWorkspaceFolder}/.dotnet:${containerEnv:PATH}",
-		"DOTNET_MULTILEVEL_LOOKUP": "0",
-
-		// Url and key for the Azure CosmosDB Emulator
-		"ASPNETCORE_CosmosEndpoint": "https://cosmos:8081",
-		"ASPNETCORE_CosmosKey": "C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==",
-
-		// Settings for paula BlazorApp
-		"ASPNETCORE_Server": "https://localhost:5001",
-
-		// Settings for paula ServerApp
-		"ASPNETCORE_Maintainer": "main",
-		"ASPNETCORE_MaintainerOrganization": "main",
-		"ASPNETCORE_DemoInspector": "demo",
-		"ASPNETCORE_DemoOrganization": "demo"
-	}
+	// Comment out to connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
+	"remoteUser": "vscode"
 }

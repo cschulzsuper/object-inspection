@@ -29,6 +29,7 @@ namespace Super.Paula.Data
                 })
                 .ConfigureAppConfiguration((context, builder) =>
                 {
+                    builder.AddEnvironmentVariables();
                     builder.AddUserSecrets<Program>(true);
                 });
     }
