@@ -20,9 +20,9 @@ namespace Super.Paula.Client.Administration
             _httpClient.BaseAddress = new Uri(appSettings.Server);
         }
 
-        public async ValueTask DeleteAsync(string uniqueName)
+        public async ValueTask DeleteAsync(string inspector)
         {
-            var request = new HttpRequestMessage(HttpMethod.Delete, $"inspectors/{uniqueName}/avatar");
+            var request = new HttpRequestMessage(HttpMethod.Delete, $"inspectors/{inspector}/avatar");
 
             var responseMessage = await _httpClient.SendAsync(request);
 
@@ -30,9 +30,9 @@ namespace Super.Paula.Client.Administration
             responseMessage.EnsureSuccessStatusCode();
         }
 
-        public async ValueTask<Stream> ReadAsync(string uniqueName)
+        public async ValueTask<Stream> ReadAsync(string inspector)
         {
-            var responseMessage = await _httpClient.GetAsync($"inspectors/{uniqueName}/avatar");
+            var responseMessage = await _httpClient.GetAsync($"inspectors/{inspector}/avatar");
 
             responseMessage.RuleOutProblems();
             responseMessage.EnsureSuccessStatusCode();
@@ -40,11 +40,11 @@ namespace Super.Paula.Client.Administration
             return await responseMessage.Content.ReadAsStreamAsync();
         }
 
-        public async ValueTask WriteAsync(Stream stream, string uniqueName)
+        public async ValueTask WriteAsync(Stream stream, string inspector)
         {
             using var streamContent = new StreamContent(stream);
 
-            var responseMessage = await _httpClient.PutAsync($"inspectors/{uniqueName}/avatar", streamContent);
+            var responseMessage = await _httpClient.PutAsync($"inspectors/{inspector}/avatar", streamContent);
 
             responseMessage.RuleOutProblems();
             responseMessage.EnsureSuccessStatusCode();

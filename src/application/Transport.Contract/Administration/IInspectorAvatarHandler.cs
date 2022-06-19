@@ -5,10 +5,10 @@ namespace Super.Paula.Application.Administration
 {
     public interface IInspectorAvatarHandler
     {
-        ValueTask<Stream> ReadAsync(string uniqueName);
+        ValueTask<Stream> ReadAsync(string inspector);
 
-        ValueTask WriteAsync(Stream stream, string uniqueName);
+        ValueTask WriteAsync(Stream stream, string inspector);
 
-        ValueTask DeleteAsync(string uniqueName);
+        ValueTask DeleteAsync(string inspector);
     }
 }

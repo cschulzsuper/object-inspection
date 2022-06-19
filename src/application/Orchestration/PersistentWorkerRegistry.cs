@@ -138,7 +138,7 @@ namespace Super.Paula.Application.Orchestration
             var successful = workerRuntimeManager.TrySetState(workerName, "running");
             if (successful)
             {
-                _logger.LogInformation("A worker has been marked as running ({worker})", workerName);
+                _logger.LogTrace("A worker has been marked as running ({worker})", workerName);
             }
             else
             {

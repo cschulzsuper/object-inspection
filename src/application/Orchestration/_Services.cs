@@ -17,8 +17,10 @@ namespace Super.Paula.Application.Orchestration
         {
             services
                 .AddScoped<IEventStorage, PersistentEventStorage>()
+                .AddSingleton<EventAwaiter>()
                 .AddSingleton<IEventBus, LocalEventBus>()
                 .AddScoped<IEventProcessingStorage, PersistentEventProcessingStorage>()
+                .AddSingleton<EventProcessingAwaiter>()
                 .AddSingleton<IEventProcessor, EventProcessor>()
                 .AddSingleton<IEventTypeRegistry, InMemoryEventTypeRegistry>();
 
@@ -28,6 +30,7 @@ namespace Super.Paula.Application.Orchestration
 
             services
                 .AddScoped<IContinuationStorage, PersistentContinuationStorage>()
+                .AddSingleton<ContinuationAwaiter>()
                 .AddSingleton<IContinuationRegistry, InMemoryContinuationRegistry>()
                 .AddSingleton<IContinuator, Continuator>();
 

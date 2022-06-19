@@ -14,15 +14,18 @@ namespace Super.Paula.Application.Orchestration
         private readonly ILogger<PersistentContinuationStorage> _logger;
         private readonly IContinuationManager _continuationManager;
         private readonly IContinuationRegistry _continuationRegistry;
+        private readonly ContinuationAwaiter _continuationAwaiter;
 
         public PersistentContinuationStorage(
             ILogger<PersistentContinuationStorage> logger,
             IContinuationManager continuationManager,
-            IContinuationRegistry continuationRegistry)
+            IContinuationRegistry continuationRegistry,
+            ContinuationAwaiter continuationAwaiter)
         {
             _logger = logger;
             _continuationManager = continuationManager;
             _continuationRegistry = continuationRegistry;
+            _continuationAwaiter = continuationAwaiter;
         }
 
         public async ValueTask AddAsync(ContinuationBase continuation, ClaimsPrincipal user)
@@ -41,10 +44,14 @@ namespace Super.Paula.Application.Orchestration
             await _continuationManager.InsertAsync(entity);
 
             _logger.LogInformation("A continuation has been added ({continuation}, {user})", continuation, user);
+
+            _continuationAwaiter.Signal();
         }
 
         public async IAsyncEnumerable<(ContinuationBase, ClaimsPrincipal)> GetPendingContinuationsAsync()
         {
+            await _continuationAwaiter.WaitAsync();
+
             // As soon as the ef core cosmos db provider can create composite indices this can be refactored.
             // The refactoring will put the order by into a call of GetAsyncEnumerable().
             //

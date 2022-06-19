@@ -11,19 +11,19 @@ namespace Super.Paula.Application.Orchestration
             workerRegistry.Register<EventProcessingWorker>(c =>
             {
                 c.Name = "event-processing-storage-worker";
-                c.IterationDelay = 1_000;
+                c.IterationDelay = 10;
             });
 
             workerRegistry.Register<EventWorker>(c =>
             {
                 c.Name = "event-storage-worker";
-                c.IterationDelay = 1_000;
+                c.IterationDelay = 10;
             });
 
             workerRegistry.Register<ContinuationWorker>(c =>
             {
                 c.Name = "continuation-storage-worker";
-                c.IterationDelay = 1_000;
+                c.IterationDelay = 10;
             });
 
             return workerRegistry;

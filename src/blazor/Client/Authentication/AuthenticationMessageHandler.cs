@@ -1,5 +1,10 @@
-﻿using Super.Paula.Authorization;
+﻿using Super.Paula.Application.Auth;
+using Super.Paula.Application.Auth.Exceptions;
+using Super.Paula.Authorization;
+using Super.Paula.Client.Auth;
 using Super.Paula.Client.Storage;
+using System;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;
@@ -25,7 +30,17 @@ namespace Super.Paula.Client.Authentication
                     ? new AuthenticationHeaderValue("Bearer", token)
                     : null;
 
-            return await base.SendAsync(request, cancellationToken);
+            var response = await base.SendAsync(request, cancellationToken);
+
+            if (response.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                await _localStorage.RemoveItemAsync("token");
+                await _localStorage.RemoveItemAsync("authorization-filter");
+
+                return new HttpResponseMessage();
+            }
+
+            return response;
         }
     }
 }

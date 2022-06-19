@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Super.Paula.Application.Administration.Exceptions;
+using Super.Paula.Application.Guidelines;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -19,20 +20,20 @@ namespace Super.Paula.Application.Administration
             _inspectorAvatarManager = inspectorAvatarManager;
         }
 
-        public async ValueTask DeleteAsync(string uniqueName)
-        {
-            await _inspectorAvatarManager.DeleteAsync($"{uniqueName}");
+        public async ValueTask DeleteAsync(string inspector)
+{
+            await _inspectorAvatarManager.DeleteAsync($"{inspector}");
         }
 
-        public async ValueTask<Stream> ReadAsync(string uniqueName)
+        public async ValueTask<Stream> ReadAsync(string inspector)
         {
             try
             {
-                return await _inspectorAvatarManager.GetAsync($"{uniqueName}");
+                return await _inspectorAvatarManager.GetAsync($"{inspector}");
             }
             catch (InspectorAvatarNotFoundException exception)
             {
-                _logger.LogTrace(exception, "Could not get inspector avatar '{uniqueName}'.", uniqueName);
+                _logger.LogTrace(exception, "Could not get inspector avatar '{uniqueName}'.", inspector);
 
                 var @default = ReadDefault();
 
@@ -53,9 +54,9 @@ namespace Super.Paula.Application.Administration
             return assembly.GetManifestResourceStream(resourceName);
         }
 
-        public async ValueTask WriteAsync(Stream stream, string uniqueName)
+        public async ValueTask WriteAsync(Stream stream, string inspector)
         {
-            await _inspectorAvatarManager.SetAsync(stream, $"{uniqueName}");
+            await _inspectorAvatarManager.SetAsync(stream, $"{inspector}");
         }
     }
 }

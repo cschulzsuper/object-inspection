@@ -14,7 +14,7 @@ namespace Super.Paula.Application.Orchestration
         private readonly IServiceProvider _services;
         private readonly ILogger<LocalWorkerHost> _logger;
 
-        private readonly int processWorkerDelay = 2_000; // 2 second
+        private readonly int processWorkerDelay = 2_000; // 2 seconds
 
         public LocalWorkerHost(
             IWorkerRegistry workerRegistry, 
@@ -39,7 +39,6 @@ namespace Super.Paula.Application.Orchestration
 
             while (!cancellationToken.IsCancellationRequested)
             {
-
                 await foreach (var worker in _workerRegistry.GetUnstartedWorkerAsync())
                 {
                     var successful = await _workerRegistry.SetWorkerAsStartingAsync(worker.WorkerName);

@@ -14,15 +14,18 @@ namespace Super.Paula.Application.Orchestration
         private readonly ILogger<PersistentEventProcessingStorage> _logger;
         private readonly IEventProcessingManager _eventProcessingManager;
         private readonly IEventTypeRegistry _eventRegistry;
+        private readonly EventProcessingAwaiter _eventProcessingAwaiter;
 
         public PersistentEventProcessingStorage(
             ILogger<PersistentEventProcessingStorage> logger,
             IEventProcessingManager eventProcessingManager,
-            IEventTypeRegistry eventRegistry)
+            IEventTypeRegistry eventRegistry,
+            EventProcessingAwaiter eventProcessingAwaiter)
         {
             _logger = logger;
             _eventProcessingManager = eventProcessingManager;
             _eventRegistry = eventRegistry;
+            _eventProcessingAwaiter = eventProcessingAwaiter;
         }
 
         public async ValueTask AddAsync(string subscriberName, EventBase @event, ClaimsPrincipal user)
@@ -45,10 +48,14 @@ namespace Super.Paula.Application.Orchestration
             await _eventProcessingManager.InsertAsync(entity);
 
             _logger.LogInformation("An event processing has been added ({subscriberName},{event},{user})", subscriberName, @event, user);
+
+            _eventProcessingAwaiter.Signal();
         }
 
         public async IAsyncEnumerable<(string, EventBase, ClaimsPrincipal)> GetPendingEventProcessingsAsync()
         {
+            await _eventProcessingAwaiter.WaitAsync();
+
             // As soon as the ef core cosmos db provider can create composite indices this can be refactored.
             // The refactoring will put the order by into a call of GetAsyncEnumerable().
             //
