@@ -27,7 +27,7 @@
                 <Authorized>
                     @if(AppEnvironment.IsDevelopment)
                     {
-                        <select class="btn btn-secondary ml-3 text-left" @onchange="e => AuthorizationFilterChanged(e.Value)" value="@_authorizationFilter">
+                        <select class="btn btn-secondary ml-3 mr-3 text-left" @onchange="e => AuthorizationFilterChanged(e.Value)" value="@_authorizationFilter">
                             <option value="">---</option>
                             <option value="Impersonator|Maintainer|Inspector|Chief|Observer">Maintainer</option>
                             <option value="Impersonator|Inspector|Chief|Observer">Chief</option>
@@ -35,8 +35,13 @@
                         </select>
                     }
 
-                    <NavLink class="nav-link" Match="NavLinkMatch.All" href="change-secret">
-                        <span class="oi oi-person" aria-hidden="true"/>@Translator[$"Change Password"]</NavLink>
+                    <NavLink class="nav-link" Match="NavLinkMatch.All" href="change-avatar" title="@Translator[$"Change Avatar"]">
+                        <Avatar Size="32" Inspector="me" />
+                    </NavLink>
+
+                    <NavLink class="nav-link" Match="NavLinkMatch.All" href="change-secret" title="@Translator[$"Change Password"]">
+                        <span class="oi oi-key" aria-hidden="true"/>
+                    </NavLink>
 
                     <SignOutButton class="nav-link btn" id="signOut"/>
 
@@ -97,11 +102,10 @@
 
     private ErrorBoundary? errorBoundaryArticle = null!;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         GenerateBuildString();
-
-        base.OnInitialized();
+        await base.OnInitializedAsync();
     }
 
     private void Recover()

@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Super.Paula.Application.Auth.Exceptions;
+using Super.Paula.Application.Localization;
+using Super.Paula.Application.Localization.Exceptions;
+using Super.Paula.Application.Localization.Requests;
 using Super.Paula.Environment;
 using System;
 using System.Security.Cryptography;
@@ -30,10 +32,8 @@ namespace Super.Paula.Client.Localization
         {
             get
             {
-                using var sha1 = SHA1.Create();
-
                 var valueBytes = Encoding.UTF8.GetBytes(format);
-                var hashBytes = sha1.ComputeHash(valueBytes);
+                var hashBytes = SHA1.HashData(valueBytes);
 
                 var translationCategory = _translationCategoryProvider.Get<T>();
                 var hashString = Convert.ToHexString(hashBytes).ToLower();
@@ -57,7 +57,7 @@ namespace Super.Paula.Client.Localization
                             Value = format
                         });
                     }
-                    return string.Format(format,arguments);
+                    return string.Format(format, arguments);
                 }
             }
         }

@@ -1,4 +1,4 @@
-﻿namespace Super.Paula.Client.Localization
+﻿namespace Super.Paula.Application.Localization.Requests
 {
     public class TranslationRequest
     {

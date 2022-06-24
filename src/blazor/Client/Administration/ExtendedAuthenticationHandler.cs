@@ -1,22 +1,26 @@
-﻿using Super.Paula.Application.Auth;
+﻿using Microsoft.Extensions.Logging;
+using Super.Paula.Application.Auth;
 using Super.Paula.Application.Auth.Exceptions;
 using Super.Paula.Application.Auth.Requests;
 using Super.Paula.Application.Auth.Responses;
 using Super.Paula.Authorization;
-using Super.Paula.Client.Storage;
+using Super.Paula.Client.Local;
 using System.Threading.Tasks;
 
 namespace Super.Paula.Client.Administration
 {
-    public class StoredTokenAuthenticationHandler : IAuthenticationHandler
+    public class ExtendedAuthenticationHandler : IAuthenticationHandler
     {
+        private readonly ILogger<ExtendedAuthenticationHandler> _logger;
         private readonly IAuthenticationHandler _authenticationHandler;
         private readonly ILocalStorage _localStorage;
 
-        public StoredTokenAuthenticationHandler(
+        public ExtendedAuthenticationHandler(
+            ILogger<ExtendedAuthenticationHandler> logger,
             IAuthenticationHandler authenticationHandler,
             ILocalStorage localStorage)
         {
+            _logger = logger;
             _authenticationHandler = authenticationHandler;
             _localStorage = localStorage;
         }
@@ -48,7 +52,7 @@ namespace Super.Paula.Client.Administration
             }
             catch (SignOutException exception)
             {
-                throw new SignOutException($"Could not sign out gracefully.", exception);
+                _logger.LogWarning(exception, $"Could not sign out gracefully.");
             }
             finally
             {

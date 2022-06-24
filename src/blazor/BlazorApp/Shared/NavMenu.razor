@@ -138,8 +138,13 @@
                     </div>
                 </div>
                 <div class="nav-item px-3 d-md-none">
+                    <NavLink class="nav-link" Match="NavLinkMatch.All" href="change-avatar" title="@Translator[$"Change Avatar"]">
+                        <Avatar Size="24" Inspector="me" CssClass="mr-2" />@Translator[$"Change Avatar"]
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3 d-md-none">
                     <NavLink class="nav-link" Match="NavLinkMatch.All" href="change-secret" title="@Translator[$"Change Password"]">
-                        <span class="oi oi-person" aria-hidden="true"/>@Translator[$"Change Password"]</NavLink>
+                        <span class="oi oi-key" aria-hidden="true"/>@Translator[$"Change Password"]</NavLink>
                 </div>
                 <div class="nav-item px-3 d-md-none">
                     <SignOutButton class="nav-link" title="@Translator[$"Sign out"]"/>

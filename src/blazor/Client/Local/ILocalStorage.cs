@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Super.Paula.Client.Storage
+namespace Super.Paula.Client.Local
 {
     public interface ILocalStorage
     {

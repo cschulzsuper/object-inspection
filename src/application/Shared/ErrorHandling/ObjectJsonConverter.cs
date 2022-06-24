@@ -19,7 +19,7 @@ namespace Super.Paula.ErrorHandling
                 _ => JsonDocument.ParseValue(ref reader).RootElement.Clone()
             };
 
-        public override void Write(Utf8JsonWriter writer, object? objectToWrite, JsonSerializerOptions options) 
+        public override void Write(Utf8JsonWriter writer, object? objectToWrite, JsonSerializerOptions options)
             => JsonSerializer.Serialize(writer, objectToWrite, objectToWrite?.GetType() ?? typeof(object), options);
     }
 }

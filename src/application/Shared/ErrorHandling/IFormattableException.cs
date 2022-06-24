@@ -1,4 +1,4 @@
-﻿namespace Super.Paula.Validation
+﻿namespace Super.Paula.ErrorHandling
 {
     public interface IFormattableException
     {

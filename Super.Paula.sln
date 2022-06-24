@@ -87,9 +87,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "github-actions", "github-ac
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventureToursAuditing", "src\templates\AdventureToursAuditing\AdventureToursAuditing.csproj", "{122432C0-374E-4BEA-948D-F9FD58811C69}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchestration", "src\application\Orchestration\Orchestration.csproj", "{759185CC-E763-491E-A8FB-64194488B1CA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orchestration", "src\application\Orchestration\Orchestration.csproj", "{759185CC-E763-491E-A8FB-64194488B1CA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchestration.Contract", "src\application\Orchestration.Contract\Orchestration.Contract.csproj", "{934AFC41-5628-4827-9217-079B56797805}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orchestration.Contract", "src\application\Orchestration.Contract\Orchestration.Contract.csproj", "{934AFC41-5628-4827-9217-079B56797805}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

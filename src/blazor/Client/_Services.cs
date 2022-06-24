@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Http;
+using Microsoft.Extensions.Logging;
 using Super.Paula.Application.Administration;
 using Super.Paula.Application.Auditing;
 using Super.Paula.Application.Communication;
@@ -15,7 +16,7 @@ using Super.Paula.Client.Communication;
 using Super.Paula.Client.Guidelines;
 using Super.Paula.Client.Inventory;
 using Super.Paula.Client.Localization;
-using Super.Paula.Client.Storage;
+using Super.Paula.Client.Local;
 using Super.Paula.Client.Streaming;
 using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
@@ -24,6 +25,9 @@ using paulaAdministration = Super.Paula.Application.Administration;
 using msftAuthorization = Microsoft.AspNetCore.Authorization;
 using Super.Paula.Client.Auth;
 using Super.Paula.Application.Auth;
+using Super.Paula.Application.Storage;
+using Super.Paula.Client.Storage;
+using Super.Paula.Application.Localization;
 
 namespace Super.Paula.Client
 {
@@ -113,6 +117,7 @@ namespace Super.Paula.Client
             services.AddClientTransportCommunication(isWebAssembly);
             services.AddClientTransportGuidelines(isWebAssembly);
             services.AddClientTransportInventory(isWebAssembly);
+            services.AddClientTransportStorage(isWebAssembly);
 
             return services;
         }
@@ -141,12 +146,12 @@ namespace Super.Paula.Client
             }
 
             services.AddScoped<paulaAdministration::IAuthorizationHandler>(provider =>
-                new StoredTokenAuthorizationHandler(
+                new ExtendedAuthorizationHandler(
                     provider.GetRequiredService<AuthorizationHandler>(),
                     provider.GetRequiredService<ILocalStorage>()));
 
             services.AddScoped<IInspectorHandler>(provider =>
-                new CachedInspectorHandler(
+                new ExtendedInspectorHandler(
                     provider.GetRequiredService<InspectorHandler>(),
                     provider.GetRequiredService<AuthenticationStateProvider>()));
 
@@ -193,7 +198,8 @@ namespace Super.Paula.Client
             }
 
             services.AddScoped<IAuthenticationHandler>(provider =>
-                new StoredTokenAuthenticationHandler(
+                new ExtendedAuthenticationHandler(
+                    provider.GetRequiredService<ILogger<ExtendedAuthenticationHandler>>(),
                     provider.GetRequiredService<AuthenticationHandler>(),
                     provider.GetRequiredService<ILocalStorage>()));
 
@@ -249,6 +255,27 @@ namespace Super.Paula.Client
             {
                 services.AddHttpClientHandler<IBusinessObjectHandler, BusinessObjectHandler>();
             }
+
+            return services;
+        }
+
+        private static IServiceCollection AddClientTransportStorage(this IServiceCollection services, bool isWebAssembly)
+        {
+            if (isWebAssembly)
+            {
+                services
+                    .AddHttpClient<FileBlobHandler>()
+                    .AddHttpMessageHandler<AuthenticationMessageHandler>();
+            }
+            else
+            {
+                services.AddHttpClientHandler<FileBlobHandler>();
+            }
+
+            services.AddScoped<IFileBlobHandler>(provider =>
+                new ExtendedFileBlobHandler(
+                    provider.GetRequiredService<ILogger<ExtendedFileBlobHandler>>(),
+                    provider.GetRequiredService<FileBlobHandler>()));
 
             return services;
         }
