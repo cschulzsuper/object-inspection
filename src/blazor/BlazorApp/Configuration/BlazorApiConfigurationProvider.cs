@@ -19,7 +19,7 @@ namespace Super.Paula.Client.Configuration
         }
         public async Task LoadAsync()
         {
-            var data = new Dictionary<string, string>();
+            var data = new Dictionary<string, string?>();
 
             var value = await _httpClient.GetStringAsync("api/settings/server");
             if (value != null)
