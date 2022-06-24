@@ -59,7 +59,7 @@ namespace Super.Paula
                     policy
                         .AllowAnyMethod()
                         .AllowAnyHeader();
-                })); 
+                }));
 
             services.AddServer(_environment.IsDevelopment());
             services.AddApplicationInsightsTelemetry();
