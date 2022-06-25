@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: azurecosmosdb
+  name: azurecosmosdb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: azurecosmosdb
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: azurecosmosdb
+    spec:
+      containers:
+        - image: mcr.microsoft.com/cosmosdb/linux/azure-cosmos-emulator
+          name: azurecosmosdb
+          env:
+            - name: AZURE_COSMOS_EMULATOR_PARTITION_COUNT
+              value: "2"
+            - name: AZURE_COSMOS_EMULATOR_ENABLE_DATA_PERSISTENCE
+              value: "true"
+            - name: AZURE_COSMOS_EMULATOR_IP_ADDRESS_OVERRIDE
+              value: "127.0.0.1"
+          ports:
+            - containerPort: 8081
+            - containerPort: 8900
+            - containerPort: 8901
+            - containerPort: 8902
+            - containerPort: 10250
+            - containerPort: 10251
+            - containerPort: 10252
+            - containerPort: 10253
+            - containerPort: 10254
+            - containerPort: 10255
+            - containerPort: 10256
+            - containerPort: 10350
+
+#          volumeMounts:
+#            - mountPath: /var/run/docker-host.sock
+#              name: docker-sock
+#      volumes:
+#      - name: docker-sock
+#        hostPath:
+#          path: /var/run/docker.sock
+#          type: Socket
+
+#
+# TODO Currently mounting does not work when used with docker.
+#
+#          volumeMounts:
+#            - mountPath: /tmp/cosmos/appdata
+#              name: data-volume
+#      volumes:
+#      - name: data-volume
+#        persistentVolumeClaim:
+#          claimName: azurecosmosdb
+
+
+            

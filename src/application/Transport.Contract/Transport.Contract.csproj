@@ -8,6 +8,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Administration\Processing\**" />
+    <EmbeddedResource Remove="Administration\Processing\**" />
+    <None Remove="Administration\Processing\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0-preview.5.22301.12" />
   </ItemGroup>
 
@@ -16,10 +22,6 @@
     <ProjectReference Include="..\Orchestration.Contract\Orchestration.Contract.csproj" />
     <ProjectReference Include="..\Security.Contract\Security.Contract.csproj" />
     <ProjectReference Include="..\Shared\Shared.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Administration\Processing\" />
   </ItemGroup>
 
 </Project>

@@ -57,7 +57,9 @@ namespace Super.Paula.Client.Localization
                             Value = format
                         });
                     }
-                    return string.Format(format, arguments);
+                    return arguments.Length > 0
+                        ? string.Format(format, arguments)
+                        : format;
                 }
             }
         }

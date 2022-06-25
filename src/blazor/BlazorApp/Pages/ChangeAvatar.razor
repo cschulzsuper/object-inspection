@@ -1,18 +1,18 @@
 ﻿@page "/change-avatar"
 
 @inject ITranslator<ChangeAvatar> Translator
-@inject IFileBlobHandler FileBlobHandler
+@inject IInspectorAvatarHandler InspectorAvatarHandler
 @inject NavigationManager NavigationManager
 
 @attribute [Authorize]
 
 <div class="container-fluid">
-    <h1>@Translator[$"Change avatar"]</h1>
+    <h1>@Translator[$"Change Avatar"]</h1>
 </div>
 
 <div class="container-fluid">
     <div class="form-group">
-        <Avatar Inspector="Me" Size="128" Src="_browserFile"/>
+        <InspectorAvatar Inspector="Me" Size="128" Src="_browserFile"/>
     </div>
     <div class="form-group">
         <InputFile OnChange="@OnInputFileChanged" class="form-control-file" />
@@ -40,7 +40,7 @@
     {
         if(_browserFile != null)
         {
-            await FileBlobHandler.WriteAsync(_browserFile.OpenReadStream(),"inspectors/me", "avatar", null);
+            await InspectorAvatarHandler.WriteAsync(_browserFile.OpenReadStream(), "me");
             NavigationManager.NavigateTo("/", true);
         }
     }

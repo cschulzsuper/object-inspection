@@ -4,7 +4,7 @@ using Super.Paula.Application.Auth.Exceptions;
 using Super.Paula.Application.Auth.Requests;
 using Super.Paula.Application.Auth.Responses;
 using Super.Paula.Authorization;
-using Super.Paula.Client.Local;
+using Super.Paula.Client.Storage;
 using System.Threading.Tasks;
 
 namespace Super.Paula.Client.Administration

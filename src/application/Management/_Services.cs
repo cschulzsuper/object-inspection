@@ -7,7 +7,6 @@ using Super.Paula.Application.Guidelines;
 using Super.Paula.Application.Inventory;
 using Super.Paula.Application.Operation;
 using Super.Paula.Application.Orchestration;
-using Super.Paula.Application.Storage;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Super.Paula.Application
@@ -97,7 +96,7 @@ namespace Super.Paula.Application
 
         private static IServiceCollection AddServerManagementStorage(this IServiceCollection services)
         {
-            services.AddScoped<IFileBlobManager, FileBlobManager>();
+            services.AddScoped<IInspectorAvatarManager, InspectorAvatarManager>();
 
             return services;
         }

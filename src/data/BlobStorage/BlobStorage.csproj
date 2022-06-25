@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net7.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<LangVersion>Preview</LangVersion>
+		<RootNamespace>Super.Paula.BlobStorage</RootNamespace>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="Azure.Storage.Blobs" Version="12.12.0" />
+	  <PackageReference Include="Microsoft.Extensions.Azure" Version="1.2.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\BlobStorage.Contract\BlobStorage.Contract.csproj" />
+	</ItemGroup>
+
+</Project>

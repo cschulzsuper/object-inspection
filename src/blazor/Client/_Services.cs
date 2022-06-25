@@ -16,7 +16,6 @@ using Super.Paula.Client.Communication;
 using Super.Paula.Client.Guidelines;
 using Super.Paula.Client.Inventory;
 using Super.Paula.Client.Localization;
-using Super.Paula.Client.Local;
 using Super.Paula.Client.Streaming;
 using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
@@ -25,7 +24,6 @@ using paulaAdministration = Super.Paula.Application.Administration;
 using msftAuthorization = Microsoft.AspNetCore.Authorization;
 using Super.Paula.Client.Auth;
 using Super.Paula.Application.Auth;
-using Super.Paula.Application.Storage;
 using Super.Paula.Client.Storage;
 using Super.Paula.Application.Localization;
 
@@ -264,18 +262,13 @@ namespace Super.Paula.Client
             if (isWebAssembly)
             {
                 services
-                    .AddHttpClient<FileBlobHandler>()
+                    .AddHttpClient<InspectorAvatarHandler>()
                     .AddHttpMessageHandler<AuthenticationMessageHandler>();
             }
             else
             {
-                services.AddHttpClientHandler<FileBlobHandler>();
+                services.AddHttpClientHandler<IInspectorAvatarHandler, InspectorAvatarHandler>();
             }
-
-            services.AddScoped<IFileBlobHandler>(provider =>
-                new ExtendedFileBlobHandler(
-                    provider.GetRequiredService<ILogger<ExtendedFileBlobHandler>>(),
-                    provider.GetRequiredService<FileBlobHandler>()));
 
             return services;
         }

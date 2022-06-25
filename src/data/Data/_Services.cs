@@ -49,6 +49,7 @@ namespace Super.Paula.Data
                             {
                                 HttpMessageHandler httpMessageHandler = new HttpClientHandler
                                 {
+                                    SslProtocols = System.Security.Authentication.SslProtocols.Tls12,
                                     ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
                                 };
 
@@ -83,6 +84,7 @@ namespace Super.Paula.Data
                             {
                                 HttpMessageHandler httpMessageHandler = new HttpClientHandler
                                 {
+                                    SslProtocols = System.Security.Authentication.SslProtocols.Tls12,
                                     ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
                                 };
 

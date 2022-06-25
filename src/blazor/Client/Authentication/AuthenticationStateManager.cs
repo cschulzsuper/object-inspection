@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components.Authorization;
 using Super.Paula.Authorization;
-using Super.Paula.Client.Local;
+using Super.Paula.Client.Storage;
 using System;
 using System.Linq;
 using System.Security.Claims;
