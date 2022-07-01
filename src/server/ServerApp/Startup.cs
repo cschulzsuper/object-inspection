@@ -61,7 +61,7 @@ namespace Super.Paula
                         .AllowAnyHeader();
                 }));
 
-            services.AddServer(_environment.IsDevelopment());
+            services.AddServer(_environment, _configuration);
             services.AddApplicationInsightsTelemetry();
         }
 

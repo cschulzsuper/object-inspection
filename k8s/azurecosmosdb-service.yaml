@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: azurecosmosdb
+  labels:
+    app: azurecosmosdb
+spec:
+  type: LoadBalancer
+  ports:
+    - name: p8081
+      port: 8081
+      protocol: TCP
+      targetPort: 8081
+    - name: p10251
+      port: 10251
+      protocol: TCP
+      targetPort: 10251
+    - name: p10252
+      port: 10252
+      protocol: TCP
+      targetPort: 10252
+    - name: p10253
+      port: 10253
+      protocol: TCP
+      targetPort: 10253
+    - name: p10254
+      port: 10254
+      protocol: TCP
+      targetPort: 10254
+  selector:
+    app: azurecosmosdb
+status:
+  loadBalancer: {}

@@ -1,0 +1,84 @@
+﻿@inject AppSettings AppSettings
+
+@if (_avatar != null)
+{
+    <img id="avatar" class="rounded-circle @CssClass" height="@Size" width="@Size" src="@_avatar" />
+} 
+else
+{
+    if (_token != null)
+    {
+        <img id="avatar" class="rounded-circle @CssClass" height="@Size" width="@Size" src="@GetImageUrl()" />
+    }
+}
+
+@inject IInspectorAvatarHandler FileBlobHandler
+
+@code {
+
+    private string? _token = null;
+
+    private string? _avatar = null;
+
+    [Parameter]
+    public IBrowserFile? Src { get; set; } = null;
+
+    [Parameter]
+    public string Inspector { get; set; } = "me";
+
+    [Parameter]
+    public int Size { get; set; } = 32;
+
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthenticationState { get; set; } = null!;
+
+    [Parameter]
+    public string CssClass { get; set; } = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _token = (await AuthenticationState).User
+            .ToToken()
+            .ToBase64String();
+
+        await base.OnInitializedAsync();
+    }
+
+    private string GetImageUrl()
+        => $"{AppSettings.Server}/inspectors/{Inspector}/avatar?access_token={_token}";
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await GenerateAvatarAsync();
+        await base.OnParametersSetAsync();
+    }
+
+    private async Task GenerateAvatarAsync()
+    {
+        using var avatarStream = GetFromSrc();
+
+        if (avatarStream == null)
+        {
+            return;
+        }
+
+        using var memoryStream = new MemoryStream();
+
+        await avatarStream.CopyToAsync(memoryStream);
+
+        var imageBytes = memoryStream.ToArray();
+        var imageSrc = Convert.ToBase64String(imageBytes);
+        _avatar = string.Format("data:image/jpg;base64,{0}", imageSrc);
+    }
+
+    private Stream? GetFromSrc()
+    {
+        if (Src != null)
+        {
+            return Src.OpenReadStream();
+        }
+
+        return null;
+    }
+
+}

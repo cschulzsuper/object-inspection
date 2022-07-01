@@ -19,6 +19,7 @@
 		<ProjectReference Include="..\..\application\Streaming\Streaming.csproj" />
 		<ProjectReference Include="..\..\application\Transport\Transport.csproj" />
 		<ProjectReference Include="..\..\application\Workflows\Workflows.csproj" />
+		<ProjectReference Include="..\..\data\BlobStorage\BlobStorage.csproj" />
 		<ProjectReference Include="..\..\data\Data\Data.csproj" />
 		<ProjectReference Include="..\..\data\RuntimeData\RuntimeData.csproj" />
 	</ItemGroup>

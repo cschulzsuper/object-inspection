@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Playwright.AdventureTours": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}

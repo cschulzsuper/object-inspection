@@ -1,6 +1,6 @@
 ﻿using Super.Paula.Application.Administration;
 using Super.Paula.Authorization;
-using Super.Paula.Client.Local;
+using Super.Paula.Client.Storage;
 using System.Threading.Tasks;
 
 namespace Super.Paula.Client.Administration
