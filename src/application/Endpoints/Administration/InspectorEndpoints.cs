@@ -10,29 +10,34 @@ namespace Super.Paula.Application.Administration
     {
         public static IEndpointRouteBuilder MapInspector(this IEndpointRouteBuilder endpoints)
         {
-            endpoints.MapCollection(
+            endpoints.MapRestCollection(
+                "Inspectors",
                 "/inspectors",
-                "/inspectors/{inspector}",
+                "/{inspector}",
                 Get,
                 GetAll,
                 Create,
                 Replace,
                 Delete);
 
-            endpoints.MapCommands(
+            endpoints.MapRestResouceCommands(
+                "Inspectors",
                 "/inspectors/{inspector}",
                 ("/activate", Activate),
                 ("/deactivate", Deactivate));
 
-            endpoints.MapQueries(
+            endpoints.MapRestCollectionQueries(
+                "Organization Inspectors",
                 "/organizations",
                 ("/{organization}/inspectors", GetAllForOrganization));
 
-            endpoints.MapQueries(
+            endpoints.MapRestCollectionQueries(
+                "Current Inspector",
                 "/inspectors",
                 ("/me", GetCurrent));
 
-            endpoints.MapQueries(
+            endpoints.MapRestCollectionQueries(
+                "Identity Inspectors",
                 "/identities",
                 ("/{identity}/inspectors", GetAllForIdentity));
 

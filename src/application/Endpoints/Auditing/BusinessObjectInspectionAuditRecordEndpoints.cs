@@ -11,16 +11,25 @@ namespace Super.Paula.Application.Auditing
     {
         public static IEndpointRouteBuilder MapBusinessObjectInspectionAuditRecord(this IEndpointRouteBuilder endpoints)
         {
-            endpoints.MapCollection(
+            endpoints.MapRestCollection(
+                "Business Object Inspection Audit Records",
                 "/business-objects/{businessObject}/inspection-audit-records",
-                "/business-objects/{businessObject}/inspections/{inspection}/audit-records/{date}/{time}",
-                Get,
+                string.Empty,
+                null,
                 GetAllForBusinessObject,
                 Create,
+                null,
+                null);
+
+            endpoints.MapRestResource(
+                "Business Object Inspection Audit Records",
+                "/business-objects/{businessObject}/inspections/{inspection}/audit-records/{date}/{time}",
+                Get,
                 Replace,
                 Delete);
 
-            endpoints.MapQueries(
+            endpoints.MapRestCollectionQueries(
+                "Inspection Audit Records",
                 "/inspection-audit-records",
                 ("", GetAll),
                 ("/search", Search));

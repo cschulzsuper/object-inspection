@@ -10,16 +10,18 @@ namespace Super.Paula.Application.Communication
     {
         public static IEndpointRouteBuilder MapNotification(this IEndpointRouteBuilder endpoints)
         {
-            endpoints.MapCollection(
+            endpoints.MapRestCollection(
+                "Inspector Notifications",
                 "/inspectors/{inspector}/notifications",
-                "/inspectors/{inspector}/notifications/{date}/{time}",
+                "/{date}/{time}",
                 Get,
                 GetAllForInspector,
                 Create,
                 Replace,
                 Delete);
 
-            endpoints.MapQueries(
+            endpoints.MapRestCollectionQueries(
+                "Notifications",
                 "/notifications",
                 ("", GetAll));
 

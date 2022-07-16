@@ -41,7 +41,7 @@ namespace Super.Paula.Client.Administration
 
         public async ValueTask<string> StopImpersonationAsync()
         {
-            var responseMessage = await _httpClient.PostAsync("inspectors/current/unmask", null);
+            var responseMessage = await _httpClient.PostAsync("inspectors/me/unmask", null);
 
             responseMessage.RuleOutProblems();
             responseMessage.EnsureSuccessStatusCode();

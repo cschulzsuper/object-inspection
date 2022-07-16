@@ -10,16 +10,18 @@ namespace Super.Paula.Application.Administration
     {
         public static IEndpointRouteBuilder MapOrganization(this IEndpointRouteBuilder endpoints)
         {
-            endpoints.MapCollection(
+            endpoints.MapRestCollection(
+                "Organizations",
                 "/organizations",
-                "/organizations/{organization}",
+                "/{organization}",
                 Get,
                 GetAll,
                 Create,
                 Replace,
                 Delete);
 
-            endpoints.MapCommands(
+            endpoints.MapRestResouceCommands(
+                "Organizations",
                 "/organizations/{organization}",
                 ("/activate", Activate),
                 ("/deactivate", Deactivate));

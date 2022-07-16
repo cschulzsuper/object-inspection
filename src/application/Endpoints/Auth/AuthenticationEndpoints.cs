@@ -10,17 +10,20 @@ namespace Super.Paula.Application.Auth
     {
         public static IEndpointRouteBuilder MapAuthentication(this IEndpointRouteBuilder endpoints)
         {
-            endpoints.MapCommands(
+            endpoints.MapRestResouceCommands(
+                "Identities",
                 "/identities",
                 ("/register", Register));
 
-            endpoints.MapCommands(
+            endpoints.MapRestResouceCommands(
+                "Identities",
                 "/identities/{identity}",
                 ("/sign-in", SignIn),
                 ("/reset", Reset));
 
-            endpoints.MapCommands(
-                "/identities/current",
+            endpoints.MapRestResouceCommands(
+                "Current Identity",
+                "/identities/me",
                 ("/sign-out", SignOut),
                 ("/change-secret", ChangeSecret));
 
