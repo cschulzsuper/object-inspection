@@ -9,20 +9,24 @@ namespace Super.Paula.Application.Administration
     {
         public static IEndpointRouteBuilder MapAuthorization(this IEndpointRouteBuilder endpoints)
         {
-            endpoints.MapCommands(
+            endpoints.MapRestResouceCommands(
+                "Organization Inspectors",
                 "/organizations/{organization}/inspectors/{inspector}",
                 ("/authorize", Authorize),
                 ("/impersonate", Impersonate));
 
-            endpoints.MapCommands(
-                "/inspector/current",
+            endpoints.MapRestResouceCommands(
+                "Current Inspector",
+                "/inspector/me",
                 ("/unmask", Unmask));
 
-            endpoints.MapCommands(
+            endpoints.MapRestResouceCommands(
+                "Organizations",
                 "/organizations/{organization}",
                 ("/initialize", Initialize));
 
-            endpoints.MapCommands(
+            endpoints.MapRestResouceCommands(
+                "Organizations",
                 "/organizations",
                 ("/register", Register));
 

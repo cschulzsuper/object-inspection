@@ -11,16 +11,18 @@ namespace Super.Paula.Application.Inventory
     {
         public static IEndpointRouteBuilder MapBusinessObject(this IEndpointRouteBuilder endpoints)
         {
-            endpoints.MapCollection(
+            endpoints.MapRestCollection(
+                "Business Objects",
                 "/business-objects",
-                "/business-objects/{businessObject}",
+                "/{businessObject}",
                 Get,
                 GetAll,
                 Create,
                 Replace,
                 Delete);
 
-            endpoints.MapQueries(
+            endpoints.MapRestCollectionQueries(
+                "Business Objects",
                 "/business-objects",
                 ("/search", Search));
 

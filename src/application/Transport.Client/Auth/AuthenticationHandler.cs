@@ -25,7 +25,7 @@ namespace Super.Paula.Client.Auth
 
         public async ValueTask ChangeSecretAsync(ChangeIdentitySecretRequest request)
         {
-            var responseMessage = await _httpClient.PostAsJsonAsync("identities/current/change-secret", request);
+            var responseMessage = await _httpClient.PostAsJsonAsync("identities/me/change-secret", request);
 
             responseMessage.RuleOutProblems();
             responseMessage.EnsureSuccessStatusCode();
@@ -53,7 +53,7 @@ namespace Super.Paula.Client.Auth
         {
             try
             {
-                var responseMessage = await _httpClient.PostAsync("identities/current/sign-out", null);
+                var responseMessage = await _httpClient.PostAsync("identities/me/sign-out", null);
 
                 responseMessage.RuleOutProblems();
                 responseMessage.EnsureSuccessStatusCode();

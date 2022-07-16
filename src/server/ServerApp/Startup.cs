@@ -94,7 +94,7 @@ namespace Super.Paula
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapServer();
-                endpoints.MapGet("", () => "It works!");
+                endpoints.MapGet("", () => "It works!").WithTags("Health");
             });
 
             app.ConfigureEvents();

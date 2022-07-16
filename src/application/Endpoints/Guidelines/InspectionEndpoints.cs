@@ -10,7 +10,8 @@ namespace Super.Paula.Application.Guidelines
     {
         public static IEndpointRouteBuilder MapInspection(this IEndpointRouteBuilder endpoints)
         {
-            endpoints.MapCollection(
+            endpoints.MapRestCollection(
+                "Inspections",
                 "/inspections",
                 "/inspections/{inspection}",
                 Get,
@@ -19,7 +20,8 @@ namespace Super.Paula.Application.Guidelines
                 Replace,
                 Delete);
 
-            endpoints.MapCommands(
+            endpoints.MapRestResouceCommands(
+                "Inspections",
                 "/inspections/{inspection}",
                 ("/activate", Activate),
                 ("/deactivate", Deactivate));

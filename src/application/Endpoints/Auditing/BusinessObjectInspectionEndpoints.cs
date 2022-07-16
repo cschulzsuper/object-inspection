@@ -10,16 +10,18 @@ namespace Super.Paula.Application.Auditing
     {
         public static IEndpointRouteBuilder MapBusinessObjectInspection(this IEndpointRouteBuilder endpoints)
         {
-            endpoints.MapCollection(
+            endpoints.MapRestCollection(
+                "Business Object Inspections",
                 "/business-objects/{businessObject}/inspections",
-                "/business-objects/{businessObject}/inspections/{inspection}",
+                "/{inspection}",
                 Get,
                 GetAllForBusinessObject,
                 Create,
                 Replace,
                 Delete);
 
-            endpoints.MapCommands(
+            endpoints.MapRestResouceCommands(
+                "Business Object Inspections",
                  "/business-objects/{businessObject}/inspections/{inspection}",
                  ("/replace-audit-schedule", ReplaceAuditSchedule),
                  ("/create-audit-schedule-omission", CreateAuditOmission),
@@ -32,18 +34,18 @@ namespace Super.Paula.Application.Auditing
 
         private static Delegate Get =>
             [Authorize("AuditingLimited")]
-        (IBusinessObjectInspectionHandler handler, string businessObject, string inspection)
+            (IBusinessObjectInspectionHandler handler, string businessObject, string inspection)
                 => handler.GetAsync(businessObject, inspection);
 
         private static Delegate GetAllForBusinessObject =>
             [Authorize("AuditingLimited")]
-        (IBusinessObjectInspectionHandler handler,
+            (IBusinessObjectInspectionHandler handler,
                 string businessObject)
                 => handler.GetAllForBusinessObject(businessObject);
 
         private static Delegate Create =>
             [Authorize("ManagementFull")]
-        (IBusinessObjectInspectionHandler handler,
+            (IBusinessObjectInspectionHandler handler,
                 string businessObject,
                 BusinessObjectInspectionRequest request)
 
@@ -51,7 +53,7 @@ namespace Super.Paula.Application.Auditing
 
         private static Delegate Replace =>
             [Authorize("ManagementFull")]
-        (IBusinessObjectInspectionHandler handler,
+            (IBusinessObjectInspectionHandler handler,
                 string businessObject,
                 string inspection,
                 BusinessObjectInspectionRequest request)
@@ -60,7 +62,7 @@ namespace Super.Paula.Application.Auditing
 
         private static Delegate Delete =>
             [Authorize("ManagementFull")]
-        (IBusinessObjectInspectionHandler handler,
+            (IBusinessObjectInspectionHandler handler,
                 string businessObject,
                 string inspection,
                 [FromHeader(Name = "If-Match")] string etag)
@@ -68,6 +70,7 @@ namespace Super.Paula.Application.Auditing
                 => handler.DeleteAsync(businessObject, inspection, etag);
 
         private static Delegate ReplaceAuditSchedule =>
+            [Authorize("Maintainance")]
             (IBusinessObjectInspectionHandler handler,
                 string businessObject,
                 string inspection,
@@ -76,6 +79,7 @@ namespace Super.Paula.Application.Auditing
                 => handler.ReplaceAuditScheduleAsync(businessObject, inspection, request);
 
         private static Delegate CreateAuditOmission =>
+            [Authorize("Maintainance")]
             (IBusinessObjectInspectionHandler handler,
                 string businessObject,
                 string inspection,
@@ -84,6 +88,7 @@ namespace Super.Paula.Application.Auditing
                 => handler.CreateAuditOmissionAsync(businessObject, inspection, request);
 
         private static Delegate CreateAudit =>
+            [Authorize("AuditingLimited")]
             (IBusinessObjectInspectionHandler handler,
                 string businessObject,
                 string inspection,
@@ -92,6 +97,7 @@ namespace Super.Paula.Application.Auditing
                 => handler.CreateAuditAsync(businessObject, inspection, request);
 
         private static Delegate ReplaceAudit =>
+            [Authorize("AuditingLimited")]
             (IBusinessObjectInspectionHandler handler,
                 string businessObject,
                 string inspection,
@@ -100,6 +106,7 @@ namespace Super.Paula.Application.Auditing
                 => handler.ReplaceAuditAsync(businessObject, inspection, request);
 
         private static Delegate ReplaceAuditAnnotation =>
+            [Authorize("AuditingLimited")]
             (IBusinessObjectInspectionHandler handler,
                 string businessObject,
                 string inspection,

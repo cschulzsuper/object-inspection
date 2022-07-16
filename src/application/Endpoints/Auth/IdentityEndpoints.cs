@@ -10,9 +10,10 @@ namespace Super.Paula.Application.Auth
     {
         public static IEndpointRouteBuilder MapIdentity(this IEndpointRouteBuilder endpoints)
         {
-            endpoints.MapCollection(
+            endpoints.MapRestCollection(
+                "Identities",
                 "/identities",
-                "/identities/{identity}",
+                "/{identity}",
                 Get,
                 GetAll,
                 Create,

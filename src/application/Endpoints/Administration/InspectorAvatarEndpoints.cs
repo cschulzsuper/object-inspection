@@ -13,11 +13,13 @@ namespace Super.Paula.Application.Administration
     {
         public static IEndpointRouteBuilder MapInspectorAvatar(this IEndpointRouteBuilder endpoints)
         {
-            endpoints.MapResource(
+            endpoints.MapRestResource(
+                "Inspector Avatar",
                 "/inspectors/{inspector}/avatar",
                 Get, null, null);
 
-            endpoints.MapResource(
+            endpoints.MapRestResource(
+                "Current Inspector",
                 "/inspectors/me/avatar",
                 GetMe,
                 PutMe,

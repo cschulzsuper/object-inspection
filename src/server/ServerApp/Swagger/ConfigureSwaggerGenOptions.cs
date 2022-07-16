@@ -18,6 +18,8 @@ namespace Super.Paula.Swagger
 
             options.OperationFilter<AuthorizationOperationFilter>();
             options.SwaggerDoc("v1", new() { Title = "Super.Paula.Server", Version = "v1" });
+            
+            options.OrderActionsBy(x => x.RelativePath);
         }
     }
 }
