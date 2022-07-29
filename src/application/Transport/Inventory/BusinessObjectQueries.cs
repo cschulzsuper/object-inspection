@@ -2,11 +2,11 @@
 
 namespace Super.Paula.Application.Inventory
 {
-    public class BusinessObjects : IBusinessObjects
+    public class BusinessObjectQueries : IBusinessObjectQueries
     {
         private readonly IBusinessObjectManager _businessObjectManager;
 
-        public BusinessObjects(IBusinessObjectManager businessObjectManager)
+        public BusinessObjectQueries(IBusinessObjectManager businessObjectManager)
         {
             _businessObjectManager = businessObjectManager;
         }

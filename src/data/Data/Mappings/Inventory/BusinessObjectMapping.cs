@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Super.Paula.Application.Inventory;
+using Super.Paula.Application.Setup;
 
 namespace Super.Paula.Data.Mappings.Inventory
 {
@@ -9,10 +10,12 @@ namespace Super.Paula.Data.Mappings.Inventory
         public string PartitionKey = nameof(PartitionKey);
 
         private readonly PaulaContextState _state;
+        private readonly ExtensionProvider _extensions;
 
-        public BusinessObjectMapping(PaulaContextState state)
+        public BusinessObjectMapping(PaulaContextState state, ExtensionProvider extensions)
         {
             _state = state;
+            _extensions = extensions;
         }
 
         public void Configure(EntityTypeBuilder<BusinessObject> builder)
@@ -50,6 +53,21 @@ namespace Super.Paula.Data.Mappings.Inventory
                 .Property(x => x.Inspector)
                 .HasMaxLength(140)
                 .IsRequired();
+
+            var extension = _extensions[ExtensionTypes.BusinessObject];
+
+            if (extension != null)
+            {
+                foreach (var extensionField in extension.Fields)
+                {
+                    var extensionFieldClrType = ExtensionFieldTypes.GetClrType(extensionField.Type);
+                    var extensionFieldName = extensionField.Name;
+
+                    builder.IndexerProperty(
+                        extensionFieldClrType, 
+                        extensionFieldName);
+                }
+            }
         }
     }
 }

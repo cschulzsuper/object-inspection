@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
 using Super.Paula.Application.Administration.Exceptions;
-using Super.Paula.Application.Guidelines;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;

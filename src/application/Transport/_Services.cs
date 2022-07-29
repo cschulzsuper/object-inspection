@@ -6,6 +6,7 @@ using Super.Paula.Application.Auth;
 using Super.Paula.Application.Communication;
 using Super.Paula.Application.Guidelines;
 using Super.Paula.Application.Inventory;
+using Super.Paula.Application.Setup;
 using Super.Paula.Application.Streaming;
 using System;
 using System.Diagnostics.CodeAnalysis;
@@ -23,6 +24,7 @@ namespace Super.Paula.Application
             services.AddServerTransportCommunication();
             services.AddServerTransportGuidelines();
             services.AddServerTransportInventory();
+            services.AddServerTransportSetup();
 
             return services;
         }
@@ -40,7 +42,7 @@ namespace Super.Paula.Application
             services.AddScoped<IInspectorAvatarHandler, InspectorAvatarHandler>();
 
             services.AddScoped<IOrganizationHandler, OrganizationHandler>();
-            services.AddScoped<IOrganizations, Organizations>();
+            services.AddScoped<IOrganizationQueries, OrganizationQueries>();
             services.AddScoped<IOrganizationEventService, OrganizationEventService>();
             services.AddScoped<IOrganizationContinuationService, OrganizationContinuationService>();
 
@@ -86,8 +88,17 @@ namespace Super.Paula.Application
         private static IServiceCollection AddServerTransportInventory(this IServiceCollection services)
         {
             services.AddScoped<IBusinessObjectHandler, BusinessObjectHandler>();
-            services.AddScoped<IBusinessObjects, BusinessObjects>();
+            services.AddScoped<IBusinessObjectQueries, BusinessObjectQueries>();
             services.AddScoped<IBusinessObjectEventService, BusinessObjectEventService>();
+
+            return services;
+        }
+
+        private static IServiceCollection AddServerTransportSetup(this IServiceCollection services)
+        {
+            services.AddScoped<IExtensionHandler, ExtensionHandler>();
+            services.AddScoped<IExtensionTypeHandler, ExtensionTypeHandler>();
+            services.AddScoped<IExtensionFieldTypeHandler, ExtensionFieldTypeHandler>();
 
             return services;
         }

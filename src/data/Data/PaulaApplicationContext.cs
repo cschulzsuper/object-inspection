@@ -9,9 +9,16 @@ namespace Super.Paula.Data
 {
     public class PaulaApplicationContext : PaulaContext
     {
-        public PaulaApplicationContext(DbContextOptions<PaulaApplicationContext> options, PaulaContextState state)
+        private readonly ExtensionProvider _extensions;
+
+        public PaulaApplicationContext(
+            DbContextOptions<PaulaApplicationContext> options, 
+            PaulaContextState state,
+            ExtensionProvider extensions)
+
             : base(options, state)
         {
+            _extensions = extensions;
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -23,7 +30,7 @@ namespace Super.Paula.Data
                 modelBuilder.HasManualThroughput(1000);
 
                 // Inventory
-                modelBuilder.ApplyConfiguration(new BusinessObjectMapping(State));
+                modelBuilder.ApplyConfiguration(new BusinessObjectMapping(State, _extensions));
                
                 // Auditing
                 modelBuilder.ApplyConfiguration(new BusinessObjectInspectionMapping(State));

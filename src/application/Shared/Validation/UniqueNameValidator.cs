@@ -18,15 +18,16 @@
                 "businessobjectinspectionaudit",
                 "businessobjectinspectionauditrecord",
                 "identity",
+                "extension",
                 "identityinspector",
                 "inspection",
                 "inspector",
-                "organiztation",
+                "organization",
                 "reset",
-                "repaire",
                 "register",
                 "null",
-                "me", 
+                "me",
+                "current",
                 "search");
         }
     }

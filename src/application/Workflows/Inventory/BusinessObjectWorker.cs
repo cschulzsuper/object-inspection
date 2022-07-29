@@ -14,7 +14,7 @@ namespace Super.Paula.Application.Inventory
     {
         public async Task ExecuteAsync(WorkerContext context, CancellationToken cancellationToken)
         {
-            var organizations = context.Services.GetRequiredService<IOrganizations>();
+            var organizations = context.Services.GetRequiredService<IOrganizationQueries>();
 
             while (!cancellationToken.IsCancellationRequested)
             {
@@ -26,7 +26,7 @@ namespace Super.Paula.Application.Inventory
                     SetupScope(organizaion, serviceScope);
 
                     var businessObjects = serviceScope.ServiceProvider
-                        .GetRequiredService<IBusinessObjects>()
+                        .GetRequiredService<IBusinessObjectQueries>()
                         .GetAllUniqueNames();
 
                     foreach (var businessObject in businessObjects)

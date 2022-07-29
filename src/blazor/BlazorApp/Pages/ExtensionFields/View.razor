@@ -1,0 +1,88 @@
+﻿@page "/extensions/{type}/field"
+
+@inject ITranslator<View> Translator
+@inject NavigationManager NavigationManager
+@inject IExtensionHandler ExtensionHandler
+
+@attribute [Authorize("ManagementRead")]
+
+<DemoNote>
+    @Translator.Markdown($"An extension extends a type with additional fields. A field color could be added to the bussiness object type.")
+</DemoNote>
+
+<div class="container-fluid">
+    <h1>@Translator[$"Extensions"]</h1>
+</div>
+
+<div class="container-fluid m-2">
+    <button class="btn btn-primary" title="@Translator[$"Create"]"
+            @onclick="Create">
+        <span class="oi oi-plus" />
+    </button>
+</div>
+
+<div class="container-fluid">
+@if (_extension == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table table-sm">
+        <thead class="table-light table-borderless">
+            <tr>
+                <th class="col-6">@Translator[$"Unique name"]</th>
+                <th class="col-6">@Translator[$"Mail address"]</th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+                @foreach (var extensionField in _extension.Fields)
+            {
+                <tr>
+                    <td>@extensionField.Name</td>
+                    <td>@extensionField.Type</td>
+                    <td>
+                        <button class="btn btn-outline-danger btn-block" title="@Translator[$"Delete"]"
+                            @onclick="() => DeleteAsync(extensionField)"><span class="oi oi-trash"/></button>
+                    </td>
+                    
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+</div>
+
+@code {
+
+    [Parameter]
+    public string Type { get; set; } = string.Empty;
+
+    private ExtensionResponse? _extension;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _extension = await ExtensionHandler.GetAsync(Type);
+
+            StateHasChanged();
+        }
+    }
+
+    public void Create()
+        => NavigationManager.NavigateTo("/extensions/{type}/field/create");
+
+    public async Task DeleteAsync(ExtensionFieldResponse field)
+    {
+        var response = await ExtensionHandler.DeleteFieldAsync(_extension!.Type, field.Name, _extension!.ETag);
+
+        _extension.ETag = response.ETag;
+
+        _extension!.Fields.Remove(field);
+    }
+}

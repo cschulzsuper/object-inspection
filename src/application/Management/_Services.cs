@@ -7,6 +7,7 @@ using Super.Paula.Application.Guidelines;
 using Super.Paula.Application.Inventory;
 using Super.Paula.Application.Operation;
 using Super.Paula.Application.Orchestration;
+using Super.Paula.Application.Setup;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Super.Paula.Application
@@ -24,7 +25,7 @@ namespace Super.Paula.Application
             services.AddServerManagementInventory();
             services.AddServerManagementOperation();
             services.AddServerManagementOrchestration();
-            services.AddServerManagementStorage();
+            services.AddServerManagementSetup();
 
             return services;
         }
@@ -34,6 +35,7 @@ namespace Super.Paula.Application
             services.AddScoped<IInspectorManager, InspectorManager>();
             services.AddScoped<IIdentityInspectorManager, IdentityInspectorManager>();
             services.AddScoped<IOrganizationManager, OrganizationManager>();
+            services.AddScoped<IInspectorAvatarManager, InspectorAvatarManager>();
 
             return services;
         }
@@ -94,9 +96,9 @@ namespace Super.Paula.Application
             return services;
         }
 
-        private static IServiceCollection AddServerManagementStorage(this IServiceCollection services)
+        private static IServiceCollection AddServerManagementSetup(this IServiceCollection services)
         {
-            services.AddScoped<IInspectorAvatarManager, InspectorAvatarManager>();
+            services.AddScoped<IExtensionManager, ExtensionManager>();
 
             return services;
         }

@@ -35,12 +35,12 @@ namespace Super.Paula.Application.Administration
                 => handler.GetAsync(organization);
 
         private static Delegate GetAll =>
-            [Authorize("Maintainance")]
+            //[Authorize("Maintainance")]
             (IOrganizationHandler handler)
                 => handler.GetAll();
 
         private static Delegate Create =>
-            [Authorize("Maintainance")]
+            //[Authorize("Maintainance")]
             [UseOrganizationFromRoute]
             (IOrganizationHandler handler, OrganizationRequest request)
                     => handler.CreateAsync(request);

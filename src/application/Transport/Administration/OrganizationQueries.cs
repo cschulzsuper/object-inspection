@@ -2,11 +2,11 @@
 
 namespace Super.Paula.Application.Administration
 {
-    public class Organizations : IOrganizations
+    public class OrganizationQueries : IOrganizationQueries
     {
         private readonly IOrganizationManager _organizationManager;
 
-        public Organizations(IOrganizationManager organizationManager)
+        public OrganizationQueries(IOrganizationManager organizationManager)
         {
             _organizationManager = organizationManager;
         }

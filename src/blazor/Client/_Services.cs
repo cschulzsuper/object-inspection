@@ -26,6 +26,7 @@ using Super.Paula.Client.Auth;
 using Super.Paula.Application.Auth;
 using Super.Paula.Client.Storage;
 using Super.Paula.Application.Localization;
+using Super.Paula.Client.Setup;
 
 namespace Super.Paula.Client
 {
@@ -116,6 +117,7 @@ namespace Super.Paula.Client
             services.AddClientTransportGuidelines(isWebAssembly);
             services.AddClientTransportInventory(isWebAssembly);
             services.AddClientTransportStorage(isWebAssembly);
+            services.AddClientTransportSetup(isWebAssembly);
 
             return services;
         }
@@ -278,6 +280,30 @@ namespace Super.Paula.Client
             services.AddSingleton<ITranslationHandler>(_ => TranslationHandlerFactory.Create());
             services.AddSingleton(typeof(ITranslator<>), typeof(Translator<>));
             services.AddSingleton<TranslationCategoryProvider>();
+
+            return services;
+        }
+
+        private static IServiceCollection AddClientTransportSetup(this IServiceCollection services, bool isWebAssembly)
+        {
+            if (isWebAssembly)
+            {
+                services
+                    .AddHttpClient<ExtensionHandler>()
+                    .AddHttpMessageHandler<AuthenticationMessageHandler>();
+
+                services
+                    .AddHttpClient<ExtensionFieldTypeHandler>()
+                    .AddHttpMessageHandler<AuthenticationMessageHandler>();
+
+                services
+                    .AddHttpClient<ExtensionTypeHandler>()
+                    .AddHttpMessageHandler<AuthenticationMessageHandler>();
+            }
+            else
+            {
+                services.AddHttpClientHandler<IInspectorAvatarHandler, InspectorAvatarHandler>();
+            }
 
             return services;
         }

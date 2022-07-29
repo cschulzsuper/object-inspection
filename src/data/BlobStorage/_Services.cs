@@ -1,6 +1,4 @@
-﻿using Azure.Storage.Blobs;
-using Microsoft.Extensions.Azure;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.DependencyInjection;
 using System.Diagnostics.CodeAnalysis;
 

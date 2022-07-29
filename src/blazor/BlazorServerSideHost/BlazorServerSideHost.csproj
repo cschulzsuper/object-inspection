@@ -10,7 +10,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\BlazorApp\BlazorApp.csproj" />
-		<PackageReference Include="Microsoft.Extensions.Configuration.KeyPerFile" Version="7.0.0-preview.6.22330.3" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.KeyPerFile" Version="7.0.0-preview.7.22376.6" />
 	</ItemGroup>
 
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(Configuration)' == 'Release' ">

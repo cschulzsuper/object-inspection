@@ -3,12 +3,10 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace Super.Paula.Data
 {
-    public class PaulaContextModelCacheKeyFactory : IModelCacheKeyFactory
+    public class PaulaAdministrationContextModelCacheKeyFactory : IModelCacheKeyFactory
     {
         public object Create(DbContext context, bool designTime)
-            => context is PaulaContext paulaContext
-                ? (context.GetType(), paulaContext.State.CurrentOrganization, designTime)
-                : context.GetType();
+            => context.GetType();
 
         public object Create(DbContext context)
             => Create(context, false);

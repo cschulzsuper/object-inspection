@@ -9,6 +9,7 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\..\application\Shared\Shared.csproj" />
+	  <ProjectReference Include="..\Aggregates\Aggregates.csproj" />
 	</ItemGroup>
 
 </Project>

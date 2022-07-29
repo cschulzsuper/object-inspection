@@ -10,15 +10,12 @@ namespace Super.Paula.Swagger
     {
         public void Apply(OpenApiOperation operation, OperationFilterContext context)
         {
-#if true
             var hasAuthorization = context.ApiDescription.ActionDescriptor.EndpointMetadata.Any(x => x is AuthorizeAttribute);
 
             if (!hasAuthorization)
             {
                 return;
             }
-#else
-#endif
 
             operation.Security = new List<OpenApiSecurityRequirement>
             {

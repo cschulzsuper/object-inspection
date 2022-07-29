@@ -3,6 +3,7 @@ using Super.Paula.Application.Inventory.Responses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -29,27 +30,49 @@ namespace Super.Paula.Application.Inventory
         {
             var entity = await _businessObjectManager.GetAsync(businessObject);
 
-            return new BusinessObjectResponse
+            var response = new BusinessObjectResponse
             {
                 Inspector = entity.Inspector,
                 DisplayName = entity.DisplayName,
                 UniqueName = entity.UniqueName,
-                ETag = entity.ETag
+                ETag = entity.ETag,
             };
+
+            foreach (var extensionItem in entity)
+            {
+                response[extensionItem.Key] = extensionItem.Value;
+            }
+
+            return response;
         }
 
-        public IAsyncEnumerable<BusinessObjectResponse> GetAll(string query, int skip, int take, CancellationToken cancellationToken = default)
-            => _businessObjectManager
-                .GetAsyncEnumerable(queryable => WhereSearchQuery(queryable, query)
-                    .Skip(skip)
-                    .Take(take)
-                    .Select(entity => new BusinessObjectResponse
-                    {
-                        Inspector = entity.Inspector,
-                        DisplayName = entity.DisplayName,
-                        UniqueName = entity.UniqueName,
-                        ETag = entity.ETag
-                    }));
+        public async IAsyncEnumerable<BusinessObjectResponse> GetAll(string query, int skip, int take, 
+            [EnumeratorCancellation] CancellationToken cancellationToken = default)
+        {
+            var businessObjects = _businessObjectManager
+                        .GetAsyncEnumerable(queryable => WhereSearchQuery(queryable, query)
+                            .Skip(skip)
+                            .Take(take));
+
+            await foreach(var businessObject in businessObjects
+                .WithCancellation(cancellationToken))
+            {
+                var response = new BusinessObjectResponse
+                {
+                    Inspector = businessObject.Inspector,
+                    DisplayName = businessObject.DisplayName,
+                    UniqueName = businessObject.UniqueName,
+                    ETag = businessObject.ETag
+                };
+
+                foreach(var extensionItem in businessObject)
+                {
+                    response[extensionItem.Key] = extensionItem.Value;
+                }
+
+                yield return response;
+            }
+        }
 
         public async ValueTask<SearchBusinessObjectResponse> SearchAsync(string query)
         {
@@ -58,21 +81,33 @@ namespace Super.Paula.Application.Inventory
             var queryable = _businessObjectManager.GetQueryable();
             queryable = WhereSearchQuery(queryable, query);
 
-            var topResult = queryable.Take(50)
-                .Select(entity => new BusinessObjectResponse
-                {
-                    Inspector = entity.Inspector,
-                    DisplayName = entity.DisplayName,
-                    UniqueName = entity.UniqueName,
-                    ETag = entity.ETag
-                })
-                .ToHashSet();
+            var topResults = queryable.Take(50);
 
-            return new SearchBusinessObjectResponse
+            var response = new SearchBusinessObjectResponse
             {
                 TotalCount = queryable.Count(),
-                TopResults = topResult
+                TopResults = new HashSet<BusinessObjectResponse>()
             };
+
+            foreach (var topResult in topResults)
+            {
+                var responseItem = new BusinessObjectResponse
+                {
+                    Inspector = topResult.Inspector,
+                    DisplayName = topResult.DisplayName,
+                    UniqueName = topResult.UniqueName,
+                    ETag = topResult.ETag
+                };
+
+                foreach (var extensionItem in topResult)
+                {
+                    responseItem[extensionItem.Key] = extensionItem.Value;
+                }
+
+                response.TopResults.Add(responseItem);
+            }
+
+            return response;
         }
 
         public async ValueTask<BusinessObjectResponse> CreateAsync(BusinessObjectRequest request)
@@ -84,17 +119,29 @@ namespace Super.Paula.Application.Inventory
                 UniqueName = request.UniqueName,
             };
 
+            foreach (var extensionItem in request)
+            {
+                entity[extensionItem.Key] = extensionItem.Value;
+            }
+
             await _businessObjectManager.InsertAsync(entity);
             await _businessObjectEventService.CreateBusinessObjectEventAsync(entity);
             await _businessObjectEventService.CreateBusinessObjectInspectorEventAsync(entity, entity.Inspector, string.Empty);
 
-            return new BusinessObjectResponse
+            var response = new BusinessObjectResponse
             {
                 Inspector = entity.Inspector,
                 DisplayName = entity.DisplayName,
                 UniqueName = entity.UniqueName,
                 ETag = entity.ETag
             };
+
+            foreach (var extensionItem in entity)
+            {
+                response[extensionItem.Key] = extensionItem.Value;
+            }
+
+            return response;
         }
 
         public async ValueTask ReplaceAsync(string businessObject, BusinessObjectRequest request)
@@ -103,21 +150,19 @@ namespace Super.Paula.Application.Inventory
 
             var oldInspector = entity.Inspector;
 
-            var required =
-                entity.DisplayName != request.DisplayName ||
-                entity.Inspector != request.Inspector;
+            entity.Inspector = request.Inspector;
+            entity.DisplayName = request.DisplayName;
+            entity.UniqueName = request.UniqueName;
+            entity.ETag = request.ETag;
 
-            if (required)
+            foreach (var extensionItem in request)
             {
-                entity.Inspector = request.Inspector;
-                entity.DisplayName = request.DisplayName;
-                entity.UniqueName = request.UniqueName;
-                entity.ETag = request.ETag;
-
-                await _businessObjectManager.UpdateAsync(entity);
-                await _businessObjectEventService.CreateBusinessObjectEventAsync(entity);
-                await _businessObjectEventService.CreateBusinessObjectInspectorEventAsync(entity, entity.Inspector, oldInspector);
+                entity[extensionItem.Key] = extensionItem.Value;
             }
+
+            await _businessObjectManager.UpdateAsync(entity);
+            await _businessObjectEventService.CreateBusinessObjectEventAsync(entity);
+            await _businessObjectEventService.CreateBusinessObjectInspectorEventAsync(entity, entity.Inspector, oldInspector);
         }
 
         public async ValueTask DeleteAsync(string businessObject, string etag)
@@ -137,7 +182,7 @@ namespace Super.Paula.Application.Inventory
             var businessObjects = searchTerms.GetValidSearchTermValues<string>(SearchTermKeyBusinessObject);
             var inspectors = searchTerms.GetValidSearchTermValues<string>(SearchTermKeyInspector);
             var freeTexts = searchTerms.GetValidSearchTermValues<string>(SearchTermKeyFreeText).Where(x => x.Length > 3).ToArray();
-
+            
             query = query
                  .Where(x => !businessObjects.Any() || businessObjects.Contains(x.UniqueName))
                  .Where(x => !inspectors.Any() || inspectors.Contains(x.Inspector));
