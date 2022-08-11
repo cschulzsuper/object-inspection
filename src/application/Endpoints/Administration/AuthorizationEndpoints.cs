@@ -56,7 +56,7 @@ namespace Super.Paula.Application.Administration
                     => handler.StartImpersonationAsync(organization, inspector);
 
         private static Delegate Unmask =>
-            [Authorize("Maintainance")]
+            [Authorize("Impersonation")]
             (IAuthorizationHandler handler)
                 => handler.StopImpersonationAsync();
     }

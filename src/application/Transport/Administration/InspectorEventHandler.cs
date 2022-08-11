@@ -42,7 +42,7 @@ namespace Super.Paula.Application.Administration
         public async Task HandleAsync(EventHandlerContext context, BusinessObjectInspectorEvent @event)
         {
             var inspectorManager = context.Services.GetRequiredService<IInspectorManager>();
-            var inspectorAnnouncer = context.Services.GetRequiredService<IInspectorAnnouncer>();
+            var inspectorStreamer = context.Services.GetRequiredService<IInspectorStreamer>();
 
             if (@event.OldInspector != null &&
                 @event.OldInspector == @event.NewInspector)
@@ -65,7 +65,7 @@ namespace Super.Paula.Application.Administration
                     changedBusinessObject.DisplayName = @event.DisplayName;
 
                     await inspectorManager.UpdateAsync(oldInspector);
-                    await inspectorAnnouncer.AnnounceBusinessObjectUpdateAsync(@event.OldInspector, changedBusinessObject.ToResponse());
+                    await inspectorStreamer.StreamInspectorBusinessObjectUpdateAsync(@event.OldInspector, changedBusinessObject.ToResponse());
                 }
             }
 
@@ -91,7 +91,7 @@ namespace Super.Paula.Application.Administration
                     }
 
                     await inspectorManager.UpdateAsync(oldInspector);
-                    await inspectorAnnouncer.AnnounceBusinessObjectDeletionAsync(oldInspector.UniqueName, @event.UnqiueName);
+                    await inspectorStreamer.StreamInspectorBusinessObjectDeletionAsync(oldInspector.UniqueName, @event.UnqiueName);
                 }
             }
 
@@ -112,7 +112,7 @@ namespace Super.Paula.Application.Administration
                     newInspector.BusinessObjects.Add(newBusinessObject);
 
                     await inspectorManager.UpdateAsync(newInspector);
-                    await inspectorAnnouncer.AnnounceBusinessObjectCreationAsync(newInspector.UniqueName, newBusinessObject.ToResponse());
+                    await inspectorStreamer.StreamInspectorBusinessObjectCreationAsync(newInspector.UniqueName, newBusinessObject.ToResponse());
                 }
             }
         }
@@ -120,7 +120,7 @@ namespace Super.Paula.Application.Administration
         public async Task HandleAsync(EventHandlerContext context, BusinessObjectInspectionAuditScheduleEvent @event)
         {
             var inspectorManager = context.Services.GetRequiredService<IInspectorManager>();
-            var inspectorAnnouncer = context.Services.GetRequiredService<IInspectorAnnouncer>();
+            var inspectorStreamer = context.Services.GetRequiredService<IInspectorStreamer>();
 
             var inspectors = inspectorManager
                 .GetQueryableWhereBusinessObject(@event.BusinessObject)
@@ -161,7 +161,7 @@ namespace Super.Paula.Application.Administration
                     inspectorBusinessObject.AuditSchedulePending = now > plannedAuditTimestamp.AddMilliseconds(-threshold);
 
                     await inspectorManager.UpdateAsync(inspector);
-                    await inspectorAnnouncer.AnnounceBusinessObjectUpdateAsync(inspector.UniqueName, inspectorBusinessObject.ToResponse());
+                    await inspectorStreamer.StreamInspectorBusinessObjectUpdateAsync(inspector.UniqueName, inspectorBusinessObject.ToResponse());
 
                     var inspectorEventService = context.Services.GetRequiredService<IInspectorEventService>();
                     await inspectorEventService.CreateInspectorBusinessObjectEventAsync(inspector, inspectorBusinessObject, oldDelayed, oldPending);

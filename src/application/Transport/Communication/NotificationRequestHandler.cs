@@ -7,17 +7,17 @@ using System.Threading.Tasks;
 
 namespace Super.Paula.Application.Communication
 {
-    public class NotificationHandler : INotificationHandler
+    public class NotificationRequestHandler : INotificationRequestHandler
     {
         private readonly INotificationManager _notificationManager;
-        private readonly INotificationAnnouncer _notificationAnnouncer;
+        private readonly INotificationStreamer _streamer;
 
-        public NotificationHandler(
+        public NotificationRequestHandler(
             INotificationManager notificationManager,
-            INotificationAnnouncer notificationAnnouncer)
+            INotificationStreamer streamer)
         {
             _notificationManager = notificationManager;
-            _notificationAnnouncer = notificationAnnouncer;
+            _streamer = streamer;
         }
 
         public async ValueTask<NotificationResponse> GetAsync(string inspector, int date, int time)
@@ -84,7 +84,7 @@ namespace Super.Paula.Application.Communication
                 ETag = entity.ETag
             };
 
-            await _notificationAnnouncer.AnnounceCreationAsync(response);
+            await _streamer.StreamNotificationCreationAsync(response);
 
             return response;
         }
@@ -110,13 +110,7 @@ namespace Super.Paula.Application.Communication
             entity.ETag = etag;
 
             await _notificationManager.DeleteAsync(entity);
-            await _notificationAnnouncer.AnnounceDeletionAsync(inspector, date, time);
+            await _streamer.StreamNotificationDeletionAsync(inspector, date, time);
         }
-
-        public Task<IDisposable> OnCreationAsync(Func<NotificationResponse, Task> handler)
-            => _notificationAnnouncer.OnCreationAsync(handler);
-
-        public Task<IDisposable> OnDeletionAsync(Func<string, int, int, Task> handler)
-            => _notificationAnnouncer.OnDeletionAsync(handler);
     }
 }
