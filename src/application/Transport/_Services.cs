@@ -6,7 +6,6 @@ using Super.Paula.Application.Auth;
 using Super.Paula.Application.Communication;
 using Super.Paula.Application.Guidelines;
 using Super.Paula.Application.Inventory;
-using Super.Paula.Application.Streaming;
 using System;
 using System.Diagnostics.CodeAnalysis;
 
@@ -32,8 +31,7 @@ namespace Super.Paula.Application
             services.AddScoped<IAuthorizationHandler, AuthorizationHandler>();
             services.AddScoped<IAuthorizationTokenHandler, AuthorizationTokenHandler>();
 
-            services.AddScoped<IInspectorAnnouncer>(InspectorAnnouncerFactory);
-            services.AddScoped<IInspectorHandler, InspectorHandler>();
+            services.AddScoped<IInspectorRequestHandler, InspectorRequestHandler>();
             services.AddScoped<IInspectorEventService, InspectorEventService>();
             services.AddScoped<IInspectorContinuationService, InspectorContinuationService>();
 
@@ -69,8 +67,7 @@ namespace Super.Paula.Application
 
         private static IServiceCollection AddServerTransportCommunication(this IServiceCollection services)
         {
-            services.AddScoped<INotificationAnnouncer>(NotificationAnnouncerFactory);
-            services.AddScoped<INotificationHandler, NotificationHandler>();
+            services.AddScoped<INotificationRequestHandler, NotificationRequestHandler>();
 
             return services;
         }
@@ -91,32 +88,5 @@ namespace Super.Paula.Application
 
             return services;
         }
-
-        private static readonly Func<IServiceProvider, INotificationAnnouncer> NotificationAnnouncerFactory =
-            services =>
-            {
-                var notificationAnnouncer = new NotificationAnnouncer();
-
-                var streamer = services.GetRequiredService<IStreamer>();
-
-                notificationAnnouncer.OnCreationAsync(streamer.StreamNotificationCreationAsync);
-                notificationAnnouncer.OnDeletionAsync(streamer.StreamNotificationDeletionAsync);
-
-                return notificationAnnouncer;
-            };
-
-        private static readonly Func<IServiceProvider, IInspectorAnnouncer> InspectorAnnouncerFactory =
-            services =>
-            {
-                var inspectorAnnouncer = new InspectorAnnouncer();
-
-                var streamer = services.GetRequiredService<IStreamer>();
-
-                inspectorAnnouncer.OnBusinessObjectCreationAsync(streamer.StreamInspectorBusinessObjectCreationAsync);
-                inspectorAnnouncer.OnBusinessObjectDeletionAsync(streamer.StreamInspectorBusinessObjectDeletionAsync);
-                inspectorAnnouncer.OnBusinessObjectUpdateAsync(streamer.StreamInspectorBusinessObjectUpdateAsync);
-
-                return inspectorAnnouncer;
-            };
     }
 }

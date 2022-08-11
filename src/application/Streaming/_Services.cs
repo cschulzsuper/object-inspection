@@ -1,4 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Super.Paula.Application.Administration;
+using Super.Paula.Application.Communication;
 using Super.Paula.Application.Streaming;
 using System.Diagnostics.CodeAnalysis;
 
@@ -10,7 +12,8 @@ namespace Super.Paula.Application
         public static IServiceCollection AddServerStreaming(this IServiceCollection services)
             => services
                 .AddScoped<HubContextResolver>()
-                .AddScoped<IStreamer, Streamer>();
+                .AddScoped<IInspectorStreamer, InspectorStreamer>()
+                .AddScoped<INotificationStreamer, NotificationStreamer>();
 
     }
 }
