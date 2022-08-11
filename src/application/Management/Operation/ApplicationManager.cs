@@ -12,11 +12,10 @@ namespace Super.Paula.Application.Operation
             _repositoryCreator = repositoryCreator;
         }
 
-        public ValueTask InitializeAsync()
-            => _repositoryCreator.CreateApplicationAsync();
+        public ValueTask InitializeAsync(string organization)
+            => _repositoryCreator.CreateApplicationAsync(organization);
 
-        public ValueTask PrugeAsync()
-            => _repositoryCreator.DestroyApplicationAsync();
-
+        public ValueTask PrugeAsync(string organization) 
+            => _repositoryCreator.DestroyApplicationAsync(organization);
     }
 }

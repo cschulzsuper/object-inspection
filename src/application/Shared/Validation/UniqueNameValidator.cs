@@ -3,23 +3,16 @@
     public static class UniqueNameValidator
     {
         public static bool IsValid(object value)
-        {
-            if (value is string stringValue)
-            {
-                value = stringValue
-                    .Replace("-", string.Empty)
-                    .Trim();
-            }           
-            
-            return InvalidValuesValidator.IsValid(value, 
+        {          
+            return InvalidValueValidator.IsValid(value, 
                 string.Empty,
-                "businessobject",
-                "businessobjectinspection",
-                "businessobjectinspectionaudit",
-                "businessobjectinspectionauditrecord",
+                "business-object",
+                "business-object-inspection",
+                "business-object-inspection-audit",
+                "business-object-inspection-audit-record",
                 "identity",
                 "extension",
-                "identityinspector",
+                "identity-inspector",
                 "inspection",
                 "inspector",
                 "organization",

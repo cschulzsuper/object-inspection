@@ -37,8 +37,6 @@ namespace Super.Paula.Templates.Playwright.AdventureTours
                     services.AddServerData(context.HostingEnvironment.IsDevelopment());
 
                     services
-                        .AddScoped<Purge>()
-                        .AddScoped<Initialization>()
                         .AddScoped<InitializationAdministration>()
                         .AddScoped<InitializationAdventureTours>();
 

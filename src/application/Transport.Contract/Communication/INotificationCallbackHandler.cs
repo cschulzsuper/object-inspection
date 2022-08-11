@@ -1,7 +1,5 @@
-﻿using Super.Paula.Application.Communication.Requests;
-using Super.Paula.Application.Communication.Responses;
+﻿using Super.Paula.Application.Communication.Responses;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Super.Paula.Application.Communication

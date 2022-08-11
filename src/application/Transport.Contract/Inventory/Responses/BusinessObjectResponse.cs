@@ -1,10 +1,9 @@
-﻿using Super.Paula.Application.Inventory.Converter;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 namespace Super.Paula.Application.Inventory.Responses
 {
-    [JsonConverter(typeof(BusinessObjectResponseConverter))]
+    [JsonConverter(typeof(BusinessObjectResponseJsonConverter))]
     public class BusinessObjectResponse
     {
         public string UniqueName { get; set; } = string.Empty;

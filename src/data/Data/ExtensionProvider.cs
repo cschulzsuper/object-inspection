@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Super.Paula.Application.Setup;
+using Super.Paula.Application.Operation;
 using System;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -22,34 +22,28 @@ namespace Super.Paula.Data
             _cache = cache;
         }
 
-        public Extension? this[string type]
+        public Extension? Get(string aggregateType)
         {
-            set
+            var extensionCacheKey = CreateKey(aggregateType);
+
+            if (_cache.TryGetValue(extensionCacheKey, out var value) && value != null)
             {
-                var extensionCacheKey = CreateKey(type);
-                _cache[extensionCacheKey] = value;
-            }
-            get
+                return value;
+            };
+
+            // TODO check if it exists
+
+            var extension = _services
+                    .GetRequiredService<PaulaContexts>().Operation
+                    .Set<Extension>()
+                    .SingleOrDefault(x => x.AggregateType == aggregateType);
+
+            if (extension != null)
             {
-                var extensionCacheKey = CreateKey(type);
-
-                if (_cache.TryGetValue(extensionCacheKey, out var value) && value != null)
-                {
-                    return value;
-                };
-
-                var extension = _services
-                        .GetRequiredService<PaulaSetupContext>()
-                        .Set<Extension>()
-                        .SingleOrDefault(x => x.Type == type);
-
-                if (extension != null)
-                {
-                    _cache[extensionCacheKey] = extension;
-                }
-
-                return extension;
+                _cache[extensionCacheKey] = extension;
             }
+
+            return extension;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

@@ -8,7 +8,7 @@ namespace Super.Paula.Application
 {
     [SuppressMessage("Style", "IDE1006")]
     public static class _Endpoints
-    {
+    { 
         public const string RouteSeparator = "/";
 
         public static IEndpointRouteBuilder MapRestCollection(this IEndpointRouteBuilder endpoints,

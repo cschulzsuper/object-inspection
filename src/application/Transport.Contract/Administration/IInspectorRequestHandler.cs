@@ -1,6 +1,5 @@
 ﻿using Super.Paula.Application.Administration.Requests;
 using Super.Paula.Application.Administration.Responses;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

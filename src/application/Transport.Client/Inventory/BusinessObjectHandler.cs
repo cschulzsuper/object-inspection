@@ -3,6 +3,7 @@ using Super.Paula.Application.Inventory.Requests;
 using Super.Paula.Application.Inventory.Responses;
 using Super.Paula.Environment;
 using Super.Paula.ErrorHandling;
+using Super.Paula.JsonConversion;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -58,12 +59,7 @@ namespace Super.Paula.Client.Inventory
 
             var responseStream = await responseMessage.Content.ReadAsStreamAsync(cancellationToken);
             var response = JsonSerializer.DeserializeAsyncEnumerable<BusinessObjectResponse>(
-                responseStream,
-                new JsonSerializerOptions(JsonSerializerDefaults.Web)
-                {
-                    DefaultBufferSize = 128
-                },
-                cancellationToken);
+                responseStream, CustomJsonSerializerOptions.WebResponse, cancellationToken);
 
             await foreach (var responseItem in response
                 .WithCancellation(cancellationToken))

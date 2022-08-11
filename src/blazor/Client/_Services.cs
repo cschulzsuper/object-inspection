@@ -26,7 +26,8 @@ using Super.Paula.Client.Auth;
 using Super.Paula.Application.Auth;
 using Super.Paula.Client.Storage;
 using Super.Paula.Application.Localization;
-using Super.Paula.Client.Setup;
+using Super.Paula.Application.Operation;
+using Super.Paula.Client.Operation;
 
 namespace Super.Paula.Client
 {
@@ -264,7 +265,7 @@ namespace Super.Paula.Client
             if (isWebAssembly)
             {
                 services
-                    .AddHttpClient<InspectorAvatarHandler>()
+                    .AddHttpClient<IInspectorAvatarHandler, InspectorAvatarHandler>()
                     .AddHttpMessageHandler<AuthenticationMessageHandler>();
             }
             else
@@ -289,20 +290,22 @@ namespace Super.Paula.Client
             if (isWebAssembly)
             {
                 services
-                    .AddHttpClient<ExtensionHandler>()
+                    .AddHttpClient<IExtensionHandler, ExtensionHandler>()
                     .AddHttpMessageHandler<AuthenticationMessageHandler>();
 
                 services
-                    .AddHttpClient<ExtensionFieldTypeHandler>()
+                    .AddHttpClient<IExtensionFieldTypeHandler, ExtensionFieldTypeHandler>()
                     .AddHttpMessageHandler<AuthenticationMessageHandler>();
 
                 services
-                    .AddHttpClient<ExtensionTypeHandler>()
+                    .AddHttpClient<IExtensionTypeHandler, ExtensionTypeHandler>()
                     .AddHttpMessageHandler<AuthenticationMessageHandler>();
             }
             else
             {
-                services.AddHttpClientHandler<IInspectorAvatarHandler, InspectorAvatarHandler>();
+                services.AddHttpClientHandler<IExtensionHandler, ExtensionHandler>();
+                services.AddHttpClientHandler<IExtensionFieldTypeHandler, ExtensionFieldTypeHandler>();
+                services.AddHttpClientHandler<IExtensionTypeHandler, ExtensionTypeHandler>();
             }
 
             return services;

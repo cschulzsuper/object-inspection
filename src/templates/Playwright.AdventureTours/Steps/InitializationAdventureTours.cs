@@ -3,6 +3,7 @@ using Super.Paula.Environment;
 using Super.Paula.Templates.Playwright.AdventureTours.Environment;
 using Super.Paula.Templates.Playwright.Auditing;
 using Super.Paula.Templates.Playwright.Auth;
+using Super.Paula.Templates.Playwright.Extension;
 using Super.Paula.Templates.Playwright.Guidelines;
 using Super.Paula.Templates.Playwright.Inventory;
 using System.Threading.Tasks;
@@ -50,12 +51,16 @@ namespace Super.Paula.Templates.Playwright.AdventureTours.Steps
                 adventureToursChiefPassword,
                 withAutomaticInspectorLogin: true);
 
-            await page.CreateBusinessObjectAsync("Radio #1234", "radio-1234", adventureToursDemoInspector);
-            await page.CreateBusinessObjectAsync("Radio #1424", "radio-1424", adventureToursDemoInspector);
-            await page.CreateBusinessObjectAsync("GPS Tracker #2234", "gps-tracker-2234", adventureToursDemoInspector);
-            await page.CreateBusinessObjectAsync("GPS Tracker #2424", "gps-tracker-2424", adventureToursDemoInspector);
-            await page.CreateBusinessObjectAsync("Flashlight #134", "flashlight-134", adventureToursDemoInspector);
-            await page.CreateBusinessObjectAsync("Flashlight #142", "flashlight-142", adventureToursDemoInspector);
+            await page.CreateExtensionAsync("business-object");
+            await page.CreateExtensionFieldAsync("business-object","color", "Color", "color");
+
+
+            await page.CreateBusinessObjectAsync("Radio #1234", "radio-1234", adventureToursDemoInspector, "Color");
+            await page.CreateBusinessObjectAsync("Radio #1424", "radio-1424", adventureToursDemoInspector, "Color");
+            await page.CreateBusinessObjectAsync("GPS Tracker #2234", "gps-tracker-2234", adventureToursDemoInspector, "Color");
+            await page.CreateBusinessObjectAsync("GPS Tracker #2424", "gps-tracker-2424", adventureToursDemoInspector, "Color");
+            await page.CreateBusinessObjectAsync("Flashlight #134", "flashlight-134", adventureToursDemoInspector, "Color");
+            await page.CreateBusinessObjectAsync("Flashlight #142", "flashlight-142", adventureToursDemoInspector, "Color");
 
             await page.CreateInspectionAsync("Charged", "charged");
             await page.CreateInspectionAsync("Operational", "operational");

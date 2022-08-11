@@ -8,7 +8,7 @@ namespace Super.Paula.Data
         public object Create(DbContext context, bool designTime)
             => context is PaulaContext paulaContext
                 ? (context.GetType(), paulaContext.State.CurrentOrganization, paulaContext.State.ExtensionModelIndicator, designTime)
-                : context.GetType();
+                : (context.GetType(), designTime);
 
         public object Create(DbContext context)
             => Create(context, false);

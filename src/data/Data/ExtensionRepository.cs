@@ -1,4 +1,4 @@
-﻿using Super.Paula.Application.Setup;
+﻿using Super.Paula.Application.Operation;
 using Super.Paula.Data.Mappings;
 using System.Threading.Tasks;
 
@@ -9,12 +9,12 @@ namespace Super.Paula.Data
         private readonly ExtensionCache _extensionCache;
 
         public ExtensionRepository(
-            PaulaSetupContext repositoryContext, 
+            PaulaContexts paulaContexts, 
             PaulaContextState appState, 
             IPartitionKeyValueGenerator<Extension> partitionKeyValueGenerator,
             ExtensionCache extensionCache)
 
-            : base(repositoryContext, appState, partitionKeyValueGenerator)
+            : base(paulaContexts.Operation, appState, partitionKeyValueGenerator)
         {
             _extensionCache = extensionCache;
         }
@@ -23,21 +23,21 @@ namespace Super.Paula.Data
         {
             await base.InsertAsync(entity);
 
-            _extensionCache[entity.Type] = null;
+            _extensionCache[entity.AggregateType] = null;
         }
 
         public override async ValueTask UpdateAsync(Extension entity)
         {
             await base.UpdateAsync(entity);
 
-            _extensionCache[entity.Type] = null;
+            _extensionCache[entity.AggregateType] = null;
         }
 
         public override async ValueTask DeleteAsync(Extension entity)
         {
             await base.DeleteAsync(entity);
 
-            _extensionCache[entity.Type] = null;
+            _extensionCache[entity.AggregateType] = null;
         }
     }
 }

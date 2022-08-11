@@ -8,8 +8,8 @@ using Super.Paula.Application.Auth;
 using Super.Paula.Application.Communication;
 using Super.Paula.Application.Guidelines;
 using Super.Paula.Application.Inventory;
+using Super.Paula.Application.Operation;
 using Super.Paula.Application.Orchestration;
-using Super.Paula.Application.Setup;
 using Super.Paula.Authorization;
 using Super.Paula.Data.Mappings;
 using Super.Paula.Data.Mappings.Administration;
@@ -18,8 +18,8 @@ using Super.Paula.Data.Mappings.Auth;
 using Super.Paula.Data.Mappings.Communication;
 using Super.Paula.Data.Mappings.Guidelines;
 using Super.Paula.Data.Mappings.Inventory;
+using Super.Paula.Data.Mappings.Operation;
 using Super.Paula.Data.Mappings.Orchestration;
-using Super.Paula.Data.Mappings.Setup;
 using Super.Paula.Environment;
 using System;
 using System.Diagnostics.CodeAnalysis;
@@ -103,11 +103,11 @@ namespace Super.Paula.Data
                 }
             });
 
-            services.AddDbContext<PaulaSetupContext>((services, options) =>
+            services.AddDbContext<PaulaOperationContext>((services, options) =>
             {
                 var appSeetings = services.GetRequiredService<AppSettings>();
 
-                options.ReplaceService<IModelCacheKeyFactory, PaulaSetupContextModelCacheKeyFactory>();
+                options.ReplaceService<IModelCacheKeyFactory, PaulaOperationContextModelCacheKeyFactory>();
 
                 options.UseCosmos(
                     appSeetings.CosmosEndpoint,
@@ -138,6 +138,7 @@ namespace Super.Paula.Data
             });
 
 
+            services.AddScoped<PaulaContexts>();
             services.AddScoped<PaulaContextState>();
 
             services.AddScoped<ExtensionProvider>();
@@ -233,8 +234,8 @@ namespace Super.Paula.Data
             {
                 var extensionProvider = services.GetRequiredService<ExtensionProvider>();
 
-                var extensionTags = ExtensionTypes.All
-                        .Select(x => extensionProvider[x])
+                var extensionTags = ExtensionAggregateTypes.All
+                        .Select(extensionProvider.Get)
                         .Where(x => x != null)
                         .Select(x => x!.ETag);
 

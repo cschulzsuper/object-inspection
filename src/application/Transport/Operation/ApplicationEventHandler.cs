@@ -2,6 +2,9 @@
 using Super.Paula.Application.Administration.Events;
 using Super.Paula.Application.Orchestration;
 using Super.Paula.Authorization;
+using Super.Paula.Environment;
+using System;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Super.Paula.Application.Operation
@@ -10,30 +13,34 @@ namespace Super.Paula.Application.Operation
     {
         public async Task HandleAsync(EventHandlerContext context, OrganizationCreationEvent @event)
         {
-            var organizationValid = context.User.GetOrganization().Equals(@event.UniqueName);
-
-            if (!organizationValid)
-            {
-                return;
-            }
+            Guard(context);
 
             var applicationManager = context.Services.GetRequiredService<IApplicationManager>();
 
-            await applicationManager.InitializeAsync();
+            await applicationManager.InitializeAsync(@event.UniqueName);
         }
 
         public async Task HandleAsync(EventHandlerContext context, OrganizationDeletionEvent @event)
         {
-            var organizationValid = context.User.GetOrganization().Equals(@event.UniqueName);
-
-            if (!organizationValid)
-            {
-                return;
-            }
+            Guard(context);
 
             var applicationManager = context.Services.GetRequiredService<IApplicationManager>();
 
-            await applicationManager.PrugeAsync();
+            await applicationManager.PrugeAsync(@event.UniqueName);
         }
+
+        private void Guard(EventHandlerContext context)
+        {
+            var appSettings = context.Services.GetRequiredService<AppSettings>();
+
+            var contextUserIdentity = context.User.GetIdentity();
+            var contextUserIdentityUnauthorized =
+                appSettings.MaintainerIdentity != contextUserIdentity;
+
+            if (contextUserIdentityUnauthorized)
+            {
+                throw new TransportException($"Unauthorized identity '{contextUserIdentity}'");
+            }
+       }
     }
 }

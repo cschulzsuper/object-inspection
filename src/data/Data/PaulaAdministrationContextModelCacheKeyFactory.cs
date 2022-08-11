@@ -6,7 +6,7 @@ namespace Super.Paula.Data
     public class PaulaAdministrationContextModelCacheKeyFactory : IModelCacheKeyFactory
     {
         public object Create(DbContext context, bool designTime)
-            => context.GetType();
+            => (context.GetType(), designTime);
 
         public object Create(DbContext context)
             => Create(context, false);

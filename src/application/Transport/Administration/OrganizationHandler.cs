@@ -99,38 +99,25 @@ namespace Super.Paula.Application.Administration
         {
             var entity = await _organizationManager.GetAsync(organization);
 
-            var required =
-                entity.Activated != request.Activated ||
-                entity.DisplayName != request.DisplayName ||
-                entity.ChiefInspector != request.ChiefInspector ||
-                entity.UniqueName != request.UniqueName;
+            entity.Activated = request.Activated;
+            entity.DisplayName = request.DisplayName;
+            entity.ChiefInspector = request.ChiefInspector;
+            entity.UniqueName = request.UniqueName;
+            entity.ETag = request.ETag;
 
-            if (required)
-            {
-                entity.Activated = request.Activated;
-                entity.DisplayName = request.DisplayName;
-                entity.ChiefInspector = request.ChiefInspector;
-                entity.UniqueName = request.UniqueName;
-                entity.ETag = request.ETag;
-
-                await _organizationManager.UpdateAsync(entity);
-                await _organizationEventService.CreateOrganizationUpdateEventAsync(entity);
-            }
+            await _organizationManager.UpdateAsync(entity);
+            await _organizationEventService.CreateOrganizationUpdateEventAsync(entity);
         }
 
         public async ValueTask<ActivateOrganizationResponse> ActivateAsync(string organization, string etag)
         {
             var entity = await _organizationManager.GetAsync(organization);
 
-            var required = !entity.Activated;
-            if (required)
-            {
-                entity.Activated = true;
-                entity.ETag = etag;
+            entity.Activated = true;
+            entity.ETag = etag;
 
-                await _organizationManager.UpdateAsync(entity);
-                await _organizationEventService.CreateOrganizationUpdateEventAsync(entity);
-            }
+            await _organizationManager.UpdateAsync(entity);
+            await _organizationEventService.CreateOrganizationUpdateEventAsync(entity);
 
             return new ActivateOrganizationResponse
             {
@@ -142,15 +129,11 @@ namespace Super.Paula.Application.Administration
         {
             var entity = await _organizationManager.GetAsync(organization);
 
-            var required = entity.Activated;
-            if (required)
-            {
-                entity.Activated = false;
-                entity.ETag = etag;
+            entity.Activated = false;
+            entity.ETag = etag;
 
-                await _organizationManager.UpdateAsync(entity);
-                await _organizationEventService.CreateOrganizationUpdateEventAsync(entity);
-            }
+            await _organizationManager.UpdateAsync(entity);
+            await _organizationEventService.CreateOrganizationUpdateEventAsync(entity);
 
             return new DeactivateOrganizationResponse
             {

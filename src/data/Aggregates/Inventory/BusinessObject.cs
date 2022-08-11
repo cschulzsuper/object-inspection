@@ -9,7 +9,7 @@ namespace Super.Paula.Application.Inventory
         public string DisplayName { get; set; } = string.Empty;
         public string Inspector { get; set; } = string.Empty;
 
-        private IDictionary<string, object> _data = new Dictionary<string, object>();
+        private readonly IDictionary<string, object> _data = new Dictionary<string, object>();
 
         public object? this[string key]
         {

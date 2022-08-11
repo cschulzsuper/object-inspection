@@ -1,5 +1,4 @@
-﻿using Super.Paula.Application.Runtime;
-using Super.Paula.RuntimeData;
+﻿using Super.Paula.RuntimeData;
 
 namespace Super.Paula.Application.Operation
 {

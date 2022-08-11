@@ -3,6 +3,7 @@
 @inject ITranslator<Edit> Translator
 @inject NavigationManager NavigationManager
 @inject IBusinessObjectHandler BusinessObjectHandler
+@inject IExtensionHandler ExtensionHandler
 
 @attribute [Authorize("ManagementRead")]
 
@@ -10,7 +11,7 @@
     <h1>@Translator[$"Edit business object"]</h1>
 </div>
 
-@if (_request == null)
+@if (_request == null || _extension == null)
 {
     <p><em>Loading...</em></p>
 }
@@ -22,16 +23,30 @@ else
         <div class="container-fluid">
             <div class="form-group">
                 <label>@Translator[$"Unique name"]</label>
-                <InputText class="form-control" id="uniqueName" @bind-Value="_request.UniqueName" readonly/>
+                <InputText class="form-control" id="businessObjectUniqueName" @bind-Value="_request.UniqueName" readonly/>
             </div>
             <div class="form-group">
                 <label>@Translator[$"Display name"]</label>
-                <InputText class="form-control" id="displayName" @bind-Value="_request.DisplayName"  />
+                <InputText class="form-control" id="businessObjectDisplayName" @bind-Value="_request.DisplayName"  />
             </div>
             <div class="form-group">
                 <label>@Translator[$"Inspector"]</label>
-                <InputText class="form-control" id="inspector" @bind-Value="_request.Inspector" />
+                <InputText class="form-control" id="businessObjectInspector" @bind-Value="_request.Inspector" />
             </div>
+        </div>
+
+        <div class="container-fluid">
+            @foreach(var extensionField in _extension.Fields)
+            {
+                <div class="form-group">
+                    <label>@Translator[extensionField.DisplayName]</label>
+                    <input 
+                        class="form-control" 
+                        id="@GetExtensionFieldInputId(extensionField)"
+                        value="@_request[extensionField.DataName]"
+                        @onchange="@(e => _request[extensionField.DataName] = e.Value)" />
+                </div>
+            }
         </div>
 
         @if(context.GetValidationMessages().Any())
@@ -57,10 +72,14 @@ else
     [Parameter]
     public string BusinessObject { get; set; } = string.Empty;
 
+    private ExtensionResponse? _extension;
+
     private BusinessObjectRequest? _request = null;
 
     protected override async Task OnInitializedAsync()
     {
+        _extension = await ExtensionHandler.GetAsync(ExtensionAggregateTypes.BusinessObject);
+
         var response = await BusinessObjectHandler.GetAsync(BusinessObject);
 
         _request = new BusinessObjectRequest
@@ -70,6 +89,11 @@ else
             UniqueName = response.UniqueName,
             ETag = response.ETag,
         };
+
+        foreach(var extension in response)
+        {
+            _request[extension.Key] = response[extension.Key];
+        }
     }
 
     private async Task OnValidSubmitAsync()
@@ -77,4 +101,7 @@ else
         await BusinessObjectHandler.ReplaceAsync(BusinessObject, _request!);
         NavigationManager.NavigateTo("/business-objects");
     }
+
+    private string GetExtensionFieldInputId(ExtensionFieldResponse extensionField)
+        => $"businessObject{char.ToUpperInvariant(extensionField.DataName[0])}{extensionField.DataName[1..]}";
 }

@@ -1,12 +1,11 @@
-﻿using Super.Paula.Application.Inventory.Converter;
-using Super.Paula.Validation;
+﻿using Super.Paula.Validation;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace Super.Paula.Application.Inventory.Requests
 {
-    [JsonConverter(typeof(BusinessObjectRequestConverter))]
+    [JsonConverter(typeof(BusinessObjectRequestJsonConverter))]
     public class BusinessObjectRequest
     {
         public string ETag { get; set; } = string.Empty;

@@ -11,6 +11,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Super.Paula.Application.Operation;
 using Super.Paula.ErrorHandling;
+using Super.Paula.JsonConversion;
 using Super.Paula.Swagger;
 using Super.Paula.Validation;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -35,6 +36,13 @@ namespace Super.Paula
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>(options =>
+            {
+                options.SerializerOptions.PropertyNameCaseInsensitive = true;
+                options.SerializerOptions.PropertyNamingPolicy = new CustomJsonCamelCaseNamingPolicy();
+                options.SerializerOptions.Converters.Add(new ObjectJsonConverter());
+            });
+
             services.AddEndpointsApiExplorer();
             services.AddSingleton<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerGenOptions>();
             services.AddSwaggerGen();

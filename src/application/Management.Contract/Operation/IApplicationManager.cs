@@ -4,7 +4,8 @@ namespace Super.Paula.Application.Operation
 {
     public interface IApplicationManager
     {
-        ValueTask InitializeAsync();
-        ValueTask PrugeAsync();
+        ValueTask InitializeAsync(string organization);
+
+        ValueTask PrugeAsync(string organization);
     }
 }

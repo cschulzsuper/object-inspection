@@ -1,7 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Super.Paula.Application.Inventory;
-using Super.Paula.Application.Setup;
+using Super.Paula.Application.Operation;
+using System.Linq;
 
 namespace Super.Paula.Data.Mappings.Inventory
 {
@@ -54,18 +55,25 @@ namespace Super.Paula.Data.Mappings.Inventory
                 .HasMaxLength(140)
                 .IsRequired();
 
-            var extension = _extensions[ExtensionTypes.BusinessObject];
+            var extension = _extensions.Get(ExtensionAggregateTypes.BusinessObject);
 
             if (extension != null)
             {
                 foreach (var extensionField in extension.Fields)
                 {
-                    var extensionFieldClrType = ExtensionFieldTypes.GetClrType(extensionField.Type);
-                    var extensionFieldName = extensionField.Name;
+                    var extensionFieldClrType = ExtensionFieldDataTypes.GetClrType(extensionField.DataType);
+                    var extensionFieldDataName = extensionField.DataName;
 
-                    builder.IndexerProperty(
-                        extensionFieldClrType, 
-                        extensionFieldName);
+                    var propertyAlreadyPresent = builder.Metadata
+                        .GetProperties()
+                        .Any(x => x.Name.Equals(extensionFieldDataName, System.StringComparison.InvariantCultureIgnoreCase));
+
+                    if (!propertyAlreadyPresent)
+                    {
+                        builder.IndexerProperty(
+                            extensionFieldClrType,
+                            extensionFieldDataName);
+                    }
                 }
             }
         }

@@ -3,6 +3,7 @@ using Super.Paula.Application.Auditing.Requests;
 using Super.Paula.Application.Auditing.Responses;
 using Super.Paula.Environment;
 using Super.Paula.ErrorHandling;
+using Super.Paula.JsonConversion;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -58,12 +59,7 @@ namespace Super.Paula.Client.Auditing
 
             var responseStream = await responseMessage.Content.ReadAsStreamAsync(cancellationToken);
             var response = JsonSerializer.DeserializeAsyncEnumerable<BusinessObjectInspectionAuditRecordResponse>(
-                responseStream,
-                new JsonSerializerOptions(JsonSerializerDefaults.Web)
-                {
-                    DefaultBufferSize = 128
-                },
-                cancellationToken);
+                responseStream, CustomJsonSerializerOptions.WebResponse, cancellationToken);
 
             await foreach (var responseItem in response
                 .WithCancellation(cancellationToken))
@@ -81,11 +77,7 @@ namespace Super.Paula.Client.Auditing
 
             var responseStream = await responseMessage.Content.ReadAsStreamAsync();
             var response = JsonSerializer.DeserializeAsyncEnumerable<BusinessObjectInspectionAuditRecordResponse>(
-                responseStream,
-                new JsonSerializerOptions(JsonSerializerDefaults.Web)
-                {
-                    DefaultBufferSize = 128
-                });
+                responseStream, CustomJsonSerializerOptions.WebResponse);
 
             await foreach (var responseItem in response)
             {

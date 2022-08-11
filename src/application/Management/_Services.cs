@@ -7,7 +7,6 @@ using Super.Paula.Application.Guidelines;
 using Super.Paula.Application.Inventory;
 using Super.Paula.Application.Operation;
 using Super.Paula.Application.Orchestration;
-using Super.Paula.Application.Setup;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Super.Paula.Application
@@ -99,6 +98,8 @@ namespace Super.Paula.Application
         private static IServiceCollection AddServerManagementSetup(this IServiceCollection services)
         {
             services.AddScoped<IExtensionManager, ExtensionManager>();
+            services.AddScoped<IExtensionAggregateTypeManager, ExtensionAggregateTypeManager>();
+            services.AddScoped<IExtensionFieldTypeManager, ExtensionFieldTypeManager>();
 
             return services;
         }
