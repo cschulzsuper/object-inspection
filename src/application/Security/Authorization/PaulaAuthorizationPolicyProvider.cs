@@ -24,7 +24,6 @@ namespace Super.Paula.Authorization
                     "AuditingLimited" => _Policies.AuditingLimitedPolicy,
 
                     "Impersonation" => _Policies.ImpersonationPolicy,
-                    "Streaming" => _Policies.StreamingPolicy,
                     _ => null
                 });
     }
