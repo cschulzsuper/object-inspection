@@ -12,7 +12,7 @@ namespace Super.Paula.Application.Communication
         public async Task HandleAsync(EventHandlerContext context, BusinessObjectInspectorEvent @event)
         {
             var notificationManager = context.Services.GetRequiredService<INotificationManager>();
-            var notificationAnnouncer = context.Services.GetRequiredService<INotificationAnnouncer>();
+            var streamer = context.Services.GetRequiredService<INotificationStreamer>();
 
             var (date, time) = DateTimeNumbers.GlobalNow;
 
@@ -39,7 +39,7 @@ namespace Super.Paula.Application.Communication
                     Target = notification.Target
                 };
 
-                await notificationAnnouncer.AnnounceCreationAsync(response);
+                await streamer.StreamNotificationCreationAsync(response);
             }
 
             if (!string.IsNullOrWhiteSpace(@event.NewInspector) &&
@@ -65,14 +65,14 @@ namespace Super.Paula.Application.Communication
                     Target = notification.Target
                 };
 
-                await notificationAnnouncer.AnnounceCreationAsync(response);
+                await streamer.StreamNotificationCreationAsync(response);
             }
         }
 
         public async Task HandleAsync(EventHandlerContext context, InspectorBusinessObjectEvent @event)
         {
             var notificationManager = context.Services.GetRequiredService<INotificationManager>();
-            var notificationAnnouncer = context.Services.GetRequiredService<INotificationAnnouncer>();
+            var streamer = context.Services.GetRequiredService<INotificationStreamer>();
 
             if (@event.NewAuditSchedulePending == true &&
                 @event.NewAuditSchedulePending != @event.OldAuditSchedulePending &&
@@ -101,7 +101,7 @@ namespace Super.Paula.Application.Communication
                     Target = notification.Target
                 };
 
-                await notificationAnnouncer.AnnounceCreationAsync(response);
+                await streamer.StreamNotificationCreationAsync(response);
             }
 
             if (@event.NewAuditScheduleDelayed == true &&
@@ -130,7 +130,7 @@ namespace Super.Paula.Application.Communication
                     Target = notification.Target
                 };
 
-                await notificationAnnouncer.AnnounceCreationAsync(response);
+                await streamer.StreamNotificationCreationAsync(response);
             }
         }
     }

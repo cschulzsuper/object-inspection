@@ -30,32 +30,32 @@ namespace Super.Paula.Application.Communication
 
         private static Delegate Get =>
             [Authorize("AuditingLimited")]
-            (INotificationHandler handler, string inspector, int date, int time)
+            (INotificationRequestHandler handler, string inspector, int date, int time)
                 => handler.GetAsync(inspector, date, time);
 
         private static Delegate GetAll =>
             [Authorize("AuditingLimited")]
-            (INotificationHandler handler)
+            (INotificationRequestHandler handler)
                 => handler.GetAll();
 
         private static Delegate GetAllForInspector =>
             [Authorize("AuditingLimited")]
-            (INotificationHandler handler, string inspector)
+            (INotificationRequestHandler handler, string inspector)
                 => handler.GetAllForInspector(inspector);
 
         private static Delegate Create =>
             [Authorize("Maintainance")]
-            (INotificationHandler handler, string inspector, NotificationRequest request)
+            (INotificationRequestHandler handler, string inspector, NotificationRequest request)
                 => handler.CreateAsync(inspector, request);
 
         private static Delegate Replace =>
             [Authorize("Maintainance")]
-            (INotificationHandler handler, string inspector, int date, int time, NotificationRequest request)
+            (INotificationRequestHandler handler, string inspector, int date, int time, NotificationRequest request)
                 => handler.ReplaceAsync(inspector, date, time, request);
 
         private static Delegate Delete =>
             [Authorize("AuditingFull")]
-            (INotificationHandler handler, string inspector, int date, int time, [FromHeader(Name = "If-Match")] string etag)
+            (INotificationRequestHandler handler, string inspector, int date, int time, [FromHeader(Name = "If-Match")] string etag)
                 => handler.DeleteAsync(inspector, date, time, etag);
     }
 }

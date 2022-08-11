@@ -9,28 +9,25 @@ using System.Threading.Tasks;
 
 namespace Super.Paula.Application.Administration
 {
-    public class InspectorHandler : IInspectorHandler
+    public class InspectorRequestHandler : IInspectorRequestHandler
     {
         private readonly IInspectorManager _inspectorManager;
         private readonly IOrganizationManager _organizationManager;
         private readonly IIdentityInspectorManager _identityInspectorManager;
         private readonly ClaimsPrincipal _user;
-        private readonly IInspectorAnnouncer _inspectorAnnouncer;
         private readonly IInspectorContinuationService _inspectorContinuationService;
 
-        public InspectorHandler(
+        public InspectorRequestHandler(
             IInspectorManager inspectorManager,
             IOrganizationManager organizationManager,
             IIdentityInspectorManager identityInspectorManager,
             ClaimsPrincipal claimsPrincipal,
-            IInspectorAnnouncer inspectorAnnouncer,
             IInspectorContinuationService inspectorContinuationService)
         {
             _inspectorManager = inspectorManager;
             _organizationManager = organizationManager;
             _identityInspectorManager = identityInspectorManager;
             _user = claimsPrincipal;
-            _inspectorAnnouncer = inspectorAnnouncer;
             _inspectorContinuationService = inspectorContinuationService;
         }
 
@@ -207,14 +204,5 @@ namespace Super.Paula.Application.Administration
                            Activated = entity.Activated,
                            Organization = entity.Organization
                        }));
-
-        public Task<IDisposable> OnBusinessObjectCreationAsync(Func<string, InspectorBusinessObjectResponse, Task> handler)
-            => _inspectorAnnouncer.OnBusinessObjectCreationAsync(handler);
-
-        public Task<IDisposable> OnBusinessObjectUpdateAsync(Func<string, InspectorBusinessObjectResponse, Task> handler)
-            => _inspectorAnnouncer.OnBusinessObjectUpdateAsync(handler);
-
-        public Task<IDisposable> OnBusinessObjectDeletionAsync(Func<string, string, Task> handler)
-            => _inspectorAnnouncer.OnBusinessObjectDeletionAsync(handler);
     }
 }
