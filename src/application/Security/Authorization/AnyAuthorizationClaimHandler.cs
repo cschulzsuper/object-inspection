@@ -8,7 +8,7 @@ namespace Super.Paula.Authorization
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, AnyAuthorizationClaimRequirement requirement)
         {
             var isAuthorized = context.User
-                .HasAuthorizations(requirement.Authorizations);
+                .HasAnyAuthorization(requirement.Authorizations);
 
             if (isAuthorized)
             {

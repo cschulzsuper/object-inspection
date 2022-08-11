@@ -70,7 +70,7 @@ namespace Super.Paula.Authorization
         public static bool HasAuthorization(this ClaimsPrincipal principal, string authorization)
             => principal.HasClaim("Authorization", authorization);
 
-        public static bool HasAuthorizations(this ClaimsPrincipal principal, params string[] authorizations)
+        public static bool HasAnyAuthorization(this ClaimsPrincipal principal, params string[] authorizations)
             => principal.FindAll("Authorization")
                 .Where(x => authorizations.Contains(x.Value))
                 .Any(x => !principal.FindAll("AuthorizationFilter").Any() ||

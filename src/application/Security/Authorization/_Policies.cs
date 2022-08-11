@@ -37,11 +37,6 @@ namespace Super.Paula.Authorization
                 .AddRequirements(new AnyAuthorizationClaimRequirement("Impersonator"))
                 .Build();
 
-        public static AuthorizationPolicy StreamingPolicy =>
-            new AuthorizationPolicyBuilder()
-                .AddRequirements(new AnyAuthorizationClaimRequirement("Streamer"))
-                .Build();
-
         public static AuthorizationPolicy ManagementReadPolicy =>
             new AuthorizationPolicyBuilder()
                 .AddRequirements(new AnyAuthorizationClaimRequirement("Chief", "Observer"))
