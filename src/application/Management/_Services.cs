@@ -24,7 +24,7 @@ namespace Super.Paula.Application
             services.AddServerManagementInventory();
             services.AddServerManagementOperation();
             services.AddServerManagementOrchestration();
-            services.AddServerManagementStorage();
+            services.AddServerManagementSetup();
 
             return services;
         }
@@ -34,6 +34,7 @@ namespace Super.Paula.Application
             services.AddScoped<IInspectorManager, InspectorManager>();
             services.AddScoped<IIdentityInspectorManager, IdentityInspectorManager>();
             services.AddScoped<IOrganizationManager, OrganizationManager>();
+            services.AddScoped<IInspectorAvatarManager, InspectorAvatarManager>();
 
             return services;
         }
@@ -94,9 +95,11 @@ namespace Super.Paula.Application
             return services;
         }
 
-        private static IServiceCollection AddServerManagementStorage(this IServiceCollection services)
+        private static IServiceCollection AddServerManagementSetup(this IServiceCollection services)
         {
-            services.AddScoped<IInspectorAvatarManager, InspectorAvatarManager>();
+            services.AddScoped<IExtensionManager, ExtensionManager>();
+            services.AddScoped<IExtensionAggregateTypeManager, ExtensionAggregateTypeManager>();
+            services.AddScoped<IExtensionFieldTypeManager, ExtensionFieldTypeManager>();
 
             return services;
         }

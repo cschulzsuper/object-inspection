@@ -3,6 +3,7 @@ using Super.Paula.Application.Administration.Requests;
 using Super.Paula.Application.Administration.Responses;
 using Super.Paula.Environment;
 using Super.Paula.ErrorHandling;
+using Super.Paula.JsonConversion;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -80,11 +81,7 @@ namespace Super.Paula.Client.Administration
 
             var responseStream = await responseMessage.Content.ReadAsStreamAsync();
             var response = JsonSerializer.DeserializeAsyncEnumerable<OrganizationResponse>(
-                responseStream,
-                new JsonSerializerOptions(JsonSerializerDefaults.Web)
-                {
-                    DefaultBufferSize = 128
-                });
+                responseStream, CustomJsonSerializerOptions.WebResponse);
 
             await foreach (var responseItem in response)
             {

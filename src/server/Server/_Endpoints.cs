@@ -5,6 +5,7 @@ using Super.Paula.Application.Auth;
 using Super.Paula.Application.Communication;
 using Super.Paula.Application.Guidelines;
 using Super.Paula.Application.Inventory;
+using Super.Paula.Application.Operation;
 using Super.Paula.Application.Streaming;
 using System.Diagnostics.CodeAnalysis;
 
@@ -20,6 +21,8 @@ namespace Super.Paula
                 .MapBusinessObject()
                 .MapBusinessObjectInspection()
                 .MapBusinessObjectInspectionAuditRecord()
+                .MapExtension()
+                .MapExtensionType()
                 .MapIdentity()
                 .MapInspection()
                 .MapInspector()

@@ -4,6 +4,7 @@ using Super.Paula.Application.Communication.Responses;
 using Super.Paula.Client.Streaming;
 using Super.Paula.Environment;
 using Super.Paula.ErrorHandling;
+using Super.Paula.JsonConversion;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -65,11 +66,7 @@ namespace Super.Paula.Client.Communication
 
             var responseStream = await responseMessage.Content.ReadAsStreamAsync();
             var response = JsonSerializer.DeserializeAsyncEnumerable<NotificationResponse>(
-                responseStream,
-                new JsonSerializerOptions(JsonSerializerDefaults.Web)
-                {
-                    DefaultBufferSize = 128
-                });
+                responseStream, CustomJsonSerializerOptions.WebResponse);
 
             await foreach (var responseItem in response)
             {
@@ -86,11 +83,7 @@ namespace Super.Paula.Client.Communication
 
             var responseStream = await responseMessage.Content.ReadAsStreamAsync();
             var response = JsonSerializer.DeserializeAsyncEnumerable<NotificationResponse>(
-                responseStream,
-                new JsonSerializerOptions(JsonSerializerDefaults.Web)
-                {
-                    DefaultBufferSize = 128
-                });
+                responseStream, CustomJsonSerializerOptions.WebResponse);
 
             await foreach (var responseItem in response)
             {

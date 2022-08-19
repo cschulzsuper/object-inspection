@@ -71,7 +71,10 @@ namespace Super.Paula.Data
         }
 
         public IQueryable<TEntity> GetQueryable()
-            => _repositoryContext.Set<TEntity>().AsNoTracking();
+        {
+            var x = _repositoryContext.Model.ToDebugString();
+            return _repositoryContext.Set<TEntity>().AsNoTracking();
+        }
 
         public IQueryable<TEntity> GetQueryable(FormattableString query)
             => _repositoryContext.Set<TEntity>()
@@ -147,7 +150,7 @@ namespace Super.Paula.Data
         public IAsyncEnumerable<TResult> GetPartitionAsyncEnumerable<TResult>(Func<IQueryable<TEntity>, IQueryable<TResult>> query, params object[] partitionKeyComponents)
             => query.Invoke(GetPartitionQueryable(partitionKeyComponents)).AsAsyncEnumerable();
 
-        public async ValueTask InsertAsync(TEntity entity)
+        public virtual  async ValueTask InsertAsync(TEntity entity)
         {
             _repositoryContext.Add(entity);
 
@@ -158,7 +161,7 @@ namespace Super.Paula.Data
             _repositoryContext.ChangeTracker.Clear();
         }
 
-        public async ValueTask UpdateAsync(TEntity entity)
+        public virtual async ValueTask UpdateAsync(TEntity entity)
         {
             if (_repositoryContext.Entry(entity).State == EntityState.Detached)
             {
@@ -186,7 +189,7 @@ namespace Super.Paula.Data
             _repositoryContext.ChangeTracker.Clear();
         }
 
-        public async ValueTask DeleteAsync(TEntity entity)
+        public virtual async ValueTask DeleteAsync(TEntity entity)
         {
             if (_repositoryContext.Entry(entity).State == EntityState.Detached)
             {

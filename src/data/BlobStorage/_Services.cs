@@ -1,6 +1,5 @@
-﻿using Azure.Storage.Blobs;
+﻿using Azure.Core;
 using Microsoft.Extensions.Azure;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Diagnostics.CodeAnalysis;
 
@@ -17,7 +16,8 @@ namespace Super.Paula.BlobStorage
             {
                 builder
                     .AddBlobServiceClient(connectionString)
-                    .WithName("PaulaBlobStorage");
+                    .WithName("PaulaBlobStorage")
+                    .ConfigureOptions(x => x.Retry.MaxRetries = 0);
             });
 
             return services;

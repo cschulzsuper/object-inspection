@@ -1,6 +1,7 @@
 ﻿using Super.Paula.Application.Administration.Events;
 using Super.Paula.Application.Orchestration;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -9,10 +10,14 @@ namespace Super.Paula.Application.Administration
     public class OrganizationEventService : IOrganizationEventService
     {
         private readonly IEventStorage _eventStorage;
+        private readonly ClaimsPrincipal _user;
 
-        public OrganizationEventService(IEventStorage eventStorage)
+        public OrganizationEventService(
+            IEventStorage eventStorage,
+            ClaimsPrincipal user)
         {
             _eventStorage = eventStorage;
+            _user = user;
         }
 
         public async ValueTask CreateOrganizationCreationEventAsync(Organization entity)
@@ -22,14 +27,7 @@ namespace Super.Paula.Application.Administration
                 entity.DisplayName,
                 entity.Activated);
 
-            var user = new ClaimsPrincipal(
-                    new ClaimsIdentity(
-                        new List<Claim>
-                        {
-                            new Claim("Organization", entity.UniqueName)
-                        }));
-
-            await _eventStorage.AddAsync(@event, user);
+            await _eventStorage.AddAsync(@event, _user);
         }
 
         public async ValueTask CreateOrganizationUpdateEventAsync(Organization entity)
@@ -39,28 +37,14 @@ namespace Super.Paula.Application.Administration
                 entity.DisplayName,
                 entity.Activated);
 
-            var user = new ClaimsPrincipal(
-                    new ClaimsIdentity(
-                        new List<Claim>
-                        {
-                            new Claim("Organization", entity.UniqueName)
-                        }));
-
-            await _eventStorage.AddAsync(@event, user);
+            await _eventStorage.AddAsync(@event, _user);
         }
 
         public async ValueTask CreateOrganizationDeletionEventAsync(string organization)
         {
             var @event = new OrganizationDeletionEvent(organization);
 
-            var user = new ClaimsPrincipal(
-                new ClaimsIdentity(
-                    new List<Claim>
-                    {
-                        new Claim("Organization", organization)
-                    }));
-
-            await _eventStorage.AddAsync(@event, user);
+            await _eventStorage.AddAsync(@event, _user);
         }
     }
 }

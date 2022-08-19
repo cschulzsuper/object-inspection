@@ -23,7 +23,7 @@ namespace Super.Paula.BlobStorage
             try
             {
                 var blobClient = CreateBlobClient(path);
-
+                
                 return await blobClient.OpenReadAsync();
             }
             catch (RequestFailedException exception) when (exception.ErrorCode == BlobErrorCode.BlobNotFound)

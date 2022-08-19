@@ -70,7 +70,7 @@ namespace Super.Paula.Application.Auditing
                 => handler.DeleteAsync(businessObject, inspection, etag);
 
         private static Delegate ReplaceAuditSchedule =>
-            [Authorize("Maintainance")]
+            [Authorize("ManagementFull")]
             (IBusinessObjectInspectionHandler handler,
                 string businessObject,
                 string inspection,
@@ -79,7 +79,7 @@ namespace Super.Paula.Application.Auditing
                 => handler.ReplaceAuditScheduleAsync(businessObject, inspection, request);
 
         private static Delegate CreateAuditOmission =>
-            [Authorize("Maintainance")]
+            [Authorize("ManagementFull")]
             (IBusinessObjectInspectionHandler handler,
                 string businessObject,
                 string inspection,

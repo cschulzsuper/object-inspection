@@ -1,6 +1,7 @@
 ﻿using Super.Paula.Application.Administration.Exceptions;
 using Super.Paula.BlobStorage;
 using Super.Paula.BlobStorage.Exceptions;
+using System;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -23,6 +24,10 @@ namespace Super.Paula.Application.Administration
             catch (BlobNotFoundException exception) 
             {
                 throw new InspectorAvatarNotFoundException($"Could not find inspector avatar '{inspector}' in blob storage.", exception);
+            }
+            catch (Exception exception)
+            {
+                throw new InspectorAvatarNotFoundException($"Unexpected error while fetching inspector avatar '{inspector}' from blob storage.", exception);
             }
         }
 

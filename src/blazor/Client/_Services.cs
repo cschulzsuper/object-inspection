@@ -26,6 +26,8 @@ using Super.Paula.Client.Auth;
 using Super.Paula.Application.Auth;
 using Super.Paula.Client.Storage;
 using Super.Paula.Application.Localization;
+using Super.Paula.Application.Operation;
+using Super.Paula.Client.Operation;
 
 namespace Super.Paula.Client
 {
@@ -116,6 +118,7 @@ namespace Super.Paula.Client
             services.AddClientTransportGuidelines(isWebAssembly);
             services.AddClientTransportInventory(isWebAssembly);
             services.AddClientTransportStorage(isWebAssembly);
+            services.AddClientTransportSetup(isWebAssembly);
 
             return services;
         }
@@ -262,7 +265,7 @@ namespace Super.Paula.Client
             if (isWebAssembly)
             {
                 services
-                    .AddHttpClient<InspectorAvatarHandler>()
+                    .AddHttpClient<IInspectorAvatarHandler, InspectorAvatarHandler>()
                     .AddHttpMessageHandler<AuthenticationMessageHandler>();
             }
             else
@@ -278,6 +281,32 @@ namespace Super.Paula.Client
             services.AddSingleton<ITranslationHandler>(_ => TranslationHandlerFactory.Create());
             services.AddSingleton(typeof(ITranslator<>), typeof(Translator<>));
             services.AddSingleton<TranslationCategoryProvider>();
+
+            return services;
+        }
+
+        private static IServiceCollection AddClientTransportSetup(this IServiceCollection services, bool isWebAssembly)
+        {
+            if (isWebAssembly)
+            {
+                services
+                    .AddHttpClient<IExtensionHandler, ExtensionHandler>()
+                    .AddHttpMessageHandler<AuthenticationMessageHandler>();
+
+                services
+                    .AddHttpClient<IExtensionFieldTypeHandler, ExtensionFieldTypeHandler>()
+                    .AddHttpMessageHandler<AuthenticationMessageHandler>();
+
+                services
+                    .AddHttpClient<IExtensionTypeHandler, ExtensionTypeHandler>()
+                    .AddHttpMessageHandler<AuthenticationMessageHandler>();
+            }
+            else
+            {
+                services.AddHttpClientHandler<IExtensionHandler, ExtensionHandler>();
+                services.AddHttpClientHandler<IExtensionFieldTypeHandler, ExtensionFieldTypeHandler>();
+                services.AddHttpClientHandler<IExtensionTypeHandler, ExtensionTypeHandler>();
+            }
 
             return services;
         }

@@ -3,6 +3,6 @@
     public static class AuditResultValidator
     {
         public static bool IsValid(object value)
-            => ValidValuesValidator.IsValid(value, string.Empty, "satisfying", "insufficient", "failed");
+            => ValidValueValidator.IsValid(value, string.Empty, "satisfying", "insufficient", "failed");
     }
 }

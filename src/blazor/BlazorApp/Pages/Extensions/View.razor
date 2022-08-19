@@ -1,0 +1,96 @@
+﻿@page "/extensions"
+
+@inject ITranslator<View> Translator
+@inject NavigationManager NavigationManager
+@inject IExtensionHandler ExtensionHandler
+
+@attribute [Authorize("ManagementRead")]
+
+<DemoNote>
+    @Translator.Markdown($"An extension extends a type with additional fields. The fields color or shape could be added to the bussiness object type.")
+</DemoNote>
+
+<div class="container-fluid">
+    <h1>@Translator[$"Extensions"]</h1>
+</div>
+
+<div class="container-fluid m-2">
+    <button class="btn btn-primary" title="@Translator[$"Create"]"
+            @onclick="Create">
+        <span class="oi oi-plus" />
+    </button>
+</div>
+
+<div class="container-fluid">
+@if (_extensions == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table table-sm">
+        <thead class="table-light table-borderless">
+            <tr>
+                <th class="col-10">@Translator[$"Aggregate type"]</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var extension in _extensions.Values)
+            {
+                <tr>
+                    <td>@extension.AggregateType</td>
+                    <td>
+                        <button class="btn btn-outline-info btn-block" title="@Translator[$"Fields"]"
+                            @onclick="() => NavigateToFields(extension.AggregateType)">
+                                <span class="oi oi-list" />
+                            </button>
+                    </td>
+                    <td>
+                        <button class="btn btn-outline-danger btn-block" title="@Translator[$"Delete"]"
+                            @onclick="() => DeleteAsync(extension)"><span class="oi oi-trash"/></button>
+                    </td>
+                    
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+</div>
+
+@code {
+
+    private IDictionary<string, ExtensionResponse>? _extensions;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _extensions = new Dictionary<string, ExtensionResponse>();
+
+            var response = ExtensionHandler.GetAll();
+
+            await foreach (var identity in response)
+            {
+                _extensions.Add(identity.AggregateType, identity);
+                StateHasChanged();
+            }
+
+            StateHasChanged();
+        }
+    }
+
+    public void Create()
+        => NavigationManager.NavigateTo("/extensions/create");
+
+    public async Task DeleteAsync(ExtensionResponse identity)
+    {
+        await ExtensionHandler.DeleteAsync(identity.AggregateType, identity.ETag);
+        _extensions!.Remove(identity.AggregateType);
+    }
+
+    public void NavigateToFields(string aggregateType)
+        => NavigationManager.NavigateTo($"/extensions/{aggregateType}/fields");
+}

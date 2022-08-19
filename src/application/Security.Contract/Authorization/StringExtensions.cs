@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Super.Paula.JsonConversion;
+using System;
 using System.Text.Json;
 
 namespace Super.Paula.Authorization
@@ -9,7 +10,6 @@ namespace Super.Paula.Authorization
             => string.IsNullOrWhiteSpace(token)
                 ? null
                 : JsonSerializer.Deserialize<Token>(
-                        Convert.FromBase64String(token),
-                        new JsonSerializerOptions(JsonSerializerDefaults.Web));
+                        Convert.FromBase64String(token), CustomJsonSerializerOptions.Default);
     }
 }

@@ -4,8 +4,8 @@ namespace Super.Paula.Data
 {
     public interface IRepositoryCreator
     {
-        ValueTask CreateApplicationAsync();
+        ValueTask CreateApplicationAsync(string organization);
 
-        ValueTask DestroyApplicationAsync();
+        ValueTask DestroyApplicationAsync(string organization);
     }
 }

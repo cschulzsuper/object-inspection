@@ -8,6 +8,7 @@ using Super.Paula.Application.Auth;
 using Super.Paula.Application.Communication;
 using Super.Paula.Application.Guidelines;
 using Super.Paula.Application.Inventory;
+using Super.Paula.Application.Operation;
 using Super.Paula.Application.Orchestration;
 using Super.Paula.Authorization;
 using Super.Paula.Data.Mappings;
@@ -17,10 +18,12 @@ using Super.Paula.Data.Mappings.Auth;
 using Super.Paula.Data.Mappings.Communication;
 using Super.Paula.Data.Mappings.Guidelines;
 using Super.Paula.Data.Mappings.Inventory;
+using Super.Paula.Data.Mappings.Operation;
 using Super.Paula.Data.Mappings.Orchestration;
 using Super.Paula.Environment;
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Net.Http;
 using System.Security.Claims;
 
@@ -35,7 +38,7 @@ namespace Super.Paula.Data
             {
                 var appSeetings = services.GetRequiredService<AppSettings>();
 
-                options.ReplaceService<IModelCacheKeyFactory, PaulaContextModelCacheKeyFactory>();
+                options.ReplaceService<IModelCacheKeyFactory, PaulaAdministrationContextModelCacheKeyFactory>();
 
                 options.UseCosmos(
                     appSeetings.CosmosEndpoint,
@@ -59,8 +62,8 @@ namespace Super.Paula.Data
                         }
                     });
 
-                
-                if(isDevelopment)
+
+                if (isDevelopment)
                 {
                     options.EnableSensitiveDataLogging();
                 }
@@ -70,7 +73,7 @@ namespace Super.Paula.Data
             {
                 var appSeetings = services.GetRequiredService<AppSettings>();
 
-                options.ReplaceService<IModelCacheKeyFactory, PaulaContextModelCacheKeyFactory>();
+                options.ReplaceService<IModelCacheKeyFactory, PaulaApplicationContextModelCacheKeyFactory>();
 
                 options.UseCosmos(
                     appSeetings.CosmosEndpoint,
@@ -100,13 +103,54 @@ namespace Super.Paula.Data
                 }
             });
 
+            services.AddDbContext<PaulaOperationContext>((services, options) =>
+            {
+                var appSeetings = services.GetRequiredService<AppSettings>();
+
+                options.ReplaceService<IModelCacheKeyFactory, PaulaOperationContextModelCacheKeyFactory>();
+
+                options.UseCosmos(
+                    appSeetings.CosmosEndpoint,
+                    appSeetings.CosmosKey,
+                    appSeetings.CosmosDatabase,
+                    options =>
+                    {
+                        if (isDevelopment)
+                        {
+                            options.HttpClientFactory(() =>
+                            {
+                                HttpMessageHandler httpMessageHandler = new HttpClientHandler
+                                {
+                                    SslProtocols = System.Security.Authentication.SslProtocols.Tls12,
+                                    ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+                                };
+
+                                return new HttpClient(httpMessageHandler);
+                            });
+                            options.ConnectionMode(ConnectionMode.Gateway);
+                        }
+                    });
+
+                if (isDevelopment)
+                {
+                    options.EnableSensitiveDataLogging();
+                }
+            });
+
+
+            services.AddScoped<PaulaContexts>();
             services.AddScoped<PaulaContextState>();
+
+            services.AddScoped<ExtensionProvider>();
+            services.AddSingleton<ExtensionCache>();
 
             services.AddScoped<IRepositoryCreator, RepositoryCreator>();
 
-            services.AddScoped(RepositoryFactory<Identity,PaulaAdministrationContext>());
+            services.AddScoped(RepositoryFactory<Identity, PaulaAdministrationContext>());
             services.AddScoped(RepositoryFactory<IdentityInspector, PaulaAdministrationContext>());
             services.AddScoped(RepositoryFactory<Organization, PaulaAdministrationContext>());
+
+            services.AddScoped<IRepository<Extension>,ExtensionRepository>();
 
             services.AddScoped(RepositoryFactory<Continuation, PaulaAdministrationContext>());
             services.AddScoped(RepositoryFactory<Event, PaulaAdministrationContext>());
@@ -135,6 +179,8 @@ namespace Super.Paula.Data
             services.AddScoped<IPartitionKeyValueGenerator<EventProcessing>, EventProcessingPartitionKeyValueGenerator>();
             services.AddScoped<IPartitionKeyValueGenerator<Worker>, WorkerPartitionKeyValueGenerator>();
 
+            services.AddScoped<IPartitionKeyValueGenerator<Extension>, ExtensionPartitionKeyValueGenerator>();
+
             return services;
         }
 
@@ -147,34 +193,58 @@ namespace Super.Paula.Data
                     services.GetRequiredService<PaulaContextState>(),
                     services.GetRequiredService<IPartitionKeyValueGenerator<TEntity>>());
 
-
         public static IServiceProvider ConfigureData(this IServiceProvider services, string? organization, string? inspector)
         {
-            var paulaContextState = services.GetRequiredService<PaulaContextState>();
+            var state = services.GetRequiredService<PaulaContextState>();
 
-            paulaContextState.CurrentOrganization = organization != null
+            state.CurrentOrganization = organization != null
                 ? $"{organization}"
                 : string.Empty;
 
-            paulaContextState.CurrentInspector = inspector != null
+            state.CurrentInspector = inspector != null
                 ? $"{inspector}"
                 : string.Empty;
 
-            return services;
+            return services
+                .ConfigureExtensionModelIndicator(state);
         }
 
         public static IServiceProvider ConfigureData(this IServiceProvider services)
         {
             var user = services.GetRequiredService<ClaimsPrincipal>();
-            var paulaContextState = services.GetRequiredService<PaulaContextState>();
+            var state = services.GetRequiredService<PaulaContextState>();
 
-            paulaContextState.CurrentOrganization = user.HasOrganization()
+            state.CurrentOrganization = user.HasOrganization()
                ? user.GetOrganization()
                : string.Empty;
 
-            paulaContextState.CurrentInspector = user.HasInspector()
+            state.CurrentInspector = user.HasInspector()
                ? user.GetInspector()
                : string.Empty;
+
+            return services
+                .ConfigureExtensionModelIndicator(state);
+        }
+
+
+
+        private static IServiceProvider ConfigureExtensionModelIndicator(this IServiceProvider services, PaulaContextState state)
+        {
+            if (!string.IsNullOrWhiteSpace(state.CurrentOrganization))
+            {
+                var extensionProvider = services.GetRequiredService<ExtensionProvider>();
+
+                var extensionTags = ExtensionAggregateTypes.All
+                        .Select(extensionProvider.Get)
+                        .Where(x => x != null)
+                        .Select(x => x!.ETag);
+
+                var extensionModelIndicator = string.Join(string.Empty, extensionTags)
+                    .GetHashCode()
+                    .ToString();
+
+                state.ExtensionModelIndicator = extensionModelIndicator;
+            }
 
             return services;
         }

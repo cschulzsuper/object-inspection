@@ -11,4 +11,8 @@
     <PackageReference Include="Cronos" Version="0.7.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\data\Aggregates\Aggregates.csproj" />
+  </ItemGroup>
+
 </Project>

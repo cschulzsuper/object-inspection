@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Super.Paula.JsonConversion;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace Super.Paula.Authorization
 {
@@ -11,11 +11,7 @@ namespace Super.Paula.Authorization
     {
         public static string ToBase64String(this Token token)
             => Convert.ToBase64String(
-                    JsonSerializer.SerializeToUtf8Bytes(token,
-                        new JsonSerializerOptions(JsonSerializerDefaults.Web)
-                        {
-                            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
-                        }));
+                    JsonSerializer.SerializeToUtf8Bytes(token, CustomJsonSerializerOptions.Default));
 
         public static Claim[] ToClaims(this Token token)
         {

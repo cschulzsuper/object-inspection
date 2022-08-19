@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Microsoft.Azure.Cosmos;
 using Microsoft.EntityFrameworkCore;
 using Super.Paula.Environment;
 
@@ -6,34 +7,40 @@ namespace Super.Paula.Data
 {
     public class RepositoryCreator : IRepositoryCreator
     {
-        private readonly PaulaApplicationContext _paulaApplicationContext;
-        private readonly PaulaContextState _paulaContextState;
+        private readonly PaulaContexts _paulaContexts;
+
         private readonly AppSettings _appSettings;
 
         public RepositoryCreator(
-            PaulaApplicationContext paulaApplicationContext,
-            PaulaContextState paulaContextState,
+            PaulaContexts paulaContexts,
             AppSettings appSettings)
         {
-            _paulaApplicationContext = paulaApplicationContext;
-            _paulaContextState = paulaContextState;
+            _paulaContexts = paulaContexts;
             _appSettings = appSettings;
         }
 
-        public async ValueTask CreateApplicationAsync()
+        public async ValueTask CreateApplicationAsync(string organization)
         {
-            var cosmosClient = _paulaApplicationContext.Database.GetCosmosClient();
+            // Only Operation needs to be created as Application uses the same container
+
+            var paulaOperationContext = _paulaContexts.Operation;
+
+            var cosmosClient = paulaOperationContext.Database.GetCosmosClient();
             var cosmosDatabase = cosmosClient.GetDatabase(_appSettings.CosmosDatabase);
 
-            await cosmosDatabase.CreateContainerIfNotExistsAsync(_paulaContextState.CurrentOrganization, "/PartitionKey");
+            await cosmosDatabase.CreateContainerIfNotExistsAsync(organization, "/PartitionKey");
         }
 
-        public async ValueTask DestroyApplicationAsync()
+        public async ValueTask DestroyApplicationAsync(string organization)
         {
-            var cosmosClient = _paulaApplicationContext.Database.GetCosmosClient();
+            // Only Operation needs to be destroyed as Application uses the same container
+
+            var paulaOperationContext = _paulaContexts.Operation;
+
+            var cosmosClient = paulaOperationContext.Database.GetCosmosClient();
             var cosmosDatabase = cosmosClient.GetDatabase(_appSettings.CosmosDatabase);
 
-            var cosmosContainer = cosmosDatabase.GetContainer(_paulaContextState.CurrentOrganization);
+            var cosmosContainer = cosmosDatabase.GetContainer(organization);
 
             await cosmosContainer.DeleteContainerAsync();
         }
