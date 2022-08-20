@@ -20,6 +20,8 @@ public class PaulaOperationContext : PaulaContext
             modelBuilder.HasManualThroughput(1000);
 
             modelBuilder.ApplyConfiguration(new ExtensionMapping(State));
+
+            ApplyCamelCaseJsonPropertyNames(modelBuilder);
         }
     }
 }

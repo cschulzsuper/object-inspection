@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 
 namespace Super.Paula.Shared;
 
@@ -59,5 +60,53 @@ public static class CaseStyleConverter
         }
 
         return kebabCase.ToString();
+    }
+
+    public static string FromPascalCaseToCamelCase(string pascalCase)
+    {
+        if (string.Equals(pascalCase, "etag", StringComparison.InvariantCultureIgnoreCase))
+        {
+            return pascalCase.ToLower();
+        }
+
+        if (string.Equals(pascalCase, "btag", StringComparison.InvariantCultureIgnoreCase))
+        {
+            return pascalCase.ToLower();
+        }
+
+        if (string.IsNullOrEmpty(pascalCase) || !char.IsUpper(pascalCase[0]))
+        {
+            return pascalCase;
+        }
+
+        var camelCase = string.Create(pascalCase.Length, pascalCase, 
+            (chars, result) =>
+                {
+                    result.CopyTo(chars);
+                    InternalFromPascalCaseToCamelCase(chars);
+                });
+
+        return camelCase;
+    }
+
+    private static void InternalFromPascalCaseToCamelCase(Span<char> chars)
+    {
+        for (var i = 0; i < chars.Length; i++)
+        {
+            if (i == 1 && !char.IsUpper(chars[i]))
+            {
+                break;
+            }
+
+            var hasNext = i + 1 < chars.Length;
+
+            // Stop when next char is already lowercase.
+            if (i > 0 && hasNext && !char.IsUpper(chars[i + 1]))
+            {
+                break;
+            }
+
+            chars[i] = char.ToLowerInvariant(chars[i]);
+        }
     }
 }

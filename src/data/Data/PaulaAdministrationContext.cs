@@ -26,5 +26,7 @@ public class PaulaAdministrationContext : PaulaContext
         modelBuilder.ApplyConfiguration(new EventMapping());
         modelBuilder.ApplyConfiguration(new EventProcessingMapping());
         modelBuilder.ApplyConfiguration(new WorkerMapping());
+
+        ApplyCamelCaseJsonPropertyNames(modelBuilder);
     }
 }

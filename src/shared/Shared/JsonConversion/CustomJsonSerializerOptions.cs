@@ -4,14 +4,14 @@ namespace Super.Paula.Shared.JsonConversion;
 
 public class CustomJsonSerializerOptions
 {
-    public readonly static JsonSerializerOptions Default = new()
+    public static readonly JsonSerializerOptions Default = new JsonSerializerOptions
     {
         PropertyNameCaseInsensitive = true,
         PropertyNamingPolicy = new CustomJsonCamelCaseNamingPolicy(),
         Converters = { new ObjectJsonConverter() }
     };
 
-    public readonly static JsonSerializerOptions WebResponse = new()
+    public static readonly JsonSerializerOptions WebResponse = new JsonSerializerOptions
     {
         PropertyNameCaseInsensitive = true,
         PropertyNamingPolicy = new CustomJsonCamelCaseNamingPolicy(),
