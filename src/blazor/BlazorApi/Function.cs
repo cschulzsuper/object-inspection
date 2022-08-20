@@ -4,22 +4,21 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Configuration;
 
-namespace BlazorApi
+namespace BlazorApi;
+
+public class Function
 {
-    public class Function
+    private readonly IConfiguration _configuration;
+
+    public Function(IConfiguration configuration)
     {
-        private readonly IConfiguration _configuration;
+        _configuration = configuration;
+    }
 
-        public Function(IConfiguration configuration)
-        {
-            _configuration = configuration;
-        }
-
-        [FunctionName("settings")]
-        public IActionResult Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "settings/{key}")] HttpRequest request, string key)
-        {
-            key= key.Replace("__",":");
-            return new OkObjectResult(_configuration[key]);
-        }
+    [FunctionName("settings")]
+    public IActionResult Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "settings/{key}")] HttpRequest request, string key)
+    {
+        key= key.Replace("__", ":");
+        return new OkObjectResult(_configuration[key]);
     }
 }

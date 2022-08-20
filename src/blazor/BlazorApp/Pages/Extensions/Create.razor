@@ -2,7 +2,7 @@
 
 @inject ITranslator<Create> Translator
 @inject NavigationManager NavigationManager
-@inject IExtensionHandler ExtensionHandler
+@inject IExtensionRequestHandler ExtensionRequestHandler
 
 @attribute [Authorize("ManagementRead")]
 
@@ -23,22 +23,22 @@
     </div>
 
     @if(context.GetValidationMessages().Any())
-    {
-        <div class="container-fluid">
+{
+    <div class="container-fluid">
             <div class="card card-body tex-wrap">
                 <ValidationSummary />    
             </div>
         </div>
-    } 
-    else 
-    {
-        <div class="container-fluid">
+} 
+else 
+{
+    <div class="container-fluid">
             <AuthorizedButton Policy="ManagementFull" 
                 id="submit"
                 type="submit"
                 class="btn btn-primary">@Translator[$"Submit"]</AuthorizedButton>
         </div>
-    }
+}
 
 </EditForm>
 
@@ -47,7 +47,8 @@
 
     private async Task OnValidSubmitAsync()
     {
-        await ExtensionHandler.CreateAsync(_request);
+        await ExtensionRequestHandler.CreateAsync(_request);
         NavigationManager.NavigateTo("/extensions");
     }
+
 }

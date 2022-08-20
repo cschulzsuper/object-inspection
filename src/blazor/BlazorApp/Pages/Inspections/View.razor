@@ -2,7 +2,7 @@
 
 @inject ITranslator<View> Translator
 @inject NavigationManager NavigationManager
-@inject IInspectionHandler InspectionHandler
+@inject IInspectionRequestHandler InspectionHandler
 
 @attribute [Authorize("ManagementRead")]
 
@@ -39,32 +39,32 @@ else
         </thead>
         <tbody>
             @foreach (var inspection in _inspections.Values)
-            {
-                <tr>
+    {
+        <tr>
                     <td class="d-none d-lg-table-cell">@inspection.UniqueName</td>
                     <td>
                         <button class="btn btn-outline-secondary btn-block text-left" 
                                 @onclick="() => ToggleTextVisibility(inspection.UniqueName)">@inspection.DisplayName</button>
 
                         @if (_inspectionsTextVisibile?[inspection.UniqueName] == true && !string.IsNullOrWhiteSpace(inspection.Text))
-                        {
-                            <div class="card card-body text-wrap">
+                {
+                    <div class="card card-body text-wrap">
                                 @inspection.Text
                             </div>
-                        }
+                }
                     </td>
                     
                     @if(inspection.Activated) {
-                        <td>
+                <td>
                             <AuthorizedButton Policy="ManagementFull" class="btn btn-success btn-block" title="@Translator[$"Deactivate"]" 
                                 @onclick="() => DeactivateAsync(inspection)"><span class="oi oi-power-standby"/></AuthorizedButton>
                         </td>
-                    } else {
-                        <td>
+            } else {
+                <td>
                             <AuthorizedButton Policy="ManagementFull" class="btn btn-outline-danger btn-block" title="@Translator[$"Activate"]"
                                 @onclick="() => ActivateAsync(inspection)"><span class="oi oi-power-standby"/></AuthorizedButton>
                         </td>
-                    }
+            }
                     <td>
                         <button class="btn btn-outline-info btn-block" title="@Translator[$"Edit"]"
                             @onclick="() => Edit(inspection.UniqueName)"><span class="oi oi-pencil"/></button>
@@ -74,7 +74,7 @@ else
                             @onclick="() => DeleteAsync(inspection)"><span class="oi oi-trash"/></AuthorizedButton>
                     </td>             
                 </tr>
-            }
+    }
         </tbody>
     </table>
 }
@@ -83,64 +83,64 @@ else
 
 @code {
 
-    private IDictionary<string,InspectionResponse>? _inspections;
+private IDictionary<string,InspectionResponse>? _inspections;
 
-    private IDictionary<string,bool>? _inspectionsTextVisibile;
+private IDictionary<string,bool>? _inspectionsTextVisibile;
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+protected override async Task OnAfterRenderAsync(bool firstRender)
+{
+if (firstRender)
+{
+    _inspections = new Dictionary<string, InspectionResponse>();
+
+    var response = InspectionHandler.GetAll();
+
+    await foreach (var inspection in response)
     {
-        if (firstRender)
-        {
-            _inspections = new Dictionary<string, InspectionResponse>();
-
-            var response = InspectionHandler.GetAll();
-
-            await foreach (var inspection in response)
-            {
-                _inspections.Add(inspection.UniqueName, inspection);
-                StateHasChanged();
-            }
-
-            _inspectionsTextVisibile = _inspections.Keys
-                .ToDictionary(key => key, _ => false);
-
-            StateHasChanged();
-        }
+        _inspections.Add(inspection.UniqueName, inspection);
+        StateHasChanged();
     }
 
-    public void Create()
-        => NavigationManager.NavigateTo("/inspections/create");
+    _inspectionsTextVisibile = _inspections.Keys
+        .ToDictionary(key => key, _ => false);
 
-    public void Edit(string inspection)
-        => NavigationManager.NavigateTo($"/inspections/{inspection}/edit");
+    StateHasChanged();
+}
+}
 
-    public async Task DeleteAsync(InspectionResponse inspection)
-    {
-        await InspectionHandler.DeleteAsync(inspection.UniqueName, inspection.ETag);
-        _inspections!.Remove(inspection.UniqueName);
-    }
+public void Create()
+=> NavigationManager.NavigateTo("/inspections/create");
 
-    public async Task ActivateAsync(InspectionResponse inspection) 
-    {
-        var response = await InspectionHandler.ActivateAsync(inspection.UniqueName, inspection.ETag);
+public void Edit(string inspection)
+=> NavigationManager.NavigateTo($"/inspections/{inspection}/edit");
 
-        inspection.Activated = true;
-        inspection.ETag = response.ETag;
-    }
+public async Task DeleteAsync(InspectionResponse inspection)
+{
+await InspectionHandler.DeleteAsync(inspection.UniqueName, inspection.ETag);
+_inspections!.Remove(inspection.UniqueName);
+}
 
-    public async Task DeactivateAsync(InspectionResponse inspection) 
-    {
-        var response = await InspectionHandler.DeactivateAsync(inspection.UniqueName, inspection.ETag);
+public async Task ActivateAsync(InspectionResponse inspection) 
+{
+var response = await InspectionHandler.ActivateAsync(inspection.UniqueName, inspection.ETag);
 
-        inspection.Activated = false;
-        inspection.ETag = response.ETag;
-    }
+inspection.Activated = true;
+inspection.ETag = response.ETag;
+}
 
-    private void ToggleTextVisibility(string inspection)
-    {
-        if (_inspectionsTextVisibile != null)
-        {
-            _inspectionsTextVisibile[inspection] = !_inspectionsTextVisibile[inspection];
-        }
-    }
+public async Task DeactivateAsync(InspectionResponse inspection) 
+{
+var response = await InspectionHandler.DeactivateAsync(inspection.UniqueName, inspection.ETag);
+
+inspection.Activated = false;
+inspection.ETag = response.ETag;
+}
+
+private void ToggleTextVisibility(string inspection)
+{
+if (_inspectionsTextVisibile != null)
+{
+    _inspectionsTextVisibile[inspection] = !_inspectionsTextVisibile[inspection];
+}
+}
 }

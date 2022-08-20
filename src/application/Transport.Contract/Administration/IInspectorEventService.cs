@@ -1,9 +1,8 @@
 ﻿using System.Threading.Tasks;
 
-namespace Super.Paula.Application.Administration
+namespace Super.Paula.Application.Administration;
+
+public interface IInspectorEventService
 {
-    public interface IInspectorEventService
-    {
-        ValueTask CreateInspectorBusinessObjectEventAsync(Inspector inspector, InspectorBusinessObject inspectorBusinessObject, bool oldDelayed, bool oldPending);
-    }
+    ValueTask CreateInspectorBusinessObjectEventAsync(Inspector inspector, InspectorBusinessObject inspectorBusinessObject, bool oldDelayed, bool oldPending);
 }

@@ -1,25 +1,24 @@
-﻿using Super.Paula.ErrorHandling;
+﻿using Super.Paula.Shared.ErrorHandling;
 using System;
 
-namespace Super.Paula.Application.Administration.Exceptions
+namespace Super.Paula.Application.Administration.Exceptions;
+
+public class InspectorAvatarStreamInvalidException : Exception, IFormattableException
 {
-    public class InspectorAvatarStreamInvalidException : Exception, IFormattableException
+    public string MessageFormat { get; }
+    public object?[] MessageArguments { get; }
+
+    public InspectorAvatarStreamInvalidException(FormattableString message)
+        : base(message.ToString())
     {
-        public string MessageFormat { get; }
-        public object?[] MessageArguments { get; }
+        MessageFormat = message.Format;
+        MessageArguments = message.GetArguments();
+    }
 
-        public InspectorAvatarStreamInvalidException(FormattableString message)
-            : base(message.ToString())
-        {
-            MessageFormat = message.Format;
-            MessageArguments = message.GetArguments();
-        }
-
-        public InspectorAvatarStreamInvalidException(FormattableString message, Exception innerException)
-            : base(message.ToString(), innerException)
-        {
-            MessageFormat = message.Format;
-            MessageArguments = message.GetArguments();
-        }
+    public InspectorAvatarStreamInvalidException(FormattableString message, Exception innerException)
+        : base(message.ToString(), innerException)
+    {
+        MessageFormat = message.Format;
+        MessageArguments = message.GetArguments();
     }
 }

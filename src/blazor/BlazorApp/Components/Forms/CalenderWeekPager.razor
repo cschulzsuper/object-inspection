@@ -19,48 +19,48 @@
 
 @code {
 
-    [Parameter]
-    public string PreviousText  { get; set; } = null!;
+[Parameter]
+public string PreviousText  { get; set; } = null!;
 
-    [Parameter]
-    public string NextText  { get; set; } = null!;
+[Parameter]
+public string NextText  { get; set; } = null!;
 
-    [Parameter]
-    public CalenderWeek CalenderWeek { get; set; }
+[Parameter]
+public CalenderWeek CalenderWeek { get; set; }
 
-    [Parameter]
-    public EventCallback<CalenderWeek> CalenderWeekChanged { get; set; }
+[Parameter]
+public EventCallback<CalenderWeek> CalenderWeekChanged { get; set; }
 
-    private async Task OnCalenderWeekChanged(CalenderWeek calenderWeek)
-    {
-        CalenderWeek = calenderWeek;
-        await CalenderWeekChanged.InvokeAsync(CalenderWeek);
-    }
+private async Task OnCalenderWeekChanged(CalenderWeek calenderWeek)
+{
+CalenderWeek = calenderWeek;
+await CalenderWeekChanged.InvokeAsync(CalenderWeek);
+}
 
-    private async Task DecrementCalenderWeekAsync()
-    {
-        var date = ISOWeek.ToDateTime(CalenderWeek.Year, CalenderWeek.Week, DayOfWeek.Monday);
+private async Task DecrementCalenderWeekAsync()
+{
+var date = ISOWeek.ToDateTime(CalenderWeek.Year, CalenderWeek.Week, DayOfWeek.Monday);
 
-        if (date > new DateTime(1000, 1, 1))
-        {
-            date = date.AddDays(-7);
-            CalenderWeek = new CalenderWeek(date);
+if (date > new DateTime(1000, 1, 1))
+{
+    date = date.AddDays(-7);
+    CalenderWeek = new CalenderWeek(date);
 
-            await CalenderWeekChanged.InvokeAsync(CalenderWeek);
-        }
-    }
+    await CalenderWeekChanged.InvokeAsync(CalenderWeek);
+}
+}
 
-    private async Task IncrementCalenderWeekAsync()
-    {
-        var date = ISOWeek.ToDateTime(CalenderWeek.Year, CalenderWeek.Week, DayOfWeek.Monday);
+private async Task IncrementCalenderWeekAsync()
+{
+var date = ISOWeek.ToDateTime(CalenderWeek.Year, CalenderWeek.Week, DayOfWeek.Monday);
 
-        if (date < new DateTime(9999,1,1))
-        {
-            date = date.AddDays(7);
-            CalenderWeek = new CalenderWeek(date);
+if (date < new DateTime(9999,1,1))
+{
+    date = date.AddDays(7);
+    CalenderWeek = new CalenderWeek(date);
 
-            await CalenderWeekChanged.InvokeAsync(CalenderWeek);
-        }
-    }
+    await CalenderWeekChanged.InvokeAsync(CalenderWeek);
+}
+}
 
 }

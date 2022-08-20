@@ -1,65 +1,64 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Super.Paula.Application.Administration.Continuation;
-using Super.Paula.Application.Orchestration;
+using Super.Paula.Shared.Orchestration;
 using System.Threading.Tasks;
 
-namespace Super.Paula.Application.Administration
+namespace Super.Paula.Application.Administration;
+
+public class IdentityInspectorContinuationHandler : IIdentityInspectorContinuationHandler
 {
-    public class IdentityInspectorContinuationHandler : IIdentityInspectorContinuationHandler
+    public async Task HandleAsync(ContinuationHandlerContext context, CreateIdentityInspectorContinuation continuation)
     {
-        public async Task HandleAsync(ContinuationHandlerContext context, CreateIdentityInspectorContinuation continuation)
+        var identityInspectorManager = context.Services.GetRequiredService<IIdentityInspectorManager>();
+
+        var identityInspector = new IdentityInspector
         {
-            var identityInspectorManager = context.Services.GetRequiredService<IIdentityInspectorManager>();
+            UniqueName = continuation.UniqueName,
+            Organization = continuation.Organization,
+            Inspector = continuation.Inspector,
+            Activated = continuation.Activated
+        };
 
-            var identityInspector = new IdentityInspector
-            {
-                UniqueName = continuation.UniqueName,
-                Organization = continuation.Organization,
-                Inspector = continuation.Inspector,
-                Activated = continuation.Activated
-            };
+        await identityInspectorManager.InsertAsync(identityInspector);
+    }
 
-            await identityInspectorManager.InsertAsync(identityInspector);
-        }
+    public async Task HandleAsync(ContinuationHandlerContext context, ActivateIdentityInspectorContinuation continuation)
+    {
+        var identityInspectorManager = context.Services.GetRequiredService<IIdentityInspectorManager>();
 
-        public async Task HandleAsync(ContinuationHandlerContext context, ActivateIdentityInspectorContinuation continuation)
-        {
-            var identityInspectorManager = context.Services.GetRequiredService<IIdentityInspectorManager>();
+        var identityInspector = await identityInspectorManager.GetAsync(
+            continuation.UniqueName,
+            continuation.Organization,
+            continuation.Inspector);
 
-            var identityInspector = await identityInspectorManager.GetAsync(
-                continuation.UniqueName,
-                continuation.Organization,
-                continuation.Inspector);
+        identityInspector.Activated = true;
 
-            identityInspector.Activated = true;
+        await identityInspectorManager.UpdateAsync(identityInspector);
+    }
 
-            await identityInspectorManager.UpdateAsync(identityInspector);
-        }
+    public async Task HandleAsync(ContinuationHandlerContext context, DeleteIdentityInspectorContinuation continuation)
+    {
+        var identityInspectorManager = context.Services.GetRequiredService<IIdentityInspectorManager>();
 
-        public async Task HandleAsync(ContinuationHandlerContext context, DeleteIdentityInspectorContinuation continuation)
-        {
-            var identityInspectorManager = context.Services.GetRequiredService<IIdentityInspectorManager>();
+        var identityInspector = await identityInspectorManager.GetAsync(
+            continuation.UniqueName,
+            continuation.Organization,
+            continuation.Inspector);
 
-            var identityInspector = await identityInspectorManager.GetAsync(
-                continuation.UniqueName,
-                continuation.Organization,
-                continuation.Inspector);
+        await identityInspectorManager.DeleteAsync(identityInspector);
+    }
 
-            await identityInspectorManager.DeleteAsync(identityInspector);
-        }
+    public async Task HandleAsync(ContinuationHandlerContext context, DeactivateIdentityInspectorContinuation continuation)
+    {
+        var identityInspectorManager = context.Services.GetRequiredService<IIdentityInspectorManager>();
 
-        public async Task HandleAsync(ContinuationHandlerContext context, DeactivateIdentityInspectorContinuation continuation)
-        {
-            var identityInspectorManager = context.Services.GetRequiredService<IIdentityInspectorManager>();
+        var identityInspector = await identityInspectorManager.GetAsync(
+            continuation.UniqueName,
+            continuation.Organization,
+            continuation.Inspector);
 
-            var identityInspector = await identityInspectorManager.GetAsync(
-                continuation.UniqueName,
-                continuation.Organization,
-                continuation.Inspector);
+        identityInspector.Activated = false;
 
-            identityInspector.Activated = false;
-
-            await identityInspectorManager.UpdateAsync(identityInspector);
-        }
+        await identityInspectorManager.UpdateAsync(identityInspector);
     }
 }

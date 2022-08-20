@@ -1,11 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Super.Paula.Application.Auth.Requests
+namespace Super.Paula.Application.Auth.Requests;
+
+public class SignInIdentityRequest
 {
-    public class SignInIdentityRequest
-    {
-        [Required]
-        [StringLength(140)]
-        public string Secret { get; set; } = string.Empty;
-    }
+    [Required]
+    [StringLength(140)]
+    public string Secret { get; set; } = string.Empty;
 }

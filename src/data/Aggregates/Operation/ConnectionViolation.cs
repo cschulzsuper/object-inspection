@@ -1,13 +1,12 @@
 ﻿using Super.Paula.RuntimeData;
 
-namespace Super.Paula.Application.Operation
+namespace Super.Paula.Application.Operation;
+
+public class ConnectionViolation : IRuntimeData
 {
-    public class ConnectionViolation : IRuntimeData
-    {
-        public string Correlation => Violator;
+    public string Correlation => Violator;
 
-        public string Violator { get; set; } = string.Empty;
+    public string Violator { get; set; } = string.Empty;
 
-        public int ViolationCounter { get; set; } = 0;
-    }
+    public int ViolationCounter { get; set; } = 0;
 }

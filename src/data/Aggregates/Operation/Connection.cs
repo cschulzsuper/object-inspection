@@ -1,14 +1,13 @@
 ﻿using Super.Paula.RuntimeData;
 using System.Collections.Generic;
 
-namespace Super.Paula.Application.Operation
+namespace Super.Paula.Application.Operation;
+
+public class Connection : IRuntimeData
 {
-    public class Connection : IRuntimeData
-    {
-        public string Correlation => Account;
+    public string Correlation => Account;
 
-        public string Account { get; set; } = string.Empty;
+    public string Account { get; set; } = string.Empty;
 
-        public ISet<string> Proof { get; } = new HashSet<string>();
-    }
+    public ISet<string> Proof { get; } = new HashSet<string>();
 }

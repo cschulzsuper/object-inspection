@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace Super.Paula.Application.Operation
+namespace Super.Paula.Application.Operation;
+
+public interface IExtensionAggregateTypeManager
 {
-    public interface IExtensionAggregateTypeManager
-    {
-        IAsyncEnumerable<string> GetAsyncEnumerable();
-    }
+    IAsyncEnumerable<string> GetAsyncEnumerable();
 }

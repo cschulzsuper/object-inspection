@@ -1,9 +1,8 @@
-﻿namespace Super.Paula.Application.Orchestration
-{
-    public interface IWorkerRuntimeManager
-    {
-        bool TrySetState(string worker, string state);
+﻿namespace Super.Paula.Application.Orchestration;
 
-        string GetState(string worker);
-    }
+public interface IWorkerRuntimeManager
+{
+    bool TrySetState(string worker, string state);
+
+    string GetState(string worker);
 }

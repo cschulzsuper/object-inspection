@@ -1,9 +1,9 @@
 ﻿@page "/inspectors"
 @page "/organizations/{organization}/inspectors"
 
-@inject Application.Administration.IAuthorizationHandler AuthorizationHandler
-@inject Application.Administration.IInspectorHandler InspectorHandler
-@inject Application.Administration.IOrganizationHandler OrganizationHandler
+@inject IAuthorizationRequestHandler AuthorizationRequestHandler
+@inject IInspectorRequestHandler InspectorRequestHandler
+@inject IOrganizationRequestHandler OrganizationRequestHandler
 
 @inject ITranslator<View> Translator
 @inject NavigationManager NavigationManager
@@ -29,12 +29,12 @@
 else 
 {
     @if (_inspectors?.Any() == false)
-    {
-        <div class="container-fluid m-2">
+{
+    <div class="container-fluid m-2">
             <button id="repair" class="btn btn-primary" title="@Translator[$"Repair"]" 
                 @onclick="RepairAsync"><span class="oi oi-wrench"/></button>
         </div>
-    }
+}
 }
 
 <div class="container-fluid">
@@ -51,12 +51,12 @@ else
                 <th class="col-6">@Translator[$"Unique name"]</th>
                 <th class="col-6">@Translator[$"Identity"]</th>
                 @if (Organization == null)
-                {
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                }
-                <AuthorizeView Policy="Maintainance">
+        {
+            <th></th>
+            <th></th>
+            <th></th>
+        }
+                <AuthorizeView Policy="Maintenance">
                     <Authorized>
                         <th></th>
                     </Authorized>
@@ -65,58 +65,58 @@ else
         </thead>
         <tbody>
             @foreach (var inspector in _inspectors.Values)
-            {
-                <tr>
+    {
+        <tr>
                     <td>@inspector.UniqueName</td>
                     <td>@inspector.Identity</td>
                     @if(Organization == null)
-                    {
-                        @if(inspector.Activated)
+            {
+                @if(inspector.Activated)
+                {
+                    <td>
+                                @if (inspector.UniqueName != _inspector)
                         {
-                            <td>
-                                @if (inspector.UniqueName != _inspector)
-                                {
-                                    <AuthorizedButton Policy="ManagementFull" class="btn btn-success btn-block" title="@Translator[$"Deactivate"]" 
+                            <AuthorizedButton Policy="ManagementFull" class="btn btn-success btn-block" title="@Translator[$"Deactivate"]" 
                                         @onclick="() => DeactivateAsync(inspector)"><span class="oi oi-power-standby"/></AuthorizedButton>
-                                }
-                            </td>
-                        } else {
-                            <td>
-                                @if (inspector.UniqueName != _inspector)
-                                {
-                                    <AuthorizedButton Policy="ManagementFull" class="btn btn-outline-danger btn-block" title="@Translator[$"Activate"]" 
-                                        @onclick="() => ActivateAsync(inspector)"><span class="oi oi-power-standby"/></AuthorizedButton>
-                                }
-                            </td>
                         }
-                        <td>
+                            </td>
+                } else {
+                    <td>
+                                @if (inspector.UniqueName != _inspector)
+                        {
+                            <AuthorizedButton Policy="ManagementFull" class="btn btn-outline-danger btn-block" title="@Translator[$"Activate"]" 
+                                        @onclick="() => ActivateAsync(inspector)"><span class="oi oi-power-standby"/></AuthorizedButton>
+                        }
+                            </td>
+                }
+                <td>
                             <button class="btn btn-outline-info btn-block" title="@Translator[$"Edit"]" 
                                 @onclick="() => Edit(inspector.UniqueName)"><span class="oi oi-pencil"/></button>
                         </td>
-                        <td>
+                <td>
                             @if (inspector.UniqueName != _inspector)
-                            {
-                                <AuthorizedButton Policy="ManagementFull" class="btn btn-outline-danger btn-block" title="@Translator[$"Delete"]" 
+                    {
+                        <AuthorizedButton Policy="ManagementFull" class="btn btn-outline-danger btn-block" title="@Translator[$"Delete"]" 
                                     @onclick="() => DeleteAsync(inspector)"><span class="oi oi-trash"/></AuthorizedButton>
-                            }
-                        </td>
                     }
-                    <AuthorizeView Policy="Maintainance">
+                        </td>
+            }
+                    <AuthorizeView Policy="Maintenance">
                         <Authorized>
                             <td>
                                 @if (inspector.Activated &&
-                                     _organization?.Activated == true &&
-                                     inspector.UniqueName != _inspector)
-                                {
-                                    <button class="btn btn-outline-danger btn-block" title="@Translator[$"Impersonate"]"
+                             _organization?.Activated == true &&
+                             inspector.UniqueName != _inspector)
+                        {
+                            <button class="btn btn-outline-danger btn-block" title="@Translator[$"Impersonate"]"
                                     @onclick="() => ImpersonateAsync(inspector.UniqueName)"><span class="oi oi-eye"/></button>
-                                }
+                        }
                             </td>
                         </Authorized>
                     </AuthorizeView>
                     
                 </tr>
-            }
+    }
         </tbody>
     </table>
 }
@@ -125,101 +125,101 @@ else
 
 @code {
 
-    [Parameter]
-    public string? Organization { get; set; }
+[Parameter]
+public string? Organization { get; set; }
 
-    private OrganizationResponse? _organization;
+private OrganizationResponse? _organization;
 
-    private IDictionary<string,InspectorResponse>? _inspectors;
+private IDictionary<string,InspectorResponse>? _inspectors;
 
-    [CascadingParameter]
-    public Task<AuthenticationState> AuthenticationState { get; set; } = null!;
+[CascadingParameter]
+public Task<AuthenticationState> AuthenticationState { get; set; } = null!;
 
-    private string? _inspector;
+private string? _inspector;
 
-    protected override async Task OnParametersSetAsync()
+protected override async Task OnParametersSetAsync()
+{
+_inspector = (await AuthenticationState).User.GetInspector();
+}
+
+protected override async Task OnAfterRenderAsync(bool firstRender)
+{
+if (firstRender)
+{
+    _inspectors = new Dictionary<string, InspectorResponse>();
+
+    if (Organization != null)
     {
-        _inspector = (await AuthenticationState).User.GetInspector();
+        _organization = await OrganizationRequestHandler.GetAsync(Organization);
+    }            
+
+    var response = Organization == null
+        ? InspectorRequestHandler.GetAll()
+        : InspectorRequestHandler.GetAllForOrganization(Organization);
+
+    await foreach (var inspector in response)
+    {
+        _inspectors.Add(inspector.UniqueName, inspector);
+        StateHasChanged();
     }
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            _inspectors = new Dictionary<string, InspectorResponse>();
+    StateHasChanged();
+}
+}
 
-            if (Organization != null)
-            {
-                _organization = await OrganizationHandler.GetAsync(Organization);
-            }            
+public void Create()
+=> NavigationManager.NavigateTo("/inspectors/create");
 
-            var response = Organization == null
-                ? InspectorHandler.GetAll()
-                : InspectorHandler.GetAllForOrganization(Organization);
+public void Edit(string inspector)
+=> NavigationManager.NavigateTo($"/inspectors/{inspector}/edit");
 
-            await foreach (var inspector in response)
-            {
-                _inspectors.Add(inspector.UniqueName, inspector);
-                StateHasChanged();
-            }
+public async Task RepairAsync() 
+{
+if (_organization == null)
+{
+    return;
+}
 
-            StateHasChanged();
-        }
-    }
+await OrganizationRequestHandler.InitializeAsync(_organization.UniqueName, new InitializeOrganizationRequest
+{
+    Inspector = _organization.ChiefInspector,
+    ETag = _organization.ETag
+});  
 
-    public void Create()
-        => NavigationManager.NavigateTo("/inspectors/create");
+NavigationManager.NavigateTo(NavigationManager.Uri,true);
+}
 
-    public void Edit(string inspector)
-        => NavigationManager.NavigateTo($"/inspectors/{inspector}/edit");
+public async Task DeleteAsync(InspectorResponse inspector) 
+{
+await InspectorRequestHandler.DeleteAsync(inspector.UniqueName, inspector.ETag);
 
-    public async Task RepairAsync() 
-    {
-        if (_organization == null)
-        {
-            return;
-        }
+_inspectors!.Remove(inspector.UniqueName);
+}
 
-        await OrganizationHandler.InitializeAsync(_organization.UniqueName, new InitializeOrganizationRequest
-        {
-            Inspector = _organization.ChiefInspector,
-            ETag = _organization.ETag
-        });  
+public async Task ActivateAsync(InspectorResponse inspector)
+{
+var response = await InspectorRequestHandler.ActivateAsync(inspector.UniqueName, inspector.ETag);
 
-        NavigationManager.NavigateTo(NavigationManager.Uri,true);
-    }
+_inspectors![inspector.UniqueName].Activated = true;
+_inspectors![inspector.UniqueName].ETag = response.ETag;
+}
 
-    public async Task DeleteAsync(InspectorResponse inspector) 
-    {
-        await InspectorHandler.DeleteAsync(inspector.UniqueName, inspector.ETag);
+public async Task DeactivateAsync(InspectorResponse inspector)
+{
+var response = await InspectorRequestHandler.DeactivateAsync(inspector.UniqueName, inspector.ETag);
 
-        _inspectors!.Remove(inspector.UniqueName);
-    }
+_inspectors![inspector.UniqueName].Activated = false;
+_inspectors![inspector.UniqueName].ETag = response.ETag;
+}
 
-    public async Task ActivateAsync(InspectorResponse inspector)
-    {
-        var response = await InspectorHandler.ActivateAsync(inspector.UniqueName, inspector.ETag);
+public async Task ImpersonateAsync(string inspector)
+{
+var organization = (await AuthenticationState).User.GetOrganization();
 
-        _inspectors![inspector.UniqueName].Activated = true;
-        _inspectors![inspector.UniqueName].ETag = response.ETag;
-    }
+await AuthorizationRequestHandler.StartImpersonationAsync(
+    Organization ?? organization,
+    inspector);
 
-    public async Task DeactivateAsync(InspectorResponse inspector)
-    {
-        var response = await InspectorHandler.DeactivateAsync(inspector.UniqueName, inspector.ETag);
-
-        _inspectors![inspector.UniqueName].Activated = false;
-        _inspectors![inspector.UniqueName].ETag = response.ETag;
-    }
-
-    public async Task ImpersonateAsync(string inspector)
-    {
-        var organization = (await AuthenticationState).User.GetOrganization();
-
-        await AuthorizationHandler.StartImpersonationAsync(
-            Organization ?? organization,
-            inspector);
-
-        NavigationManager.NavigateTo("/");
-    }
+NavigationManager.NavigateTo("/");
+}
 }

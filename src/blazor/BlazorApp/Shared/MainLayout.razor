@@ -1,7 +1,7 @@
 ﻿@inherits LayoutComponentBase
 
-@inject Application.Administration.IAuthorizationHandler AuthorizationHandler
-@inject Application.Auth.IAuthenticationHandler AuthenticationHandler
+@inject Application.Administration.IAuthorizationRequestHandler AuthorizationHandler
+@inject Application.Auth.IAuthenticationRequestHandler AuthenticationHandler
 
 @inject NavigationManager NavigationManager   
 @inject AppEnvironment AppEnvironment
@@ -26,14 +26,14 @@
             <AuthorizeView>
                 <Authorized>
                     @if(AppEnvironment.IsDevelopment)
-                    {
-                        <select class="btn btn-secondary ml-3 mr-3 text-left" @onchange="e => AuthorizationFilterChanged(e.Value)" value="@_authorizationFilter">
+            {
+                <select class="btn btn-secondary ml-3 mr-3 text-left" @onchange="e => AuthorizationFilterChanged(e.Value)" value="@_authorizationFilter">
                             <option value="">---</option>
                             <option value="Impersonator|Maintainer|Inspector|Chief|Observer">Maintainer</option>
                             <option value="Impersonator|Inspector|Chief|Observer">Chief</option>
                             <option value="Impersonator|Inspector|Observer">Inspector</option>
                         </select>
-                    }
+            }
 
                     <NavLink class="nav-link" Match="NavLinkMatch.All" href="change-avatar" title="@Translator[$"Change Avatar"]">
                         <InspectorAvatar Size="32" Inspector="me" />
@@ -58,24 +58,24 @@
                     <div class="alert alert-danger">
                         <p>@Translate(context)</p>
                         @if(context is ProblemDetailsException problems && problems.Errors != null)
-                        {
-                            <ul>
+                {
+                    <ul>
                             @foreach(var problem in problems.Errors.SelectMany(x => x.Value))
-                            {
-                                <li>@problem</li>
-                            }
+                    {
+                        <li>@problem</li>
+                    }
                             </ul>
-                        }
+                }
                         <p>
                             @if(context is HttpRequestException requestException && 
-                                (requestException.StatusCode == HttpStatusCode.Unauthorized || 
-                                 requestException.StatusCode == HttpStatusCode.Forbidden))
-                            {
-                                 <a class="alert-link" href="javascript:void(0);" @onclick=RecoverAndGoHome>@Translator[$"Go to Homepage"]</a>                                
-                                 <span> - </span>
-                                 <a class="alert-link" href="javascript:void(0);" @onclick=RecoverAndSignOutAsync>@Translator[$"Sign Out"]</a>                                
-                                 <span> - </span>
-                            }
+                        (requestException.StatusCode == HttpStatusCode.Unauthorized || 
+                         requestException.StatusCode == HttpStatusCode.Forbidden))
+                    {
+                         <a class="alert-link" href="javascript:void(0);" @onclick=RecoverAndGoHome>@Translator[$"Go to Homepage"]</a>                                
+                         <span> - </span>
+                         <a class="alert-link" href="javascript:void(0);" @onclick=RecoverAndSignOutAsync>@Translator[$"Sign Out"]</a>                                
+                         <span> - </span>
+                    }
                             <a class="alert-link" href="javascript:void(0);" @onclick=Recover>@Translator[$"Try Again"]</a>
                         </p>
                     </div>
@@ -87,133 +87,133 @@
         <div class="copyright">&copy; Copyright @DateTime.Now.Year 
              <a href="https://github.com/cschulzsuper">Christian Schulz</a>. 
              @if (_buildString != null) 
-             {
-                <span class="d-none d-md-inline-block">@_buildString.Value</span>
-             }
+     {
+        <span class="d-none d-md-inline-block">@_buildString.Value</span>
+     }
         </div>
     </footer>
 </div>
 
 @code {
 
-    private string _authorizationFilter = string.Empty;
+private string _authorizationFilter = string.Empty;
 
-    private MarkupString? _buildString = null;
+private MarkupString? _buildString = null;
 
-    private ErrorBoundary? errorBoundaryArticle = null!;
+private ErrorBoundary? errorBoundaryArticle = null!;
 
-    protected override async Task OnInitializedAsync()
+protected override async Task OnInitializedAsync()
+{
+GenerateBuildString();
+await base.OnInitializedAsync();
+}
+
+private void Recover()
+{
+errorBoundaryArticle?.Recover();
+}
+
+private void RecoverAndGoHome()
+{
+errorBoundaryArticle?.Recover();
+NavigationManager.NavigateTo("/", true);
+}
+
+private async Task RecoverAndSignOutAsync()
+{
+await AuthenticationHandler.SignOutAsync();
+errorBoundaryArticle?.Recover();
+NavigationManager.NavigateTo("/", true);
+}
+
+private string Translate(Exception exception)
+{
+if(exception is ProblemDetailsException problems && 
+    problems.TitleFormat != null &&
+    problems.TitleArguments != null)
+{
+    return Translator[problems.TitleFormat, problems.TitleArguments];
+}
+
+return Translator[exception.Message];
+}
+
+public async Task StopImpersonationAsync()
+{
+try
+{
+    await AuthorizationHandler.StopImpersonationAsync();
+}
+catch(HttpRequestException e) when (e.StatusCode == HttpStatusCode.Unauthorized)
+{
+    if ((await LocalStorage.ContainKeyAsync("token")) ||
+        (await LocalStorage.ContainKeyAsync("authorization-filter")))
     {
-        GenerateBuildString();
-        await base.OnInitializedAsync();
+        await LocalStorage.RemoveItemAsync("token");
+        await LocalStorage.RemoveItemAsync("authorization-filter");
     }
+} 
+finally
+{
+    NavigationManager.NavigateTo("/");
+}
+}
 
-    private void Recover()
-    {
-        errorBoundaryArticle?.Recover();
-    }
+public async Task AuthorizationFilterChanged(object? value)
+{
+_authorizationFilter = ((string)value!);
 
-    private void RecoverAndGoHome()
-    {
-        errorBoundaryArticle?.Recover();
-        NavigationManager.NavigateTo("/", true);
-    }
+var authorizationFilter = _authorizationFilter
+    .Split('|')
+    .Where(x => !string.IsNullOrWhiteSpace(x))
+    .ToArray();
 
-    private async Task RecoverAndSignOutAsync()
-    {
-        await AuthenticationHandler.SignOutAsync();
-        errorBoundaryArticle?.Recover();
-        NavigationManager.NavigateTo("/", true);
-    }
+await LocalStorage.SetItemAsync("authorization-filter", authorizationFilter);
+}
 
-    private string Translate(Exception exception)
-    {
-        if(exception is ProblemDetailsException problems && 
-            problems.TitleFormat != null &&
-            problems.TitleArguments != null)
-        {
-            return Translator[problems.TitleFormat, problems.TitleArguments];
-        }
+private void GenerateBuildString()
+{
+if (_buildString != null )
+{
+    return;
+}
 
-        return Translator[exception.Message];
-    }
+var makeRuntimeString =
+   !string.IsNullOrWhiteSpace(BuildInfo.Runtime);
 
-    public async Task StopImpersonationAsync()
-    {
-        try
-        {
-            await AuthorizationHandler.StopImpersonationAsync();
-        }
-        catch(HttpRequestException e) when (e.StatusCode == HttpStatusCode.Unauthorized)
-        {
-            if ((await LocalStorage.ContainKeyAsync("token")) ||
-                (await LocalStorage.ContainKeyAsync("authorization-filter")))
-            {
-                await LocalStorage.RemoveItemAsync("token");
-                await LocalStorage.RemoveItemAsync("authorization-filter");
-            }
-        } 
-        finally
-        {
-            NavigationManager.NavigateTo("/");
-        }
-    }
+var makeCommitString = makeRuntimeString &&
+    !string.IsNullOrWhiteSpace(BuildInfo.Branch) &&
+    !string.IsNullOrWhiteSpace(BuildInfo.Hash) &&
+    !string.IsNullOrWhiteSpace(BuildInfo.ShortHash);
 
-    public async Task AuthorizationFilterChanged(object? value)
-    {
-        _authorizationFilter = ((string)value!);
+var makeBuildString = makeCommitString &&
+    !string.IsNullOrWhiteSpace(BuildInfo.Build);
 
-        var authorizationFilter = _authorizationFilter
-            .Split('|')
-            .Where(x => !string.IsNullOrWhiteSpace(x))
-            .ToArray();
-
-        await LocalStorage.SetItemAsync("authorization-filter", authorizationFilter);
-    }
-
-    private void GenerateBuildString()
-    {
-        if (_buildString != null )
-        {
-            return;
-        }
-
-        var makeRuntimeString =
-           !string.IsNullOrWhiteSpace(BuildInfo.Runtime);
-
-        var makeCommitString = makeRuntimeString &&
-            !string.IsNullOrWhiteSpace(BuildInfo.Branch) &&
-            !string.IsNullOrWhiteSpace(BuildInfo.Hash) &&
-            !string.IsNullOrWhiteSpace(BuildInfo.ShortHash);
-
-        var makeBuildString = makeCommitString &&
-            !string.IsNullOrWhiteSpace(BuildInfo.Build);
-
-        if(makeBuildString)
-        {
-            _buildString = Translator.Markdown(
-                $@"Powered by {BuildInfo.Runtime}, 
+if(makeBuildString)
+{
+    _buildString = Translator.Markdown(
+        $@"Powered by {BuildInfo.Runtime}, 
 deployed from [{BuildInfo.Branch}](https://github.com/cschulzsuper/paula/tree/{BuildInfo.Branch}) 
 commit [{BuildInfo.ShortHash}](https://github.com/cschulzsuper/paula/commit/{BuildInfo.Hash}) 
 via build [{BuildInfo.Build}](https://github.com/cschulzsuper/paula/actions/runs/{BuildInfo.Build}).");
 
-            return;
-        }
+    return;
+}
 
-        if(makeCommitString)
-        {
-            _buildString = Translator.Markdown(
-                $@"Powered by {BuildInfo.Runtime} and 
+if(makeCommitString)
+{
+    _buildString = Translator.Markdown(
+        $@"Powered by {BuildInfo.Runtime} and 
 deployed from [{BuildInfo.Branch}](https://github.com/cschulzsuper/paula/tree/{BuildInfo.Branch}) 
 commit [{BuildInfo.ShortHash}](https://github.com/cschulzsuper/paula/commit/{BuildInfo.Hash}).");
 
-            return;
-        }
+    return;
+}
 
-        if(makeCommitString)
-        {
-            _buildString = Translator.Markdown($"Powered by {BuildInfo.Runtime}.");
-            return;
-        }
-    }
+if(makeCommitString)
+{
+    _buildString = Translator.Markdown($"Powered by {BuildInfo.Runtime}.");
+    return;
+}
+}
 }

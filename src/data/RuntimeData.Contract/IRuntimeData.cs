@@ -1,7 +1,6 @@
-﻿namespace Super.Paula.RuntimeData
+﻿namespace Super.Paula.RuntimeData;
+
+public interface IRuntimeData
 {
-    public interface IRuntimeData
-    {
-        string Correlation { get; }
-    }
+    string Correlation { get; }
 }

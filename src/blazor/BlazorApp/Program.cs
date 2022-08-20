@@ -7,49 +7,48 @@ using System.Globalization;
 using Microsoft.JSInterop;
 using Super.Paula.Client.Storage;
 
-namespace Super.Paula.Client
+namespace Super.Paula.Client;
+
+public static class Program
 {
-    public static class Program
+    public static async Task Main(string[] args)
     {
-        public static async Task Main(string[] args)
+        var builder = WebAssemblyHostBuilder.CreateDefault(args);
+        builder.RootComponents.Add<App>("#app");
+
+        builder.Services.ConfigureServices(builder.HostEnvironment);
+
+        var blazorApiUrl = builder.HostEnvironment.IsDevelopment()
+                ? "http://localhost:7071"
+                : builder.HostEnvironment.BaseAddress;
+
+        await builder.Configuration.AddBlazorApiConfigurationAsync(blazorApiUrl);
+
+        var host = builder.Build();
+
+        CultureInfo culture;
+        var jsRuntime = host.Services.GetRequiredService<IJSRuntime>();
+        var cultureName = await jsRuntime.InvokeAsync<string>("culture.get");
+
+        if (cultureName != null)
         {
-            var builder = WebAssemblyHostBuilder.CreateDefault(args);
-            builder.RootComponents.Add<App>("#app");
-
-            builder.Services.ConfigureServices(builder.HostEnvironment);
-
-            var blazorApiUrl = builder.HostEnvironment.IsDevelopment()
-                    ? "http://localhost:7071"
-                    : builder.HostEnvironment.BaseAddress;
-
-            await builder.Configuration.AddBlazorApiConfigurationAsync(blazorApiUrl);
-
-            var host = builder.Build();
-
-            CultureInfo culture;
-            var jsRuntime = host.Services.GetRequiredService<IJSRuntime>();
-            var cultureName = await jsRuntime.InvokeAsync<string>("culture.get");
-
-            if (cultureName != null)
-            {
-                culture = new CultureInfo(cultureName);
-            }
-            else
-            {
-                culture = new CultureInfo("en-US");
-                await jsRuntime.InvokeVoidAsync("culture.set", "en-US");
-            }
-
-            CultureInfo.DefaultThreadCurrentCulture = culture;
-            CultureInfo.DefaultThreadCurrentUICulture = culture;
-
-            await host.RunAsync();
+            culture = new CultureInfo(cultureName);
+        }
+        else
+        {
+            culture = new CultureInfo("en-US");
+            await jsRuntime.InvokeVoidAsync("culture.set", "en-US");
         }
 
-        public static void ConfigureServices(this IServiceCollection services, IWebAssemblyHostEnvironment environment)
-        {
-            services.AddBlazoredLocalStorage();
-            services.AddClient<DefaultLocalStorage>(environment.IsDevelopment(), isWebAssembly: true);
-        }
+        CultureInfo.DefaultThreadCurrentCulture = culture;
+        CultureInfo.DefaultThreadCurrentUICulture = culture;
+
+        await host.RunAsync();
+    }
+
+    public static void ConfigureServices(this IServiceCollection services, IWebAssemblyHostEnvironment environment)
+    {
+        services.AddBlazoredLocalStorage();
+        services.AddClient<DefaultLocalStorage>(environment.IsDevelopment(), isWebAssembly: true);
     }
 }

@@ -1,11 +1,10 @@
 ﻿using Super.Paula.Application.Auditing.Continuations;
-using Super.Paula.Application.Orchestration;
+using Super.Paula.Shared.Orchestration;
 
-namespace Super.Paula.Application.Auditing
+namespace Super.Paula.Application.Auditing;
+
+public interface IBusinessObjectInspectionAuditRecordContinuationHandler :
+    IContinuationHandler<CreateBusinessObjectInspectionAuditRecordContinuation>
 {
-    public interface IBusinessObjectInspectionAuditRecordContinuationHandler :
-        IContinuationHandler<CreateBusinessObjectInspectionAuditRecordContinuation>
-    {
 
-    }
 }

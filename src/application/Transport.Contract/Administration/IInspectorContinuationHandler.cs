@@ -1,10 +1,9 @@
 ﻿using Super.Paula.Application.Administration.Continuation;
-using Super.Paula.Application.Orchestration;
+using Super.Paula.Shared.Orchestration;
 
-namespace Super.Paula.Application.Administration
+namespace Super.Paula.Application.Administration;
+
+public interface IInspectorContinuationHandler :
+    IContinuationHandler<CreateInspectorContinuation>
 {
-    public interface IInspectorContinuationHandler :
-        IContinuationHandler<CreateInspectorContinuation>
-    {
-    }
 }

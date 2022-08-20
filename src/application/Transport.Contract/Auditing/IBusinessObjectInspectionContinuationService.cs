@@ -1,9 +1,8 @@
 ﻿using System.Threading.Tasks;
 
-namespace Super.Paula.Application.Auditing
+namespace Super.Paula.Application.Auditing;
+
+public interface IBusinessObjectInspectionContinuationService
 {
-    public interface IBusinessObjectInspectionContinuationService
-    {
-        ValueTask AddCreateBusinessObjectInspectionAuditRecordContinuationAsync(BusinessObjectInspection inspection);
-    }
+    ValueTask AddCreateBusinessObjectInspectionAuditRecordContinuationAsync(BusinessObjectInspection inspection);
 }

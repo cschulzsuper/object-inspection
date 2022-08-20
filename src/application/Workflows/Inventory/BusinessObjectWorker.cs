@@ -1,58 +1,58 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Super.Paula.Application.Administration;
 using Super.Paula.Application.Auditing;
-using Super.Paula.Application.Orchestration;
 using Super.Paula.Data;
+using Super.Paula.Shared;
+using Super.Paula.Shared.Orchestration;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Super.Paula.Application.Inventory
+namespace Super.Paula.Application.Inventory;
+
+public class BusinessObjectWorker : IWorker
 {
-    public class BusinessObjectWorker : IWorker
+    public async Task ExecuteAsync(WorkerContext context, CancellationToken cancellationToken)
     {
-        public async Task ExecuteAsync(WorkerContext context, CancellationToken cancellationToken)
-        {
-            var organizations = context.Services.GetRequiredService<IOrganizationQueries>();
+        var organizations = context.Services.GetRequiredService<IOrganizationQueries>();
 
-            while (!cancellationToken.IsCancellationRequested)
+        while (!cancellationToken.IsCancellationRequested)
+        {
+            var organizationUniqueNames = organizations.GetAllUniqueNames();
+
+            foreach (var organizaion in organizationUniqueNames)
             {
-                var organizationUniqueNames = organizations.GetAllUniqueNames();
+                using var serviceScope = context.Services.CreateScope();
+                SetupScope(organizaion, serviceScope);
 
-                foreach (var organizaion in organizationUniqueNames)
+                var businessObjects = serviceScope.ServiceProvider
+                    .GetRequiredService<IBusinessObjectQueries>()
+                    .GetAllUniqueNames();
+
+                foreach (var businessObject in businessObjects)
                 {
-                    using var serviceScope = context.Services.CreateScope();
-                    SetupScope(organizaion, serviceScope);
+                    var businessObjectInspectionHandler = serviceScope.ServiceProvider
+                        .GetRequiredService<IBusinessObjectInspectionRequestHandler>();
 
-                    var businessObjects = serviceScope.ServiceProvider
-                        .GetRequiredService<IBusinessObjectQueries>()
-                        .GetAllUniqueNames();
-
-                    foreach (var businessObject in businessObjects)
-                    {
-                        var businessObjectInspectionHandler = serviceScope.ServiceProvider
-                            .GetRequiredService<IBusinessObjectInspectionHandler>();
-
-                        await businessObjectInspectionHandler.RecalculateInspectionAuditAppointmentsAsync(businessObject);
-                    }
+                    await businessObjectInspectionHandler.RecalculateInspectionAuditAppointmentsAsync(businessObject);
                 }
-
-                await Task.Delay(context.IterationDelay, cancellationToken);
             }
-        }
 
-        private static void SetupScope(string organization, IServiceScope scope)
-        {
-            scope.ServiceProvider.ConfigureUser(
-                new ClaimsPrincipal(
-                    new ClaimsIdentity(
-                        new List<Claim>
-                        {
-                                new Claim("Organization", organization)
-                        })));
-
-            scope.ServiceProvider.ConfigureData();
+            await Task.Delay(context.IterationDelay, cancellationToken);
         }
+    }
+
+    private static void SetupScope(string organization, IServiceScope scope)
+    {
+        scope.ServiceProvider.ConfigureUser(
+            new ClaimsPrincipal(
+                new ClaimsIdentity(
+                    new List<Claim>
+                    {
+                        new Claim("Organization", organization)
+                    })));
+
+        scope.ServiceProvider.ConfigureData();
     }
 }

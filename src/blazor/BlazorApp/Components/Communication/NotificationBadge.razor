@@ -1,4 +1,5 @@
-﻿@inject INotificationHandler NotificationHandler
+﻿@inject INotificationCallbackHandler NotificationCallbackHandler
+@inject INotificationRequestHandler NotificationRequestHandler
 
 @implements IDisposable
 
@@ -8,8 +9,8 @@
 }
 
 @code {
-    private IDisposable? _notificationHandlerOnCreation;
-    private IDisposable? _notificationHandlerOnDeletion;
+    private IDisposable? _notificationCreation;
+    private IDisposable? _notificationDeletion;
 
     private long _notificationCount;
 
@@ -20,13 +21,13 @@
     {
         if (firstRender)
         {
-            _notificationHandlerOnCreation = await NotificationHandler.OnCreationAsync(OnNotificationCreationAsync);
-            _notificationHandlerOnDeletion = await NotificationHandler.OnDeletionAsync(OnNotificationDeletionAsync);
+            _notificationCreation = await NotificationCallbackHandler.OnCreationAsync(OnNotificationCreationAsync);
+            _notificationDeletion = await NotificationCallbackHandler.OnDeletionAsync(OnNotificationDeletionAsync);
         }
     }
 
     protected override async Task OnParametersSetAsync()
-    {          
+    {
         await CountAsync();
     }
 
@@ -38,7 +39,7 @@
 
         if (user.Identity!.IsAuthenticated && user.HasInspector())
         {
-            await foreach (var _ in NotificationHandler.GetAllForInspector(user.GetInspector()))
+            await foreach (var _ in NotificationRequestHandler.GetAllForInspector(user.GetInspector()))
             {
                 _notificationCount++;
             }
@@ -54,7 +55,8 @@
 
     public void Dispose()
     {
-        _notificationHandlerOnCreation?.Dispose();
-        _notificationHandlerOnDeletion?.Dispose();
+        _notificationCreation?.Dispose();
+        _notificationDeletion?.Dispose();
     }
+
 }

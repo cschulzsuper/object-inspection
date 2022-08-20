@@ -2,10 +2,10 @@
 
 @inject ITranslator<View> Translator
 @inject NavigationManager NavigationManager
-@inject IIdentityHandler IdentityHandler
-@inject IAuthenticationHandler AuthenticationHandler
+@inject IIdentityRequestHandler IdentityHandler
+@inject IAuthenticationRequestHandler AuthenticationHandler
 
-@attribute [Authorize("Maintainance")]
+@attribute [Authorize("Maintenance")]
 
 <div class="container-fluid">
     <h1>@Translator[$"Identities"]</h1>
@@ -36,8 +36,8 @@ else
         </thead>
         <tbody>
             @foreach (var identity in _identities.Values)
-            {
-                <tr>
+    {
+        <tr>
                     <td>@identity.UniqueName</td>
                     <td>@identity.MailAddress</td>
                     <td>
@@ -54,7 +54,7 @@ else
                     </td>
                     
                 </tr>
-            }
+    }
         </tbody>
     </table>
 }
@@ -63,46 +63,46 @@ else
 
 @code {
 
-    private IDictionary<string,IdentityResponse>? _identities;
+private IDictionary<string,IdentityResponse>? _identities;
 
-    private IDictionary<string,bool>? _identitiesTextVisibile;
+private IDictionary<string,bool>? _identitiesTextVisibile;
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+protected override async Task OnAfterRenderAsync(bool firstRender)
+{
+if (firstRender)
+{
+    _identities = new Dictionary<string, IdentityResponse>();
+
+    var response = IdentityHandler.GetAll();
+
+    await foreach (var identity in response)
     {
-        if (firstRender)
-        {
-            _identities = new Dictionary<string, IdentityResponse>();
-
-            var response = IdentityHandler.GetAll();
-
-            await foreach (var identity in response)
-            {
-                _identities.Add(identity.UniqueName, identity);
-                StateHasChanged();
-            }
-
-            _identitiesTextVisibile = _identities.Keys
-                .ToDictionary(key => key, _ => false);
-
-            StateHasChanged();
-        }
+        _identities.Add(identity.UniqueName, identity);
+        StateHasChanged();
     }
 
-    public void Create()
-        => NavigationManager.NavigateTo("/identities/create");
+    _identitiesTextVisibile = _identities.Keys
+        .ToDictionary(key => key, _ => false);
 
-    public void Edit(string identity)
-        => NavigationManager.NavigateTo($"/identities/{identity}/edit");
+    StateHasChanged();
+}
+}
 
-    public async Task DeleteAsync(IdentityResponse identity)
-    {
-        await IdentityHandler.DeleteAsync(identity.UniqueName, identity.ETag);
-        _identities!.Remove(identity.UniqueName);
-    }
+public void Create()
+=> NavigationManager.NavigateTo("/identities/create");
 
-    public async Task ResetAsync(IdentityResponse identity) 
-    {
-        var reponse = await AuthenticationHandler.ResetAsync(identity.UniqueName, identity.ETag);
-        identity.ETag = reponse.ETag;
-    }
+public void Edit(string identity)
+=> NavigationManager.NavigateTo($"/identities/{identity}/edit");
+
+public async Task DeleteAsync(IdentityResponse identity)
+{
+await IdentityHandler.DeleteAsync(identity.UniqueName, identity.ETag);
+_identities!.Remove(identity.UniqueName);
+}
+
+public async Task ResetAsync(IdentityResponse identity) 
+{
+var reponse = await AuthenticationHandler.ResetAsync(identity.UniqueName, identity.ETag);
+identity.ETag = reponse.ETag;
+}
 }

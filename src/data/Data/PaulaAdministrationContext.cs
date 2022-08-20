@@ -3,29 +3,28 @@ using Super.Paula.Data.Mappings.Administration;
 using Super.Paula.Data.Mappings.Auth;
 using Super.Paula.Data.Mappings.Orchestration;
 
-namespace Super.Paula.Data
+namespace Super.Paula.Data;
+
+public class PaulaAdministrationContext : PaulaContext
 {
-    public class PaulaAdministrationContext : PaulaContext
+    public PaulaAdministrationContext(DbContextOptions<PaulaAdministrationContext> options, PaulaContextState state)
+        : base(options, state)
     {
-        public PaulaAdministrationContext(DbContextOptions<PaulaAdministrationContext> options, PaulaContextState state)
-            : base(options, state)
-        {
-        }
+    }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
 
-            modelBuilder.HasManualThroughput(1000);
+        modelBuilder.HasManualThroughput(1000);
 
-            modelBuilder.ApplyConfiguration(new IdentityMapping());
-            modelBuilder.ApplyConfiguration(new IdentityInspectorMapping());
-            modelBuilder.ApplyConfiguration(new OrganizationMapping());
+        modelBuilder.ApplyConfiguration(new IdentityMapping());
+        modelBuilder.ApplyConfiguration(new IdentityInspectorMapping());
+        modelBuilder.ApplyConfiguration(new OrganizationMapping());
 
-            modelBuilder.ApplyConfiguration(new ContinuationMapping());
-            modelBuilder.ApplyConfiguration(new EventMapping());
-            modelBuilder.ApplyConfiguration(new EventProcessingMapping());
-            modelBuilder.ApplyConfiguration(new WorkerMapping());
-        }
+        modelBuilder.ApplyConfiguration(new ContinuationMapping());
+        modelBuilder.ApplyConfiguration(new EventMapping());
+        modelBuilder.ApplyConfiguration(new EventProcessingMapping());
+        modelBuilder.ApplyConfiguration(new WorkerMapping());
     }
 }

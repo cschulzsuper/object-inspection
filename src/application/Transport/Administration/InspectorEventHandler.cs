@@ -3,198 +3,198 @@ using Super.Paula.Application.Administration.Events;
 using Super.Paula.Application.Administration.Responses;
 using Super.Paula.Application.Auditing.Events;
 using Super.Paula.Application.Inventory.Events;
-using Super.Paula.Application.Orchestration;
+using Super.Paula.Shared.Orchestration;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Super.Paula.Shared;
 
-namespace Super.Paula.Application.Administration
+namespace Super.Paula.Application.Administration;
+
+public class InspectorEventHandler : IInspectorEventHandler
 {
-    public class InspectorEventHandler : IInspectorEventHandler
+    public async Task HandleAsync(EventHandlerContext context, OrganizationUpdateEvent @event)
     {
-        public async Task HandleAsync(EventHandlerContext context, OrganizationUpdateEvent @event)
+        var inspectorManager = context.Services.GetRequiredService<IInspectorManager>();
+        var identityInspectorManager = context.Services.GetRequiredService<IIdentityInspectorManager>();
+
+        var inspectors = inspectorManager.GetQueryable()
+            .Where(x => x.Organization == @event.UniqueName)
+            .ToList();
+
+        foreach (var inspector in inspectors)
         {
-            var inspectorManager = context.Services.GetRequiredService<IInspectorManager>();
-            var identityInspectorManager = context.Services.GetRequiredService<IIdentityInspectorManager>();
+            inspector.OrganizationActivated = @event.Activated;
+            inspector.OrganizationDisplayName =  @event.DisplayName;
 
-            var inspectors = inspectorManager.GetQueryable()
-                .Where(x => x.Organization == @event.UniqueName)
-                .ToList();
+            await inspectorManager.UpdateAsync(inspector);
 
-            foreach (var inspector in inspectors)
+            var identity = await identityInspectorManager.GetAsync(
+                inspector.Identity,
+                inspector.Organization,
+                inspector.UniqueName);
+
+            identity.Activated = inspector.Activated && inspector.OrganizationActivated;
+
+            await identityInspectorManager.UpdateAsync(identity);
+        }
+    }
+
+    public async Task HandleAsync(EventHandlerContext context, BusinessObjectInspectorEvent @event)
+    {
+        var inspectorManager = context.Services.GetRequiredService<IInspectorManager>();
+        var inspectorBroadcaster = context.Services.GetRequiredService<IInspectorBroadcaster>();
+
+        if (@event.OldInspector != null &&
+            @event.OldInspector == @event.NewInspector)
+        {
+            var oldInspector = inspectorManager
+                .GetQueryable()
+                .SingleOrDefault(x => x.UniqueName == @event.OldInspector);
+
+            if (oldInspector != null)
             {
-                inspector.OrganizationActivated = @event.Activated;
-                inspector.OrganizationDisplayName =  @event.DisplayName;
+                var oldBusinessObjects = oldInspector.BusinessObjects
+                    .Where(x => x.UniqueName == @event.UniqueName);
 
-                await inspectorManager.UpdateAsync(inspector);
+                foreach (var oldBusinessObject in oldBusinessObjects.Skip(1))
+                {
+                    oldInspector.BusinessObjects.Remove(oldBusinessObject);
+                }
 
-                var identity = await identityInspectorManager.GetAsync(
-                    inspector.Identity,
-                    inspector.Organization,
-                    inspector.UniqueName);
+                var changedBusinessObject = oldBusinessObjects.First();
+                changedBusinessObject.DisplayName = @event.DisplayName;
 
-                identity.Activated = inspector.Activated && inspector.OrganizationActivated;
-
-                await identityInspectorManager.UpdateAsync(identity);
+                await inspectorManager.UpdateAsync(oldInspector);
+                await inspectorBroadcaster.SendInspectorBusinessObjectUpdateAsync(@event.OldInspector, changedBusinessObject.ToResponse());
             }
         }
 
-        public async Task HandleAsync(EventHandlerContext context, BusinessObjectInspectorEvent @event)
+        var useBusinessObject = (InspectorBusinessObject?)null;
+
+        if (@event.OldInspector != null &&
+            @event.OldInspector != @event.NewInspector)
         {
-            var inspectorManager = context.Services.GetRequiredService<IInspectorManager>();
-            var inspectorStreamer = context.Services.GetRequiredService<IInspectorStreamer>();
+            var oldInspector = inspectorManager
+                .GetQueryable()
+                .SingleOrDefault(x => x.UniqueName == @event.OldInspector);
 
-            if (@event.OldInspector != null &&
-                @event.OldInspector == @event.NewInspector)
+            if (oldInspector != null)
             {
-                var oldInspector = inspectorManager
-                    .GetQueryable()
-                    .SingleOrDefault(x => x.UniqueName == @event.OldInspector);
+                var oldBusinessObjects = oldInspector.BusinessObjects
+                    .Where(x => x.UniqueName == @event.UniqueName);
 
-                if (oldInspector != null)
+                useBusinessObject = oldBusinessObjects.FirstOrDefault();
+
+                foreach (var oldBusinessObject in oldBusinessObjects)
                 {
-                    var oldBusinessObjects = oldInspector.BusinessObjects
-                        .Where(x => x.UniqueName == @event.UnqiueName);
-
-                    foreach (var oldBusinessObject in oldBusinessObjects.Skip(1))
-                    {
-                        oldInspector.BusinessObjects.Remove(oldBusinessObject);
-                    }
-
-                    var changedBusinessObject = oldBusinessObjects.First();
-                    changedBusinessObject.DisplayName = @event.DisplayName;
-
-                    await inspectorManager.UpdateAsync(oldInspector);
-                    await inspectorStreamer.StreamInspectorBusinessObjectUpdateAsync(@event.OldInspector, changedBusinessObject.ToResponse());
+                    oldInspector.BusinessObjects.Remove(oldBusinessObject);
                 }
-            }
 
-            var useBusinessObject = (InspectorBusinessObject?)null;
-
-            if (@event.OldInspector != null &&
-                @event.OldInspector != @event.NewInspector)
-            {
-                var oldInspector = inspectorManager
-                    .GetQueryable()
-                    .SingleOrDefault(x => x.UniqueName == @event.OldInspector);
-
-                if (oldInspector != null)
-                {
-                    var oldBusinessObjects = oldInspector.BusinessObjects
-                        .Where(x => x.UniqueName == @event.UnqiueName);
-
-                    useBusinessObject = oldBusinessObjects.FirstOrDefault();
-
-                    foreach (var oldBusinessObject in oldBusinessObjects)
-                    {
-                        oldInspector.BusinessObjects.Remove(oldBusinessObject);
-                    }
-
-                    await inspectorManager.UpdateAsync(oldInspector);
-                    await inspectorStreamer.StreamInspectorBusinessObjectDeletionAsync(oldInspector.UniqueName, @event.UnqiueName);
-                }
-            }
-
-            if (@event.OldInspector != @event.NewInspector &&
-                @event.NewInspector != null)
-            {
-                var newInspector = inspectorManager
-                    .GetQueryable()
-                    .SingleOrDefault(x => x.UniqueName == @event.NewInspector);
-
-                if (newInspector != null)
-                {
-                    var newBusinessObject = useBusinessObject ?? new InspectorBusinessObject();
-
-                    newBusinessObject.DisplayName = @event.DisplayName;
-                    newBusinessObject.UniqueName = @event.UnqiueName;
-
-                    newInspector.BusinessObjects.Add(newBusinessObject);
-
-                    await inspectorManager.UpdateAsync(newInspector);
-                    await inspectorStreamer.StreamInspectorBusinessObjectCreationAsync(newInspector.UniqueName, newBusinessObject.ToResponse());
-                }
+                await inspectorManager.UpdateAsync(oldInspector);
+                await inspectorBroadcaster.SendInspectorBusinessObjectDeletionAsync(oldInspector.UniqueName, @event.UniqueName);
             }
         }
 
-        public async Task HandleAsync(EventHandlerContext context, BusinessObjectInspectionAuditScheduleEvent @event)
+        if (@event.OldInspector != @event.NewInspector &&
+            @event.NewInspector != null)
         {
-            var inspectorManager = context.Services.GetRequiredService<IInspectorManager>();
-            var inspectorStreamer = context.Services.GetRequiredService<IInspectorStreamer>();
+            var newInspector = inspectorManager
+                .GetQueryable()
+                .SingleOrDefault(x => x.UniqueName == @event.NewInspector);
 
-            var inspectors = inspectorManager
-                .GetQueryableWhereBusinessObject(@event.BusinessObject)
-                .AsEnumerable();
-
-            foreach (var inspector in inspectors)
+            if (newInspector != null)
             {
-                var inspectorBusinessObject = inspector.BusinessObjects
-                    .Single(x => x.UniqueName == @event.BusinessObject);
+                var newBusinessObject = useBusinessObject ?? new InspectorBusinessObject();
 
-                if (@event.PlannedAuditDate == default)
-                {
-                    inspectorBusinessObject.AuditSchedulePlannedAuditDate = default;
-                    inspectorBusinessObject.AuditSchedulePlannedAuditTime = default;
-                    inspectorBusinessObject.AuditScheduleDelayed = false;
-                    inspectorBusinessObject.AuditSchedulePending = false;
+                newBusinessObject.DisplayName = @event.DisplayName;
+                newBusinessObject.UniqueName = @event.UniqueName;
 
-                    await inspectorManager.UpdateAsync(inspector);
-                }
-                else
-                {
-                    var plannedAuditTimestamp = 
-                        new DateTimeNumbers(
-                            @event.PlannedAuditDate,
-                            @event.PlannedAuditTime)
-                        .ToGlobalDateTime();
+                newInspector.BusinessObjects.Add(newBusinessObject);
 
-                    var oldDelayed = inspectorBusinessObject.AuditScheduleDelayed;
-                    var oldPending = inspectorBusinessObject.AuditSchedulePending;
-
-                    inspectorBusinessObject.AuditSchedulePlannedAuditDate = @event.PlannedAuditDate;
-                    inspectorBusinessObject.AuditSchedulePlannedAuditTime = @event.PlannedAuditTime;
-
-                    var now = DateTime.UtcNow;
-                    var threshold = @event.Threshold;
-
-                    inspectorBusinessObject.AuditScheduleDelayed = now > plannedAuditTimestamp.AddMilliseconds(threshold);
-                    inspectorBusinessObject.AuditSchedulePending = now > plannedAuditTimestamp.AddMilliseconds(-threshold);
-
-                    await inspectorManager.UpdateAsync(inspector);
-                    await inspectorStreamer.StreamInspectorBusinessObjectUpdateAsync(inspector.UniqueName, inspectorBusinessObject.ToResponse());
-
-                    var inspectorEventService = context.Services.GetRequiredService<IInspectorEventService>();
-                    await inspectorEventService.CreateInspectorBusinessObjectEventAsync(inspector, inspectorBusinessObject, oldDelayed, oldPending);
-                }
+                await inspectorManager.UpdateAsync(newInspector);
+                await inspectorBroadcaster.SendInspectorBusinessObjectCreationAsync(newInspector.UniqueName, newBusinessObject.ToResponse());
             }
         }
+    }
 
-        public async Task HandleAsync(EventHandlerContext context, BusinessObjectDeletionEvent @event)
+    public async Task HandleAsync(EventHandlerContext context, BusinessObjectInspectionAuditScheduleEvent @event)
+    {
+        var inspectorManager = context.Services.GetRequiredService<IInspectorManager>();
+        var inspectorBroadcaster = context.Services.GetRequiredService<IInspectorBroadcaster>();
+
+        var inspectors = inspectorManager
+            .GetQueryableWhereBusinessObject(@event.BusinessObject)
+            .AsEnumerable();
+
+        foreach (var inspector in inspectors)
         {
-            var inspectorManager = context.Services.GetRequiredService<IInspectorManager>();
+            var inspectorBusinessObject = inspector.BusinessObjects
+                .Single(x => x.UniqueName == @event.BusinessObject);
 
-            var inspectors = inspectorManager
-                .GetQueryableWhereBusinessObject(@event.UniqueName)
-                .ToList();
-
-            if (!inspectors.Any())
+            if (@event.PlannedAuditDate == default)
             {
-                return;
-            }
-
-            foreach (var inspector in inspectors)
-            {
-                var businessObjects = inspector.BusinessObjects
-                    .Where(x => x.UniqueName == @event.UniqueName)
-                    .ToList();
-
-                foreach (var businessObject in businessObjects)
-                {
-                    inspector.BusinessObjects.Remove(businessObject);
-                }
+                inspectorBusinessObject.AuditSchedulePlannedAuditDate = default;
+                inspectorBusinessObject.AuditSchedulePlannedAuditTime = default;
+                inspectorBusinessObject.AuditScheduleDelayed = false;
+                inspectorBusinessObject.AuditSchedulePending = false;
 
                 await inspectorManager.UpdateAsync(inspector);
             }
+            else
+            {
+                var plannedAuditTimestamp =
+                    new DateTimeNumbers(
+                        @event.PlannedAuditDate,
+                        @event.PlannedAuditTime)
+                    .ToGlobalDateTime();
+
+                var oldDelayed = inspectorBusinessObject.AuditScheduleDelayed;
+                var oldPending = inspectorBusinessObject.AuditSchedulePending;
+
+                inspectorBusinessObject.AuditSchedulePlannedAuditDate = @event.PlannedAuditDate;
+                inspectorBusinessObject.AuditSchedulePlannedAuditTime = @event.PlannedAuditTime;
+
+                var now = DateTime.UtcNow;
+                var threshold = @event.Threshold;
+
+                inspectorBusinessObject.AuditScheduleDelayed = now > plannedAuditTimestamp.AddMilliseconds(threshold);
+                inspectorBusinessObject.AuditSchedulePending = now > plannedAuditTimestamp.AddMilliseconds(-threshold);
+
+                await inspectorManager.UpdateAsync(inspector);
+                await inspectorBroadcaster.SendInspectorBusinessObjectUpdateAsync(inspector.UniqueName, inspectorBusinessObject.ToResponse());
+
+                var inspectorEventService = context.Services.GetRequiredService<IInspectorEventService>();
+                await inspectorEventService.CreateInspectorBusinessObjectEventAsync(inspector, inspectorBusinessObject, oldDelayed, oldPending);
+            }
+        }
+    }
+
+    public async Task HandleAsync(EventHandlerContext context, BusinessObjectDeletionEvent @event)
+    {
+        var inspectorManager = context.Services.GetRequiredService<IInspectorManager>();
+
+        var inspectors = inspectorManager
+            .GetQueryableWhereBusinessObject(@event.UniqueName)
+            .ToList();
+
+        if (!inspectors.Any())
+        {
+            return;
+        }
+
+        foreach (var inspector in inspectors)
+        {
+            var businessObjects = inspector.BusinessObjects
+                .Where(x => x.UniqueName == @event.UniqueName)
+                .ToList();
+
+            foreach (var businessObject in businessObjects)
+            {
+                inspector.BusinessObjects.Remove(businessObject);
+            }
+
+            await inspectorManager.UpdateAsync(inspector);
         }
     }
 }

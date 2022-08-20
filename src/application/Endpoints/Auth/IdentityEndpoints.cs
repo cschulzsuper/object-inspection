@@ -4,48 +4,47 @@ using Microsoft.AspNetCore.Routing;
 using Super.Paula.Application.Auth.Requests;
 using System;
 
-namespace Super.Paula.Application.Auth
+namespace Super.Paula.Application.Auth;
+
+public static class IdentityEndpoints
 {
-    public static class IdentityEndpoints
+    public static IEndpointRouteBuilder MapIdentity(this IEndpointRouteBuilder endpoints)
     {
-        public static IEndpointRouteBuilder MapIdentity(this IEndpointRouteBuilder endpoints)
-        {
-            endpoints.MapRestCollection(
-                "Identities",
-                "/identities",
-                "/{identity}",
-                Get,
-                GetAll,
-                Create,
-                Replace,
-                Delete);
+        endpoints.MapRestCollection(
+            "Identities",
+            "/identities",
+            "/{identity}",
+            Get,
+            GetAll,
+            Create,
+            Replace,
+            Delete);
 
-            return endpoints;
-        }
-
-        private static Delegate Get =>
-            [Authorize("Maintainance")]
-        (IIdentityHandler handler, string identity)
-                => handler.GetAsync(identity);
-
-        private static Delegate GetAll =>
-            [Authorize("Maintainance")]
-        (IIdentityHandler handler)
-                => handler.GetAll();
-
-        private static Delegate Create =>
-            [Authorize("Maintainance")]
-        (IIdentityHandler handler, IdentityRequest request)
-                => handler.CreateAsync(request);
-
-        private static Delegate Replace =>
-            [Authorize("Maintainance")]
-        (IIdentityHandler handler, string identity, IdentityRequest request)
-                => handler.ReplaceAsync(identity, request);
-
-        private static Delegate Delete =>
-            [Authorize("Maintainance")]
-        (IIdentityHandler handler, string identity, [FromHeader(Name = "If-Match")] string etag)
-                => handler.DeleteAsync(identity, etag);
+        return endpoints;
     }
+
+    private static Delegate Get =>
+        [Authorize("Maintenance")]
+    (IIdentityRequestHandler requestHandler, string identity)
+            => requestHandler.GetAsync(identity);
+
+    private static Delegate GetAll =>
+        [Authorize("Maintenance")]
+    (IIdentityRequestHandler requestHandler)
+            => requestHandler.GetAll();
+
+    private static Delegate Create =>
+        [Authorize("Maintenance")]
+    (IIdentityRequestHandler requestHandler, IdentityRequest request)
+            => requestHandler.CreateAsync(request);
+
+    private static Delegate Replace =>
+        [Authorize("Maintenance")]
+    (IIdentityRequestHandler requestHandler, string identity, IdentityRequest request)
+            => requestHandler.ReplaceAsync(identity, request);
+
+    private static Delegate Delete =>
+        [Authorize("Maintenance")]
+    (IIdentityRequestHandler requestHandler, string identity, [FromHeader(Name = "If-Match")] string etag)
+            => requestHandler.DeleteAsync(identity, etag);
 }

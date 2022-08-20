@@ -1,6 +1,6 @@
 ﻿@page "/missing-translations"
 
-@inject ITranslationHandler TranslationHandler
+@inject ITranslationRequestHandler TranslationHandler
 @inject ITranslator<MissingTranslations> Translator
 
 <div class="container-fluid">
@@ -12,35 +12,35 @@
     <div class="container-fluid">
         <pre>
             @foreach (var missingTranslation in _missingTranslations)
-            {
-                @($"[({CategoryString(missingTranslation)},{HashString(missingTranslation)})] = {ValueString(missingTranslation)},\n");
-            }
+    {
+        @($"[({CategoryString(missingTranslation)},{HashString(missingTranslation)})] = {ValueString(missingTranslation)},\n");
+    }
         </pre>
     </div>
 }
 
 @code {
-    private IEnumerable<TranslationResponse>? _missingTranslations;
+private IEnumerable<TranslationResponse>? _missingTranslations;
 
-    protected override void OnInitialized()
-    {
-        var searchResponse = TranslationHandler.Search("placeholder:true");
+protected override void OnInitialized()
+{
+var searchResponse = TranslationHandler.Search("placeholder:true");
 
-        _missingTranslations = searchResponse.TotalCount != searchResponse.TopResults.Count
-            ? searchResponse.TopResults
-            : TranslationHandler.GetAll("placeholder:true", 0, searchResponse.TotalCount);
+_missingTranslations = searchResponse.TotalCount != searchResponse.TopResults.Count
+    ? searchResponse.TopResults
+    : TranslationHandler.GetAll("placeholder:true", 0, searchResponse.TotalCount);
 
-    }
+}
 
-    private string CategoryString(TranslationResponse translation)
-        => translation.Category == null
-            ? "null"
-            : $"\"{translation.Category}\"";
+private string CategoryString(TranslationResponse translation)
+=> translation.Category == null
+    ? "null"
+    : $"\"{translation.Category}\"";
 
-    private string HashString(TranslationResponse translation)
-        => $"\"{translation.Hash}\"";
+private string HashString(TranslationResponse translation)
+=> $"\"{translation.Hash}\"";
 
-    private string ValueString(TranslationResponse translation)
-        => $"\"{translation.Value}\"";
+private string ValueString(TranslationResponse translation)
+=> $"\"{translation.Value}\"";
 
 }

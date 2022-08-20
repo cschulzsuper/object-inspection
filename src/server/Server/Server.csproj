@@ -4,7 +4,7 @@
 		<TargetFramework>net7.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<LangVersion>Preview</LangVersion>
-		<RootNamespace>Super.Paula</RootNamespace>
+		<RootNamespace>Super.Paula.Server</RootNamespace>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -14,9 +14,9 @@
 	<ItemGroup>
 		<ProjectReference Include="..\..\application\Endpoints\Endpoints.csproj" />
 		<ProjectReference Include="..\..\application\Management\Management.csproj" />
-		<ProjectReference Include="..\..\application\Orchestration\Orchestration.csproj" />
-		<ProjectReference Include="..\..\application\Security\Security.csproj" />
-		<ProjectReference Include="..\..\application\Streaming\Streaming.csproj" />
+		<ProjectReference Include="..\..\shared\Orchestration\Orchestration.csproj" />
+		<ProjectReference Include="..\..\shared\Security\Security.csproj" />
+		<ProjectReference Include="..\..\application\Radio\Radio.csproj" />
 		<ProjectReference Include="..\..\application\Transport\Transport.csproj" />
 		<ProjectReference Include="..\..\application\Workflows\Workflows.csproj" />
 		<ProjectReference Include="..\..\data\BlobStorage\BlobStorage.csproj" />

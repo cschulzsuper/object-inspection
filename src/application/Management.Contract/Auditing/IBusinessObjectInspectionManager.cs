@@ -3,18 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Super.Paula.Application.Auditing
+namespace Super.Paula.Application.Auditing;
+
+public interface IBusinessObjectInspectionManager
 {
-    public interface IBusinessObjectInspectionManager
-    {
-        ValueTask<BusinessObjectInspection> GetAsync(string businessObject, string inspection);
-        IQueryable<BusinessObjectInspection> GetQueryable();
+    ValueTask<BusinessObjectInspection> GetAsync(string businessObject, string inspection);
+    IQueryable<BusinessObjectInspection> GetQueryable();
 
-        IAsyncEnumerable<BusinessObjectInspection> GetAsyncEnumerable();
-        IAsyncEnumerable<TResult> GetAsyncEnumerable<TResult>(Func<IQueryable<BusinessObjectInspection>, IQueryable<TResult>> query);
+    IAsyncEnumerable<BusinessObjectInspection> GetAsyncEnumerable();
+    IAsyncEnumerable<TResult> GetAsyncEnumerable<TResult>(Func<IQueryable<BusinessObjectInspection>, IQueryable<TResult>> query);
 
-        ValueTask InsertAsync(BusinessObjectInspection inspection);
-        ValueTask UpdateAsync(BusinessObjectInspection inspection);
-        ValueTask DeleteAsync(BusinessObjectInspection inspection);
-    }
+    ValueTask InsertAsync(BusinessObjectInspection inspection);
+    ValueTask UpdateAsync(BusinessObjectInspection inspection);
+    ValueTask DeleteAsync(BusinessObjectInspection inspection);
 }

@@ -1,18 +1,17 @@
 ﻿using System.Collections.Generic;
 
-namespace Super.Paula.Application.Administration
+namespace Super.Paula.Application.Administration;
+
+public class Inspector
 {
-    public class Inspector
-    {
-        public string ETag { get; set; } = string.Empty;
-        public string UniqueName { get; set; } = string.Empty;
-        public string Identity { get; set; } = string.Empty;
-        public bool Activated { get; set; }
+    public string ETag { get; set; } = string.Empty;
+    public string UniqueName { get; set; } = string.Empty;
+    public string Identity { get; set; } = string.Empty;
+    public bool Activated { get; set; }
 
-        public string Organization { get; set; } = string.Empty;
-        public string OrganizationDisplayName { get; set; } = string.Empty;
-        public bool OrganizationActivated { get; set; }
+    public string Organization { get; set; } = string.Empty;
+    public string OrganizationDisplayName { get; set; } = string.Empty;
+    public bool OrganizationActivated { get; set; }
 
-        public ISet<InspectorBusinessObject> BusinessObjects { get; set; } = new HashSet<InspectorBusinessObject>();
-    }
+    public ISet<InspectorBusinessObject> BusinessObjects { get; set; } = new HashSet<InspectorBusinessObject>();
 }

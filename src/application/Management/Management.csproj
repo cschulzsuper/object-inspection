@@ -15,7 +15,7 @@
     <ProjectReference Include="..\..\data\BlobStorage.Contract\BlobStorage.Contract.csproj" />
     <ProjectReference Include="..\..\data\Data.Contract\Data.Contract.csproj" />
     <ProjectReference Include="..\Management.Contract\Management.Contract.csproj" />
-    <ProjectReference Include="..\Shared\Shared.csproj" />
+    <ProjectReference Include="..\..\shared\Shared\Shared.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,11 +1,10 @@
 ﻿using Super.Paula.Application.Administration.Events;
-using Super.Paula.Application.Orchestration;
+using Super.Paula.Shared.Orchestration;
 
-namespace Super.Paula.Application.Operation
+namespace Super.Paula.Application.Operation;
+
+public interface IApplicationEventHandler :
+    IEventHandler<OrganizationCreationEvent>,
+    IEventHandler<OrganizationDeletionEvent>
 {
-    public interface IApplicationEventHandler :
-        IEventHandler<OrganizationCreationEvent>,
-        IEventHandler<OrganizationDeletionEvent>
-    {
-    }
 }

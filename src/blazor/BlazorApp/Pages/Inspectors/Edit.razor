@@ -2,7 +2,7 @@
 
 @inject ITranslator<Edit> Translator
 @inject NavigationManager NavigationManager
-@inject IInspectorHandler InspectorHandler
+@inject IInspectorRequestHandler InspectorRequestHandler
 
 @attribute [Authorize("ManagementRead")]
 
@@ -36,64 +36,64 @@ else
         </div>
 
         @if(context.GetValidationMessages().Any())
-        {
-            <div class="container-fluid">
+{
+    <div class="container-fluid">
                 <div class="card card-body tex-wrap">
                     <ValidationSummary />    
                 </div>
             </div>
-        } 
-        else 
-        {
-            <div class="container-fluid">
+} 
+else 
+{
+    <div class="container-fluid">
                 <AuthorizedButton Policy="ManagementFull" 
                     id="submit"
                     type="submit" 
                     class="btn btn-primary">@Translator[$"Submit"]</AuthorizedButton>
             </div>
-        }
+}
 
     </EditForm>
 }
 
 @code {
 
-    [Parameter]
-    public string Inspector { get; set; } = string.Empty;
+[Parameter]
+public string Inspector { get; set; } = string.Empty;
 
-    private InspectorRequest? _request = null;
+private InspectorRequest? _request = null;
 
-    [CascadingParameter]
-    public Task<AuthenticationState> AuthenticationState { get; set; } = null!;
+[CascadingParameter]
+public Task<AuthenticationState> AuthenticationState { get; set; } = null!;
 
-    private string? _inspector;
+private string? _inspector;
 
-    protected override async Task OnParametersSetAsync()
-    {
-        _inspector = (await AuthenticationState).User.GetInspector();
-    }
+protected override async Task OnParametersSetAsync()
+{
+_inspector = (await AuthenticationState).User.GetInspector();
+}
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
+protected override async Task OnAfterRenderAsync(bool firstRender)
+{
+if (firstRender)
+{
+    var response = await InspectorRequestHandler.GetAsync(Inspector);
+
+    _request = new InspectorRequest
         {
-            var response = await InspectorHandler.GetAsync(Inspector);
+            Identity = response.Identity,
+            UniqueName = response.UniqueName,
+            Activated = response.Activated,
+            ETag = response.ETag
+        };
 
-            _request = new InspectorRequest
-                {
-                    Identity = response.Identity,
-                    UniqueName = response.UniqueName,
-                    Activated = response.Activated,
-                    ETag = response.ETag
-                };
+    StateHasChanged();
+}
+}
 
-            StateHasChanged();
-        }
-    }
-
-    private async Task OnValidSubmitAsync()
-    {
-        await InspectorHandler.ReplaceAsync(Inspector, _request!);
-        NavigationManager.NavigateTo("/inspectors");
-    }
+private async Task OnValidSubmitAsync()
+{
+await InspectorRequestHandler.ReplaceAsync(Inspector, _request!);
+NavigationManager.NavigateTo("/inspectors");
+}
 }

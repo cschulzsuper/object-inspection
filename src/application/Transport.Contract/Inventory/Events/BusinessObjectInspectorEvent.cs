@@ -1,30 +1,29 @@
-﻿using Super.Paula.Application.Orchestration;
-using Super.Paula.Validation;
+﻿using Super.Paula.Shared.Orchestration;
 using System.ComponentModel.DataAnnotations;
+using Super.Paula.Shared.Validation;
 
-namespace Super.Paula.Application.Inventory.Events
-{
-    [AllowedSubscriber(AllowedSubscribers.Inspector)]
-    [AllowedSubscriber(AllowedSubscribers.Notification)]
-    public record BusinessObjectInspectorEvent(
+namespace Super.Paula.Application.Inventory.Events;
 
-        [KebabCase]
-        [StringLength(140)]
-        [UniqueName]
-        string UnqiueName,
+[AllowedSubscriber(AllowedSubscribers.Inspector)]
+[AllowedSubscriber(AllowedSubscribers.Notification)]
+public record BusinessObjectInspectorEvent(
 
-        [StringLength(140)]
-        string DisplayName,
+    [KebabCase]
+    [StringLength(140)]
+    [UniqueName]
+    string UniqueName,
 
-        [KebabCase]
-        [StringLength(140)]
-        [UniqueName]
-        string? NewInspector,
+    [StringLength(140)]
+string DisplayName,
 
-        [KebabCase]
-        [StringLength(140)]
-        [UniqueName]
-        string OldInspector)
+    [KebabCase]
+[StringLength(140)]
+[UniqueName]
+string? NewInspector,
 
-        : EventBase();
-}
+    [KebabCase]
+[StringLength(140)]
+[UniqueName]
+string OldInspector)
+
+    : EventBase;

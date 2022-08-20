@@ -2,7 +2,7 @@
 
 @inject ITranslator<Edit> Translator
 @inject NavigationManager NavigationManager
-@inject IInspectionHandler InspectionHandler
+@inject IInspectionRequestHandler InspectionHandler
 
 @attribute [Authorize("ManagementRead")]
 
@@ -39,52 +39,52 @@ else
         </div>
 
         @if(context.GetValidationMessages().Any())
-        {
-            <div class="container-fluid">
+{
+    <div class="container-fluid">
                 <div class="card card-body tex-wrap">
                     <ValidationSummary />    
                 </div>
             </div>
-        } 
-        else 
-        {
-            <div class="container-fluid">
+} 
+else 
+{
+    <div class="container-fluid">
                 <AuthorizedButton Policy="ManagementFull" type="submit" class="btn btn-primary">@Translator[$"Submit"]</AuthorizedButton>
             </div>
-        }
+}
 
     </EditForm>
 }
 
 @code {
 
-    [Parameter]
-    public string Inspection { get; set; } = string.Empty;
+[Parameter]
+public string Inspection { get; set; } = string.Empty;
 
-    private InspectionRequest? _request = null;
+private InspectionRequest? _request = null;
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
+protected override async Task OnAfterRenderAsync(bool firstRender)
+{
+if (firstRender)
+{
+    var response = await InspectionHandler.GetAsync(Inspection);
+
+    _request = new InspectionRequest
         {
-            var response = await InspectionHandler.GetAsync(Inspection);
+            ETag = response.ETag,
+            Activated = response.Activated,
+            DisplayName = response.DisplayName,
+            Text = response.Text,
+            UniqueName = response.UniqueName
+        };
 
-            _request = new InspectionRequest
-                {
-                    ETag = response.ETag,
-                    Activated = response.Activated,
-                    DisplayName = response.DisplayName,
-                    Text = response.Text,
-                    UniqueName = response.UniqueName
-                };
+    StateHasChanged();
+}
+}
 
-            StateHasChanged();
-        }
-    }
-
-    private async Task OnValidSubmitAsync()
-    {
-        await InspectionHandler.ReplaceAsync(Inspection, _request!);
-        NavigationManager.NavigateTo("/inspections");
-    }
+private async Task OnValidSubmitAsync()
+{
+await InspectionHandler.ReplaceAsync(Inspection, _request!);
+NavigationManager.NavigateTo("/inspections");
+}
 }

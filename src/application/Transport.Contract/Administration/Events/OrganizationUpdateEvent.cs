@@ -1,21 +1,20 @@
-﻿using Super.Paula.Application.Orchestration;
-using Super.Paula.Validation;
+﻿using Super.Paula.Shared.Orchestration;
 using System.ComponentModel.DataAnnotations;
+using Super.Paula.Shared.Validation;
 
-namespace Super.Paula.Application.Administration.Events
-{
-    [AllowedSubscriber(AllowedSubscribers.Inspector)]
-    public record OrganizationUpdateEvent(
+namespace Super.Paula.Application.Administration.Events;
 
-        [KebabCase]
-        [StringLength(140)]
-        [UniqueName]
-        string UniqueName,
+[AllowedSubscriber(AllowedSubscribers.Inspector)]
+public record OrganizationUpdateEvent(
 
-        [StringLength(140)]
-        string DisplayName,
+    [KebabCase]
+    [StringLength(140)]
+    [UniqueName]
+    string UniqueName,
 
-        bool Activated)
+    [StringLength(140)]
+    string DisplayName,
 
-        : EventBase();
-}
+    bool Activated)
+
+    : EventBase;

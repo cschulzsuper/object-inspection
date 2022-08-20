@@ -1,17 +1,16 @@
 ﻿using System.Threading.Tasks;
 
-namespace Super.Paula.Application.Administration
+namespace Super.Paula.Application.Administration;
+
+public interface IInspectorContinuationService
 {
-    public interface IInspectorContinuationService
-    {
-        ValueTask AddCreateIdentityInspectorContinuationAsync(Inspector entity);
+    ValueTask AddCreateIdentityInspectorContinuationAsync(Inspector entity);
 
-        ValueTask AddActivateIdentityInspectorContinuationAsync(Inspector entity);
+    ValueTask AddActivateIdentityInspectorContinuationAsync(Inspector entity);
 
-        ValueTask AddDeactivateIdentityInspectorContinuationAsync(Inspector entity);
+    ValueTask AddDeactivateIdentityInspectorContinuationAsync(Inspector entity);
 
-        ValueTask AddDeleteIdentityInspectorContinuationAsync(Inspector entity);
+    ValueTask AddDeleteIdentityInspectorContinuationAsync(Inspector entity);
 
-        ValueTask AddDeleteIdentityInspectorContinuationAsync(string identity, string organization, string uniqueName);
-    }
+    ValueTask AddDeleteIdentityInspectorContinuationAsync(string identity, string organization, string uniqueName);
 }

@@ -1,12 +1,11 @@
 ﻿using Super.Paula.Application.Administration.Events;
 using Super.Paula.Application.Inventory.Events;
-using Super.Paula.Application.Orchestration;
+using Super.Paula.Shared.Orchestration;
 
-namespace Super.Paula.Application.Communication
+namespace Super.Paula.Application.Communication;
+
+public interface INotificationEventHandler :
+    IEventHandler<BusinessObjectInspectorEvent>,
+    IEventHandler<InspectorBusinessObjectEvent>
 {
-    public interface INotificationEventHandler :
-        IEventHandler<BusinessObjectInspectorEvent>,
-        IEventHandler<InspectorBusinessObjectEvent>
-    {
-    }
 }

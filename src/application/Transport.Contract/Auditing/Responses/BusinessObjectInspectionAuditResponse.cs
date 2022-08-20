@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Immutable;
 
-namespace Super.Paula.Application.Auditing.Responses
+namespace Super.Paula.Application.Auditing.Responses;
+
+public class BusinessObjectInspectionAuditResponse
 {
-    public class BusinessObjectInspectionAuditResponse
-    {
-        public string ETag { get; set; } = string.Empty;
-        public ISet<BusinessObjectInspectionAuditScheduleTimestampResponse> Appointments { get; set; } = ImmutableHashSet.Create<BusinessObjectInspectionAuditScheduleTimestampResponse>();
-    }
+    public string ETag { get; set; } = string.Empty;
+    public ISet<BusinessObjectInspectionAuditScheduleTimestampResponse> Appointments { get; set; } = ImmutableHashSet.Create<BusinessObjectInspectionAuditScheduleTimestampResponse>();
 }

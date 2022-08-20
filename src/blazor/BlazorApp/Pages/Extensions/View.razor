@@ -2,7 +2,7 @@
 
 @inject ITranslator<View> Translator
 @inject NavigationManager NavigationManager
-@inject IExtensionHandler ExtensionHandler
+@inject IExtensionRequestHandler ExtensionRequestHandler
 
 @attribute [Authorize("ManagementRead")]
 
@@ -38,8 +38,8 @@ else
         </thead>
         <tbody>
             @foreach (var extension in _extensions.Values)
-            {
-                <tr>
+    {
+        <tr>
                     <td>@extension.AggregateType</td>
                     <td>
                         <button class="btn btn-outline-info btn-block" title="@Translator[$"Fields"]"
@@ -53,7 +53,7 @@ else
                     </td>
                     
                 </tr>
-            }
+    }
         </tbody>
     </table>
 }
@@ -70,7 +70,7 @@ else
         {
             _extensions = new Dictionary<string, ExtensionResponse>();
 
-            var response = ExtensionHandler.GetAll();
+            var response = ExtensionRequestHandler.GetAll();
 
             await foreach (var identity in response)
             {
@@ -87,10 +87,11 @@ else
 
     public async Task DeleteAsync(ExtensionResponse identity)
     {
-        await ExtensionHandler.DeleteAsync(identity.AggregateType, identity.ETag);
+        await ExtensionRequestHandler.DeleteAsync(identity.AggregateType, identity.ETag);
         _extensions!.Remove(identity.AggregateType);
     }
 
     public void NavigateToFields(string aggregateType)
         => NavigationManager.NavigateTo($"/extensions/{aggregateType}/fields");
+
 }

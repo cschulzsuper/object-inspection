@@ -8,7 +8,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\Management.Contract\Management.Contract.csproj" />
 		<ProjectReference Include="..\Transport.Contract\Transport.Contract.csproj" />
 		<ProjectReference Include="..\..\data\Data\Data.csproj" />
 	</ItemGroup>

@@ -2,9 +2,9 @@
 
 @inject ITranslator<Create> Translator
 @inject NavigationManager NavigationManager
-@inject IIdentityHandler IdentityHandler
+@inject IIdentityRequestHandler IdentityHandler
 
-@attribute [Authorize("Maintainance")]
+@attribute [Authorize("Maintenance")]
 
 <div class="container-fluid">
     <h1>@Translator[$"Create identity"]</h1>
@@ -25,28 +25,28 @@
     </div>
 
     @if(context.GetValidationMessages().Any())
-    {
-        <div class="container-fluid">
+{
+    <div class="container-fluid">
             <div class="card card-body tex-wrap">
                 <ValidationSummary />    
             </div>
         </div>
-    } 
-    else 
-    {
-        <div class="container-fluid">
+} 
+else 
+{
+    <div class="container-fluid">
             <button type="submit" class="btn btn-primary">@Translator[$"Submit"]</button>
         </div>
-    }
+}
 
 </EditForm>
 
 @code {
-    private IdentityRequest _request = new IdentityRequest();
+private IdentityRequest _request = new IdentityRequest();
 
-    private async Task OnValidSubmitAsync()
-    {
-        await IdentityHandler.CreateAsync(_request);
-        NavigationManager.NavigateTo("/identities");
-    }
+private async Task OnValidSubmitAsync()
+{
+await IdentityHandler.CreateAsync(_request);
+NavigationManager.NavigateTo("/identities");
+}
 }
