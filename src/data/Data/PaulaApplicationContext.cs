@@ -44,6 +44,8 @@ public class PaulaApplicationContext : PaulaContext
 
             // Communication
             modelBuilder.ApplyConfiguration(new NotificationMapping(State));
+
+            ApplyCamelCaseJsonPropertyNames(modelBuilder);
         }
     }
 }

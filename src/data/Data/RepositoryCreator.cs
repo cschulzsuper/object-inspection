@@ -27,7 +27,7 @@ public class RepositoryCreator : IRepositoryCreator
         var cosmosClient = paulaOperationContext.Database.GetCosmosClient();
         var cosmosDatabase = cosmosClient.GetDatabase(_appSettings.CosmosDatabase);
 
-        await cosmosDatabase.CreateContainerIfNotExistsAsync(organization, "/PartitionKey");
+        await cosmosDatabase.CreateContainerIfNotExistsAsync(organization, "/partitionKey");
     }
 
     public async ValueTask DestroyApplicationAsync(string organization)

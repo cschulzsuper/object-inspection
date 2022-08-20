@@ -22,4 +22,16 @@ public class CaseStyleConverterTests
         // Assert
         result.Should().Be(kebabCase);
     }
+
+    [Theory]
+    [InlineData("CaseStyleConverterTests", "caseStyleConverterTests")]
+    [InlineData("etag", "etag")]
+    public void FromPascalCaseToCamelCase_ReturnsKebabCase_ForPascalCase(string pascalCase, string camelCase)
+    {
+        // Act
+        var result = CaseStyleConverter.FromPascalCaseToKebabCase(pascalCase);
+
+        // Assert
+        result.Should().Be(camelCase);
+    }
 }
