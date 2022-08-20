@@ -1,5 +1,5 @@
 ﻿@inject ITranslator<SignOutButton> Translator
-@inject IAuthenticationHandler AuthenticationHandler
+@inject IAuthenticationRequestHandler AuthenticationHandler
 @inject NavigationManager NavigationManager   
 
 <a @attributes="AdditionalAttributes" @onclick="() => SignOutAsync()" href="#">
@@ -7,17 +7,17 @@
 
 @code {
 
-    [Parameter(CaptureUnmatchedValues = true)]
-    public IDictionary<string, object>? AdditionalAttributes { get; set; }
+[Parameter(CaptureUnmatchedValues = true)]
+public IDictionary<string, object>? AdditionalAttributes { get; set; }
 
-    public async Task SignOutAsync()
-    {
-        await AuthenticationHandler.SignOutAsync();
-        NavigationManager.NavigateTo("/");
-    }
+public async Task SignOutAsync()
+{
+await AuthenticationHandler.SignOutAsync();
+NavigationManager.NavigateTo("/");
+}
 
-    public string Title => AdditionalAttributes?.ContainsKey("title") == true
-        ? $"{AdditionalAttributes["title"]}"
-        : string.Empty;
+public string Title => AdditionalAttributes?.ContainsKey("title") == true
+? $"{AdditionalAttributes["title"]}"
+: string.Empty;
 
 }

@@ -27,9 +27,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Environment\Environment.csproj" />
+    <ProjectReference Include="..\..\shared\Environment\Environment.csproj" />
     <ProjectReference Include="..\Management.Contract\Management.Contract.csproj" />
-    <ProjectReference Include="..\Streaming.Contract\Streaming.Contract.csproj" />
+    <ProjectReference Include="..\Radio.Contract\Radio.Contract.csproj" />
     <ProjectReference Include="..\Transport.Contract\Transport.Contract.csproj" />
   </ItemGroup>
 

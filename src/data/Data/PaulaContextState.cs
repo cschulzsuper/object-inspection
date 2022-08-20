@@ -1,9 +1,8 @@
-﻿namespace Super.Paula.Data
+﻿namespace Super.Paula.Data;
+
+public class PaulaContextState
 {
-    public class PaulaContextState
-    {
-        public string CurrentOrganization { get; set; } = string.Empty;
-        public string CurrentInspector { get; set; } = string.Empty;
-        public string ExtensionModelIndicator { get; set; } = string.Empty;
-    }
+    public string CurrentOrganization { get; set; } = string.Empty;
+    public string CurrentInspector { get; set; } = string.Empty;
+    public string ExtensionModelIndicator { get; set; } = string.Empty;
 }

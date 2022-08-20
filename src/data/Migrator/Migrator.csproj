@@ -5,7 +5,7 @@
 		<TargetFramework>net7.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<LangVersion>Preview</LangVersion>
-		<RootNamespace>Super.Paula.Data</RootNamespace>
+		<RootNamespace>Super.Paula.Migrator</RootNamespace>
 		<UserSecretsId>b60582a0-a9df-4614-a837-b9ab58e3463d</UserSecretsId>
 	</PropertyGroup>
 
@@ -15,7 +15,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\application\Security.Contract\Security.Contract.csproj" />
+		<ProjectReference Include="..\..\shared\Security.Contract\Security.Contract.csproj" />
 		<ProjectReference Include="..\Data\Data.csproj" />
 	</ItemGroup>
 

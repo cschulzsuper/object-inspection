@@ -1,7 +1,6 @@
-﻿namespace Super.Paula.Application.Operation.Responses
+﻿namespace Super.Paula.Application.Operation.Responses;
+
+public class ExtensionFieldDeleteResponse
 {
-    public class ExtensionFieldDeleteResponse
-    {
-        public string ETag { get; set; } = string.Empty;
-    }
+    public string ETag { get; set; } = string.Empty;
 }

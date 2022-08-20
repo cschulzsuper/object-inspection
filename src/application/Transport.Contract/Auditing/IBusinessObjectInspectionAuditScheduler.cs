@@ -1,7 +1,6 @@
-﻿namespace Super.Paula.Application.Auditing
+﻿namespace Super.Paula.Application.Auditing;
+
+public interface IBusinessObjectInspectionAuditScheduler
 {
-    public interface IBusinessObjectInspectionAuditScheduler
-    {
-        public void Schedule(BusinessObjectInspection inspection);
-    }
+    public void Schedule(BusinessObjectInspection inspection);
 }

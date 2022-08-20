@@ -2,7 +2,7 @@
 
 @inject ITranslator<Create> Translator
 @inject NavigationManager NavigationManager
-@inject IInspectorHandler InspectorHandler
+@inject IInspectorRequestHandler InspectorRequestHandler
 
 @attribute [Authorize("ManagementRead")]
 
@@ -29,32 +29,32 @@
     </div>
 
     @if(context.GetValidationMessages().Any())
-    {
-        <div class="container-fluid">
+{
+    <div class="container-fluid">
             <div class="card card-body tex-wrap">
                 <ValidationSummary />    
             </div>
         </div>
-    } 
-    else 
-    {
-        <div class="container-fluid">
+} 
+else 
+{
+    <div class="container-fluid">
             <AuthorizedButton Policy="ManagementFull" 
                 id="submit"
                 type="submit" 
                 class="btn btn-primary">@Translator[$"Submit"]</AuthorizedButton>
         </div>
-    }
+}
 
 </EditForm>
 
 @code {
 
-    private InspectorRequest _request = new InspectorRequest();
+private InspectorRequest _request = new InspectorRequest();
 
-    private async Task OnValidSubmitAsync()
-    {
-        await InspectorHandler.CreateAsync(_request);
-        NavigationManager.NavigateTo("/inspectors");
-    }
+private async Task OnValidSubmitAsync()
+{
+await InspectorRequestHandler.CreateAsync(_request);
+NavigationManager.NavigateTo("/inspectors");
+}
 }

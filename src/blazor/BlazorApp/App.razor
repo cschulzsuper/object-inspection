@@ -31,11 +31,11 @@
 
 @code {
 
-    private ErrorBoundary? errorBoundary = null!;
+private ErrorBoundary? errorBoundary = null!;
 
-    private void RecoverAndGoHome()
-    {
-        errorBoundary?.Recover();
-        NavigationManager.NavigateTo("/", true);
-    }
+private void RecoverAndGoHome()
+{
+errorBoundary?.Recover();
+NavigationManager.NavigateTo("/", true);
+}
 }

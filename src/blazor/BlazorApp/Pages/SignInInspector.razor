@@ -1,7 +1,7 @@
 ﻿@page "/sign-in-inspector"
 
-@inject Application.Administration.IAuthorizationHandler AuthorizationHandler
-@inject Application.Administration.IInspectorHandler InspectorHandler
+@inject IAuthorizationRequestHandler AuthorizationRequestHandler
+@inject IInspectorRequestHandler InspectorRequestHandler
 
 @inject ITranslator<SignInInspector> Translator
 @inject NavigationManager NavigationManager
@@ -24,53 +24,53 @@ else if(!_inspectors.Any())
 else
 {
     @foreach (var inspector in _inspectors)
-    {
-        <button 
+{
+    <button 
             id=@($"signIn{inspector.UniqueName}For{inspector.Organization}")
             class="btn btn-outline-secondary btn-block text-left font-italic"
             @onclick="() => SignInAsync(inspector)">
             @inspector.Organization @@ @inspector.UniqueName
         </button>
-    }
+}
 }
 </div>
 
 @code {
-    private ICollection<IdentityInspectorResponse>? _inspectors;
+private ICollection<IdentityInspectorResponse>? _inspectors;
 
-    [CascadingParameter]
-    public Task<AuthenticationState> AuthenticationState { get; set; } = null!;
+[CascadingParameter]
+public Task<AuthenticationState> AuthenticationState { get; set; } = null!;
 
-    protected override async Task OnParametersSetAsync()
-    {          
-        _inspectors = new List<IdentityInspectorResponse>();
+protected override async Task OnParametersSetAsync()
+{          
+_inspectors = new List<IdentityInspectorResponse>();
 
-        var user = (await AuthenticationState).User;
+var user = (await AuthenticationState).User;
 
-        var identity = user.GetIdentity();
+var identity = user.GetIdentity();
 
-        await foreach (var inspector in InspectorHandler.GetAllForIdentity(identity))
-        {
-            if (inspector.Activated)
-            {
-                _inspectors.Add(inspector);
-            }
-        }
-
-        if(_inspectors.Count == 1)
-        {
-            await SignInAsync(_inspectors.Single());
-        }
-
-        StateHasChanged();
-    }
-
-    private async Task SignInAsync(IdentityInspectorResponse inspector)
+await foreach (var inspector in InspectorRequestHandler.GetAllForIdentity(identity))
+{
+    if (inspector.Activated)
     {
-        await AuthorizationHandler.AuthorizeAsync(
-            inspector.Organization,
-            inspector.UniqueName);
-
-        NavigationManager.NavigateTo("/");
+        _inspectors.Add(inspector);
     }
+}
+
+if(_inspectors.Count == 1)
+{
+    await SignInAsync(_inspectors.Single());
+}
+
+StateHasChanged();
+}
+
+private async Task SignInAsync(IdentityInspectorResponse inspector)
+{
+await AuthorizationRequestHandler.AuthorizeAsync(
+    inspector.Organization,
+    inspector.UniqueName);
+
+NavigationManager.NavigateTo("/");
+}
 }

@@ -1,17 +1,16 @@
 ﻿using Microsoft.Extensions.Configuration;
 
-namespace Super.Paula.Client.Configuration
+namespace Super.Paula.Client.Configuration;
+
+public class BlazorApiConfigurationSource : IConfigurationSource
 {
-    public class BlazorApiConfigurationSource : IConfigurationSource
-    {
-        private readonly IConfigurationProvider _provider;
+    private readonly IConfigurationProvider _provider;
 
-        public BlazorApiConfigurationSource(IConfigurationProvider provider) =>
-            _provider = provider;
+    public BlazorApiConfigurationSource(IConfigurationProvider provider) =>
+        _provider = provider;
 
-        public IConfigurationProvider Build(IConfigurationBuilder builder) =>
-            _provider;
+    public IConfigurationProvider Build(IConfigurationBuilder builder) =>
+        _provider;
 
 
-    }
 }

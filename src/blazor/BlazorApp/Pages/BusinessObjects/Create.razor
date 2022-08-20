@@ -2,8 +2,8 @@
 
 @inject ITranslator<Create> Translator
 @inject NavigationManager NavigationManager
-@inject IBusinessObjectHandler BusinessObjectHandler
-@inject IExtensionHandler ExtensionHandler
+@inject IBusinessObjectRequestHandler BusinessObjectHandler
+@inject IExtensionRequestHandler ExtensionRequestHandler
 
 @attribute [Authorize("ManagementRead")]
 
@@ -43,8 +43,8 @@ else
 
         <div class="container-fluid">
             @foreach(var extensionField in _extension.Fields)
-            {
-                <div class="form-group">
+    {
+        <div class="form-group">
                     <label>@Translator[extensionField.DisplayName]</label>
                     <input
                         class="form-control"
@@ -52,26 +52,26 @@ else
                         value="@_request[extensionField.DataName]"
                         @onchange="@(e => _request[extensionField.DataName] = e.Value)" />
                 </div>
-            }
+    }
         </div>
 
         @if(context.GetValidationMessages().Any())
-        {
-            <div class="container-fluid">
+{
+    <div class="container-fluid">
                 <div class="card card-body tex-wrap">
                     <ValidationSummary />    
                 </div>
             </div>
-        } 
-        else 
-        {
-            <div class="container-fluid">
+} 
+else 
+{
+    <div class="container-fluid">
                 <AuthorizedButton Policy="ManagementFull" 
                     id="submit"
                     type="submit"
                     class="btn btn-primary">@Translator[$"Submit"]</AuthorizedButton>
             </div>
-        }
+}
 
     </EditForm>
 }
@@ -83,7 +83,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        _extension = await ExtensionHandler.GetAsync(ExtensionAggregateTypes.BusinessObject);
+        _extension = await ExtensionRequestHandler.GetAsync(ExtensionAggregateTypes.BusinessObject);
     }
 
     private async Task OnValidSubmitAsync()
@@ -94,4 +94,5 @@ else
 
     private string GetExtensionFieldInputId(ExtensionFieldResponse extensionField)
         => $"businessObject{char.ToUpperInvariant(extensionField.DataName[0])}{extensionField.DataName[1..]}";
+
 }

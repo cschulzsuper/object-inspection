@@ -1,60 +1,59 @@
-﻿using Super.Paula.Authorization;
-using Super.Paula.Environment;
+﻿using Super.Paula.Shared.Authorization;
+using Super.Paula.Shared.Environment;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Super.Paula.Application.Administration
+namespace Super.Paula.Application.Administration;
+
+public class AuthorizationTokenHandler : IAuthorizationTokenHandler
 {
-    public class AuthorizationTokenHandler : IAuthorizationTokenHandler
+    private readonly IOrganizationManager _organizationManager;
+    private readonly AppSettings _appSettings;
+
+    public AuthorizationTokenHandler(
+        IOrganizationManager organizationManager,
+        AppSettings appSettings)
     {
-        private readonly IOrganizationManager _organizationManager;
-        private readonly AppSettings _appSettings;
+        _organizationManager = organizationManager;
+        _appSettings = appSettings;
+    }
 
-        public AuthorizationTokenHandler(
-            IOrganizationManager organizationManager,
-            AppSettings appSettings)
+    public void RewriteAuthorizations(Token token)
+    {
+        var authorizations = new HashSet<string>();
+
+        if (!string.IsNullOrWhiteSpace(token.Organization))
         {
-            _organizationManager = organizationManager;
-            _appSettings = appSettings;
-        }
+            var organization = _organizationManager.Get(token.Organization);
 
-        public void RewriteAuthorizations(Token token)
-        {
-            var authorizations = new HashSet<string>();
-
-            if (!string.IsNullOrWhiteSpace(token.Organization))
+            if (_appSettings.DemoIdentity == token.Identity)
             {
-                var organization = _organizationManager.Get(token.Organization);
-
-                if (_appSettings.DemoIdentity == token.Identity)
-                {
-                    authorizations.Add("Observer");
-                }
-                else if (!string.IsNullOrWhiteSpace(token.Inspector))
-                {
-                    authorizations.Add("Inspector");
-                }
-
-                if (organization.ChiefInspector == token.Inspector)
-                {
-                    authorizations.Add("Chief");
-                }
-
-                if (!string.IsNullOrWhiteSpace(token.ImpersonatorOrganization) &&
-                    !string.IsNullOrWhiteSpace(token.ImpersonatorInspector))
-                {
-                    authorizations.Add("Impersonator");
-                }
+                authorizations.Add("Observer");
+            }
+            else if (!string.IsNullOrWhiteSpace(token.Inspector))
+            {
+                authorizations.Add("Inspector");
             }
 
-            if (_appSettings.MaintainerIdentity == token.Identity &&
-                !authorizations.Contains("Observer") &&
-                !authorizations.Contains("Impersonator"))
+            if (organization.ChiefInspector == token.Inspector)
             {
-                authorizations.Add("Maintainer");
+                authorizations.Add("Chief");
             }
 
-            token.Authorizations = authorizations.ToArray();
+            if (!string.IsNullOrWhiteSpace(token.ImpersonatorOrganization) &&
+                !string.IsNullOrWhiteSpace(token.ImpersonatorInspector))
+            {
+                authorizations.Add("Impersonator");
+            }
         }
+
+        if (_appSettings.MaintainerIdentity == token.Identity &&
+            !authorizations.Contains("Observer") &&
+            !authorizations.Contains("Impersonator"))
+        {
+            authorizations.Add("Maintainer");
+        }
+
+        token.Authorizations = authorizations.ToArray();
     }
 }

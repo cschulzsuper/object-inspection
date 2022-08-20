@@ -16,7 +16,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\Streaming.Contract\Streaming.Contract.csproj" />
 		<ProjectReference Include="..\Transport.Contract\Transport.Contract.csproj" />
 	</ItemGroup>
 

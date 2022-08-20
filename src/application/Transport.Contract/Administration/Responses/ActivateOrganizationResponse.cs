@@ -1,7 +1,6 @@
-﻿namespace Super.Paula.Application.Administration.Responses
+﻿namespace Super.Paula.Application.Administration.Responses;
+
+public class ActivateOrganizationResponse
 {
-    public class ActivateOrganizationResponse
-    {
-        public string ETag { get; set; } = string.Empty;
-    }
+    public string ETag { get; set; } = string.Empty;
 }

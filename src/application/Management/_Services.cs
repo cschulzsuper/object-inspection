@@ -9,99 +9,98 @@ using Super.Paula.Application.Operation;
 using Super.Paula.Application.Orchestration;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Super.Paula.Application
+namespace Super.Paula.Application;
+
+[SuppressMessage("Style", "IDE1006")]
+public static class _Services
 {
-    [SuppressMessage("Style", "IDE1006")]
-    public static class _Services
+    public static IServiceCollection AddServerManagement(this IServiceCollection services)
     {
-        public static IServiceCollection AddServerManagement(this IServiceCollection services)
-        {
-            services.AddServerManagementAdministration();
-            services.AddServerManagementAuditing();
-            services.AddServerManagementAuth();
-            services.AddServerManagementCommunication();
-            services.AddServerManagementGuidelines();
-            services.AddServerManagementInventory();
-            services.AddServerManagementOperation();
-            services.AddServerManagementOrchestration();
-            services.AddServerManagementSetup();
+        services.AddServerManagementAdministration();
+        services.AddServerManagementAuditing();
+        services.AddServerManagementAuth();
+        services.AddServerManagementCommunication();
+        services.AddServerManagementGuidelines();
+        services.AddServerManagementInventory();
+        services.AddServerManagementOperation();
+        services.AddServerManagementOrchestration();
+        services.AddServerManagementSetup();
 
-            return services;
-        }
+        return services;
+    }
 
-        private static IServiceCollection AddServerManagementAdministration(this IServiceCollection services)
-        {
-            services.AddScoped<IInspectorManager, InspectorManager>();
-            services.AddScoped<IIdentityInspectorManager, IdentityInspectorManager>();
-            services.AddScoped<IOrganizationManager, OrganizationManager>();
-            services.AddScoped<IInspectorAvatarManager, InspectorAvatarManager>();
+    private static IServiceCollection AddServerManagementAdministration(this IServiceCollection services)
+    {
+        services.AddScoped<IInspectorManager, InspectorManager>();
+        services.AddScoped<IIdentityInspectorManager, IdentityInspectorManager>();
+        services.AddScoped<IOrganizationManager, OrganizationManager>();
+        services.AddScoped<IInspectorAvatarManager, InspectorAvatarManager>();
 
-            return services;
-        }
+        return services;
+    }
 
-        private static IServiceCollection AddServerManagementAuditing(this IServiceCollection services)
-        {
-            services.AddScoped<IBusinessObjectInspectionManager, BusinessObjectInspectionManager>();
-            services.AddScoped<IBusinessObjectInspectionAuditRecordManager, BusinessObjectInspectionAuditRecordManager>();
+    private static IServiceCollection AddServerManagementAuditing(this IServiceCollection services)
+    {
+        services.AddScoped<IBusinessObjectInspectionManager, BusinessObjectInspectionManager>();
+        services.AddScoped<IBusinessObjectInspectionAuditRecordManager, BusinessObjectInspectionAuditRecordManager>();
 
-            return services;
-        }
+        return services;
+    }
 
-        private static IServiceCollection AddServerManagementAuth(this IServiceCollection services)
-        {
-            services.AddScoped<IIdentityManager, IdentityManager>();
+    private static IServiceCollection AddServerManagementAuth(this IServiceCollection services)
+    {
+        services.AddScoped<IIdentityManager, IdentityManager>();
 
-            return services;
-        }
+        return services;
+    }
 
-        private static IServiceCollection AddServerManagementCommunication(this IServiceCollection services)
-        {
-            services.AddScoped<INotificationManager, NotificationManager>();
+    private static IServiceCollection AddServerManagementCommunication(this IServiceCollection services)
+    {
+        services.AddScoped<INotificationManager, NotificationManager>();
 
-            return services;
-        }
+        return services;
+    }
 
-        private static IServiceCollection AddServerManagementGuidelines(this IServiceCollection services)
-        {
-            services.AddScoped<IInspectionManager, InspectionManager>();
+    private static IServiceCollection AddServerManagementGuidelines(this IServiceCollection services)
+    {
+        services.AddScoped<IInspectionManager, InspectionManager>();
 
-            return services;
-        }
+        return services;
+    }
 
-        private static IServiceCollection AddServerManagementInventory(this IServiceCollection services)
-        {
-            services.AddScoped<IBusinessObjectManager, BusinessObjectManager>();
+    private static IServiceCollection AddServerManagementInventory(this IServiceCollection services)
+    {
+        services.AddScoped<IBusinessObjectManager, BusinessObjectManager>();
 
-            return services;
-        }
+        return services;
+    }
 
-        private static IServiceCollection AddServerManagementOperation(this IServiceCollection services)
-        {
-            services.AddScoped<IApplicationManager, ApplicationManager>();
-            services.AddScoped<IConnectionManager, ConnectionManager>();
-            services.AddScoped<IConnectionViolationManager, ConnectionViolationManager>();
+    private static IServiceCollection AddServerManagementOperation(this IServiceCollection services)
+    {
+        services.AddScoped<IApplicationManager, ApplicationManager>();
+        services.AddScoped<IConnectionManager, ConnectionManager>();
+        services.AddScoped<IConnectionViolationManager, ConnectionViolationManager>();
 
-            return services;
-        }
+        return services;
+    }
 
-        private static IServiceCollection AddServerManagementOrchestration(this IServiceCollection services)
-        {
-            services.AddScoped<IContinuationManager, ContinuationManager>();
-            services.AddScoped<IEventManager, EventManager>();
-            services.AddScoped<IEventProcessingManager, EventProcessingManager>();
-            services.AddScoped<IWorkerManager, WorkerManager>();
-            services.AddScoped<IWorkerRuntimeManager, WorkerRuntimeManager>();
+    private static IServiceCollection AddServerManagementOrchestration(this IServiceCollection services)
+    {
+        services.AddScoped<IContinuationManager, ContinuationManager>();
+        services.AddScoped<IEventManager, EventManager>();
+        services.AddScoped<IEventProcessingManager, EventProcessingManager>();
+        services.AddScoped<IWorkerManager, WorkerManager>();
+        services.AddScoped<IWorkerRuntimeManager, WorkerRuntimeManager>();
 
-            return services;
-        }
+        return services;
+    }
 
-        private static IServiceCollection AddServerManagementSetup(this IServiceCollection services)
-        {
-            services.AddScoped<IExtensionManager, ExtensionManager>();
-            services.AddScoped<IExtensionAggregateTypeManager, ExtensionAggregateTypeManager>();
-            services.AddScoped<IExtensionFieldTypeManager, ExtensionFieldTypeManager>();
+    private static IServiceCollection AddServerManagementSetup(this IServiceCollection services)
+    {
+        services.AddScoped<IExtensionManager, ExtensionManager>();
+        services.AddScoped<IExtensionAggregateTypeManager, ExtensionAggregateTypeManager>();
+        services.AddScoped<IExtensionFieldTypeManager, ExtensionFieldTypeManager>();
 
-            return services;
-        }
+        return services;
     }
 }

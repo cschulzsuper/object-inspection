@@ -1,11 +1,10 @@
 ﻿using System.Threading.Tasks;
 
-namespace Super.Paula.Application.Operation
-{
-    public interface IApplicationManager
-    {
-        ValueTask InitializeAsync(string organization);
+namespace Super.Paula.Application.Operation;
 
-        ValueTask PrugeAsync(string organization);
-    }
+public interface IApplicationManager
+{
+    ValueTask InitializeAsync(string organization);
+
+    ValueTask PrugeAsync(string organization);
 }

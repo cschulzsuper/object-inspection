@@ -1,12 +1,11 @@
-﻿namespace Super.Paula.Application.Communication
+﻿namespace Super.Paula.Application.Communication;
+
+public class Notification
 {
-    public class Notification
-    {
-        public string ETag { get; set; } = string.Empty;
-        public string Inspector { get; set; } = string.Empty;
-        public string Target { get; set; } = string.Empty;
-        public string Text { get; set; } = string.Empty;
-        public int Date { get; set; }
-        public int Time { get; set; }
-    }
+    public string ETag { get; set; } = string.Empty;
+    public string Inspector { get; set; } = string.Empty;
+    public string Target { get; set; } = string.Empty;
+    public string Text { get; set; } = string.Empty;
+    public int Date { get; set; }
+    public int Time { get; set; }
 }

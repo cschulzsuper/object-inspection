@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Routing;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Routing;
 using Super.Paula.Application.Administration;
 using Super.Paula.Application.Auditing;
 using Super.Paula.Application.Auth;
@@ -6,29 +7,34 @@ using Super.Paula.Application.Communication;
 using Super.Paula.Application.Guidelines;
 using Super.Paula.Application.Inventory;
 using Super.Paula.Application.Operation;
-using Super.Paula.Application.Streaming;
+using Super.Paula.Application.SignalR;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Super.Paula
+namespace Super.Paula.Server;
+
+[SuppressMessage("Style", "IDE1006")]
+public static class _Endpoints
 {
-    [SuppressMessage("Style", "IDE1006")]
-    public static class _Endpoints
+    public static IEndpointRouteBuilder MapServer(this IEndpointRouteBuilder endpoints)
     {
-        public static IEndpointRouteBuilder MapServer(this IEndpointRouteBuilder endpoints)
-            => endpoints
-                .MapAuthentication()
-                .MapAuthorization()
-                .MapBusinessObject()
-                .MapBusinessObjectInspection()
-                .MapBusinessObjectInspectionAuditRecord()
-                .MapExtension()
-                .MapExtensionType()
-                .MapIdentity()
-                .MapInspection()
-                .MapInspector()
-                .MapInspectorAvatar()
-                .MapNotification()
-                .MapOrganization()
-                .MapStreaming();
+        endpoints
+            .MapAuthentication()
+            .MapAuthorization()
+            .MapBusinessObject()
+            .MapBusinessObjectInspection()
+            .MapBusinessObjectInspectionAuditRecord()
+            .MapExtension()
+            .MapExtensionAggrgateType()
+            .MapExtensionFieldType()
+            .MapIdentity()
+            .MapInspection()
+            .MapInspector()
+            .MapInspectorAvatar()
+            .MapNotification()
+            .MapOrganization();
+
+        endpoints.MapHub<RadioHub>("/radio");
+
+        return endpoints;
     }
 }

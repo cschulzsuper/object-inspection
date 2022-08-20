@@ -2,30 +2,29 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Super.Paula.Data
+namespace Super.Paula.Data;
+
+public class ExtensionCache
 {
-    public class ExtensionCache
+    private readonly IDictionary<string, Extension> _cache = new Dictionary<string, Extension>();
+
+    public Extension? this[string key]
     {
-        private readonly IDictionary<string, Extension> _cache = new Dictionary<string, Extension>();
-
-        public Extension? this[string key]
+        set
         {
-            set
+            if (value == null)
             {
-                if (value == null)
-                {
-                    _cache.Remove(key);
-                }
-                else
-                {
-                    _cache[key] = value;
-                }
+                _cache.Remove(key);
             }
-
-            get => _cache[key];
+            else
+            {
+                _cache[key] = value;
+            }
         }
 
-        public bool TryGetValue(string key, [MaybeNullWhen(false)] out Extension value)
-            => _cache.TryGetValue(key, out value);
+        get => _cache[key];
     }
+
+    public bool TryGetValue(string key, [MaybeNullWhen(false)] out Extension value)
+        => _cache.TryGetValue(key, out value);
 }

@@ -12,8 +12,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\application\Environment\Environment.csproj" />
-    <ProjectReference Include="..\..\application\Security.Contract\Security.Contract.csproj" />
+    <ProjectReference Include="..\..\shared\Environment\Environment.csproj" />
+    <ProjectReference Include="..\..\shared\Security.Contract\Security.Contract.csproj" />
     <ProjectReference Include="..\Aggregates\Aggregates.csproj" />
     <ProjectReference Include="..\Data.Contract\Data.Contract.csproj" />
   </ItemGroup>

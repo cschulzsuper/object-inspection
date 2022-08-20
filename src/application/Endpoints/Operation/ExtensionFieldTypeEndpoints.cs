@@ -2,28 +2,27 @@
 using Microsoft.AspNetCore.Routing;
 using System;
 
-namespace Super.Paula.Application.Operation
+namespace Super.Paula.Application.Operation;
+
+public static class ExtensionFieldTypeEndpoints
 {
-    public static class ExtensionFieldTypeEndpoints
+    public static IEndpointRouteBuilder MapExtensionFieldType(this IEndpointRouteBuilder endpoints)
     {
-        public static IEndpointRouteBuilder MapExtensionFieldType(this IEndpointRouteBuilder endpoints)
-        {
-            endpoints.MapRestCollection(
-                "Extensions",
-                "/extension-field-types",
-                "/{extensionFieldType}",
-                null,
-                GetAll,
-                null,
-                null,
-                null);
+        endpoints.MapRestCollection(
+            "Extensions",
+            "/extension-field-types",
+            "/{extensionFieldType}",
+            null,
+            GetAll,
+            null,
+            null,
+            null);
 
-            return endpoints;
-        }
-
-        private static Delegate GetAll =>
-            [Authorize("ManagementFull")]
-            (IExtensionTypeHandler handler)
-                => handler.GetAll();
+        return endpoints;
     }
+
+    private static Delegate GetAll =>
+        [Authorize("ManagementRead")]
+        (IExtensionAggregateTypeRequestHandler requestHandler)
+            => requestHandler.GetAll();
 }

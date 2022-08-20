@@ -1,20 +1,19 @@
-﻿using Super.Paula.Validation;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using Super.Paula.Shared.Validation;
 
-namespace Super.Paula.Application.Auth.Requests
+namespace Super.Paula.Application.Auth.Requests;
+
+public class IdentityRequest
 {
-    public class IdentityRequest
-    {
-        public string ETag { get; set; } = string.Empty;
+    public string ETag { get; set; } = string.Empty;
 
-        [Required]
-        [KebabCase]
-        [StringLength(140)]
-        [UniqueName]
-        public string UniqueName { get; set; } = string.Empty;
+    [Required]
+    [KebabCase]
+    [StringLength(140)]
+    [UniqueName]
+    public string UniqueName { get; set; } = string.Empty;
 
-        [EmailAddress]
-        [StringLength(140)]
-        public string MailAddress { get; set; } = string.Empty;
-    }
+    [EmailAddress]
+    [StringLength(140)]
+    public string MailAddress { get; set; } = string.Empty;
 }

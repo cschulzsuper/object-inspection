@@ -1,7 +1,7 @@
 ﻿@page "/change-avatar"
 
 @inject ITranslator<ChangeAvatar> Translator
-@inject IInspectorAvatarHandler InspectorAvatarHandler
+@inject IInspectorAvatarRequestHandler InspectorAvatarHandler
 @inject NavigationManager NavigationManager
 
 @attribute [Authorize]
@@ -28,20 +28,20 @@
 
 @code {
 
-    private IBrowserFile? _browserFile;
+private IBrowserFile? _browserFile;
 
-    private void OnInputFileChanged(InputFileChangeEventArgs e)
-    {
-        _browserFile = e.File;
-        StateHasChanged();
-    }
+private void OnInputFileChanged(InputFileChangeEventArgs e)
+{
+_browserFile = e.File;
+StateHasChanged();
+}
 
-    private async Task OnSubmitAsync()
-    {
-        if(_browserFile != null)
-        {
-            await InspectorAvatarHandler.WriteAsync(_browserFile.OpenReadStream(), "me");
-            NavigationManager.NavigateTo("/", true);
-        }
-    }
+private async Task OnSubmitAsync()
+{
+if(_browserFile != null)
+{
+    await InspectorAvatarHandler.WriteAsync(_browserFile.OpenReadStream(), "me");
+    NavigationManager.NavigateTo("/", true);
+}
+}
 }

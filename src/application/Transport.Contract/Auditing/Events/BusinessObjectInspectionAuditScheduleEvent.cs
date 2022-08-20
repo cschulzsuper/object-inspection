@@ -1,25 +1,24 @@
-﻿using Super.Paula.Application.Orchestration;
-using Super.Paula.Validation;
+﻿using Super.Paula.Shared.Orchestration;
 using System.ComponentModel.DataAnnotations;
+using Super.Paula.Shared.Validation;
 
-namespace Super.Paula.Application.Auditing.Events
-{
-    [AllowedSubscriber(AllowedSubscribers.Inspector)]
-    public record BusinessObjectInspectionAuditScheduleEvent(
+namespace Super.Paula.Application.Auditing.Events;
 
-        [KebabCase]
-        [StringLength(140)]
-        [UniqueName]
-        string BusinessObject,
+[AllowedSubscriber(AllowedSubscribers.Inspector)]
+public record BusinessObjectInspectionAuditScheduleEvent(
 
-        [DayNumber]
-        int PlannedAuditDate,
+    [KebabCase]
+    [StringLength(140)]
+    [UniqueName]
+    string BusinessObject,
 
-        [Milliseconds]
-        int PlannedAuditTime,
+    [DayNumber]
+    int PlannedAuditDate,
 
-        [Milliseconds]
-        int Threshold)
+    [Milliseconds]
+    int PlannedAuditTime,
 
-        : EventBase();
-}
+    [Milliseconds]
+    int Threshold)
+
+    : EventBase;

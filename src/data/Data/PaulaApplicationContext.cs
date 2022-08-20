@@ -5,46 +5,45 @@ using Super.Paula.Data.Mappings.Communication;
 using Super.Paula.Data.Mappings.Guidelines;
 using Super.Paula.Data.Mappings.Inventory;
 
-namespace Super.Paula.Data
+namespace Super.Paula.Data;
+
+public class PaulaApplicationContext : PaulaContext
 {
-    public class PaulaApplicationContext : PaulaContext
+    private readonly ExtensionProvider _extensions;
+
+    public PaulaApplicationContext(
+        DbContextOptions<PaulaApplicationContext> options,
+        PaulaContextState state,
+        ExtensionProvider extensions)
+
+        : base(options, state)
     {
-        private readonly ExtensionProvider _extensions;
+        _extensions = extensions;
+    }
 
-        public PaulaApplicationContext(
-            DbContextOptions<PaulaApplicationContext> options, 
-            PaulaContextState state,
-            ExtensionProvider extensions)
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
 
-            : base(options, state)
+        if (!string.IsNullOrWhiteSpace(State.CurrentOrganization))
         {
-            _extensions = extensions;
-        }
+            modelBuilder.HasManualThroughput(1000);
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
+            // Inventory
+            modelBuilder.ApplyConfiguration(new BusinessObjectMapping(State, _extensions));
 
-            if (!string.IsNullOrWhiteSpace(State.CurrentOrganization))
-            {
-                modelBuilder.HasManualThroughput(1000);
+            // Auditing
+            modelBuilder.ApplyConfiguration(new BusinessObjectInspectionMapping(State));
+            modelBuilder.ApplyConfiguration(new BusinessObjectInspectionAuditRecordMapping(State));
 
-                // Inventory
-                modelBuilder.ApplyConfiguration(new BusinessObjectMapping(State, _extensions));
-               
-                // Auditing
-                modelBuilder.ApplyConfiguration(new BusinessObjectInspectionMapping(State));
-                modelBuilder.ApplyConfiguration(new BusinessObjectInspectionAuditRecordMapping(State));
+            // Guidelines
+            modelBuilder.ApplyConfiguration(new InspectionMapping(State));
 
-                // Guidelines
-                modelBuilder.ApplyConfiguration(new InspectionMapping(State));
+            // Administration
+            modelBuilder.ApplyConfiguration(new InspectorMapping(State));
 
-                // Administration
-                modelBuilder.ApplyConfiguration(new InspectorMapping(State));
-
-                // Communication
-                modelBuilder.ApplyConfiguration(new NotificationMapping(State));
-            }
+            // Communication
+            modelBuilder.ApplyConfiguration(new NotificationMapping(State));
         }
     }
 }

@@ -1,7 +1,6 @@
-﻿namespace Super.Paula.Application.Auditing
+﻿namespace Super.Paula.Application.Auditing;
+
+public class BusinessObjectInspectionAuditScheduleExpression
 {
-    public class BusinessObjectInspectionAuditScheduleExpression
-    {
-        public string CronExpression { get; set; } = string.Empty;
-    }
+    public string CronExpression { get; set; } = string.Empty;
 }

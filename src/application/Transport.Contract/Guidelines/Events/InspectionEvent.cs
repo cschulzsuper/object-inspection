@@ -1,26 +1,24 @@
-﻿using Super.Paula.Application.Orchestration;
-using Super.Paula.Validation;
+﻿using Super.Paula.Shared.Orchestration;
 using System.ComponentModel.DataAnnotations;
+using Super.Paula.Shared.Validation;
 
-namespace Super.Paula.Application.Guidelines.Events
-{
-    [AllowedSubscriber(AllowedSubscribers.BusinessObjectInspection)]
-    [AllowedSubscriber(AllowedSubscribers.BusinessObjectInspectionAuditRecord)]
-    public record InspectionEvent(
+namespace Super.Paula.Application.Guidelines.Events;
 
-        [StringLength(140)]
-        [UniqueName]
-        [KebabCase]
-        string UniqueName,
+[AllowedSubscriber(AllowedSubscribers.BusinessObjectInspection)]
+[AllowedSubscriber(AllowedSubscribers.BusinessObjectInspectionAuditRecord)]
+public record InspectionEvent(
 
-        [StringLength(140)]
-        string DisplayName,
+    [StringLength(140)]
+    [UniqueName]
+    [KebabCase]
+    string UniqueName,
 
-        [StringLength(4000)]
-        string Text,
+    [StringLength(140)]
+    string DisplayName,
 
-        bool Activated)
+    [StringLength(4000)]
+    string Text,
 
-        : EventBase();
+    bool Activated)
 
-}
+    : EventBase;

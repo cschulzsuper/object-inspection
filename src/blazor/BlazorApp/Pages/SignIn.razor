@@ -2,7 +2,7 @@
 
 
 @inject ITranslator<SignIn> Translator
-@inject IAuthenticationHandler AuthenticationHandler
+@inject IAuthenticationRequestHandler AuthenticationHandler
 @inject NavigationManager NavigationManager
 @inject AppSettings AppSettings
 
@@ -18,71 +18,71 @@
             <label>@Translator[$"Identity"]</label>
             <InputText class="form-control" id="identityUniqueName" @bind-Value="_model.Identity" />
             @if(IsDemo)
-            {
-                <small class="form-text text-muted">@Translator.Markdown($"Please feel free to use the demo identity *{AppSettings.DemoIdentity}*")</small>    
-            }
+    {
+        <small class="form-text text-muted">@Translator.Markdown($"Please feel free to use the demo identity *{AppSettings.DemoIdentity}*")</small>    
+    }
         </div>
         <div class="form-group">
             <label>@Translator[$"Password"]</label>
             <InputText class="form-control" id="identitySecret" @bind-Value="_model.Secret" type="password"/>
             @if(IsDemo)
-            {
-                <small class="form-text text-muted">@Translator.Markdown($"The demo identity password is *{AppSettings.DemoPassword}*")</small>    
-            }
+    {
+        <small class="form-text text-muted">@Translator.Markdown($"The demo identity password is *{AppSettings.DemoPassword}*")</small>    
+    }
         </div>
     </div>
 
     @if(context.GetValidationMessages().Any())
-    {
-        <div class="container-fluid">
+{
+    <div class="container-fluid">
             <div class="card card-body tex-wrap">
                 <ValidationSummary />    
             </div>
         </div>
-    } 
-    else 
-    {
-        <div class="container-fluid">
+} 
+else 
+{
+    <div class="container-fluid">
             <button 
                 id="submit"
                 type="submit" 
                 class="btn btn-primary">@Translator[$"Submit"]</button>
         </div>
-    }
+}
 
 </EditForm>
 
 @code {
 
-    public class SignInModel
+public class SignInModel
+{
+[Required]
+[KebabCase]
+[StringLength(140)]
+[UniqueName]
+public string Identity { get; set; } = string.Empty;
+
+[Required]
+[StringLength(140)]
+public string Secret { get; set; } = string.Empty;
+}
+
+private SignInModel _model = new SignInModel();
+
+private bool IsDemo =>
+!string.IsNullOrWhiteSpace(AppSettings.DemoIdentity) &&
+!string.IsNullOrWhiteSpace(AppSettings.DemoPassword);
+
+
+private async Task OnValidSubmitAsync()
+{
+var request = new SignInIdentityRequest
     {
-        [Required]
-        [KebabCase]
-        [StringLength(140)]
-        [UniqueName]
-        public string Identity { get; set; } = string.Empty;
+        Secret = _model.Secret
+    };
 
-        [Required]
-        [StringLength(140)]
-        public string Secret { get; set; } = string.Empty;
-    }
+await AuthenticationHandler.SignInAsync(_model.Identity,request);
 
-    private SignInModel _model = new SignInModel();
-
-    private bool IsDemo =>
-        !string.IsNullOrWhiteSpace(AppSettings.DemoIdentity) &&
-        !string.IsNullOrWhiteSpace(AppSettings.DemoPassword);
-
-
-    private async Task OnValidSubmitAsync()
-    {
-        var request = new SignInIdentityRequest
-            {
-                Secret = _model.Secret
-            };
-
-        await AuthenticationHandler.SignInAsync(_model.Identity,request);
-
-        NavigationManager.NavigateTo("/sign-in-inspector");
-    }
+NavigationManager.NavigateTo("/sign-in-inspector");
+}
 }

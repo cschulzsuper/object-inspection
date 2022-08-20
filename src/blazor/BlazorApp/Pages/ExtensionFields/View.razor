@@ -2,7 +2,7 @@
 
 @inject ITranslator<View> Translator
 @inject NavigationManager NavigationManager
-@inject IExtensionHandler ExtensionHandler
+@inject IExtensionRequestHandler ExtensionRequestHandler
 
 @attribute [Authorize("ManagementRead")]
 
@@ -40,8 +40,8 @@ else
         </thead>
         <tbody>
                 @foreach (var extensionField in _extension.Fields)
-            {
-                <tr>
+    {
+        <tr>
                     <td>@extensionField.UniqueName</td>
                     <td>@extensionField.DisplayName</td>
                     <td>@extensionField.DataType</td>
@@ -52,7 +52,7 @@ else
                     </td>
                     
                 </tr>
-            }
+    }
         </tbody>
     </table>
 }
@@ -70,7 +70,7 @@ else
     {
         if (firstRender)
         {
-            _extension = await ExtensionHandler.GetAsync(AggregateType);
+            _extension = await ExtensionRequestHandler.GetAsync(AggregateType);
 
             StateHasChanged();
         }
@@ -81,10 +81,11 @@ else
 
     public async Task DeleteAsync(ExtensionFieldResponse field)
     {
-        var response = await ExtensionHandler.DeleteFieldAsync(_extension!.AggregateType, field.UniqueName, _extension!.ETag);
+        var response = await ExtensionRequestHandler.DeleteFieldAsync(_extension!.AggregateType, field.UniqueName, _extension!.ETag);
 
         _extension.ETag = response.ETag;
 
         _extension!.Fields.Remove(field);
     }
+
 }

@@ -1,7 +1,6 @@
-﻿namespace Super.Paula.Application.Guidelines.Responses
+﻿namespace Super.Paula.Application.Guidelines.Responses;
+
+public class DeactivateInspectionResponse
 {
-    public class DeactivateInspectionResponse
-    {
-        public string ETag { get; set; } = string.Empty;
-    }
+    public string ETag { get; set; } = string.Empty;
 }

@@ -1,10 +1,9 @@
 ﻿using System.Threading.Tasks;
 
-namespace Super.Paula.Application.Guidelines
+namespace Super.Paula.Application.Guidelines;
+
+public interface IInspectionEventService
 {
-    public interface IInspectionEventService
-    {
-        ValueTask CreateInspectionEventAsync(Inspection inspection);
-        ValueTask CreateInspectionDeletionEventAsync(string inspection);
-    }
+    ValueTask CreateInspectionEventAsync(Inspection inspection);
+    ValueTask CreateInspectionDeletionEventAsync(string inspection);
 }

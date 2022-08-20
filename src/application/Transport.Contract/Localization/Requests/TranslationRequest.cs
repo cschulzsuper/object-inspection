@@ -1,11 +1,10 @@
-﻿namespace Super.Paula.Application.Localization.Requests
+﻿namespace Super.Paula.Application.Localization.Requests;
+
+public class TranslationRequest
 {
-    public class TranslationRequest
-    {
-        public string? Category { get; set; }
+    public string? Category { get; set; }
 
-        public string Hash { get; set; } = string.Empty;
+    public string Hash { get; set; } = string.Empty;
 
-        public string Value { get; set; } = string.Empty;
-    }
+    public string Value { get; set; } = string.Empty;
 }

@@ -2,7 +2,8 @@
 
 @inject ITranslator<View> Translator
 @inject NavigationManager NavigationManager
-@inject INotificationHandler NotificationHandler
+@inject INotificationCallbackHandler NotificationCallbackHandler
+@inject INotificationRequestHandler NotificationRequestHandler
 
 @implements IAsyncDisposable
 
@@ -24,8 +25,8 @@
 else
 {
     @foreach (var notification in _notifications)
-    {
-        <div class="card mb-3">
+{
+    <div class="card mb-3">
             <div class="card-body">
                 <h6 class="card-subtitle text-muted mb-1">@(new DateTimeNumbers(notification.Date, notification.Time).ToLocalDateTimeString())</h6>
                 <p class="card-text tex-wrap">@notification.Text</p>
@@ -36,7 +37,7 @@ else
                     @onclick="() => RemoveAsync(notification)"><span class="oi oi-trash"/></AuthorizedButton>
             </div>
         </div>
-    }
+}
 }
 </div>
 
@@ -44,14 +45,14 @@ else
 
     private ICollection<NotificationResponse>? _notifications;
 
-    private IDisposable? _notificationHandlerOnCreation;
-    private IDisposable? _notificationHandlerOnDeletion;
+    private IDisposable? _notificationCreation;
+    private IDisposable? _notificationDeletion;
 
     [CascadingParameter]
     public Task<AuthenticationState> AuthenticationState { get; set; } = null!;
 
     protected override async Task OnParametersSetAsync()
-    {          
+    {
         await QueryAsync();
     }
 
@@ -59,8 +60,8 @@ else
     {
         if (firstRender)
         {
-            _notificationHandlerOnCreation = await NotificationHandler.OnCreationAsync(OnCreationAsync);
-            _notificationHandlerOnDeletion = await NotificationHandler.OnDeletionAsync(OnDeletionAsync);
+            _notificationCreation = await NotificationCallbackHandler.OnCreationAsync(OnCreationAsync);
+            _notificationDeletion = await NotificationCallbackHandler.OnDeletionAsync(OnDeletionAsync);
         }
     }
 
@@ -70,7 +71,7 @@ else
 
         var inspector = (await AuthenticationState).User.GetInspector();
 
-        await foreach (var notification in NotificationHandler.GetAllForInspector(inspector))
+        await foreach (var notification in NotificationRequestHandler.GetAllForInspector(inspector))
         {
             _notifications.Add(notification);
         }
@@ -78,7 +79,7 @@ else
         StateHasChanged();
     }
 
-    public Task OnCreationAsync(NotificationResponse notification) 
+    public Task OnCreationAsync(NotificationResponse notification)
         => InvokeAsync(QueryAsync);
 
     public Task OnDeletionAsync(string _, int __, int ___)
@@ -86,18 +87,19 @@ else
 
     public async ValueTask DisposeAsync()
     {
-        _notificationHandlerOnCreation?.Dispose();
-        _notificationHandlerOnDeletion?.Dispose();
+        _notificationCreation?.Dispose();
+        _notificationDeletion?.Dispose();
 
         await ValueTask.CompletedTask;
     }
 
     public async Task RemoveAsync(NotificationResponse notification)
     {
-        await NotificationHandler.DeleteAsync(
-            notification.Inspector, 
+        await NotificationRequestHandler.DeleteAsync(
+            notification.Inspector,
             notification.Date,
             notification.Time,
             notification.ETag);
     }
+
 }

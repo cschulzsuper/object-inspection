@@ -1,7 +1,6 @@
-﻿namespace Super.Paula.Application.Inventory
+﻿namespace Super.Paula.Application.Inventory;
+
+public interface IBusinessObjectQueries
 {
-    public interface IBusinessObjectQueries
-    {
-        string[] GetAllUniqueNames();
-    }
+    string[] GetAllUniqueNames();
 }

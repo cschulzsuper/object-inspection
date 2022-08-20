@@ -1,8 +1,7 @@
 ﻿
-namespace Super.Paula.Application.Administration
+namespace Super.Paula.Application.Administration;
+
+public interface IOrganizationQueries
 {
-    public interface IOrganizationQueries
-    {
-        string[] GetAllUniqueNames();
-    }
+    string[] GetAllUniqueNames();
 }

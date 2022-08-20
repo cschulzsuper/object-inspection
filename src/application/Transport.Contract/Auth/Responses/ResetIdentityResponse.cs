@@ -1,7 +1,6 @@
-﻿namespace Super.Paula.Application.Auth.Responses
+﻿namespace Super.Paula.Application.Auth.Responses;
+
+public class ResetIdentityResponse
 {
-    public class ResetIdentityResponse
-    {
-        public string ETag { get; set; } = string.Empty;
-    }
+    public string ETag { get; set; } = string.Empty;
 }

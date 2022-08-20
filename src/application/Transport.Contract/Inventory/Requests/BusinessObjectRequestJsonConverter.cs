@@ -1,87 +1,86 @@
-﻿using Super.Paula.JsonConversion;
+﻿using Super.Paula.Shared.JsonConversion;
 using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Super.Paula.Application.Inventory.Requests
+namespace Super.Paula.Application.Inventory.Requests;
+
+public class BusinessObjectRequestJsonConverter : JsonConverter<BusinessObjectRequest>
 {
-    public class BusinessObjectRequestJsonConverter : JsonConverter<BusinessObjectRequest>
+    private static readonly JsonEncodedText UniqueName = JsonEncodedText.Encode("uniqueName");
+    private static readonly JsonEncodedText DisplayName = JsonEncodedText.Encode("displayName");
+    private static readonly JsonEncodedText Inspector = JsonEncodedText.Encode("inspector");
+    private static readonly JsonEncodedText ETag = JsonEncodedText.Encode("etag");
+
+    public override BusinessObjectRequest Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        private static readonly JsonEncodedText UniqueName = JsonEncodedText.Encode("uniqueName");
-        private static readonly JsonEncodedText DisplayName = JsonEncodedText.Encode("displayName");
-        private static readonly JsonEncodedText Inspector = JsonEncodedText.Encode("inspector");
-        private static readonly JsonEncodedText ETag = JsonEncodedText.Encode("etag");
+        var request = new BusinessObjectRequest();
 
-        public override BusinessObjectRequest Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        if (reader.TokenType != JsonTokenType.StartObject)
         {
-            var request = new BusinessObjectRequest();
-
-            if (reader.TokenType != JsonTokenType.StartObject)
-            {
-                throw new JsonException("Unexcepted end when reading JSON.");
-            }
-
-            while (reader.Read() && reader.TokenType != JsonTokenType.EndObject)
-            {
-                ReadValue(ref reader, request, options);
-            }
-
-            if (reader.TokenType != JsonTokenType.EndObject)
-            {
-                throw new JsonException("Unexcepted end when reading JSON.");
-            }
-
-            return request;
+            throw new JsonException("Unexcepted end when reading JSON.");
         }
 
-        internal static void ReadValue(ref Utf8JsonReader reader, BusinessObjectRequest value, JsonSerializerOptions options)
+        while (reader.Read() && reader.TokenType != JsonTokenType.EndObject)
         {
-            if (reader.TryReadStringProperty(Inspector, out var stringValue))
-            {
-                value.Inspector = stringValue;
-                return;
-            }
-
-            if (reader.TryReadStringProperty(DisplayName, out stringValue))
-            {
-                value.DisplayName = stringValue;
-                return;
-            }
-
-            if (reader.TryReadStringProperty(UniqueName, out stringValue))
-            {
-                value.UniqueName = stringValue;
-                return;
-            }
-
-            if (reader.TryReadStringProperty(ETag, out stringValue))
-            {
-                value.ETag = stringValue;
-                return;
-            }
-
-            if (reader.TryReadExtensionProperty(out var extensionKey, out var extensionValue, options))
-            {
-                value[extensionKey] = extensionValue;
-                return;
-            }
+            ReadValue(ref reader, request, options);
         }
 
-        public override void Write(Utf8JsonWriter writer, BusinessObjectRequest value, JsonSerializerOptions options)
+        if (reader.TokenType != JsonTokenType.EndObject)
         {
-            writer.WriteStartObject();
-
-            writer.WriteStringIfNotNull(Inspector, value.Inspector);
-            writer.WriteStringIfNotNull(UniqueName, value.UniqueName);
-            writer.WriteStringIfNotNull(DisplayName, value.DisplayName);
-            writer.WriteStringIfNotNull(ETag, value.ETag);
-
-            foreach (var extension in value)
-            {
-                writer.WriteObjectIfNotNull(extension.Key, extension.Value, options);
-            }
-
-            writer.WriteEndObject();
+            throw new JsonException("Unexcepted end when reading JSON.");
         }
+
+        return request;
+    }
+
+    internal static void ReadValue(ref Utf8JsonReader reader, BusinessObjectRequest value, JsonSerializerOptions options)
+    {
+        if (reader.TryReadStringProperty(Inspector, out var stringValue))
+        {
+            value.Inspector = stringValue;
+            return;
+        }
+
+        if (reader.TryReadStringProperty(DisplayName, out stringValue))
+        {
+            value.DisplayName = stringValue;
+            return;
+        }
+
+        if (reader.TryReadStringProperty(UniqueName, out stringValue))
+        {
+            value.UniqueName = stringValue;
+            return;
+        }
+
+        if (reader.TryReadStringProperty(ETag, out stringValue))
+        {
+            value.ETag = stringValue;
+            return;
+        }
+
+        if (reader.TryReadExtensionProperty(out var extensionKey, out var extensionValue, options))
+        {
+            value[extensionKey] = extensionValue;
+            return;
+        }
+    }
+
+    public override void Write(Utf8JsonWriter writer, BusinessObjectRequest value, JsonSerializerOptions options)
+    {
+        writer.WriteStartObject();
+
+        writer.WriteStringIfNotNull(Inspector, value.Inspector);
+        writer.WriteStringIfNotNull(UniqueName, value.UniqueName);
+        writer.WriteStringIfNotNull(DisplayName, value.DisplayName);
+        writer.WriteStringIfNotNull(ETag, value.ETag);
+
+        foreach (var extension in value)
+        {
+            writer.WriteObjectIfNotNull(extension.Key, extension.Value, options);
+        }
+
+        writer.WriteEndObject();
     }
 }

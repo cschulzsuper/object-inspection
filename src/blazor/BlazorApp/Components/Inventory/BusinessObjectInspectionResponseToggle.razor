@@ -1,13 +1,13 @@
 ﻿@inject ITranslator<BusinessObjectInspectionResponseToggle> Translator
 
 <button class="btn btn-block text-left @(
-                IsOverdue() 
-                    ? "btn-outline-danger" 
-                    : IsCurrent() 
-                        ? "btn-outline-warning" 
-                        : IsUpcomming() 
-                            ? "btn-outline-success"
-                            : "btn-outline-secondary")"
+        IsOverdue() 
+            ? "btn-outline-danger" 
+            : IsCurrent() 
+                ? "btn-outline-warning" 
+                : IsUpcomming() 
+                    ? "btn-outline-success"
+                    : "btn-outline-secondary")"
 
         @onclick="() => Toggle()">@Inspection.InspectionDisplayName</button>
 
@@ -15,29 +15,29 @@
 {
     <div class="card card-body text-wrap">
         @if (HasTimestamps())
-        {
-            <ul class="list-unstyled">
+{
+    <ul class="list-unstyled">
                 @if (IsAuditted())
-                {
-                    <li>
+        {
+            <li>
                         <small class="text-nowrap">@GetAuditString()</small>
                     </li>
-                }
-                @if (IsScheduled())
-                {
-                    <li>
-                        <small class="text-nowrap @(
-                                        IsOverdue() 
-                                            ? "text-danger font-weight-bold" 
-                                            : IsCurrent() 
-                                                ? "text-warning" 
-                                                : IsUpcomming() 
-                                                    ? "text-success"
-                                                    : "")">@GetScheduledString()</small>
-                    </li>
-                }
-            </ul>
         }
+                @if (IsScheduled())
+        {
+            <li>
+                        <small class="text-nowrap @(
+                                IsOverdue() 
+                                    ? "text-danger font-weight-bold" 
+                                    : IsCurrent() 
+                                        ? "text-warning" 
+                                        : IsUpcomming() 
+                                            ? "text-success"
+                                            : "")">@GetScheduledString()</small>
+                    </li>
+        }
+            </ul>
+}
         <span>
             @Inspection.InspectionText
         </span>
@@ -46,103 +46,103 @@
 
 @code {
 
-    [Parameter]
-    public BusinessObjectInspectionResponse Inspection { get; set; } = null!;
+[Parameter]
+public BusinessObjectInspectionResponse Inspection { get; set; } = null!;
 
-    private bool _isExpanded = false;
+private bool _isExpanded = false;
 
-    private void Toggle()
+private void Toggle()
+{
+if (CanToggle())
+{
+    _isExpanded =!_isExpanded;
+}
+}
+
+private bool IsAuditted()
+=> Inspection.AuditDate != default;
+
+private bool IsOverdue()
+{
+if (IsScheduled())
+{
+    var appointments = Inspection.AuditSchedule.Appointments.FirstOrDefault();
+    if (appointments == null)
     {
-        if (CanToggle())
-        {
-            _isExpanded =!_isExpanded;
-        }
-    }
-
-    private bool IsAuditted()
-        => Inspection.AuditDate != default;
-
-    private bool IsOverdue()
-    {
-        if (IsScheduled())
-        {
-            var appointments = Inspection.AuditSchedule.Appointments.FirstOrDefault();
-            if (appointments == null)
-            {
-                return false;
-            }
-
-            var auditDelay = new DateTimeNumbers(appointments.PlannedAuditDate, appointments.PlannedAuditTime)
-                .ToGlobalDateTime()
-                .AddMilliseconds(Inspection.AuditSchedule.Threshold);
-
-            return auditDelay < DateTime.UtcNow;
-        }
         return false;
     }
 
-    private bool IsScheduled()
-        => Inspection.AuditSchedule.Appointments.Any();
+    var auditDelay = new DateTimeNumbers(appointments.PlannedAuditDate, appointments.PlannedAuditTime)
+        .ToGlobalDateTime()
+        .AddMilliseconds(Inspection.AuditSchedule.Threshold);
 
-    private bool IsCurrent()
+    return auditDelay < DateTime.UtcNow;
+}
+return false;
+}
+
+private bool IsScheduled()
+=> Inspection.AuditSchedule.Appointments.Any();
+
+private bool IsCurrent()
+{
+if (IsScheduled())
+{
+    var appointment = Inspection.AuditSchedule.Appointments.FirstOrDefault();
+    if (appointment == null)
     {
-        if (IsScheduled())
-        {
-            var appointment = Inspection.AuditSchedule.Appointments.FirstOrDefault();
-            if (appointment == null)
-            {
-                return false;
-            }
-
-            var plannedAudit = new DateTimeNumbers(appointment.PlannedAuditDate, appointment.PlannedAuditTime)
-                .ToGlobalDateTime();
-
-            return plannedAudit < DateTime.UtcNow;
-        }
         return false;
     }
 
-    private bool IsUpcomming()
+    var plannedAudit = new DateTimeNumbers(appointment.PlannedAuditDate, appointment.PlannedAuditTime)
+        .ToGlobalDateTime();
+
+    return plannedAudit < DateTime.UtcNow;
+}
+return false;
+}
+
+private bool IsUpcomming()
+{
+if (IsScheduled())
+{
+    var appointment = Inspection.AuditSchedule.Appointments.FirstOrDefault();
+    if (appointment == null)
     {
-        if (IsScheduled())
-        {
-            var appointment = Inspection.AuditSchedule.Appointments.FirstOrDefault();
-            if (appointment == null)
-            {
-                return false;
-            }
-
-            var upcomingAudit = new DateTimeNumbers(appointment.PlannedAuditDate, appointment.PlannedAuditTime)
-                .ToGlobalDateTime()
-                .AddMilliseconds(-Inspection.AuditSchedule.Threshold);
-
-            return upcomingAudit < DateTime.UtcNow;
-        }
         return false;
     }
 
-    private bool HasTimestamps()
-        => IsScheduled() || IsAuditted();
+    var upcomingAudit = new DateTimeNumbers(appointment.PlannedAuditDate, appointment.PlannedAuditTime)
+        .ToGlobalDateTime()
+        .AddMilliseconds(-Inspection.AuditSchedule.Threshold);
 
-    private bool CanToggle()
-        => HasTimestamps() || !string.IsNullOrWhiteSpace(Inspection.InspectionText);
+    return upcomingAudit < DateTime.UtcNow;
+}
+return false;
+}
 
-    private string GetAuditString()
-    {
-        var audit = new DateTimeNumbers(Inspection.AuditDate, Inspection.AuditTime).ToLocalDateTimeString();
-        return Translator[$"{audit} (last audit)"];
-    }
+private bool HasTimestamps()
+=> IsScheduled() || IsAuditted();
 
-    private string GetScheduledString()
-    {
-        var appointment = Inspection.AuditSchedule.Appointments.FirstOrDefault();
+private bool CanToggle()
+=> HasTimestamps() || !string.IsNullOrWhiteSpace(Inspection.InspectionText);
 
-        if(appointment == null)
-        {
-            return string.Empty;
-        }
+private string GetAuditString()
+{
+var audit = new DateTimeNumbers(Inspection.AuditDate, Inspection.AuditTime).ToLocalDateTimeString();
+return Translator[$"{audit} (last audit)"];
+}
 
-        var plannedAudit = new DateTimeNumbers(appointment.PlannedAuditDate, appointment.PlannedAuditTime).ToLocalDateTimeString();
-        return Translator[$"{plannedAudit} (next audit)"];
-    }
+private string GetScheduledString()
+{
+var appointment = Inspection.AuditSchedule.Appointments.FirstOrDefault();
+
+if(appointment == null)
+{
+    return string.Empty;
+}
+
+var plannedAudit = new DateTimeNumbers(appointment.PlannedAuditDate, appointment.PlannedAuditTime).ToLocalDateTimeString();
+return Translator[$"{plannedAudit} (next audit)"];
+}
 }

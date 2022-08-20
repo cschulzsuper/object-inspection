@@ -1,43 +1,42 @@
-﻿using Super.Paula.Application.Orchestration;
-using Super.Paula.Validation;
+﻿using Super.Paula.Shared.Orchestration;
 using System.ComponentModel.DataAnnotations;
+using Super.Paula.Shared.Validation;
 
-namespace Super.Paula.Application.Auditing.Continuations
-{
-    public record CreateBusinessObjectInspectionAuditRecordContinuation(
+namespace Super.Paula.Application.Auditing.Continuations;
 
-        [KebabCase]
-        [StringLength(140)]
-        [UniqueName]
-        string BusinessObject,
+public record CreateBusinessObjectInspectionAuditRecordContinuation(
 
-        [StringLength(140)]
-        string BusinessObjectDisplayName,
+    [KebabCase]
+    [StringLength(140)]
+    [UniqueName]
+    string BusinessObject,
 
-        [KebabCase]
-        [StringLength(140)]
-        [UniqueName]
-        string AuditInspector,
+    [StringLength(140)]
+    string BusinessObjectDisplayName,
 
-        [KebabCase]
-        [StringLength(140)]
-        [UniqueName]
-        string Inspection,
+    [KebabCase]
+    [StringLength(140)]
+    [UniqueName]
+    string AuditInspector,
 
-        [StringLength(140)]
-        string InspectionDisplayName,
+    [KebabCase]
+    [StringLength(140)]
+    [UniqueName]
+    string Inspection,
 
-        [StringLength(4000)]
-        string AuditAnnotation,
+    [StringLength(140)]
+    string InspectionDisplayName,
 
-        [AuditResult]
-        string AuditResult,
+    [StringLength(4000)]
+    string AuditAnnotation,
 
-        [DayNumber]
-        int AuditDate,
+    [AuditResult]
+    string AuditResult,
 
-        [Milliseconds]
-        int AuditTime)
+    [DayNumber]
+    int AuditDate,
 
-        : ContinuationBase();
-}
+    [Milliseconds]
+    int AuditTime)
+
+    : ContinuationBase;

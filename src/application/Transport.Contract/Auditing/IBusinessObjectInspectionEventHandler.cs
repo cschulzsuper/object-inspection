@@ -1,11 +1,10 @@
 ﻿using Super.Paula.Application.Guidelines.Events;
-using Super.Paula.Application.Orchestration;
+using Super.Paula.Shared.Orchestration;
 
-namespace Super.Paula.Application.Auditing
+namespace Super.Paula.Application.Auditing;
+
+public interface IBusinessObjectInspectionEventHandler :
+    IEventHandler<InspectionEvent>,
+    IEventHandler<InspectionDeletionEvent>
 {
-    public interface IBusinessObjectInspectionEventHandler :
-        IEventHandler<InspectionEvent>,
-        IEventHandler<InspectionDeletionEvent>
-    {
-    }
 }

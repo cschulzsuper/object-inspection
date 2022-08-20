@@ -1,13 +1,12 @@
-﻿using Super.Paula.Validation;
+﻿using Super.Paula.Shared.Validation;
 
-namespace Super.Paula.Application.Auditing.Requests
+namespace Super.Paula.Application.Auditing.Requests;
+
+public class BusinessObjectInspectionAuditOmissionRequest
 {
-    public class BusinessObjectInspectionAuditOmissionRequest
-    {
-        [DayNumber]
-        public int PlannedAuditDate { get; set; }
+    [DayNumber]
+    public int PlannedAuditDate { get; set; }
 
-        [Milliseconds]
-        public int PlannedAuditTime { get; set; }
-    }
+    [Milliseconds]
+    public int PlannedAuditTime { get; set; }
 }

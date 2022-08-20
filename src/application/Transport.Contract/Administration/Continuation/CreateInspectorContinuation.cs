@@ -1,31 +1,30 @@
-﻿using Super.Paula.Application.Orchestration;
-using Super.Paula.Validation;
+﻿using Super.Paula.Shared.Orchestration;
 using System.ComponentModel.DataAnnotations;
+using Super.Paula.Shared.Validation;
 
-namespace Super.Paula.Application.Administration.Continuation
-{
-    public record CreateInspectorContinuation(
-        [StringLength(140)]
-        [UniqueName]
-        [KebabCase]
-        string Organization,
+namespace Super.Paula.Application.Administration.Continuation;
 
-        [StringLength(140)]
-        [UniqueName]
-        [KebabCase]
-        string UniqueName,
+public record CreateInspectorContinuation(
+    [StringLength(140)]
+    [UniqueName]
+    [KebabCase]
+    string Organization,
 
-        [StringLength(140)]
-        [UniqueName]
-        [KebabCase]
-        string Identity,
+    [StringLength(140)]
+    [UniqueName]
+    [KebabCase]
+    string UniqueName,
 
-        bool OrganizationActivated,
+    [StringLength(140)]
+    [UniqueName]
+    [KebabCase]
+    string Identity,
 
-        [StringLength(140)]
-        string OrganizationDisplayName,
+    bool OrganizationActivated,
 
-        bool Activated) 
-        
-        : ContinuationBase();
-}
+    [StringLength(140)]
+    string OrganizationDisplayName,
+
+    bool Activated)
+
+    : ContinuationBase;

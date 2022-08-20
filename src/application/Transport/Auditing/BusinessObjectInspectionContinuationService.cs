@@ -1,42 +1,41 @@
 ﻿using Super.Paula.Application.Auditing.Continuations;
-using Super.Paula.Application.Orchestration;
+using Super.Paula.Shared.Orchestration;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace Super.Paula.Application.Auditing
+namespace Super.Paula.Application.Auditing;
+
+public class BusinessObjectInspectionContinuationService : IBusinessObjectInspectionContinuationService
 {
-    public class BusinessObjectInspectionContinuationService : IBusinessObjectInspectionContinuationService
+    private readonly ClaimsPrincipal _user;
+    private readonly IContinuationStorage _continuationStorage;
+
+    public BusinessObjectInspectionContinuationService(
+        ClaimsPrincipal user,
+        IContinuationStorage continuationStorage)
     {
-        private readonly ClaimsPrincipal _user;
-        private readonly IContinuationStorage _continuationStorage;
+        _user = user;
+        _continuationStorage = continuationStorage;
+    }
 
-        public BusinessObjectInspectionContinuationService(
-            ClaimsPrincipal user,
-            IContinuationStorage continuationStorage)
+    public async ValueTask AddCreateBusinessObjectInspectionAuditRecordContinuationAsync(BusinessObjectInspection inspection)
+    {
+        if (inspection.Audit.AuditDate == default)
         {
-            _user = user;
-            _continuationStorage = continuationStorage;
+            return;
         }
 
-        public async ValueTask AddCreateBusinessObjectInspectionAuditRecordContinuationAsync(BusinessObjectInspection inspection)
-        {
-            if (inspection.Audit.AuditDate == default)
-            {
-                return;
-            }
+        var continuation = new CreateBusinessObjectInspectionAuditRecordContinuation(
+            inspection.BusinessObject,
+            inspection.BusinessObjectDisplayName,
+            inspection.Audit.Inspector,
+            inspection.Inspection,
+            inspection.InspectionDisplayName,
+            inspection.Audit.Annotation,
+            inspection.Audit.Result,
+            inspection.Audit.AuditDate,
+            inspection.Audit.AuditTime);
 
-            var continuation = new CreateBusinessObjectInspectionAuditRecordContinuation(
-                inspection.BusinessObject,
-                inspection.BusinessObjectDisplayName,
-                inspection.Audit.Inspector,
-                inspection.Inspection,
-                inspection.InspectionDisplayName,
-                inspection.Audit.Annotation,
-                inspection.Audit.Result,
-                inspection.Audit.AuditDate,
-                inspection.Audit.AuditTime);
-
-            await _continuationStorage.AddAsync(continuation, _user);
-        }
+        await _continuationStorage.AddAsync(continuation, _user);
     }
 }
