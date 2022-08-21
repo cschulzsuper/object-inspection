@@ -53,7 +53,7 @@ public class ContinuationManager : IContinuationManager
         }
         catch (Exception exception)
         {
-            throw new ManagementException($"Could not update continuation '{continuation.Id}'.", exception);
+            throw new ManagementException($"Could not update continuation '{continuation.ContinuationId}'.", exception);
         }
     }
 
@@ -67,7 +67,7 @@ public class ContinuationManager : IContinuationManager
         }
         catch (Exception exception)
         {
-            throw new ManagementException($"Could not delete continuation '{continuation.Id}'.", exception);
+            throw new ManagementException($"Could not delete continuation '{continuation.ContinuationId}'.", exception);
         }
     }
 
@@ -87,8 +87,8 @@ public class ContinuationManager : IContinuationManager
 
     private static void EnsureInsertable(Continuation continuation)
         => Validator.Ensure($"continuation with unique name '{continuation.Name}'",
-            ContinuationValidator.IdIsNotEmpty(continuation.Id),
-            ContinuationValidator.IdIsGuid(continuation.Id),
+            ContinuationValidator.IdIsNotEmpty(continuation.ContinuationId),
+            ContinuationValidator.IdIsGuid(continuation.ContinuationId),
             ContinuationValidator.NameIsNotEmpty(continuation.Name),
             ContinuationValidator.NameHasKebabCase(continuation.Name),
             ContinuationValidator.NameIsNotTooLong(continuation.Name),
@@ -104,9 +104,9 @@ public class ContinuationManager : IContinuationManager
             ContinuationValidator.CreationTimeIsInDayTimeRange(continuation.CreationTime));
 
     private static void EnsureUpdateable(Continuation continuation)
-        => Validator.Ensure($"continuation with id '{continuation.Id}'",
-            ContinuationValidator.IdIsNotEmpty(continuation.Id),
-            ContinuationValidator.IdIsGuid(continuation.Id),
+        => Validator.Ensure($"continuation with id '{continuation.ContinuationId}'",
+            ContinuationValidator.IdIsNotEmpty(continuation.ContinuationId),
+            ContinuationValidator.IdIsGuid(continuation.ContinuationId),
             ContinuationValidator.NameIsNotEmpty(continuation.Name),
             ContinuationValidator.NameHasKebabCase(continuation.Name),
             ContinuationValidator.NameIsNotTooLong(continuation.Name),
@@ -122,7 +122,7 @@ public class ContinuationManager : IContinuationManager
             ContinuationValidator.CreationTimeIsInDayTimeRange(continuation.CreationTime));
 
     private static void EnsureDeletable(Continuation continuation)
-        => Validator.Ensure($"continuation with id '{continuation.Id}'",
-            ContinuationValidator.IdIsNotEmpty(continuation.Id),
-            ContinuationValidator.IdIsGuid(continuation.Id));
+        => Validator.Ensure($"continuation with id '{continuation.ContinuationId}'",
+            ContinuationValidator.IdIsNotEmpty(continuation.ContinuationId),
+            ContinuationValidator.IdIsGuid(continuation.ContinuationId));
 }

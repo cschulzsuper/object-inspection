@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Globalization;
 using Microsoft.JSInterop;
 using Super.Paula.Client.Storage;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace Super.Paula.Client;
 
@@ -15,6 +16,7 @@ public static class Program
     {
         var builder = WebAssemblyHostBuilder.CreateDefault(args);
         builder.RootComponents.Add<App>("#app");
+        builder.RootComponents.Add<HeadOutlet>("head::after");
 
         builder.Services.ConfigureServices(builder.HostEnvironment);
 
@@ -28,7 +30,7 @@ public static class Program
 
         CultureInfo culture;
         var jsRuntime = host.Services.GetRequiredService<IJSRuntime>();
-        var cultureName = await jsRuntime.InvokeAsync<string>("culture.get");
+        var cultureName = await jsRuntime.InvokeAsync<string?>("culture.get");
 
         if (cultureName != null)
         {

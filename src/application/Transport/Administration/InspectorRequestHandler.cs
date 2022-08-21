@@ -125,8 +125,9 @@ public class InspectorRequestHandler : IInspectorRequestHandler
         entity.ETag = request.ETag;
 
         await _inspectorManager.UpdateAsync(entity);
-        await _inspectorContinuationService.AddCreateIdentityInspectorContinuationAsync(entity);
+
         await _inspectorContinuationService.AddDeleteIdentityInspectorContinuationAsync(oldIdentity, entity.Organization, entity.UniqueName);
+        await _inspectorContinuationService.AddCreateIdentityInspectorContinuationAsync(entity);
     }
 
     public async ValueTask<ActivateInspectorResponse> ActivateAsync(string inspector, string etag)

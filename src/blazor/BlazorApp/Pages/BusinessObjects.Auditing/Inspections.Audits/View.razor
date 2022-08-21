@@ -7,15 +7,17 @@
 
 @attribute [Authorize("AuditingLimited")]
 
+<PageTitle>@Translator[$"Inspections"]</PageTitle>
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">@Translator[$"Inspections"]</h1>
+</div>
+
 <DemoNote>
     @Translator.Markdown($"An audit can result in three different states (`satisfying`, `insufficient`, `failed`). The current state can be changed for 10 minutes. After 10 minutes a new audit history entry will be created. An optional annotation can be defined.")
 </DemoNote>
 
-<div class="container-fluid">
-    <h1>@Translator[$"Inspections"]</h1>
-</div>
-
-<div class="container-fluid">
+<div class="table-responsive">
 
 @if (_inspections == null)
 {
@@ -24,61 +26,63 @@
 else
 {
     <table class="table table-sm">
-        <thead class="table-light table-borderless">
-            <tr>
-                <th class="col-12">@Translator[$"Inspection"]</th>
-                <th colspan="2">@Translator[$"Result"]</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var inspection in _inspections.Where(x => x.Activated))
-    {
+
+        <thead>
         <tr>
-                    <td>
-                        <BusinessObjectInspectionResponseToggle Inspection="inspection"/>
-                    </td>
-                    <td>
-                        @switch (inspection.AuditResult)
-                {
-                    case "satisfying":
-                        <AuthorizedButton Policy="AuditingLimited" 
-                                    id="@($"audit-{inspection.BusinessObject}-{inspection.Inspection}")"
-                                    class=@ToggleCss(inspection,"success")
-                                    title="@Translator[$"Satisfying"]"
-                                    @onclick="() => ToggleAsync(inspection)"><span class="oi oi-star"/></AuthorizedButton>
-                        break;
+                <th scope="col" class="col-12">@Translator[$"Inspection"]</th>
+                <th scope="col" colspan="2">@Translator[$"Result"]</th>
+        </tr>
+        </thead>
 
-                    case "insufficient":
-                        <AuthorizedButton Policy="AuditingLimited" 
-                                    id="@($"audit-{inspection.BusinessObject}-{inspection.Inspection}")"
-                                    class=@ToggleCss(inspection,"warning") 
-                                    title="@Translator[$"Insufficient"]"
-                                        @onclick="() => ToggleAsync(inspection)"><span class="oi oi-warning"/></AuthorizedButton>
-                        break;
+        <tbody>
+        @foreach (var inspection in _inspections.Where(x => x.Activated))
+        {
+            <tr>
+                <td>
+                    <BusinessObjectInspectionResponseToggle Inspection="inspection"/>
+                </td>
+                <td>
+                    @switch (inspection.AuditResult)
+                    {
+                        case "satisfying":
+                            <AuthorizedButton Policy="AuditingLimited"
+                                              id="@($"audit-{inspection.BusinessObject}-{inspection.Inspection}")"
+                                              class=@ToggleCss(inspection, "success")
+                                              title="@Translator[$"Satisfying"]"
+                                              @onclick="() => ToggleAsync(inspection)"><span class="oi oi-star"/></AuthorizedButton>
+                            break;
 
-                    case "failed":
-                        <AuthorizedButton Policy="AuditingLimited" 
-                                    id="@($"audit-{inspection.BusinessObject}-{inspection.Inspection}")"
-                                    class=@ToggleCss(inspection,"danger")
-                                    title="@Translator[$"Failed"]"
-                                    @onclick="() => ToggleAsync(inspection)"><span class="oi oi-x"/></AuthorizedButton>
-                        break;
+                        case "insufficient":
+                            <AuthorizedButton Policy="AuditingLimited"
+                                              id="@($"audit-{inspection.BusinessObject}-{inspection.Inspection}")"
+                                              class=@ToggleCss(inspection, "warning")
+                                              title="@Translator[$"Insufficient"]"
+                                              @onclick="() => ToggleAsync(inspection)"><span class="oi oi-warning"/></AuthorizedButton>
+                            break;
 
-                    default:
-                        <AuthorizedButton Policy="AuditingLimited" 
-                                    id="@($"audit-{inspection.BusinessObject}-{inspection.Inspection}")"
-                                    class=@ToggleCss(inspection,"secondary")
-                                    title="@Translator[$"Unset"]"
-                                    @onclick="() => ToggleAsync(inspection)"><span class="oi oi-ellipses"></span></AuthorizedButton>
-                        break;
-                }
-                    </td> 
-                    <td>
-                        <button class=@AnnotationCss(inspection,"primary") title="@Translator[$"Annotate"]"
-                                @onclick="() => NavigateToAnnotationAsync(inspection)"><span class="oi oi-copywriting"/></button>
-                    </td>
-                </tr>
-    }
+                        case "failed":
+                            <AuthorizedButton Policy="AuditingLimited"
+                                              id="@($"audit-{inspection.BusinessObject}-{inspection.Inspection}")"
+                                              class=@ToggleCss(inspection, "danger")
+                                              title="@Translator[$"Failed"]"
+                                              @onclick="() => ToggleAsync(inspection)"><span class="oi oi-x"/></AuthorizedButton>
+                            break;
+
+                        default:
+                            <AuthorizedButton Policy="AuditingLimited"
+                                              id="@($"audit-{inspection.BusinessObject}-{inspection.Inspection}")"
+                                              class=@ToggleCss(inspection, "secondary")
+                                              title="@Translator[$"Unset"]"
+                                              @onclick="() => ToggleAsync(inspection)"><span class="oi oi-ellipses"></span></AuthorizedButton>
+                            break;
+                    }
+                </td>
+                <td>
+                    <button class=@AnnotationCss(inspection, "primary") title="@Translator[$"Annotate"]"
+                            @onclick="() => NavigateToAnnotationAsync(inspection)"><span class="oi oi-copywriting"/></button>
+                </td>
+            </tr>
+        }
         </tbody>
     </table>
 }
@@ -87,115 +91,116 @@ else
 
 @code {
 
-private ICollection<BusinessObjectInspectionResponse>? _inspections;
+    private ICollection<BusinessObjectInspectionResponse>? _inspections;
 
-[Parameter]
-public string BusinessObject { get; set; } = null!;
+    [Parameter]
+    public string BusinessObject { get; set; } = null!;
 
-protected override async Task OnAfterRenderAsync(bool firstRender)
-{
-if (firstRender)
-{
-    await QueryAsync();
-    StateHasChanged();
-}
-}
-
-public async Task QueryAsync()
-{
-_inspections = new List<BusinessObjectInspectionResponse>();
-
-await foreach (var inspection in BusinessObjectInspectionHandler.GetAllForBusinessObject(BusinessObject))
-{
-    _inspections.Add(inspection);
-}
-
-StateHasChanged();
-}
-
-private string ToggleCss(BusinessObjectInspectionResponse inspection, string btnClass)
-{
-var utcNow = DateTime.UtcNow;
-
-var audit = 
-    new DateTimeNumbers(
-        inspection.AuditDate,
-        inspection.AuditTime)
-    .ToGlobalDateTime();
-
-return audit < utcNow.AddMinutes(-10)
-    ? $"btn btn-outline-{btnClass} btn-block"
-    : $"btn btn-{btnClass} btn-block";
-}
-
-private string AnnotationCss(BusinessObjectInspectionResponse inspection, string btnClass)
-{
-return string.IsNullOrWhiteSpace(inspection.AuditAnnotation)
-    ? $"btn btn-outline-{btnClass} btn-block"
-    : $"btn btn-{btnClass} btn-block";
-}
-
-private async Task ToggleAsync(BusinessObjectInspectionResponse inspection)
-{
-var utcNow = DateTime.UtcNow;
-
-var audit = 
-    new DateTimeNumbers(
-        inspection.AuditDate,
-        inspection.AuditTime)
-    .ToGlobalDateTime();
-
-var inspectionToOld = audit < utcNow.AddMinutes(-10);
-
-if (!inspectionToOld)
-{
-    var nextResult = new Dictionary<string,string>
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        [""] = "satisfying",
-        ["satisfying"] = "insufficient",
-        ["insufficient"] = "failed",
-        ["failed"] = "satisfying"
-    };
+        if (firstRender)
+        {
+            await QueryAsync();
+            StateHasChanged();
+        }
+    }
 
-    var request = new BusinessObjectInspectionAuditRequest
+    public async Task QueryAsync()
     {
-        Result = nextResult[inspection.AuditResult],
-        ETag = inspection.ETag
-    };
+        _inspections = new List<BusinessObjectInspectionResponse>();
 
-    var response = await BusinessObjectInspectionHandler.ReplaceAuditAsync(
-        inspection.BusinessObject, inspection.Inspection, request);
+        await foreach (var inspection in BusinessObjectInspectionHandler.GetAllForBusinessObject(BusinessObject))
+        {
+            _inspections.Add(inspection);
+        }
 
-    inspection.AuditResult = request.Result;
-    inspection.ETag = response.ETag;
-}
-else
-{
-    var nextResult = string.IsNullOrWhiteSpace(inspection.AuditResult)
-            ? "satisfying"
-            : inspection.AuditResult;
+        StateHasChanged();
+    }
 
-    var request = new BusinessObjectInspectionAuditRequest
+    private string ToggleCss(BusinessObjectInspectionResponse inspection, string btnClass)
     {
-        RequestDate = DateOnly.FromDateTime(utcNow).DayNumber,
-        RequestTime = (int)utcNow.TimeOfDay.TotalMilliseconds,
-        Result = nextResult,
-        ETag = inspection.ETag
-    };
+        var utcNow = DateTime.UtcNow;
 
-    var response = await BusinessObjectInspectionHandler.CreateAuditAsync(
-        inspection.BusinessObject, inspection.Inspection, request);
+        var audit =
+            new DateTimeNumbers(
+                inspection.AuditDate,
+                inspection.AuditTime)
+                .ToGlobalDateTime();
 
-    inspection.AuditAnnotation = string.Empty;
-    inspection.AuditDate = request.RequestDate;
-    inspection.AuditTime = request.RequestTime;
-    inspection.AuditResult = request.Result;
-    inspection.ETag = response.ETag;
+        return audit < utcNow.AddMinutes(-10)
+            ? $"btn btn-sm btn-outline-{btnClass} btn-block"
+            : $"btn btn-sm btn-{btnClass} btn-block";
+    }
 
-    inspection.AuditSchedule.Appointments = response.Appointments;
-}
-}
+    private string AnnotationCss(BusinessObjectInspectionResponse inspection, string btnClass)
+    {
+        return string.IsNullOrWhiteSpace(inspection.AuditAnnotation)
+            ? $"btn btn-sm btn-outline-{btnClass} btn-block"
+            : $"btn btn-sm btn-{btnClass} btn-block";
+    }
 
-private void NavigateToAnnotationAsync(BusinessObjectInspectionResponse inspection)
-=> NavigationManager.NavigateTo($"/business-objects/{inspection.BusinessObject}/inspections/{inspection.Inspection}/annotation");
+    private async Task ToggleAsync(BusinessObjectInspectionResponse inspection)
+    {
+        var utcNow = DateTime.UtcNow;
+
+        var audit =
+            new DateTimeNumbers(
+                inspection.AuditDate,
+                inspection.AuditTime)
+                .ToGlobalDateTime();
+
+        var inspectionToOld = audit < utcNow.AddMinutes(-10);
+
+        if (!inspectionToOld)
+        {
+            var nextResult = new Dictionary<string, string>
+            {
+                [""] = "satisfying",
+                ["satisfying"] = "insufficient",
+                ["insufficient"] = "failed",
+                ["failed"] = "satisfying"
+            };
+
+            var request = new BusinessObjectInspectionAuditRequest
+            {
+                Result = nextResult[inspection.AuditResult],
+                ETag = inspection.ETag
+            };
+
+            var response = await BusinessObjectInspectionHandler.ReplaceAuditAsync(
+                inspection.BusinessObject, inspection.Inspection, request);
+
+            inspection.AuditResult = request.Result;
+            inspection.ETag = response.ETag;
+        }
+        else
+        {
+            var nextResult = string.IsNullOrWhiteSpace(inspection.AuditResult)
+                ? "satisfying"
+                : inspection.AuditResult;
+
+            var request = new BusinessObjectInspectionAuditRequest
+            {
+                RequestDate = DateOnly.FromDateTime(utcNow).DayNumber,
+                RequestTime = (int)utcNow.TimeOfDay.TotalMilliseconds,
+                Result = nextResult,
+                ETag = inspection.ETag
+            };
+
+            var response = await BusinessObjectInspectionHandler.CreateAuditAsync(
+                inspection.BusinessObject, inspection.Inspection, request);
+
+            inspection.AuditAnnotation = string.Empty;
+            inspection.AuditDate = request.RequestDate;
+            inspection.AuditTime = request.RequestTime;
+            inspection.AuditResult = request.Result;
+            inspection.ETag = response.ETag;
+
+            inspection.AuditSchedule.Appointments = response.Appointments;
+        }
+    }
+
+    private void NavigateToAnnotationAsync(BusinessObjectInspectionResponse inspection)
+        => NavigationManager.NavigateTo($"/business-objects/{inspection.BusinessObject}/inspections/{inspection.Inspection}/annotation");
+
 }

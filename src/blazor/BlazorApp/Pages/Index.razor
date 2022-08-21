@@ -1,56 +1,16 @@
 ﻿@page "/"
 
 @inject ITranslator<Index> Translator
+@inject NavigationManager NavigationManager
+
+@attribute [Authorize("AuditingLimited")]
+
+<PageTitle>@Translator[$"Welcome"]</PageTitle>
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 id="indexHeadline" class="h2">@Translator[$"Welcome"]</h1>
+</div>
 
 <DemoNote>
     @Translator.Markdown($"*{"Paula"}* is a simple auditing app, that does not follow any official workflow. You can click around, but the demo mode will prevent wrongdoing.")
 </DemoNote>
-
-@if(_mode == Mode.SignIn)
-{
-    <SignIn/>
-}
-@if(_mode == Mode.SignInInspector)
-{
-    <SignInInspector/>
-}
-@if(_mode == Mode.Authenticated)
-{
-    <div class="container-fluid">
-        <h1 id="indexHeadline">@Translator[$"Welcome"]</h1>
-    </div>
-}
-
-@code {
-[CascadingParameter]
-public Task<AuthenticationState> AuthenticationState { get; set; } = null!;
-
-private Mode _mode = Mode.SignIn;
-
-protected override async Task OnParametersSetAsync()
-{
-var user = (await AuthenticationState).User;
-
-if (user.Identity?.IsAuthenticated != true)
-{
-    _mode = Mode.SignIn;
-    return;
-}
-
-if (!user.HasInspector())
-{
-    _mode = Mode.SignInInspector;
-    return;
-}
-
-_mode = Mode.Authenticated;
-return;
-}
-
-public enum Mode
-{
-SignIn,
-SignInInspector,
-Authenticated
-}
-}

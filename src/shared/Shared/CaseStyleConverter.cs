@@ -5,6 +5,9 @@ namespace Super.Paula.Shared;
 
 public static class CaseStyleConverter
 {
+    public static string FromCamelCaseToKebabCase(string camelCase)
+        => FromPascalCaseToKebabCase(camelCase);
+
     public static string FromPascalCaseToKebabCase(string pascalCase)
     {
         var kebabCase = new StringBuilder();

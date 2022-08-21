@@ -26,6 +26,8 @@ public static class OrganizationExtensions
     {
         await page.GotoAsync($"organizations/{organization}/inspectors");
 
+        await page.WaitForSelectorAsync("#inspectorsTable");
+
         await page.RunAndWaitForNavigationAsync(async () =>
         {
             await page.Locator("#repair").ClickAsync();
@@ -36,7 +38,7 @@ public static class OrganizationExtensions
 
     public static async Task RegisterOrganizationAsync(this IPage page, string uniqueName, string displayName)
     {
-        await page.GotoAsync("register-organization");
+        await page.GotoAsync("organizations/register");
 
         await page.Locator("#organizationUniqueName").FillAsync(uniqueName);
         await page.Locator("#organizationDisplayName").FillAsync(displayName);
@@ -51,7 +53,7 @@ public static class OrganizationExtensions
 
     public static async Task RegisterChiefInspectorAsync(this IPage page, string organization, string inspector)
     {
-        await page.GotoAsync($"register-chief-inspector/{organization}");
+        await page.GotoAsync($"organizations/{organization}/register");
 
         await page.Locator("#inspector").FillAsync(inspector);
 

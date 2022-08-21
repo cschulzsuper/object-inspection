@@ -2,145 +2,154 @@
 
 @inject ITranslator<View> Translator
 @inject NavigationManager NavigationManager
-@inject IOrganizationRequestHandler OrganizationHandler
+@inject IOrganizationRequestHandler OrganizationRequestHandler
 
 @attribute [Authorize("Maintenance")]
 
-<div class="container-fluid">
-    <h1>@Translator[$"Organizations"]</h1>
+<PageTitle>@Translator[$"Organizations"]</PageTitle>
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">@Translator[$"Organizations"]</h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <div class="btn-group me-2">
+            <button type="button" class="btn btn-sm btn-outline-secondary" title="@Translator[$"Create"]" @onclick="@Create"><span class="oi oi-plus" /></button>
+        </div>
+    </div>
 </div>
 
-<div class="container-fluid m-2">
-    <button class="btn btn-primary" title="@Translator[$"Create"]"
-            @onclick="Create"><span class="oi oi-plus"/></button>
-</div>
 
-<div class="container-fluid">
-@if (_organizations == null)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
-    <table class="table table-sm">
-        <thead class="table-light table-borderless">
-            <tr>
-                <th class="col-3 d-none d-lg-table-cell">@Translator[$"Unique name"]</th>
-                <th class="col-6">@Translator[$"Display name"]</th>
-                <th class="col-3 d-none d-lg-table-cell">@Translator[$"Chief inspector"]</th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var organization in _organizations.Values)
+<div class="table-responsive">
+
+    @if (_organizations == null)
     {
-        <tr>
-                    <td class="d-none d-lg-table-cell">@organization.UniqueName</td>
-                    <td>@organization.DisplayName</td>
-                    <td class="d-none d-lg-table-cell">@organization.ChiefInspector</td>
-                    @if(organization.Activated) {
-                <td>
-                            @if (organization.UniqueName != _organization)
-                    {
-                        <button class="btn btn-success btn-block" title="@Translator[$"Deactivate"]"
-                                    @onclick="() => DeactivateAsync(organization)"><span class="oi oi-power-standby"/></button>
-                    }
-                        </td>
-            } else {
-                <td>
-                            @if (organization.UniqueName != _organization)
-                    {
+        <p><em>Loading...</em></p>
+    }
+    else
+    {
+        <table class="table table-striped table-sm">
 
-                        <button class="btn btn-outline-danger btn-block" title="@Translator[$"Activate"]"
-                                    @onclick="() => ActivateAsync(organization)"><span class="oi oi-power-standby"/></button>
-                    }
+            <thead>
+            <tr>
+                <th scope="col" class="col-3 d-none d-md-table-cell">@Translator[$"Unique name"]</th>
+                <th scope="col" class="col-6">@Translator[$"Display name"]</th>
+                <th scope="col" class="col-3 d-none d-sm-table-cell">@Translator[$"Chief inspector"]</th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+            </tr>
+            </thead>
+
+            <tbody>
+            @foreach (var organization in _organizations.Values)
+            {
+                <tr>
+                    <td class="d-none d-md-table-cell">@organization.UniqueName</td>
+                    <td>@organization.DisplayName</td>
+                    <td class="d-none d-sm-table-cell">@organization.ChiefInspector</td>
+                    @if (organization.Activated)
+                    {
+                        <td>
+                            @if (organization.UniqueName != _organization)
+                            {
+                                <button class="btn btn-sm btn-success btn-block" title="@Translator[$"Deactivate"]"
+                                        @onclick="() => DeactivateAsync(organization)"><span class="oi oi-power-standby"/></button>
+                            }
                         </td>
-            }
+                    }
+                    else
+                    {
+                        <td>
+                            @if (organization.UniqueName != _organization)
+                            {
+
+                                <button class="btn btn-sm btn-outline-danger btn-block" title="@Translator[$"Activate"]"
+                                        @onclick="() => ActivateAsync(organization)"><span class="oi oi-power-standby"/></button>
+                            }
+                        </td>
+                    }
                     <td>
-                        <button class="btn btn-outline-info btn-block" title="@Translator[$"Edit"]"
-                            @onclick="() => Edit(organization.UniqueName)"><span class="oi oi-pencil"/></button>
+                        <button class="btn btn-sm btn-outline-info btn-block" title="@Translator[$"Edit"]"
+                                @onclick="() => Edit(organization.UniqueName)"><span class="oi oi-pencil"/></button>
                     </td>
                     <td>
                         @if (organization.UniqueName != _organization)
-                {
-                    <button class="btn btn-outline-danger btn-block" title="@Translator[$"Delete"]"
-                                @onclick="() => DeleteAsync(organization)"><span class="oi oi-trash"/></button>
-                }
+                        {
+                            <button class="btn btn-sm btn-outline-danger btn-block" title="@Translator[$"Delete"]"
+                                    @onclick="() => DeleteAsync(organization)"><span class="oi oi-trash"/></button>
+                        }
                     </td>
                     <td>
-                        <button class="btn btn-outline-danger btn-block" title="@Translator[$"Inspectors"]"
-                            @onclick="() => NavigateToInspectors(organization.UniqueName)"><span class="oi oi-person"/></button>
+                        <button class="btn btn-sm btn-outline-danger btn-block" title="@Translator[$"Inspectors"]"
+                                @onclick="() => NavigateToInspectors(organization.UniqueName)"><span class="oi oi-person"/></button>
                     </td>
-                    
+
                 </tr>
+            }
+            </tbody>
+        </table>
     }
-        </tbody>
-    </table>
-}
 </div>
 
 @code {
 
-private IDictionary<string,OrganizationResponse>? _organizations;
+    private IDictionary<string, OrganizationResponse>? _organizations;
 
-[CascadingParameter]
-public Task<AuthenticationState> AuthenticationState { get; set; } = null!;
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthenticationState { get; set; } = null!;
 
-private string? _organization = null;
+    private string? _organization = null;
 
-protected override async Task OnParametersSetAsync()
-{
-_organization = (await AuthenticationState).User.GetOrganization();
-}
-
-protected override async Task OnAfterRenderAsync(bool firstRender)
-{
-if (firstRender)
-{
-    _organizations = new Dictionary<string, OrganizationResponse>();
-
-    await foreach (var organization in OrganizationHandler.GetAll())
+    protected override async Task OnParametersSetAsync()
     {
-        _organizations.Add(organization.UniqueName, organization);
-        StateHasChanged();
+        _organization = (await AuthenticationState).User.GetOrganization();
     }
 
-    StateHasChanged();
-}
-}
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _organizations = new Dictionary<string, OrganizationResponse>();
 
-public void Create()
-=> NavigationManager.NavigateTo("/organizations/create");
+            await foreach (var organization in OrganizationRequestHandler.GetAll())
+            {
+                _organizations.Add(organization.UniqueName, organization);
+                StateHasChanged();
+            }
 
-public async Task DeleteAsync(OrganizationResponse organization)
-{
-await OrganizationHandler.DeleteAsync(organization.UniqueName, organization.ETag);
-_organizations!.Remove(organization.UniqueName);
-}
+            StateHasChanged();
+        }
+    }
 
-public async Task ActivateAsync(OrganizationResponse organization)
-{
-var response = await OrganizationHandler.ActivateAsync(organization.UniqueName, organization.ETag);
+    public void Create()
+        => NavigationManager.NavigateTo("/organizations/create");
 
-_organizations![organization.UniqueName].Activated = true;
-_organizations![organization.UniqueName].ETag = response.ETag;
-}
+    public async Task DeleteAsync(OrganizationResponse organization)
+    {
+        await OrganizationRequestHandler.DeleteAsync(organization.UniqueName, organization.ETag);
+        _organizations!.Remove(organization.UniqueName);
+    }
 
-public async Task DeactivateAsync(OrganizationResponse organization) 
-{
-var response = await OrganizationHandler.DeactivateAsync(organization.UniqueName, organization.ETag);
+    public async Task ActivateAsync(OrganizationResponse organization)
+    {
+        var response = await OrganizationRequestHandler.ActivateAsync(organization.UniqueName, organization.ETag);
 
-_organizations![organization.UniqueName].Activated = false;
-_organizations![organization.UniqueName].ETag = response.ETag;
-}
+        _organizations![organization.UniqueName].Activated = true;
+        _organizations![organization.UniqueName].ETag = response.ETag;
+    }
 
-public void Edit(string organization)
-=> NavigationManager.NavigateTo($"/organizations/{organization}/edit/");
+    public async Task DeactivateAsync(OrganizationResponse organization)
+    {
+        var response = await OrganizationRequestHandler.DeactivateAsync(organization.UniqueName, organization.ETag);
 
-public void NavigateToInspectors(string organization)
-=> NavigationManager.NavigateTo($"/organizations/{organization}/inspectors");
+        _organizations![organization.UniqueName].Activated = false;
+        _organizations![organization.UniqueName].ETag = response.ETag;
+    }
+
+    public void Edit(string organization)
+        => NavigationManager.NavigateTo($"/organizations/{organization}/edit/");
+
+    public void NavigateToInspectors(string organization)
+        => NavigationManager.NavigateTo($"/organizations/{organization}/inspectors");
 
 }

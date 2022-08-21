@@ -55,7 +55,7 @@ public static class _Services
         services.AddAuthorizationCore();
         services.AddSingleton<IAuthorizationPolicyProvider, PaulaAuthorizationPolicyProvider>();
         services.AddScoped<IAuthorizationHandler, AnyAuthorizationClaimHandler>();
-        services.AddScoped<AuthenticationStateProvider, AuthenticationStateManager>();
+        services.AddScoped<AuthenticationStateProvider, TokenAuthenticationStateProvider>();
 
         return services;
     }
@@ -69,7 +69,7 @@ public static class _Services
             var clientFactory = sp.GetRequiredService<ITypedHttpClientFactory<THandler>>();
 
             var factoryHandler = messageHandlerFactory.CreateHandler();
-            var fullHandler = new AuthenticationMessageHandler(sp.GetRequiredService<ILocalStorage>())
+            var fullHandler = new TokenAuthenticationMessageHandler(sp.GetRequiredService<ILocalStorage>())
             {
                 InnerHandler = factoryHandler
             };
@@ -89,7 +89,7 @@ public static class _Services
             var clientFactory = sp.GetRequiredService<ITypedHttpClientFactory<THandler>>();
 
             var factoryHandler = messageHandlerFactory.CreateHandler();
-            var fullHandler = new AuthenticationMessageHandler(sp.GetRequiredService<ILocalStorage>())
+            var fullHandler = new TokenAuthenticationMessageHandler(sp.GetRequiredService<ILocalStorage>())
             {
                 InnerHandler = factoryHandler
             };
@@ -106,7 +106,7 @@ public static class _Services
             services.AddHttpClient();
         }
 
-        services.AddScoped<AuthenticationMessageHandler>();
+        services.AddScoped<TokenAuthenticationMessageHandler>();
 
         services.AddClientTransportAdministration(isWebAssembly);
         services.AddClientTransportAuditing(isWebAssembly);
@@ -125,19 +125,19 @@ public static class _Services
         {
             services
                 .AddHttpClient<InspectorRequestHandler>()
-                .AddHttpMessageHandler<AuthenticationMessageHandler>();
+                .AddHttpMessageHandler<TokenAuthenticationMessageHandler>();
 
             services
                 .AddHttpClient<IInspectorAvatarRequestHandler, InspectorAvatarRequestHandler>()
-                .AddHttpMessageHandler<AuthenticationMessageHandler>();
+                .AddHttpMessageHandler<TokenAuthenticationMessageHandler>();
 
             services
                 .AddHttpClient<IOrganizationRequestHandler, OrganizationRequestHandler>()
-                .AddHttpMessageHandler<AuthenticationMessageHandler>();
+                .AddHttpMessageHandler<TokenAuthenticationMessageHandler>();
 
             services
                 .AddHttpClient<AuthorizationRequestHandler>()
-                .AddHttpMessageHandler<AuthenticationMessageHandler>();
+                .AddHttpMessageHandler<TokenAuthenticationMessageHandler>();
         }
         else
         {
@@ -167,11 +167,11 @@ public static class _Services
         {
             services
                 .AddHttpClient<IBusinessObjectInspectionAuditRecordRequestHandler, BusinessObjectInspectionAuditRecordRequestHandler>()
-                .AddHttpMessageHandler<AuthenticationMessageHandler>();
+                .AddHttpMessageHandler<TokenAuthenticationMessageHandler>();
 
             services
                 .AddHttpClient<IBusinessObjectInspectionRequestHandler, BusinessObjectInspectionRequestHandler>()
-                .AddHttpMessageHandler<AuthenticationMessageHandler>();
+                .AddHttpMessageHandler<TokenAuthenticationMessageHandler>();
         }
         else
         {
@@ -188,11 +188,11 @@ public static class _Services
         {
             services
                 .AddHttpClient<IIdentityRequestHandler, IdentityRequestHandler>()
-                .AddHttpMessageHandler<AuthenticationMessageHandler>();
+                .AddHttpMessageHandler<TokenAuthenticationMessageHandler>();
 
             services
                 .AddHttpClient<AuthenticationRequestHandler>()
-                .AddHttpMessageHandler<AuthenticationMessageHandler>();
+                .AddHttpMessageHandler<TokenAuthenticationMessageHandler>();
         }
         else
         {
@@ -215,7 +215,7 @@ public static class _Services
         {
             services
                 .AddHttpClient<NotificationRequestHandler>()
-                .AddHttpMessageHandler<AuthenticationMessageHandler>();
+                .AddHttpMessageHandler<TokenAuthenticationMessageHandler>();
         }
         else
         {
@@ -237,7 +237,7 @@ public static class _Services
         {
             services
                 .AddHttpClient<IInspectionRequestHandler, InspectionRequestHandler>()
-                .AddHttpMessageHandler<AuthenticationMessageHandler>();
+                .AddHttpMessageHandler<TokenAuthenticationMessageHandler>();
         }
         else
         {
@@ -253,7 +253,7 @@ public static class _Services
         {
             services
                 .AddHttpClient<IBusinessObjectRequestHandler, BusinessObjectRequestHandler>()
-                .AddHttpMessageHandler<AuthenticationMessageHandler>();
+                .AddHttpMessageHandler<TokenAuthenticationMessageHandler>();
         }
         else
         {
@@ -268,15 +268,15 @@ public static class _Services
         {
             services
                 .AddHttpClient<IExtensionRequestHandler, ExtensionRequestHandler>()
-                .AddHttpMessageHandler<AuthenticationMessageHandler>();
+                .AddHttpMessageHandler<TokenAuthenticationMessageHandler>();
 
             services
                 .AddHttpClient<IExtensionAggregateTypeRequestHandler, ExtensionAggregateTypeRequestHandler>()
-                .AddHttpMessageHandler<AuthenticationMessageHandler>();
+                .AddHttpMessageHandler<TokenAuthenticationMessageHandler>();
 
             services
                 .AddHttpClient<IExtensionFieldTypeRequestHandler, ExtensionFieldTypeRequestHandler>()
-                .AddHttpMessageHandler<AuthenticationMessageHandler>();
+                .AddHttpMessageHandler<TokenAuthenticationMessageHandler>();
         }
         else
         {

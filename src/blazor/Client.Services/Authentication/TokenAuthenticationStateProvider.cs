@@ -8,13 +8,13 @@ using System.Threading.Tasks;
 
 namespace Super.Paula.Client.Authentication;
 
-public class AuthenticationStateManager : AuthenticationStateProvider
+public class TokenAuthenticationStateProvider : AuthenticationStateProvider
 {
     private readonly ILocalStorage _localStorage;
 
     private Task<AuthenticationState>? _authenticationState;
 
-    public AuthenticationStateManager(ILocalStorage localStorage)
+    public TokenAuthenticationStateProvider(ILocalStorage localStorage)
     {
         _localStorage = localStorage;
         _localStorage.Changed += OnChanged;

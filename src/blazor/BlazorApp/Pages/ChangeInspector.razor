@@ -1,0 +1,93 @@
+﻿@page "/change-inspector"
+
+@inject ITranslator<ChangeInspector> Translator
+@inject IInspectorAvatarRequestHandler InspectorAvatarRequestHandler
+@inject IAuthenticationRequestHandler AuthenticationRequestHandler
+@inject NavigationManager NavigationManager
+
+@attribute [Authorize]
+
+<PageTitle>@Translator[$"Change Inspector"]</PageTitle>
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 id="indexHeadline" class="h2">@Translator[$"Change Inspector"]</h1>
+</div>
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-2 pb-1 mb-2 border-bottom">
+    <h2 id="indexHeadline" class="h5">@Translator[$"Change Password"]</h2>
+</div>
+
+<EditForm Model="@model" OnValidSubmit="OnSubmitSecretAsync">
+    <DataAnnotationsValidator />
+
+    <div class="container-fluid pb-3 mb-3 border-bottom">
+        <div class="form-floating mt-3">
+            <InputText class="form-control" id="oldSecret" @bind-Value="model.OldSecret" type="password" />
+            <label for="oldSecret">@Translator[$"Old password"]</label>
+        </div>
+        <div class="form-floating mt-3">
+            <InputText class="form-control" id="newSecret" @bind-Value="model.NewSecret" type="password"/>
+            <label for="newSecret">@Translator[$"New password"]</label>
+        </div>
+    </div>
+
+    @if(context.GetValidationMessages().Any())
+    {
+        <div class="container-fluid pb-4 mb-5">
+            <div class="card card-body tex-wrap">
+                <ValidationSummary />    
+            </div>
+        </div>
+    } 
+    else 
+    {
+        <div class="container-fluid pb-4 mb-5">
+            <AuthorizedButton Policy="AuditingFull" type="submit" class="btn btn-sm btn-primary">@Translator[$"Submit"]</AuthorizedButton>
+        </div>
+    }
+
+</EditForm>
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-2 pb-1 mb-2 border-bottom">
+    <h2 id="indexHeadline" class="h5">@Translator[$"Change Avatar"]</h2>
+</div>
+
+<div class="container-fluid pb-3 mb-3 border-bottom">
+    <div class="form-group">
+        <InspectorAvatar Inspector="Me" Size="128" Src="_browserFile"/>
+    </div>
+    <div class="form-floating mt-3">
+        <InputFile OnChange="@OnInputFileChanged" class="form-control-file" />
+    </div>
+</div>
+
+<div class="container-fluid pb-4 mb-5">
+    <AuthorizedButton Policy="AuditingFull" @onclick="OnSubmitAvatarAsync" class="btn btn-sm btn-primary">@Translator[$"Submit"]</AuthorizedButton>
+</div>
+
+@code {
+    private ChangeIdentitySecretRequest model = new ChangeIdentitySecretRequest();
+
+    private IBrowserFile? _browserFile;
+
+    private void OnInputFileChanged(InputFileChangeEventArgs e)
+    {
+        _browserFile = e.File;
+        StateHasChanged();
+    }
+
+    private async Task OnSubmitAvatarAsync()
+    {
+        if (_browserFile != null)
+        {
+            await InspectorAvatarRequestHandler.WriteAsync(_browserFile.OpenReadStream(), "me");
+            NavigationManager.NavigateTo("/", true);
+        }
+    }
+
+    private async Task OnSubmitSecretAsync()
+    {
+        await AuthenticationRequestHandler.ChangeSecretAsync(model);
+        NavigationManager.NavigateTo("/");
+    }
+}

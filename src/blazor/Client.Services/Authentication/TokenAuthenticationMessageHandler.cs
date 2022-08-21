@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace Super.Paula.Client.Authentication;
 
-public class AuthenticationMessageHandler : DelegatingHandler
+public class TokenAuthenticationMessageHandler : DelegatingHandler
 {
     private readonly ILocalStorage _localStorage;
 
-    public AuthenticationMessageHandler(ILocalStorage localStorage)
+    public TokenAuthenticationMessageHandler(ILocalStorage localStorage)
     {
         _localStorage = localStorage;
     }

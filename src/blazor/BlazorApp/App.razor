@@ -2,40 +2,59 @@
 @inject ITranslator<App> Translator
 
 <CascadingAuthenticationState>
-    <Router AppAssembly="@typeof(Program).Assembly">
-        <Found Context="routeData">
-            <ErrorBoundary @ref="errorBoundary">
-                <ChildContent>
-                    <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
-                    <FocusOnNavigate RouteData="@routeData" Selector="h1" />
-                </ChildContent>
-                <ErrorContent>
-                    <div class="alert alert-danger">
-                        <p>
-                            @context.Message
-                        </p>
-                        <p>
-                            <a class="alert-link" href="javascript:void(0);" @onclick=@(RecoverAndGoHome)>@Translator[$"Go to Homepage"]</a>
-                        </p>
-                    </div>
-                </ErrorContent>
-            </ErrorBoundary>
-        </Found>
-        <NotFound>
-            <LayoutView Layout="@typeof(MainLayout)">
-                <p role="alert">@Translator[$"Sorry, there's nothing at this address."]</p>
-            </LayoutView>
-        </NotFound>
-    </Router>
+    <AuthorizeView>
+        <Authorized>
+            @RouterWithLayout(typeof(MainLayout))
+        </Authorized>
+        <Authorizing>
+            @RouterWithLayout(typeof(UnauthorizedLayout))
+        </Authorizing>
+        <NotAuthorized>
+            @RouterWithLayout(typeof(UnauthorizedLayout))
+        </NotAuthorized>
+    </AuthorizeView>
 </CascadingAuthenticationState>
 
 @code {
 
-private ErrorBoundary? errorBoundary = null!;
+    private ErrorBoundary? errorBoundary = null!;
 
-private void RecoverAndGoHome()
-{
-errorBoundary?.Recover();
-NavigationManager.NavigateTo("/", true);
-}
+    private void RecoverAndGoHome()
+    {
+        errorBoundary?.Recover();
+        NavigationManager.NavigateTo("/", true);
+    }
+
+    RenderFragment RouterWithLayout(Type layoutType) => __builder =>
+    {
+        <Router AppAssembly="@typeof(Program).Assembly">
+            <Found Context="routeData">
+                <ErrorBoundary @ref="errorBoundary">
+                    <ChildContent>
+                        <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@layoutType">
+                            <NotAuthorized>
+                                <UnauthorizedRedirect/>
+                            </NotAuthorized>
+                        </AuthorizeRouteView>
+                        <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+                    </ChildContent>
+                    <ErrorContent>
+                        <div class="alert alert-danger">
+                            <p>
+                                @context.Message
+                            </p>
+                            <p>
+                                <a class="alert-link" href="javascript:void(0);" @onclick=@(RecoverAndGoHome)>@Translator[$"Go to Homepage"]</a>
+                            </p>
+                        </div>
+                    </ErrorContent>
+                </ErrorBoundary>
+            </Found>
+            <NotFound>
+                <LayoutView Layout="@typeof(UnauthorizedLayout)">
+                    <UnauthorizedRedirect />
+                </LayoutView>
+            </NotFound>
+        </Router>
+    };
 }

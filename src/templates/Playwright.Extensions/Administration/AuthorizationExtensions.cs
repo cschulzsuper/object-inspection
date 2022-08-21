@@ -7,7 +7,7 @@ public static class AuthorizationExtensions
 {
     public static async Task SignInInspectorAsync(this IPage page, string? organization, string? inspector)
     {
-        await page.GotoAsync($"sign-in-inspector");
+        await page.GotoAsync($"inspectors/sign-in");
         await Task.Delay(1200);
 
         if (inspector != null && organization != null)

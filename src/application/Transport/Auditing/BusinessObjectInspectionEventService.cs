@@ -25,13 +25,12 @@ public class BusinessObjectInspectionEventService : IBusinessObjectInspectionEve
     {
         var inspection = inspections
             .Where(x => x.AuditSchedule.Appointments.Any())
-            .OrderBy(x => x.AuditSchedule.Appointments
+            .MinBy(x => x.AuditSchedule.Appointments
                 .Min(y =>
                     new DateTimeNumbers(
                         y.PlannedAuditDate,
                         y.PlannedAuditTime)
-                    .ToGlobalDateTime()))
-            .FirstOrDefault();
+                    .ToGlobalDateTime()));
 
         if (inspection == null)
         {

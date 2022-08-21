@@ -17,7 +17,7 @@ public static class AuthorizationEndpoints
 
         endpoints.MapRestResouceCommands(
             "Current Inspector",
-            "/inspector/me",
+            "/inspectors/me",
             ("/unmask", Unmask));
 
         endpoints.MapRestResouceCommands(
@@ -35,28 +35,28 @@ public static class AuthorizationEndpoints
 
     private static Delegate Register =>
         [Authorize("Maintenance")]
-    (IOrganizationRequestHandler requestHandler, RegisterOrganizationRequest request)
+        (IOrganizationRequestHandler requestHandler, RegisterOrganizationRequest request)
             => requestHandler.RegisterAsync(request);
 
     private static Delegate Initialize =>
         [Authorize("Maintenance")]
-    (IOrganizationRequestHandler requestHandler, string organization, InitializeOrganizationRequest request)
+        (IOrganizationRequestHandler requestHandler, string organization, InitializeOrganizationRequest request)
             => requestHandler.InitializeAsync(organization, request);
 
     private static Delegate Authorize =>
         [Authorize]
-    [UseOrganizationFromRoute]
-    (IAuthorizationRequestHandler requestHandler, string organization, string inspector)
+        [UseOrganizationFromRoute]
+        (IAuthorizationRequestHandler requestHandler, string organization, string inspector)
                 => requestHandler.AuthorizeAsync(organization, inspector);
 
     private static Delegate Impersonate =>
         [Authorize("Maintenance")]
-    [UseOrganizationFromRoute]
-    (IAuthorizationRequestHandler requestHandler, string organization, string inspector)
+        [UseOrganizationFromRoute]
+        (IAuthorizationRequestHandler requestHandler, string organization, string inspector)
                 => requestHandler.StartImpersonationAsync(organization, inspector);
 
     private static Delegate Unmask =>
         [Authorize("Impersonation")]
-    (IAuthorizationRequestHandler requestHandler)
+        (IAuthorizationRequestHandler requestHandler)
             => requestHandler.StopImpersonationAsync();
 }

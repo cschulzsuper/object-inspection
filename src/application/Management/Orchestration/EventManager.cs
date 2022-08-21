@@ -53,7 +53,7 @@ public class EventManager : IEventManager
         }
         catch (Exception exception)
         {
-            throw new ManagementException($"Could not update event '{@event.Id}'.", exception);
+            throw new ManagementException($"Could not update event '{@event.EventId}'.", exception);
         }
     }
 
@@ -67,7 +67,7 @@ public class EventManager : IEventManager
         }
         catch (Exception exception)
         {
-            throw new ManagementException($"Could not delete event '{@event.Id}'.", exception);
+            throw new ManagementException($"Could not delete event '{@event.EventId}'.", exception);
         }
     }
 
@@ -87,8 +87,8 @@ public class EventManager : IEventManager
 
     private static void EnsureInsertable(Event @event)
         => Validator.Ensure($"event with unique name '{@event.Name}'",
-            EventValidator.IdIsNotEmpty(@event.Id),
-            EventValidator.IdIsGuid(@event.Id),
+            EventValidator.IdIsNotEmpty(@event.EventId),
+            EventValidator.IdIsGuid(@event.EventId),
             EventValidator.NameIsNotEmpty(@event.Name),
             EventValidator.NameHasKebabCase(@event.Name),
             EventValidator.NameIsNotTooLong(@event.Name),
@@ -104,9 +104,9 @@ public class EventManager : IEventManager
             EventValidator.CreationTimeIsInDayTimeRange(@event.CreationTime));
 
     private static void EnsureUpdateable(Event @event)
-        => Validator.Ensure($"event with id '{@event.Id}'",
-            EventValidator.IdIsNotEmpty(@event.Id),
-            EventValidator.IdIsGuid(@event.Id),
+        => Validator.Ensure($"event with id '{@event.EventId}'",
+            EventValidator.IdIsNotEmpty(@event.EventId),
+            EventValidator.IdIsGuid(@event.EventId),
             EventValidator.NameIsNotEmpty(@event.Name),
             EventValidator.NameHasKebabCase(@event.Name),
             EventValidator.NameIsNotTooLong(@event.Name),
@@ -122,7 +122,7 @@ public class EventManager : IEventManager
             EventValidator.CreationTimeIsInDayTimeRange(@event.CreationTime));
 
     private static void EnsureDeletable(Event @event)
-        => Validator.Ensure($"event with id '{@event.Id}'",
-            EventValidator.IdIsNotEmpty(@event.Id),
-            EventValidator.IdIsGuid(@event.Id));
+        => Validator.Ensure($"event with id '{@event.EventId}'",
+            EventValidator.IdIsNotEmpty(@event.EventId),
+            EventValidator.IdIsGuid(@event.EventId));
 }

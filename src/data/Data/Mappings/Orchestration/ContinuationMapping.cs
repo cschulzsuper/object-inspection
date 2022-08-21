@@ -15,7 +15,7 @@ public class ContinuationMapping : IEntityTypeConfiguration<Continuation>
             .HasValueGenerator<ContinuationPartitionKeyValueGenerator>();
 
         builder
-             .HasKey(PartitionKey, nameof(Continuation.Id));
+             .HasKey(PartitionKey, nameof(Continuation.ContinuationId));
 
         builder
             .ToContainer("_orchestration")
@@ -30,7 +30,7 @@ public class ContinuationMapping : IEntityTypeConfiguration<Continuation>
             .IsETagConcurrency();
 
         builder
-            .Property(x => x.Id)
+            .Property(x => x.ContinuationId)
             .HasMaxLength(140)
             .IsRequired();
 

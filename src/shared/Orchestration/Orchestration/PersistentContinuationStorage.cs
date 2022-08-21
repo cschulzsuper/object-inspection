@@ -36,7 +36,7 @@ public class PersistentContinuationStorage : IContinuationStorage
             Name = TypeNameConverter.ToKebabCase(continuation.GetType()),
             CreationTime = continuation.CreationTime,
             CreationDate = continuation.CreationDate,
-            Id = continuation.Id.ToString(),
+            ContinuationId = continuation.Id.ToString(),
             Data = Base64Encoder.ObjectToBase64(continuation),
             User = Base64Encoder.ObjectToBase64(user.ToToken()),
             OperationId = Activity.Current?.RootId ?? Guid.NewGuid().ToString(),
@@ -90,7 +90,7 @@ public class PersistentContinuationStorage : IContinuationStorage
     public async ValueTask<bool> SetContinuationAsInProgressAsync(Guid continuationId)
     {
         var continuation = _continuationManager.GetQueryable()
-            .SingleOrDefault(x => x.Id == continuationId.ToString());
+            .SingleOrDefault(x => x.ContinuationId == continuationId.ToString());
 
         if (continuation is not null and not { State: "in-progress" })
         {
@@ -118,7 +118,7 @@ public class PersistentContinuationStorage : IContinuationStorage
     public async ValueTask SetContinuationCompletionAsync(Guid continuationId)
     {
         var continuation = _continuationManager.GetQueryable()
-            .SingleOrDefault(x => x.Id == continuationId.ToString());
+            .SingleOrDefault(x => x.ContinuationId == continuationId.ToString());
 
         if (continuation is { State: "in-progress" })
         {
@@ -135,7 +135,7 @@ public class PersistentContinuationStorage : IContinuationStorage
     public async ValueTask SetContinuationFailureAsync(Guid continuationId, Exception? exception)
     {
         var continuation = _continuationManager.GetQueryable()
-            .SingleOrDefault(x => x.Id == continuationId.ToString());
+            .SingleOrDefault(x => x.ContinuationId == continuationId.ToString());
 
         if (continuation is { State: "in-progress" })
         {

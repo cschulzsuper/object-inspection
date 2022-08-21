@@ -1,225 +1,149 @@
 ﻿@page "/inspectors"
-@page "/organizations/{organization}/inspectors"
 
 @inject IAuthorizationRequestHandler AuthorizationRequestHandler
 @inject IInspectorRequestHandler InspectorRequestHandler
-@inject IOrganizationRequestHandler OrganizationRequestHandler
-
 @inject ITranslator<View> Translator
 @inject NavigationManager NavigationManager
 
 @attribute [Authorize("ManagementRead")]
 
+<PageTitle>@Translator[$"Inspectors"]</PageTitle>
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">@Translator[$"Inspectors"]</h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <div class="btn-group me-2">
+            <button type="button" class="btn btn-sm btn-outline-secondary" title="@Translator[$"Create"]" @onclick="@Create"><span class="oi oi-plus" /></button>
+        </div>
+    </div>
+</div>
+
 <DemoNote>
     @Translator.Markdown($"An inspector is a person that can be assigned to a business object. Assigned inspectors conduct the auditing of the business object.")
 </DemoNote>
 
-<div class="container-fluid">
-    <h1>@Translator[$"Inspectors"]</h1>
-</div>
+<div class="table-responsive">
 
-@if (_organization == null)
-{
-    <div class="container-fluid m-2">
-        <button class="btn btn-primary" title="@Translator[$"Create"]" 
-            @onclick="Create"><span class="oi oi-plus"/></button>
-    </div>
-
-}
-else 
-{
-    @if (_inspectors?.Any() == false)
-{
-    <div class="container-fluid m-2">
-            <button id="repair" class="btn btn-primary" title="@Translator[$"Repair"]" 
-                @onclick="RepairAsync"><span class="oi oi-wrench"/></button>
-        </div>
-}
-}
-
-<div class="container-fluid">
-
-@if (_inspectors == null)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
-    <table class="table table-sm">
-        <thead class="table-light table-borderless">
-            <tr>
-                <th class="col-6">@Translator[$"Unique name"]</th>
-                <th class="col-6">@Translator[$"Identity"]</th>
-                @if (Organization == null)
-        {
-            <th></th>
-            <th></th>
-            <th></th>
-        }
-                <AuthorizeView Policy="Maintenance">
-                    <Authorized>
-                        <th></th>
-                    </Authorized>
-                </AuthorizeView>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var inspector in _inspectors.Values)
+    @if (_inspectors == null)
     {
-        <tr>
+        <p><em>Loading...</em></p>
+    }
+    else
+    {
+        <table class="table table-striped table-sm">
+
+            <thead>
+            <tr>
+                <th scope="col" class="col-6">@Translator[$"Unique name"]</th>
+                <th scope="col" class="col-6">@Translator[$"Identity"]</th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+            </tr>
+            </thead>
+
+            <tbody>
+            @foreach (var inspector in _inspectors.Values)
+            {
+                <tr>
                     <td>@inspector.UniqueName</td>
                     <td>@inspector.Identity</td>
-                    @if(Organization == null)
-            {
-                @if(inspector.Activated)
-                {
-                    <td>
-                                @if (inspector.UniqueName != _inspector)
-                        {
-                            <AuthorizedButton Policy="ManagementFull" class="btn btn-success btn-block" title="@Translator[$"Deactivate"]" 
-                                        @onclick="() => DeactivateAsync(inspector)"><span class="oi oi-power-standby"/></AuthorizedButton>
-                        }
-                            </td>
-                } else {
-                    <td>
-                                @if (inspector.UniqueName != _inspector)
-                        {
-                            <AuthorizedButton Policy="ManagementFull" class="btn btn-outline-danger btn-block" title="@Translator[$"Activate"]" 
-                                        @onclick="() => ActivateAsync(inspector)"><span class="oi oi-power-standby"/></AuthorizedButton>
-                        }
-                            </td>
-                }
-                <td>
-                            <button class="btn btn-outline-info btn-block" title="@Translator[$"Edit"]" 
-                                @onclick="() => Edit(inspector.UniqueName)"><span class="oi oi-pencil"/></button>
-                        </td>
-                <td>
-                            @if (inspector.UniqueName != _inspector)
+                    @if (inspector.Activated)
                     {
-                        <AuthorizedButton Policy="ManagementFull" class="btn btn-outline-danger btn-block" title="@Translator[$"Delete"]" 
-                                    @onclick="() => DeleteAsync(inspector)"><span class="oi oi-trash"/></AuthorizedButton>
-                    }
+                        <td>
+                            @if (inspector.UniqueName != _inspector)
+                            {
+                                <AuthorizedButton Policy="ManagementFull" class="btn btn-sm btn-success btn-block" title="@Translator[$"Deactivate"]"
+                                                  @onclick="() => DeactivateAsync(inspector)"><span class="oi oi-power-standby"/></AuthorizedButton>
+                            }
                         </td>
-            }
-                    <AuthorizeView Policy="Maintenance">
-                        <Authorized>
-                            <td>
-                                @if (inspector.Activated &&
-                             _organization?.Activated == true &&
-                             inspector.UniqueName != _inspector)
+                    }
+                    else
+                    {
+                        <td>
+                            @if (inspector.UniqueName != _inspector)
+                            {
+                                <AuthorizedButton Policy="ManagementFull" class="btn btn-sm btn-outline-danger btn-block" title="@Translator[$"Activate"]"
+                                                  @onclick="() => ActivateAsync(inspector)"><span class="oi oi-power-standby"/></AuthorizedButton>
+                            }
+                        </td>
+                    }
+                    <td>
+                        <button class="btn btn-sm btn-outline-info btn-block" title="@Translator[$"Edit"]"
+                                @onclick="() => Edit(inspector.UniqueName)"><span class="oi oi-pencil"/></button>
+                    </td>
+                    <td>
+                        @if (inspector.UniqueName != _inspector)
                         {
-                            <button class="btn btn-outline-danger btn-block" title="@Translator[$"Impersonate"]"
-                                    @onclick="() => ImpersonateAsync(inspector.UniqueName)"><span class="oi oi-eye"/></button>
+                            <AuthorizedButton Policy="ManagementFull" class="btn btn-sm btn-outline-danger btn-block" title="@Translator[$"Delete"]"
+                                              @onclick="() => DeleteAsync(inspector)"><span class="oi oi-trash"/></AuthorizedButton>
                         }
-                            </td>
-                        </Authorized>
-                    </AuthorizeView>
-                    
+                    </td>
                 </tr>
+            }
+            </tbody>
+        </table>
     }
-        </tbody>
-    </table>
-}
-
 </div>
 
 @code {
 
-[Parameter]
-public string? Organization { get; set; }
+    private IDictionary<string, InspectorResponse>? _inspectors;
 
-private OrganizationResponse? _organization;
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthenticationState { get; set; } = null!;
 
-private IDictionary<string,InspectorResponse>? _inspectors;
+    private string? _inspector;
 
-[CascadingParameter]
-public Task<AuthenticationState> AuthenticationState { get; set; } = null!;
-
-private string? _inspector;
-
-protected override async Task OnParametersSetAsync()
-{
-_inspector = (await AuthenticationState).User.GetInspector();
-}
-
-protected override async Task OnAfterRenderAsync(bool firstRender)
-{
-if (firstRender)
-{
-    _inspectors = new Dictionary<string, InspectorResponse>();
-
-    if (Organization != null)
+    protected override async Task OnParametersSetAsync()
     {
-        _organization = await OrganizationRequestHandler.GetAsync(Organization);
-    }            
-
-    var response = Organization == null
-        ? InspectorRequestHandler.GetAll()
-        : InspectorRequestHandler.GetAllForOrganization(Organization);
-
-    await foreach (var inspector in response)
-    {
-        _inspectors.Add(inspector.UniqueName, inspector);
-        StateHasChanged();
+        _inspector = (await AuthenticationState).User.GetInspector();
     }
 
-    StateHasChanged();
-}
-}
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _inspectors = new Dictionary<string, InspectorResponse>();
 
-public void Create()
-=> NavigationManager.NavigateTo("/inspectors/create");
+            var response = InspectorRequestHandler.GetAll();
 
-public void Edit(string inspector)
-=> NavigationManager.NavigateTo($"/inspectors/{inspector}/edit");
+            await foreach (var inspector in response)
+            {
+                _inspectors.Add(inspector.UniqueName, inspector);
+                StateHasChanged();
+            }
 
-public async Task RepairAsync() 
-{
-if (_organization == null)
-{
-    return;
-}
+            StateHasChanged();
+        }
+    }
 
-await OrganizationRequestHandler.InitializeAsync(_organization.UniqueName, new InitializeOrganizationRequest
-{
-    Inspector = _organization.ChiefInspector,
-    ETag = _organization.ETag
-});  
+    public void Create()
+        => NavigationManager.NavigateTo("/inspectors/create");
 
-NavigationManager.NavigateTo(NavigationManager.Uri,true);
-}
+    public void Edit(string inspector)
+        => NavigationManager.NavigateTo($"/inspectors/{inspector}/edit");
 
-public async Task DeleteAsync(InspectorResponse inspector) 
-{
-await InspectorRequestHandler.DeleteAsync(inspector.UniqueName, inspector.ETag);
+    public async Task DeleteAsync(InspectorResponse inspector)
+    {
+        await InspectorRequestHandler.DeleteAsync(inspector.UniqueName, inspector.ETag);
 
-_inspectors!.Remove(inspector.UniqueName);
-}
+        _inspectors!.Remove(inspector.UniqueName);
+    }
 
-public async Task ActivateAsync(InspectorResponse inspector)
-{
-var response = await InspectorRequestHandler.ActivateAsync(inspector.UniqueName, inspector.ETag);
+    public async Task ActivateAsync(InspectorResponse inspector)
+    {
+        var response = await InspectorRequestHandler.ActivateAsync(inspector.UniqueName, inspector.ETag);
 
-_inspectors![inspector.UniqueName].Activated = true;
-_inspectors![inspector.UniqueName].ETag = response.ETag;
-}
+        _inspectors![inspector.UniqueName].Activated = true;
+        _inspectors![inspector.UniqueName].ETag = response.ETag;
+    }
 
-public async Task DeactivateAsync(InspectorResponse inspector)
-{
-var response = await InspectorRequestHandler.DeactivateAsync(inspector.UniqueName, inspector.ETag);
+    public async Task DeactivateAsync(InspectorResponse inspector)
+    {
+        var response = await InspectorRequestHandler.DeactivateAsync(inspector.UniqueName, inspector.ETag);
 
-_inspectors![inspector.UniqueName].Activated = false;
-_inspectors![inspector.UniqueName].ETag = response.ETag;
-}
-
-public async Task ImpersonateAsync(string inspector)
-{
-var organization = (await AuthenticationState).User.GetOrganization();
-
-await AuthorizationRequestHandler.StartImpersonationAsync(
-    Organization ?? organization,
-    inspector);
-
-NavigationManager.NavigateTo("/");
-}
+        _inspectors![inspector.UniqueName].Activated = false;
+        _inspectors![inspector.UniqueName].ETag = response.ETag;
+    }
 }

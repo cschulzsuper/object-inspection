@@ -30,19 +30,13 @@ public static class SearchQueryParser
             if (parts.Length == 1)
             {
                 var value = parts[0].Trim('\"');
-                if (value != string.Empty)
-                {
-                    yield return new KeyValuePair<string, object>(string.Empty, value);
-                }
+                yield return new KeyValuePair<string, object>(string.Empty, value);
             }
 
             if (parts.Length == 2)
             {
                 var value = parts[1].Trim('\"');
-                if (value != string.Empty)
-                {
-                    yield return new KeyValuePair<string, object>(parts[0], value);
-                }
+                yield return new KeyValuePair<string, object>(parts[0], value);
             }
         }
     }
