@@ -10,128 +10,124 @@ namespace Super.Paula.Application.Communication;
 
 public class NotificationEventHandler : INotificationEventHandler
 {
-    public async Task HandleAsync(EventHandlerContext context, BusinessObjectInspectorEvent @event)
+    public async Task HandleAsync(EventHandlerContext context, BusinessObjectInspectorCreationEvent @event)
     {
         var notificationManager = context.Services.GetRequiredService<INotificationManager>();
         var notificationBroadcaster = context.Services.GetRequiredService<INotificationBroadcaster>();
 
         var (date, time) = DateTimeNumbers.GlobalNow;
 
-        if (!string.IsNullOrWhiteSpace(@event.OldInspector) &&
-            @event.OldInspector != @event.NewInspector)
+        var notification = new Notification
         {
-            var notification = new Notification
-            {
-                Inspector = @event.OldInspector,
-                Date = date,
-                Time = time,
-                Target = $"business-objects/{@event.UniqueName}",
-                Text = $"You are not longer the inspector for {@event.DisplayName}!"
-            };
+            Inspector = @event.Inspector,
+            Date = date,
+            Time = time,
+            Target = $"business-objects/{@event.UniqueName}",
+            Text = $"You are not longer the inspector for {@event.DisplayName}!"
+        };
 
-            await notificationManager.InsertAsync(notification);
+        await notificationManager.InsertAsync(notification);
 
-            var response = new NotificationResponse
-            {
-                Date = notification.Date,
-                Time = notification.Time,
-                Text = notification.Text,
-                Inspector = notification.Inspector,
-                Target = notification.Target
-            };
-
-            await notificationBroadcaster.SendNotificationCreationAsync(response);
-        }
-
-        if (!string.IsNullOrWhiteSpace(@event.NewInspector) &&
-            @event.NewInspector != @event.OldInspector)
+        var response = new NotificationResponse
         {
-            var notification = new Notification
-            {
-                Inspector = @event.NewInspector,
-                Date = date,
-                Time = time,
-                Target = $"business-objects/{@event.UniqueName}",
-                Text = $"You are now the inspector for {@event.DisplayName}!"
-            };
+            Date = notification.Date,
+            Time = notification.Time,
+            Text = notification.Text,
+            Inspector = notification.Inspector,
+            Target = notification.Target
+        };
 
-            await notificationManager.InsertAsync(notification);
+        await notificationBroadcaster.SendNotificationCreationAsync(response);
 
-            var response = new NotificationResponse
-            {
-                Date = notification.Date,
-                Time = notification.Time,
-                Text = notification.Text,
-                Inspector = notification.Inspector,
-                Target = notification.Target
-            };
-
-            await notificationBroadcaster.SendNotificationCreationAsync(response);
-        }
     }
 
-    public async Task HandleAsync(EventHandlerContext context, InspectorBusinessObjectEvent @event)
+    public async Task HandleAsync(EventHandlerContext context, BusinessObjectInspectorDeletionEvent @event)
     {
         var notificationManager = context.Services.GetRequiredService<INotificationManager>();
         var notificationBroadcaster = context.Services.GetRequiredService<INotificationBroadcaster>();
 
-        if (@event.NewAuditSchedulePending == true &&
-            @event.NewAuditSchedulePending != @event.OldAuditSchedulePending &&
-            @event.NewAuditScheduleDelayed == false &&
-            @event.OldAuditScheduleDelayed == false)
+        var (date, time) = DateTimeNumbers.GlobalNow;
+
+        var notification = new Notification
         {
-            var (date, time) = DateTimeNumbers.GlobalNow;
+            Inspector = @event.Inspector,
+            Date = date,
+            Time = time,
+            Target = $"business-objects/{@event.UniqueName}",
+            Text = $"You are now the inspector for {@event.DisplayName}!"
+        };
 
-            var notification = new Notification
-            {
-                Inspector = @event.UniqueName,
-                Date = date,
-                Time = time,
-                Target = $"business-objects/{@event.BusinessObject}",
-                Text = $"An inspection audit for {@event.BusinessObjectDisplayName} imminent!"
-            };
+        await notificationManager.InsertAsync(notification);
 
-            await notificationManager.InsertAsync(notification);
-
-            var response = new NotificationResponse
-            {
-                Date = notification.Date,
-                Time = notification.Time,
-                Text = notification.Text,
-                Inspector = notification.Inspector,
-                Target = notification.Target
-            };
-
-            await notificationBroadcaster.SendNotificationCreationAsync(response);
-        }
-
-        if (@event.NewAuditScheduleDelayed == true &&
-            @event.NewAuditScheduleDelayed != @event.OldAuditScheduleDelayed)
+        var response = new NotificationResponse
         {
+            Date = notification.Date,
+            Time = notification.Time,
+            Text = notification.Text,
+            Inspector = notification.Inspector,
+            Target = notification.Target
+        };
 
-            var (date, time) = DateTimeNumbers.GlobalNow;
+        await notificationBroadcaster.SendNotificationCreationAsync(response);
+    }
 
-            var notification = new Notification
-            {
-                Inspector = @event.UniqueName,
-                Date = date,
-                Time = time,
-                Target = $"business-objects/{@event.BusinessObject}",
-                Text = $"An inspection audit for {@event.BusinessObjectDisplayName} overdue!"
-            };
+    public async Task HandleAsync(EventHandlerContext context, InspectorBusinessObjectImmediacyDetectionEvent @event)
+    {
+        var notificationManager = context.Services.GetRequiredService<INotificationManager>();
+        var notificationBroadcaster = context.Services.GetRequiredService<INotificationBroadcaster>();
 
-            await notificationManager.InsertAsync(notification);
+        var (date, time) = DateTimeNumbers.GlobalNow;
 
-            var response = new NotificationResponse
-            {
-                Date = notification.Date,
-                Time = notification.Time,
-                Text = notification.Text,
-                Inspector = notification.Inspector,
-                Target = notification.Target
-            };
+        var notification = new Notification
+        {
+            Inspector = @event.UniqueName,
+            Date = date,
+            Time = time,
+            Target = $"business-objects/{@event.BusinessObject}",
+            Text = $"An inspection audit for {@event.BusinessObjectDisplayName} imminent!"
+        };
 
-            await notificationBroadcaster.SendNotificationCreationAsync(response);
-        }
+        await notificationManager.InsertAsync(notification);
+
+        var response = new NotificationResponse
+        {
+            Date = notification.Date,
+            Time = notification.Time,
+            Text = notification.Text,
+            Inspector = notification.Inspector,
+            Target = notification.Target
+        };
+
+        await notificationBroadcaster.SendNotificationCreationAsync(response);
+    }
+
+    public async Task HandleAsync(EventHandlerContext context, InspectorBusinessObjectOverdueDetectionEvent @event)
+    {
+        var notificationManager = context.Services.GetRequiredService<INotificationManager>();
+        var notificationBroadcaster = context.Services.GetRequiredService<INotificationBroadcaster>();
+
+        var (date, time) = DateTimeNumbers.GlobalNow;
+
+        var notification = new Notification
+        {
+            Inspector = @event.UniqueName,
+            Date = date,
+            Time = time,
+            Target = $"business-objects/{@event.BusinessObject}",
+            Text = $"An inspection audit for {@event.BusinessObjectDisplayName} overdue!"
+        };
+
+        await notificationManager.InsertAsync(notification);
+
+        var response = new NotificationResponse
+        {
+            Date = notification.Date,
+            Time = notification.Time,
+            Text = notification.Text,
+            Inspector = notification.Inspector,
+            Target = notification.Target
+        };
+
+        await notificationBroadcaster.SendNotificationCreationAsync(response);
     }
 }

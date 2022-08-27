@@ -5,9 +5,9 @@ using Super.Paula.Shared.Orchestration;
 namespace Super.Paula.Application.Auditing;
 
 public interface IBusinessObjectInspectionAuditRecordEventHandler :
-    IEventHandler<BusinessObjectEvent>,
+    IEventHandler<BusinessObjectUpdateEvent>,
     IEventHandler<BusinessObjectDeletionEvent>,
-    IEventHandler<InspectionEvent>,
+    IEventHandler<InspectionUpdateEvent>,
     IEventHandler<InspectionDeletionEvent>
 {
 

@@ -1,4 +1,5 @@
 ﻿@page "/business-objects/{businessObject}/inspections"
+@using Super.Paula.Shared.Security
 
 @inject ITranslator<View> Translator
 @inject NavigationManager NavigationManager
@@ -8,33 +9,38 @@
 
 @attribute [Authorize("OnlyInspectorOrObserver")]
 
+<PageTitle>@Translator[$"Inspections"]</PageTitle>
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">@Translator[$"Inspections"]</h1>
+    <AuthorizeView Policy="OnlyChiefOrObserver">
+        <Authorized>
+            <div class="btn-toolbar mb-2 mb-md-0">
+                <div class="btn-group me-2">
+                    <button id="assignmentMode" class="btn btn-sm @(_mode == Mode.AssignmentMode ? "btn-primary" : "btn-outline-secondary")"
+                            title="@Translator[$"Assigment mode"]"
+                            @onclick="ToggleAssignmentMode"><span class="oi oi-list"/></button>
+
+                    <button id="dropMode" class="d-lg-none btn btn-sm @(_mode == Mode.DropMode ? "btn-primary" : "btn-outline-secondary")"
+                            title="@Translator[$"Drop mode"]"
+                            @onclick="ToggleDropMode"><span class="oi oi-media-skip-forward"/></button>
+
+                    <button id="scheduleMode" class="d-lg-none btn btn-sm @(_mode == Mode.ScheduleMode ? "btn-primary" : "btn-outline-secondary")"
+                            title="@Translator[$"Schedule mode"]"
+                            @onclick="ToggleScheduleMode"><span class="oi oi-clock"/></button>
+                </div>
+            </div>
+        </Authorized>
+    </AuthorizeView>
+</div>
+
 <DemoNote>
     @Translator.Markdown($"One or more inspection can make up a check list for a business object. An optional schedule can be defined.")
 </DemoNote>
 
-<div class="container-fluid">
-    <h1>@Translator[$"Inspections"]</h1>
-</div>
 
-<AuthorizeView Policy="OnlyChiefOrObserver">
-    <Authorized>
-        <div class="container-fluid m-2">
-            <button id="assignmentMode" class="btn @(_mode == Mode.AssignmentMode ? "btn-primary" : "btn-outline-secondary")"
-                    title="@Translator[$"Assigment mode"]"
-                    @onclick="ToggleAssignmentMode"><span class="oi oi-list"/></button>
 
-            <button id="dropMode" class="d-lg-none btn @(_mode == Mode.DropMode ? "btn-primary" : "btn-outline-secondary")"
-                    title="@Translator[$"Drop mode"]"
-                    @onclick="ToggleDropMode"><span class="oi oi-media-skip-forward"/></button>
-
-            <button id="scheduleMode" class=" d-lg-none btn @(_mode == Mode.ScheduleMode ? "btn-primary" : "btn-outline-secondary")" 
-                    title="@Translator[$"Schedule mode"]"
-                    @onclick="ToggleScheduleMode"><span class="oi oi-clock"/></button>
-        </div>
-    </Authorized>
-</AuthorizeView>
-
-<div class="container-fluid">
+<div class="table-responsive">
 
 @if (RelevantInspections == null)
 {
@@ -42,70 +48,70 @@
 }
 else
 {
-    <table class="table table-sm">
-        <thead class="table-light table-borderless">
+    <table class="table table-striped table-sm">
+        <thead>
+        <tr>
+            <th scope="col" class="col-2 d-none d-lg-table-cell">@Translator[$"Unique name"]</th>
+            <th scope="col" class="col-12 col-lg-10">@Translator[$"Display name"]</th>
+
+            <AuthorizeView Policy="OnlyChiefOrObserver">
+                <Authorized>
+                    <th scope="col" class=@(_mode == Mode.AssignmentMode ? "" : "d-none d-lg-table-cell")></th>
+                    <th scope="col" class=@(_mode == Mode.ScheduleMode ? "" : "d-none d-lg-table-cell")></th>
+                    <th scope="col" class=@(_mode == Mode.DropMode ? "" : "d-none d-lg-table-cell")></th>
+                </Authorized>
+            </AuthorizeView>
+
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var inspection in RelevantInspections)
+        {
             <tr>
-                <th class="col-2 d-none d-lg-table-cell">@Translator[$"Unique name"]</th>
-                <th class="col-12 col-lg-10">@Translator[$"Display name"]</th>
+                <td class="d-none d-lg-table-cell">@inspection.Inspection</td>
+                <td>
+                    <BusinessObjectInspectionResponseToggle Inspection="inspection"/>
+                </td>
 
                 <AuthorizeView Policy="OnlyChiefOrObserver">
                     <Authorized>
-                        <th class=@(_mode == Mode.AssignmentMode ? "" : "d-none d-lg-table-cell")></th>
-                        <th class=@(_mode == Mode.ScheduleMode ? "" : "d-none d-lg-table-cell")></th>
-                        <th class=@(_mode == Mode.DropMode ? "" : "d-none d-lg-table-cell")></th>
+                        <td class=@(_mode == Mode.AssignmentMode ? "" : "d-none d-lg-table-cell")>
+                            @if (_inspectionBusinessObjects!.ContainsKey(inspection.Inspection))
+                            {
+                                <AuthorizedButton Policy="OnlyChief"
+                                                  id="@($"unassign-{inspection.Inspection}")"
+                                                  class="btn btn-sm btn-primary btn-block"
+                                                  title="@Translator[$"Unassign"]"
+                                                  @onclick="() => UnassignAsync(inspection)"><span class="oi oi-minus"/></AuthorizedButton>
+                            }
+                            else
+                            {
+                                <AuthorizedButton Policy="OnlyChief"
+                                                  id="@($"assign-{inspection.Inspection}")"
+                                                  class="btn btn-sm btn-primary btn-block"
+                                                  title="@Translator[$"Assign"]"
+                                                  @onclick="() => AssignAsync(inspection)"><span class="oi oi-plus"/></AuthorizedButton>
+                            }
+                        </td>
+                        <td class=@(_mode == Mode.ScheduleMode ? "" : "d-none d-lg-table-cell")>
+                            <button
+                                id="@($"schedule-{inspection.Inspection}")"
+                                class="btn btn-sm btn-primary btn-block"
+                                title="@Translator[$"Schedule"]"
+                                @onclick="() => Schedule(inspection)"><span class="oi oi-clock"/></button>
+                        </td>
+                        <td class=@(_mode == Mode.DropMode ? "" : "d-none d-lg-table-cell")>
+                            <AuthorizedButton Policy="OnlyChief"
+                                              id="@($"drop-{inspection.Inspection}")"
+                                              class="btn btn-sm btn-primary btn-block"
+                                              title="@Translator[$"Drop"]"
+                                              @onclick="() => DropAsync(inspection)"><span class="oi oi-media-skip-forward"></span></AuthorizedButton>
+                        </td>
                     </Authorized>
                 </AuthorizeView>
 
             </tr>
-        </thead>
-        <tbody>
-            @foreach (var inspection in RelevantInspections)
-    {
-        <tr>
-                    <td class="d-none d-lg-table-cell">@inspection.Inspection</td>
-                    <td>
-                        <BusinessObjectInspectionResponseToggle Inspection="inspection"/>
-                    </td>
-
-                    <AuthorizeView Policy="OnlyChiefOrObserver">
-                        <Authorized>
-                            <td class=@(_mode == Mode.AssignmentMode ? "" : "d-none d-lg-table-cell")>
-                                @if (_inspectionBusinessObjects!.ContainsKey(inspection.Inspection))
-                        {
-                            <AuthorizedButton Policy="OnlyChief" 
-                                            id="@($"unassign-{inspection.Inspection}")"
-                                            class="btn btn-primary btn-block"
-                                            title="@Translator[$"Unassign"]"
-                                            @onclick="() => UnassignAsync(inspection)"><span class="oi oi-minus"/></AuthorizedButton>
-                        }
-                        else
-                        {
-                            <AuthorizedButton Policy="OnlyChief" 
-                                            id="@($"assign-{inspection.Inspection}")"
-                                            class="btn btn-primary btn-block"
-                                            title="@Translator[$"Assign"]"
-                                            @onclick="() => AssignAsync(inspection)"><span class="oi oi-plus"/></AuthorizedButton>
-                        }
-                            </td>
-                            <td class=@(_mode == Mode.ScheduleMode ? "" : "d-none d-lg-table-cell")>
-                                <button 
-                                        id="@($"schedule-{inspection.Inspection}")"
-                                        class="btn btn-primary btn-block"
-                                        title="@Translator[$"Schedule"]"
-                                        @onclick="() => Schedule(inspection)"><span class="oi oi-clock"/></button>
-                            </td>
-                            <td class=@(_mode == Mode.DropMode ? "" : "d-none d-lg-table-cell")>
-                                <AuthorizedButton Policy="OnlyChief" 
-                                        id="@($"drop-{inspection.Inspection}")"
-                                        class="btn btn-primary btn-block"
-                                        title="@Translator[$"Drop"]"
-                                        @onclick="() => DropAsync(inspection)"><span class="oi oi-media-skip-forward"></span></AuthorizedButton>
-                            </td>
-                        </Authorized>
-                    </AuthorizeView>
-
-                </tr>
-    }
+        }
         </tbody>
     </table>
 }
@@ -114,165 +120,166 @@ else
 
 @code {
 
-public enum Mode
-{
-None,
-AssignmentMode,
-ScheduleMode,
-DropMode
-}
-
-[Parameter]
-public string BusinessObject { get; set; } = null!;
-
-private IDictionary<string, BusinessObjectInspectionResponse>? _inspectionBusinessObjects;
-
-private IDictionary<string, BusinessObjectInspectionResponse>? _inspections;
-
-private BusinessObjectResponse? _businessObject;
-
-private Mode _mode = Mode.ScheduleMode;
-
-[CascadingParameter]
-public Task<AuthenticationState> AuthenticationState { get; set; } = null!;
-
-public IEnumerable<BusinessObjectInspectionResponse>? RelevantInspections
-=> _mode != Mode.AssignmentMode
-    ? _inspectionBusinessObjects?
-        .OrderBy(x => x.Key)
-        .Select(x => x.Value)
-
-    : _inspectionBusinessObjects?
-        .Concat(_inspections!
-            .Where(x => !_inspectionBusinessObjects.ContainsKey(x.Key)))
-        .OrderBy(x => x.Key)
-        .Select(x => x.Value);
-
-protected override async Task OnAfterRenderAsync(bool firstRender)
-{
-if (firstRender)
-{
-    await QueryAsync();
-    StateHasChanged();
-}
-}
-
-public async Task QueryAsync()
-{
-_inspections = new Dictionary<string, BusinessObjectInspectionResponse>();
-
-_businessObject = await BusinessObjectHandler.GetAsync(BusinessObject);
-
-var isChief = (await AuthenticationState).User.HasAuthorization("Chief");
-
-if (isChief)
-{
-    var inspectionResponse = InspectionHandler.GetAll();
-
-    await foreach (var inspection in inspectionResponse)
+    public enum Mode
     {
-        _inspections!.Add(inspection.UniqueName, new BusinessObjectInspectionResponse
-        {
-            Activated = inspection.Activated,
-            InspectionDisplayName = inspection.DisplayName,
-            InspectionText = inspection.Text,
-            Inspection = inspection.UniqueName,
-            BusinessObject = _businessObject.UniqueName,
-            BusinessObjectDisplayName = _businessObject.DisplayName
-        });
-        this.StateHasChanged();
+        None,
+        AssignmentMode,
+        ScheduleMode,
+        DropMode
     }
-}
 
-_inspectionBusinessObjects = new Dictionary<string, BusinessObjectInspectionResponse>();
+    [Parameter]
+    public string BusinessObject { get; set; } = null!;
 
-var inspections = BusinessObjectInspectionHandler.GetAllForBusinessObject(BusinessObject);
+    private IDictionary<string, BusinessObjectInspectionResponse>? _inspectionBusinessObjects;
 
-await foreach (var inspection in inspections)
-{
-    _inspectionBusinessObjects!.Add(inspection.Inspection, inspection);
+    private IDictionary<string, BusinessObjectInspectionResponse>? _inspections;
 
-    this.StateHasChanged();
-}
-}
+    private BusinessObjectResponse? _businessObject;
 
-public Task ToggleAssignmentMode()
-{
-_mode = _mode == Mode.AssignmentMode
-    ? Mode.ScheduleMode
-    : Mode.AssignmentMode;
+    private Mode _mode = Mode.ScheduleMode;
 
-return Task.CompletedTask;
-}
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthenticationState { get; set; } = null!;
 
-public Task ToggleScheduleMode()
-{
-_mode = Mode.ScheduleMode;
+    public IEnumerable<BusinessObjectInspectionResponse>? RelevantInspections
+        => _mode != Mode.AssignmentMode
+            ? _inspectionBusinessObjects?
+                .OrderBy(x => x.Key)
+                .Select(x => x.Value)
 
-return Task.CompletedTask;
-}
+            : _inspectionBusinessObjects?
+                .Concat(_inspections!
+                    .Where(x => !_inspectionBusinessObjects.ContainsKey(x.Key)))
+                .OrderBy(x => x.Key)
+                .Select(x => x.Value);
 
-public Task ToggleDropMode()
-{
-_mode = _mode == Mode.DropMode
-    ? Mode.ScheduleMode
-    : Mode.DropMode;
-
-return Task.CompletedTask;
-}
-
-public async Task AssignAsync(BusinessObjectInspectionResponse inspection)
-{
-var response = await BusinessObjectInspectionHandler.CreateAsync(
-    BusinessObject!,
-    new BusinessObjectInspectionRequest
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        BusinessObjectDisplayName = inspection.BusinessObjectDisplayName,
-        Inspection = inspection.Inspection,
-        InspectionDisplayName = inspection.InspectionDisplayName,
-        InspectionText = inspection.InspectionText,
-        Activated = inspection.Activated
-    });
+        if (firstRender)
+        {
+            await QueryAsync();
+            StateHasChanged();
+        }
+    }
 
-inspection.ETag = response.ETag;
-
-_inspectionBusinessObjects!.Add(inspection.Inspection, inspection);
-StateHasChanged();
-}
-
-public async Task UnassignAsync(BusinessObjectInspectionResponse inspection)
-{
-await BusinessObjectInspectionHandler.DeleteAsync(
-    BusinessObject!,
-    inspection.Inspection,
-    inspection.ETag);
-
-_inspectionBusinessObjects!.Remove(inspection.Inspection);
-StateHasChanged();
-}
-
-public void Schedule(BusinessObjectInspectionResponse inspection)
-=> NavigationManager.NavigateTo($"/business-objects/{BusinessObject}/inspections/{inspection.Inspection}/schedule");
-
-public async Task DropAsync(BusinessObjectInspectionResponse inspection)
-{
-var appointment = inspection.AuditSchedule.Appointments.FirstOrDefault();
-
-if(appointment == null)
-{
-    return;
-}
-
-var response = await BusinessObjectInspectionHandler.CreateAuditOmissionAsync(
-    BusinessObject!,
-    inspection.Inspection,
-    new BusinessObjectInspectionAuditOmissionRequest
+    public async Task QueryAsync()
     {
-        PlannedAuditDate = appointment.PlannedAuditDate,
-        PlannedAuditTime = appointment.PlannedAuditTime,
-    });
+        _inspections = new Dictionary<string, BusinessObjectInspectionResponse>();
 
-inspection.AuditSchedule.Appointments = response.Appointments;
-inspection.ETag = response.ETag;
-}
+        _businessObject = await BusinessObjectHandler.GetAsync(BusinessObject);
+
+        var isChief = (await AuthenticationState).User.HasAuthorization("Chief");
+
+        if (isChief)
+        {
+            var inspectionResponse = InspectionHandler.GetAll();
+
+            await foreach (var inspection in inspectionResponse)
+            {
+                _inspections!.Add(inspection.UniqueName, new BusinessObjectInspectionResponse
+                {
+                    Activated = inspection.Activated,
+                    InspectionDisplayName = inspection.DisplayName,
+                    InspectionText = inspection.Text,
+                    Inspection = inspection.UniqueName,
+                    BusinessObject = _businessObject.UniqueName,
+                    BusinessObjectDisplayName = _businessObject.DisplayName
+                });
+                this.StateHasChanged();
+            }
+        }
+
+        _inspectionBusinessObjects = new Dictionary<string, BusinessObjectInspectionResponse>();
+
+        var inspections = BusinessObjectInspectionHandler.GetAllForBusinessObject(BusinessObject);
+
+        await foreach (var inspection in inspections)
+        {
+            _inspectionBusinessObjects!.Add(inspection.Inspection, inspection);
+
+            this.StateHasChanged();
+        }
+    }
+
+    public Task ToggleAssignmentMode()
+    {
+        _mode = _mode == Mode.AssignmentMode
+            ? Mode.ScheduleMode
+            : Mode.AssignmentMode;
+
+        return Task.CompletedTask;
+    }
+
+    public Task ToggleScheduleMode()
+    {
+        _mode = Mode.ScheduleMode;
+
+        return Task.CompletedTask;
+    }
+
+    public Task ToggleDropMode()
+    {
+        _mode = _mode == Mode.DropMode
+            ? Mode.ScheduleMode
+            : Mode.DropMode;
+
+        return Task.CompletedTask;
+    }
+
+    public async Task AssignAsync(BusinessObjectInspectionResponse inspection)
+    {
+        var response = await BusinessObjectInspectionHandler.CreateAsync(
+            BusinessObject!,
+            new BusinessObjectInspectionRequest
+            {
+                BusinessObjectDisplayName = inspection.BusinessObjectDisplayName,
+                Inspection = inspection.Inspection,
+                InspectionDisplayName = inspection.InspectionDisplayName,
+                InspectionText = inspection.InspectionText,
+                Activated = inspection.Activated
+            });
+
+        inspection.ETag = response.ETag;
+
+        _inspectionBusinessObjects!.Add(inspection.Inspection, inspection);
+        StateHasChanged();
+    }
+
+    public async Task UnassignAsync(BusinessObjectInspectionResponse inspection)
+    {
+        await BusinessObjectInspectionHandler.DeleteAsync(
+            BusinessObject!,
+            inspection.Inspection,
+            inspection.ETag);
+
+        _inspectionBusinessObjects!.Remove(inspection.Inspection);
+        StateHasChanged();
+    }
+
+    public void Schedule(BusinessObjectInspectionResponse inspection)
+        => NavigationManager.NavigateTo($"/business-objects/{BusinessObject}/inspections/{inspection.Inspection}/schedule");
+
+    public async Task DropAsync(BusinessObjectInspectionResponse inspection)
+    {
+        var appointment = inspection.AuditSchedule.Appointments.FirstOrDefault();
+
+        if (appointment == null)
+        {
+            return;
+        }
+
+        var response = await BusinessObjectInspectionHandler.CreateAuditOmissionAsync(
+            BusinessObject!,
+            inspection.Inspection,
+            new BusinessObjectInspectionAuditOmissionRequest
+            {
+                PlannedAuditDate = appointment.PlannedAuditDate,
+                PlannedAuditTime = appointment.PlannedAuditTime,
+            });
+
+        inspection.AuditSchedule.Appointments = response.Appointments;
+        inspection.ETag = response.ETag;
+    }
+
 }

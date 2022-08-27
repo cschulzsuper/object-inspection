@@ -6,7 +6,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Super.Paula.Application.Orchestration;
-using Super.Paula.Shared.Authorization;
+using Super.Paula.Shared.Security;
 
 namespace Super.Paula.Shared.Orchestration;
 

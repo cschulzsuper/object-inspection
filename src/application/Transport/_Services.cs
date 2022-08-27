@@ -2,12 +2,12 @@
 using Microsoft.Extensions.DependencyInjection;
 using Super.Paula.Application.Administration;
 using Super.Paula.Application.Auditing;
-using Super.Paula.Application.Auth;
 using Super.Paula.Application.Communication;
 using Super.Paula.Application.Guidelines;
 using Super.Paula.Application.Inventory;
 using Super.Paula.Application.Operation;
 using System.Diagnostics.CodeAnalysis;
+using Super.Paula.Application.Authentication;
 
 namespace Super.Paula.Application;
 
@@ -18,7 +18,7 @@ public static class _Services
     {
         services.AddServerTransportAdministration();
         services.AddServerTransportAuditing();
-        services.AddServerTransportAuth();
+        services.AddServerTransportAuthentication();
         services.AddServerTransportCommunication();
         services.AddServerTransportGuidelines();
         services.AddServerTransportInventory();
@@ -57,7 +57,7 @@ public static class _Services
         return services;
     }
 
-    private static IServiceCollection AddServerTransportAuth(this IServiceCollection services)
+    private static IServiceCollection AddServerTransportAuthentication(this IServiceCollection services)
     {
         services.AddScoped<IPasswordHasher<Identity>, IdentityPasswordHasher>();
         services.AddScoped<IIdentityRequestHandler, IdentityRequestHandler>();

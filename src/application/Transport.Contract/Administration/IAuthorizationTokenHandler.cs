@@ -1,4 +1,4 @@
-﻿using Super.Paula.Shared.Authorization;
+﻿using Super.Paula.Shared.Security;
 
 namespace Super.Paula.Application.Administration;
 

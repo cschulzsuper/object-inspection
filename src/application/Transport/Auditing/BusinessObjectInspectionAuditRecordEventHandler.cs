@@ -9,14 +9,13 @@ namespace Super.Paula.Application.Auditing;
 
 public class BusinessObjectInspectionAuditRecordEventHandler : IBusinessObjectInspectionAuditRecordEventHandler
 {
-    public async Task HandleAsync(EventHandlerContext context, BusinessObjectEvent @event)
+    public async Task HandleAsync(EventHandlerContext context, BusinessObjectUpdateEvent @event)
     {
         var businessObjectInspectionAuditRecordManager = context.Services.GetRequiredService<IBusinessObjectInspectionAuditRecordManager>();
 
         var businessObjectInspectionAuditRecords = businessObjectInspectionAuditRecordManager
             .GetQueryable()
             .Where(entity => entity.BusinessObject == @event.UniqueName)
-            .Where(entity => entity.BusinessObjectDisplayName != @event.DisplayName)
             .AsEnumerable();
 
         foreach (var businessObjectInspectionAuditRecord in businessObjectInspectionAuditRecords)
@@ -27,19 +26,33 @@ public class BusinessObjectInspectionAuditRecordEventHandler : IBusinessObjectIn
         }
     }
 
-    public async Task HandleAsync(EventHandlerContext context, InspectionEvent @event)
+    public async Task HandleAsync(EventHandlerContext context, BusinessObjectDeletionEvent @event)
     {
         var businessObjectInspectionAuditRecordManager = context.Services.GetRequiredService<IBusinessObjectInspectionAuditRecordManager>();
 
         var businessObjectInspectionAuditRecords = businessObjectInspectionAuditRecordManager
             .GetQueryable()
-            .Where(entity => entity.Inspection == @event.UniqueName)
-            .Where(entity => entity.InspectionDisplayName != @event.DisplayName)
+            .Where(entity => entity.BusinessObject == @event.UniqueName)
             .AsEnumerable();
 
         foreach (var businessObjectInspectionAuditRecord in businessObjectInspectionAuditRecords)
         {
-            businessObjectInspectionAuditRecord.InspectionDisplayName = @event.DisplayName;
+            await businessObjectInspectionAuditRecordManager.DeleteAsync(businessObjectInspectionAuditRecord);
+        }
+    }
+
+    public async Task HandleAsync(EventHandlerContext context, InspectionUpdateEvent updateEvent)
+    {
+        var businessObjectInspectionAuditRecordManager = context.Services.GetRequiredService<IBusinessObjectInspectionAuditRecordManager>();
+
+        var businessObjectInspectionAuditRecords = businessObjectInspectionAuditRecordManager
+            .GetQueryable()
+            .Where(entity => entity.Inspection == updateEvent.UniqueName)
+            .AsEnumerable();
+
+        foreach (var businessObjectInspectionAuditRecord in businessObjectInspectionAuditRecords)
+        {
+            businessObjectInspectionAuditRecord.InspectionDisplayName = updateEvent.DisplayName;
 
             await businessObjectInspectionAuditRecordManager.UpdateAsync(businessObjectInspectionAuditRecord);
         }
@@ -52,21 +65,6 @@ public class BusinessObjectInspectionAuditRecordEventHandler : IBusinessObjectIn
         var businessObjectInspectionAuditRecords = businessObjectInspectionAuditRecordManager
             .GetQueryable()
             .Where(entity => entity.Inspection == @event.UniqueName)
-            .AsEnumerable();
-
-        foreach (var businessObjectInspectionAuditRecord in businessObjectInspectionAuditRecords)
-        {
-            await businessObjectInspectionAuditRecordManager.DeleteAsync(businessObjectInspectionAuditRecord);
-        }
-    }
-
-    public async Task HandleAsync(EventHandlerContext context, BusinessObjectDeletionEvent @event)
-    {
-        var businessObjectInspectionAuditRecordManager = context.Services.GetRequiredService<IBusinessObjectInspectionAuditRecordManager>();
-
-        var businessObjectInspectionAuditRecords = businessObjectInspectionAuditRecordManager
-            .GetQueryable()
-            .Where(entity => entity.BusinessObject == @event.UniqueName)
             .AsEnumerable();
 
         foreach (var businessObjectInspectionAuditRecord in businessObjectInspectionAuditRecords)

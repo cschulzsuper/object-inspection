@@ -85,8 +85,7 @@ public class BusinessObjectRequestHandler : IBusinessObjectRequestHandler
         };
 
         await _businessObjectManager.InsertAsync(entity);
-        await _businessObjectEventService.CreateBusinessObjectEventAsync(entity);
-        await _businessObjectEventService.CreateBusinessObjectInspectorEventAsync(entity, entity.Inspector, string.Empty);
+        await _businessObjectEventService.CreateBusinessObjectInspectorCreationEventAsync(entity);
 
         return new BusinessObjectResponse
         {
@@ -103,20 +102,18 @@ public class BusinessObjectRequestHandler : IBusinessObjectRequestHandler
 
         var oldInspector = entity.Inspector;
 
-        var required =
-            entity.DisplayName != request.DisplayName ||
-            entity.Inspector != request.Inspector;
+        entity.Inspector = request.Inspector;
+        entity.DisplayName = request.DisplayName;
+        entity.UniqueName = request.UniqueName;
+        entity.ETag = request.ETag;
 
-        if (required)
+        await _businessObjectManager.UpdateAsync(entity);
+        await _businessObjectEventService.CreateBusinessObjectUpdateEventAsync(entity);
+
+        if (entity.Inspector != oldInspector)
         {
-            entity.Inspector = request.Inspector;
-            entity.DisplayName = request.DisplayName;
-            entity.UniqueName = request.UniqueName;
-            entity.ETag = request.ETag;
-
-            await _businessObjectManager.UpdateAsync(entity);
-            await _businessObjectEventService.CreateBusinessObjectEventAsync(entity);
-            await _businessObjectEventService.CreateBusinessObjectInspectorEventAsync(entity, entity.Inspector, oldInspector);
+            await _businessObjectEventService.CreateBusinessObjectInspectorCreationEventAsync(entity);
+            await _businessObjectEventService.CreateBusinessObjectInspectorDeletionEventAsync(entity, oldInspector);
         }
     }
 
@@ -128,7 +125,7 @@ public class BusinessObjectRequestHandler : IBusinessObjectRequestHandler
 
         await _businessObjectManager.DeleteAsync(entity);
         await _businessObjectEventService.CreateBusinessObjectDeletionEventAsync(businessObject);
-        await _businessObjectEventService.CreateBusinessObjectInspectorEventAsync(entity, string.Empty, entity.Inspector);
+        await _businessObjectEventService.CreateBusinessObjectInspectorDeletionEventAsync(entity, entity.Inspector);
     }
 
     private static IQueryable<BusinessObject> WhereSearchQuery(IQueryable<BusinessObject> query, string searchQuery)

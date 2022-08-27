@@ -5,6 +5,7 @@
 @inject INotificationCallbackHandler NotificationCallbackHandler
 @inject INotificationRequestHandler NotificationRequestHandler
 
+@using Super.Paula.Shared.Security
 @implements IAsyncDisposable
 
 @attribute [Authorize("OnlyInspectorOrObserver")]

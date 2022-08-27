@@ -4,6 +4,6 @@ namespace Super.Paula.Application.Guidelines;
 
 public interface IInspectionEventService
 {
-    ValueTask CreateInspectionEventAsync(Inspection inspection);
+    ValueTask CreateInspectionUpdateEventAsync(Inspection inspection);
     ValueTask CreateInspectionDeletionEventAsync(string inspection);
 }

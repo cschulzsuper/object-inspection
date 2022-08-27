@@ -1,11 +1,12 @@
-﻿using Microsoft.Extensions.Logging;
-using Super.Paula.Application.Auth;
-using Super.Paula.Application.Auth.Exceptions;
-using Super.Paula.Application.Auth.Requests;
-using Super.Paula.Application.Auth.Responses;
+﻿using System;
+using Microsoft.Extensions.Logging;
 using Super.Paula.Client.Storage;
-using Super.Paula.Shared.Authorization;
 using System.Threading.Tasks;
+using Super.Paula.Application.Authentication;
+using Super.Paula.Application.Authentication.Exceptions;
+using Super.Paula.Application.Authentication.Requests;
+using Super.Paula.Application.Authentication.Responses;
+using Super.Paula.Shared.Security;
 
 namespace Super.Paula.Client.Administration;
 
@@ -23,6 +24,23 @@ public class ExtendedAuthenticationRequestHandler : IAuthenticationRequestHandle
         _logger = logger;
         _authenticationHandler = authenticationHandler;
         _localStorage = localStorage;
+    }
+
+    public async ValueTask VerifyAsync()
+    {
+        try
+        {
+            await _authenticationHandler.VerifyAsync();
+        }
+        catch (Exception exception)
+        {
+            _logger.LogWarning(exception, $"Authentication invalid.");
+        }
+        finally
+        {
+            await _localStorage.RemoveItemAsync("token");
+            await _localStorage.RemoveItemAsync("authorization-filter");
+        }
     }
 
     public ValueTask ChangeSecretAsync(ChangeIdentitySecretRequest request)

@@ -4,5 +4,7 @@ namespace Super.Paula.Application.Administration;
 
 public interface IInspectorEventService
 {
-    ValueTask CreateInspectorBusinessObjectEventAsync(Inspector inspector, InspectorBusinessObject inspectorBusinessObject, bool oldDelayed, bool oldPending);
+    ValueTask CreateInspectorBusinessObjectImmediacyDetectionEventAsync(Inspector inspector, InspectorBusinessObject inspectorBusinessObject);
+
+    ValueTask CreateInspectorBusinessObjectOverdueDetectionEventAsync(Inspector inspector, InspectorBusinessObject inspectorBusinessObject);
 }

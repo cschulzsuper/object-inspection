@@ -56,7 +56,6 @@ public class InspectionRequestHandler : IInspectionRequestHandler
         };
 
         await _inspectionManager.InsertAsync(entity);
-        await _inspectionEventService.CreateInspectionEventAsync(entity);
 
         return new InspectionResponse
         {
@@ -72,22 +71,14 @@ public class InspectionRequestHandler : IInspectionRequestHandler
     {
         var entity = await _inspectionManager.GetAsync(inspection);
 
-        var required =
-            entity.Activated != request.Activated ||
-            entity.DisplayName != request.DisplayName ||
-            entity.Text != request.Text;
+        entity.Activated = request.Activated;
+        entity.DisplayName = request.DisplayName;
+        entity.Text = request.Text;
+        entity.UniqueName = request.UniqueName;
+        entity.ETag = request.ETag;
 
-        if (required)
-        {
-            entity.Activated = request.Activated;
-            entity.DisplayName = request.DisplayName;
-            entity.Text = request.Text;
-            entity.UniqueName = request.UniqueName;
-            entity.ETag = request.ETag;
-
-            await _inspectionManager.UpdateAsync(entity);
-            await _inspectionEventService.CreateInspectionEventAsync(entity);
-        }
+        await _inspectionManager.UpdateAsync(entity);
+        await _inspectionEventService.CreateInspectionUpdateEventAsync(entity);
     }
 
     public async ValueTask DeleteAsync(string inspection, string etag)
@@ -104,16 +95,11 @@ public class InspectionRequestHandler : IInspectionRequestHandler
     {
         var entity = await _inspectionManager.GetAsync(inspection);
 
-        var required = !entity.Activated;
+        entity.Activated = true;
+        entity.ETag = etag;
 
-        if (required)
-        {
-            entity.Activated = true;
-            entity.ETag = etag;
-
-            await _inspectionManager.UpdateAsync(entity);
-            await _inspectionEventService.CreateInspectionEventAsync(entity);
-        }
+        await _inspectionManager.UpdateAsync(entity);
+        await _inspectionEventService.CreateInspectionUpdateEventAsync(entity);
 
         return new ActivateInspectionResponse
         {
@@ -125,16 +111,11 @@ public class InspectionRequestHandler : IInspectionRequestHandler
     {
         var entity = await _inspectionManager.GetAsync(inspection);
 
-        var required = entity.Activated;
+        entity.Activated = false;
+        entity.ETag = etag;
 
-        if (required)
-        {
-            entity.Activated = false;
-            entity.ETag = etag;
-
-            await _inspectionManager.UpdateAsync(entity);
-            await _inspectionEventService.CreateInspectionEventAsync(entity);
-        }
+        await _inspectionManager.UpdateAsync(entity);
+        await _inspectionEventService.CreateInspectionUpdateEventAsync(entity);
 
         return new DeactivateInspectionResponse
         {
