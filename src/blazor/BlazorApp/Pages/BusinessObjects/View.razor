@@ -4,7 +4,7 @@
 @inject NavigationManager NavigationManager
 @inject IBusinessObjectRequestHandler BusinessObjectHandler
 
-@attribute [Authorize("ManagementRead")]
+@attribute [Authorize("OnlyChiefOrObserver")]
 
 <PageTitle>@Translator[$"Business objects"]</PageTitle>
 
@@ -56,7 +56,7 @@
                             @onclick="() => Edit(businessObject.UniqueName)"><span class="oi oi-pencil"/></button>
                     </td>
                     <td>
-                        <AuthorizedButton Policy="ManagementFull" class="btn btn-sm btn-outline-danger btn-block" title="@Translator[$"Delete"]"
+                        <AuthorizedButton Policy="OnlyChief" class="btn btn-sm btn-outline-danger btn-block" title="@Translator[$"Delete"]"
                             @onclick="() => DeleteAsync(businessObject)"><span class="oi oi-trash"/></AuthorizedButton>
                     </td>
                     <td>

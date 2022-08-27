@@ -17,7 +17,7 @@
     </button>
     <div class="navbar-nav align-items-center">
 
-        <AuthorizeView Policy="Impersonation">
+        <AuthorizeView Policy="OnlyImpersonator">
             <Authorized>
                 <a type="button" class="nav-link pe-3" title="@Translator[$"Stop impersonation"]"
                     @onclick="() => StopImpersonationAsync()">

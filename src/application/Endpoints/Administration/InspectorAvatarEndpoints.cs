@@ -28,22 +28,22 @@ public static class InspectorAvatarEndpoints
     }
 
     private static Delegate Get =>
-        [Authorize("AuditingLimited")]
+        [Authorize("OnlyInspectorOrObserver")]
         async (IInspectorAvatarRequestHandler requestHandler, string inspector)
                     => Results.File(await requestHandler.ReadAsync(inspector));
 
     private static Delegate GetMe =>
-        [Authorize("AuditingLimited")]
+        [Authorize("OnlyInspectorOrObserver")]
         async (IInspectorAvatarRequestHandler requestHandler, ClaimsPrincipal user)
                     => Results.File(await requestHandler.ReadAsync(user.GetInspector()));
 
     private static Delegate PutMe =>
-        [Authorize("AuditingFull")]
+        [Authorize("OnlyInspector")]
         (IInspectorAvatarRequestHandler requestHandler, ClaimsPrincipal user, Stream body)
                     => requestHandler.WriteAsync(body, user.GetInspector());
 
     private static Delegate DeleteMe =>
-        [Authorize("AuditingFull")]
+        [Authorize("OnlyInspector")]
         (IInspectorAvatarRequestHandler requestHandler, ClaimsPrincipal user)
                     => requestHandler.DeleteAsync(user.GetInspector());
 }

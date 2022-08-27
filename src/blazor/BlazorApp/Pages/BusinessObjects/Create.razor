@@ -7,7 +7,7 @@
 @inject IBusinessObjectRequestHandler BusinessObjectRequestHandler
 @inject IExtensionRequestHandler ExtensionRequestHandler
 
-@attribute [Authorize("ManagementRead")]
+@attribute [Authorize("OnlyChiefOrObserver")]
 
 <PageTitle>@Translator[$"Create business object"]</PageTitle>
 
@@ -66,7 +66,7 @@
     else
     {
         <div class="container-fluid pb-4 mb-5">
-            <AuthorizedButton Policy="ManagementFull"
+            <AuthorizedButton Policy="OnlyChief"
                               id="submit"
                               type="submit"
                               class="btn btn-sm btn-primary">@Translator[$"Submit"]</AuthorizedButton>

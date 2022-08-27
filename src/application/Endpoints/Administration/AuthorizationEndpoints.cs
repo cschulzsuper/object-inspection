@@ -34,12 +34,12 @@ public static class AuthorizationEndpoints
     }
 
     private static Delegate Register =>
-        [Authorize("Maintenance")]
+        [Authorize("OnlyMaintainer")]
         (IOrganizationRequestHandler requestHandler, RegisterOrganizationRequest request)
             => requestHandler.RegisterAsync(request);
 
     private static Delegate Initialize =>
-        [Authorize("Maintenance")]
+        [Authorize("OnlyMaintainer")]
         (IOrganizationRequestHandler requestHandler, string organization, InitializeOrganizationRequest request)
             => requestHandler.InitializeAsync(organization, request);
 
@@ -50,13 +50,13 @@ public static class AuthorizationEndpoints
                 => requestHandler.AuthorizeAsync(organization, inspector);
 
     private static Delegate Impersonate =>
-        [Authorize("Maintenance")]
+        [Authorize("OnlyMaintainer")]
         [UseOrganizationFromRoute]
         (IAuthorizationRequestHandler requestHandler, string organization, string inspector)
                 => requestHandler.StartImpersonationAsync(organization, inspector);
 
     private static Delegate Unmask =>
-        [Authorize("Impersonation")]
+        [Authorize("OnlyImpersonator")]
         (IAuthorizationRequestHandler requestHandler)
             => requestHandler.StopImpersonationAsync();
 }

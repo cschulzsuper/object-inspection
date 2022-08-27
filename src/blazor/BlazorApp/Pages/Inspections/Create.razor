@@ -4,7 +4,7 @@
 @inject NavigationManager NavigationManager
 @inject IInspectionRequestHandler InspectionHandler
 
-@attribute [Authorize("ManagementRead")]
+@attribute [Authorize("OnlyChiefOrObserver")]
 
 <PageTitle>@Translator[$"Create inspection"]</PageTitle>
 
@@ -45,7 +45,7 @@
     else
     {
         <div class="container-fluid pb-4 mb-5">
-            <AuthorizedButton Policy="ManagementFull"
+            <AuthorizedButton Policy="OnlyChief"
                               id="submit"
                               type="submit"
                               class="btn btn-sm btn-primary">@Translator[$"Submit"]</AuthorizedButton>

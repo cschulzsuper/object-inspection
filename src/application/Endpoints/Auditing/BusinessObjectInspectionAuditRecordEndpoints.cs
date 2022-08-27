@@ -38,7 +38,7 @@ public static class BusinessObjectInspectionAuditRecordEndpoints
     }
 
     private static Delegate Get =>
-        [Authorize("AuditingLimited")]
+        [Authorize("OnlyInspectorOrObserver")]
     (IBusinessObjectInspectionAuditRecordRequestHandler requestHandler,
             string businessObject,
             string inspection,
@@ -48,7 +48,7 @@ public static class BusinessObjectInspectionAuditRecordEndpoints
             => requestHandler.GetAsync(businessObject, inspection, date, time);
 
     private static Delegate GetAll =>
-        [Authorize("AuditingLimited")]
+        [Authorize("OnlyInspectorOrObserver")]
     (IBusinessObjectInspectionAuditRecordRequestHandler requestHandler,
             [FromQuery(Name = "q")] string query,
             [FromQuery(Name = "s")] int? skip,
@@ -58,7 +58,7 @@ public static class BusinessObjectInspectionAuditRecordEndpoints
             => requestHandler.GetAll(query, skip ?? 0, take, cancellationToken);
 
     private static Delegate GetAllForBusinessObject =>
-        [Authorize("AuditingLimited")]
+        [Authorize("OnlyInspectorOrObserver")]
     (IBusinessObjectInspectionAuditRecordRequestHandler requestHandler,
             string businessObject,
             [FromQuery(Name = "s")] int? skip,
@@ -67,7 +67,7 @@ public static class BusinessObjectInspectionAuditRecordEndpoints
             => requestHandler.GetAllForBusinessObject(businessObject, skip ?? 0, take);
 
     private static Delegate Create =>
-        [Authorize("AuditingLimited")]
+        [Authorize("OnlyInspectorOrObserver")]
     (IBusinessObjectInspectionAuditRecordRequestHandler requestHandler,
             string businessObject,
             BusinessObjectInspectionAuditRecordRequest request)
@@ -75,7 +75,7 @@ public static class BusinessObjectInspectionAuditRecordEndpoints
             => requestHandler.CreateAsync(businessObject, request);
 
     private static Delegate Replace =>
-        [Authorize("AuditingLimited")]
+        [Authorize("OnlyInspectorOrObserver")]
     (IBusinessObjectInspectionAuditRecordRequestHandler requestHandler,
             string businessObject,
             string inspection,
@@ -86,7 +86,7 @@ public static class BusinessObjectInspectionAuditRecordEndpoints
             => requestHandler.ReplaceAsync(businessObject, inspection, date, time, request);
 
     private static Delegate Delete =>
-        [Authorize("AuditingLimited")]
+        [Authorize("OnlyInspectorOrObserver")]
     (IBusinessObjectInspectionAuditRecordRequestHandler requestHandler,
             string businessObject,
             string inspection,
@@ -97,7 +97,7 @@ public static class BusinessObjectInspectionAuditRecordEndpoints
             => requestHandler.DeleteAsync(businessObject, inspection, date, time, etag);
 
     private static Delegate Search =>
-        [Authorize("AuditingLimited")]
+        [Authorize("OnlyInspectorOrObserver")]
     (IBusinessObjectInspectionAuditRecordRequestHandler requestHandler,
             [FromQuery(Name = "q")] string query)
 

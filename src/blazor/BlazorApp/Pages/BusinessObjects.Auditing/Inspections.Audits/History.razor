@@ -4,7 +4,7 @@
 @inject NavigationManager NavigationManager
 @inject IBusinessObjectInspectionAuditRecordRequestHandler BusinessObjectInspectionAuditRecordHandler
 
-@attribute [Authorize("ManagementRead")]
+@attribute [Authorize("OnlyChiefOrObserver")]
 
 <PageTitle>@Translator[$"Audit history"]</PageTitle>
 

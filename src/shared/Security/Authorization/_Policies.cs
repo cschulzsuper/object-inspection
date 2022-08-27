@@ -17,42 +17,42 @@ public static class _Policies
             .RequireAuthenticatedUser()
             .Build();
 
-    public static AuthorizationPolicy ManagementFullPolicy =>
+    public static AuthorizationPolicy OnlyChiefPolicy =>
         new AuthorizationPolicyBuilder()
             .AddRequirements(new AnyAuthorizationClaimRequirement("Chief"))
             .Build();
 
-    public static AuthorizationPolicy AuditingFullPolicy =>
+    public static AuthorizationPolicy OnlyInspectorPolicy =>
         new AuthorizationPolicyBuilder()
             .AddRequirements(new AnyAuthorizationClaimRequirement("Inspector"))
             .Build();
 
-    public static AuthorizationPolicy MaintenancePolicy =>
+    public static AuthorizationPolicy OnlyMaintainerPolicy =>
         new AuthorizationPolicyBuilder()
             .AddRequirements(new AnyAuthorizationClaimRequirement("Maintainer"))
             .Build();
 
-    public static AuthorizationPolicy ImpersonationPolicy =>
+    public static AuthorizationPolicy OnlyImpersonatorPolicy =>
         new AuthorizationPolicyBuilder()
             .AddRequirements(new AnyAuthorizationClaimRequirement("Impersonator"))
             .Build();
 
-    public static AuthorizationPolicy ManagementReadPolicy =>
+    public static AuthorizationPolicy OnlyChiefOrObserverPolicy =>
         new AuthorizationPolicyBuilder()
             .AddRequirements(new AnyAuthorizationClaimRequirement("Chief", "Observer"))
             .Build();
 
-    public static AuthorizationPolicy AuditingLimitedPolicy =>
+    public static AuthorizationPolicy OnlyInspectorOrObserverPolicy =>
         new AuthorizationPolicyBuilder()
             .AddRequirements(new AnyAuthorizationClaimRequirement("Inspector", "Observer"))
             .Build();
 
-    public static AuthorizationPolicy InspectorReadPolicy =>
+    public static AuthorizationPolicy OnlyChiefOrObserverOrInspectorOwnerPolicy =>
         new AuthorizationPolicyBuilder()
             .AddRequirements(new InspectorClaimResourceRequirement("Chief", "Observer"))
             .Build();
 
-    public static AuthorizationPolicy IdentityReadPolicy =>
+    public static AuthorizationPolicy OnlyMaintainerOrIdentityOwnerPolicy =>
         new AuthorizationPolicyBuilder()
             .AddRequirements(new IdentityClaimResourceRequirement("Maintainer"))
             .Build();

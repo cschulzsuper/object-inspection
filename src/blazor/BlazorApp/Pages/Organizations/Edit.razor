@@ -4,7 +4,7 @@
 @inject NavigationManager NavigationManager
 @inject IOrganizationRequestHandler OrganizationHandler
 
-@attribute [Authorize("Maintenance")]
+@attribute [Authorize("OnlyMaintainer")]
 
 <PageTitle>@Translator[$"Edit organization"]</PageTitle>
 

@@ -7,7 +7,7 @@
 
 @implements IAsyncDisposable
 
-@attribute [Authorize("AuditingLimited")]
+@attribute [Authorize("OnlyInspectorOrObserver")]
 
 <PageTitle>@Translator[$"Notification"]</PageTitle>
 
@@ -30,7 +30,7 @@ else
     {
         <div class="card mb-3">
             <div class="card-header text-end">
-                <AuthorizedButton Policy="AuditingFull"
+                <AuthorizedButton Policy="OnlyInspector"
                                   id="@($"delete-{notification.Date}-{notification.Time}")"
                                   class="btn btn-sm btn-close"
                                   title="@Translator[$"Delete"]"

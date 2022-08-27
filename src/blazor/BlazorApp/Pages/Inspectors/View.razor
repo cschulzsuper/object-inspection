@@ -5,7 +5,7 @@
 @inject ITranslator<View> Translator
 @inject NavigationManager NavigationManager
 
-@attribute [Authorize("ManagementRead")]
+@attribute [Authorize("OnlyChiefOrObserver")]
 
 <PageTitle>@Translator[$"Inspectors"]</PageTitle>
 
@@ -53,7 +53,7 @@
                         <td>
                             @if (inspector.UniqueName != _inspector)
                             {
-                                <AuthorizedButton Policy="ManagementFull" class="btn btn-sm btn-success btn-block" title="@Translator[$"Deactivate"]"
+                                <AuthorizedButton Policy="OnlyChief" class="btn btn-sm btn-success btn-block" title="@Translator[$"Deactivate"]"
                                                   @onclick="() => DeactivateAsync(inspector)"><span class="oi oi-power-standby"/></AuthorizedButton>
                             }
                         </td>
@@ -63,7 +63,7 @@
                         <td>
                             @if (inspector.UniqueName != _inspector)
                             {
-                                <AuthorizedButton Policy="ManagementFull" class="btn btn-sm btn-outline-danger btn-block" title="@Translator[$"Activate"]"
+                                <AuthorizedButton Policy="OnlyChief" class="btn btn-sm btn-outline-danger btn-block" title="@Translator[$"Activate"]"
                                                   @onclick="() => ActivateAsync(inspector)"><span class="oi oi-power-standby"/></AuthorizedButton>
                             }
                         </td>
@@ -75,7 +75,7 @@
                     <td>
                         @if (inspector.UniqueName != _inspector)
                         {
-                            <AuthorizedButton Policy="ManagementFull" class="btn btn-sm btn-outline-danger btn-block" title="@Translator[$"Delete"]"
+                            <AuthorizedButton Policy="OnlyChief" class="btn btn-sm btn-outline-danger btn-block" title="@Translator[$"Delete"]"
                                               @onclick="() => DeleteAsync(inspector)"><span class="oi oi-trash"/></AuthorizedButton>
                         }
                     </td>

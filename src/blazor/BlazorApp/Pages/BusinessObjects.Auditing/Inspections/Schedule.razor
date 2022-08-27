@@ -4,7 +4,7 @@
 @inject NavigationManager NavigationManager
 @inject IBusinessObjectInspectionRequestHandler BusinessObjectInspectionHandler
 
-@attribute [Authorize("ManagementRead")]
+@attribute [Authorize("OnlyChiefOrObserver")]
 
 <PageTitle>@Translator[$"Schedule inspection"]</PageTitle>
 
@@ -43,7 +43,7 @@ else
         else
         {
             <div class="container-fluid pb-4 mb-5">
-                <AuthorizedButton Policy="ManagementFull" id="submit" type="submit" class="btn btn-sm btn-primary">@Translator[$"Submit"]</AuthorizedButton>
+                <AuthorizedButton Policy="OnlyChief" id="submit" type="submit" class="btn btn-sm btn-primary">@Translator[$"Submit"]</AuthorizedButton>
             </div>
         }
 

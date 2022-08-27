@@ -4,7 +4,7 @@
 @inject NavigationManager NavigationManager
 @inject IInspectionRequestHandler InspectionHandler
 
-@attribute [Authorize("ManagementRead")]
+@attribute [Authorize("OnlyChiefOrObserver")]
 
 <PageTitle>@Translator[$"Inspections"]</PageTitle>
 
@@ -61,14 +61,14 @@
                     @if (inspection.Activated)
                     {
                         <td>
-                            <AuthorizedButton Policy="ManagementFull" class="btn btn-sm btn-success btn-block" title="@Translator[$"Deactivate"]"
+                            <AuthorizedButton Policy="OnlyChief" class="btn btn-sm btn-success btn-block" title="@Translator[$"Deactivate"]"
                                               @onclick="() => DeactivateAsync(inspection)"><span class="oi oi-power-standby"/></AuthorizedButton>
                         </td>
                     }
                     else
                     {
                         <td>
-                            <AuthorizedButton Policy="ManagementFull" class="btn btn-sm btn-outline-danger btn-block" title="@Translator[$"Activate"]"
+                            <AuthorizedButton Policy="OnlyChief" class="btn btn-sm btn-outline-danger btn-block" title="@Translator[$"Activate"]"
                                               @onclick="() => ActivateAsync(inspection)"><span class="oi oi-power-standby"/></AuthorizedButton>
                         </td>
                     }
@@ -77,7 +77,7 @@
                                 @onclick="() => Edit(inspection.UniqueName)"><span class="oi oi-pencil"/></button>
                     </td>
                     <td >
-                        <AuthorizedButton Policy="ManagementFull" class="btn btn-sm btn-outline-danger btn-block" title="@Translator[$"Delete"]"
+                        <AuthorizedButton Policy="OnlyChief" class="btn btn-sm btn-outline-danger btn-block" title="@Translator[$"Delete"]"
                                           @onclick="() => DeleteAsync(inspection)"><span class="oi oi-trash"/></AuthorizedButton>
                     </td>
                 </tr>
