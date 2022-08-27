@@ -6,12 +6,11 @@ using Super.Paula.Application;
 using Super.Paula.BlobStorage;
 using Super.Paula.Data;
 using Super.Paula.RuntimeData;
-using Super.Paula.Server.Authentication;
-using Super.Paula.Server.Authorization;
 using Super.Paula.Server.Orchestration;
 using Super.Paula.Shared;
-using Super.Paula.Shared.Authorization;
 using System.Diagnostics.CodeAnalysis;
+using Super.Paula.Server.Security;
+using Super.Paula.Shared.Security;
 
 namespace Super.Paula.Server;
 
@@ -48,7 +47,7 @@ public static class _Services
         services.AddAuthentication(options =>
         {
             options.DefaultScheme = "bearer";
-            options.AddScheme<PaulaAuthenticationHandler>("bearer", null);
+            options.AddScheme<TokenAuthenticationHandler>("bearer", null);
         });
 
         return services;
@@ -59,8 +58,8 @@ public static class _Services
         services.AddAuthorization();
 
         services
-            .AddSingleton<IAuthorizationPolicyProvider, PaulaAuthorizationPolicyProvider>()
-            .AddScoped<IAuthorizationMiddlewareResultHandler, PaulaAuthorizationMiddlewareResultHandler>()
+            .AddSingleton<IAuthorizationPolicyProvider, TokenAuthorizationPolicyProvider>()
+            .AddScoped<IAuthorizationMiddlewareResultHandler, TokenAuthorizationMiddlewareResultHandler>()
             .AddScoped<IAuthorizationHandler, AnyAuthorizationClaimHandler>()
             .AddScoped<IAuthorizationHandler, IdentityClaimResourceHandler>()
             .AddScoped<IAuthorizationHandler, InspectorClaimResourceHandler>()

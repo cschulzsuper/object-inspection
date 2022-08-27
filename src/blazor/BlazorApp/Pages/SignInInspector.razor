@@ -1,4 +1,5 @@
 ﻿@page "/inspectors/sign-in"
+@using Super.Paula.Shared.Security
 
 @layout UnauthorizedLayout
 
@@ -13,7 +14,7 @@
 <PageTitle>@Translator["Sign in inspector"]</PageTitle>
 
 <img class="mb-4" src="../img/logo.png" alt="" width="128" height="128">
-<h1 class="h3 mb-3 fw-normal" id="signInHeadline">@Translator["Sign in inspector"]</h1>
+<h1 class="h3 mb-3 fw-normal" id="signInInspectorHeadline">@Translator["Sign in inspector"]</h1>
 
 @if (_inspectors == null)
 {
@@ -29,7 +30,7 @@ else
     {
         <button
             id=@($"signIn{inspector.UniqueName}For{inspector.Organization}")
-        class="btn btn-lg w-100 btn-outline-secondary btn-block text-start fst-italic fs-5 mb-3"
+            class="btn btn-lg w-100 btn-outline-secondary btn-block text-start fst-italic fs-6 mb-3"
             @onclick="() => SignInAsync(inspector)">
             @inspector.Organization @@ @inspector.UniqueName
         </button>

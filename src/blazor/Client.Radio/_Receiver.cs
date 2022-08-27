@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.SignalR.Client;
-using Super.Paula.Shared.Authorization;
 using Super.Paula.Shared.Environment;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Super.Paula.Shared.Security;
 
 namespace Super.Paula.Client;
 

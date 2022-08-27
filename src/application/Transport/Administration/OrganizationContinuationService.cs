@@ -1,9 +1,9 @@
 ﻿using Super.Paula.Application.Administration.Continuation;
-using Super.Paula.Shared.Authorization;
 using Super.Paula.Shared.Orchestration;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Super.Paula.Shared.Security;
 
 namespace Super.Paula.Application.Administration;
 

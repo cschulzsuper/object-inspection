@@ -1,4 +1,6 @@
 ﻿@page "/change-inspector"
+@using Super.Paula.Application.Authentication
+@using Super.Paula.Application.Authentication.Requests
 
 @inject ITranslator<ChangeInspector> Translator
 @inject IInspectorAvatarRequestHandler InspectorAvatarRequestHandler
@@ -42,7 +44,7 @@
     else 
     {
         <div class="container-fluid pb-4 mb-5">
-            <AuthorizedButton Policy="OnlyInspector" type="submit" class="btn btn-sm btn-primary">@Translator[$"Submit"]</AuthorizedButton>
+            <AuthorizedButton Policy="OnlyInspector" type="submit" class="btn btn-sm btn-primary">@Translator[$"Save password"]</AuthorizedButton>
         </div>
     }
 
@@ -54,15 +56,15 @@
 
 <div class="container-fluid pb-3 mb-3 border-bottom">
     <div class="form-group">
-        <InspectorAvatar Inspector="Me" Size="128" Src="_browserFile"/>
+        <InspectorAvatar Inspector="Me" Size="128" Src="_browserFile" CssClass="img-thumbnail" />
     </div>
-    <div class="form-floating mt-3">
-        <InputFile OnChange="@OnInputFileChanged" class="form-control-file" />
+    <div class="mt-3">
+        <InputFile id="inspectorAvatarInput" OnChange="@OnInputFileChanged" class="form-control form-control-sm" />
     </div>
 </div>
 
 <div class="container-fluid pb-4 mb-5">
-    <AuthorizedButton Policy="OnlyInspector" @onclick="OnSubmitAvatarAsync" class="btn btn-sm btn-primary">@Translator[$"Submit"]</AuthorizedButton>
+    <AuthorizedButton Policy="OnlyInspector" @onclick="OnSubmitAvatarAsync" class="btn btn-sm btn-primary">@Translator[$"Save avatar"]</AuthorizedButton>
 </div>
 
 @code {

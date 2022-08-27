@@ -18,9 +18,9 @@ public class BusinessObjectEventService : IBusinessObjectEventService
         _eventStorage = eventStorage;
     }
 
-    public async ValueTask CreateBusinessObjectEventAsync(BusinessObject businessObject)
+    public async ValueTask CreateBusinessObjectUpdateEventAsync(BusinessObject businessObject)
     {
-        var @event = new BusinessObjectEvent(
+        var @event = new BusinessObjectUpdateEvent(
             businessObject.UniqueName,
             businessObject.DisplayName);
 
@@ -34,13 +34,22 @@ public class BusinessObjectEventService : IBusinessObjectEventService
         await _eventStorage.AddAsync(@event, _user);
     }
 
-    public async ValueTask CreateBusinessObjectInspectorEventAsync(BusinessObject businessObject, string newInspector, string oldInspector)
+    public async ValueTask CreateBusinessObjectInspectorCreationEventAsync(BusinessObject businessObject)
     {
-        var @event = new BusinessObjectInspectorEvent(
+        var @event = new BusinessObjectInspectorCreationEvent(
             businessObject.UniqueName,
             businessObject.DisplayName,
-            newInspector,
-            oldInspector);
+            businessObject.Inspector);
+
+        await _eventStorage.AddAsync(@event, _user);
+    }
+
+    public async ValueTask CreateBusinessObjectInspectorDeletionEventAsync(BusinessObject businessObject, string inspector)
+    {
+        var @event = new BusinessObjectInspectorCreationEvent(
+            businessObject.UniqueName,
+            businessObject.DisplayName,
+            inspector);
 
         await _eventStorage.AddAsync(@event, _user);
     }

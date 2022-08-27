@@ -14,7 +14,7 @@ public static class _EventTypes
     {
         eventTypeRegistry.ConfigureTransportAdministration();
         eventTypeRegistry.ConfigureTransportAuditing();
-        eventTypeRegistry.ConfigureTransportGuidlines();
+        eventTypeRegistry.ConfigureTransportGuidelines();
         eventTypeRegistry.ConfigureTransportInventory();
 
         return eventTypeRegistry;
@@ -25,7 +25,8 @@ public static class _EventTypes
         eventTypeRegistry.Register<OrganizationCreationEvent>();
         eventTypeRegistry.Register<OrganizationDeletionEvent>();
         eventTypeRegistry.Register<OrganizationUpdateEvent>();
-        eventTypeRegistry.Register<InspectorBusinessObjectEvent>();
+        eventTypeRegistry.Register<InspectorBusinessObjectOverdueDetectionEvent>();
+        eventTypeRegistry.Register<InspectorBusinessObjectImmediacyDetectionEvent>();
 
         return eventTypeRegistry;
     }
@@ -37,18 +38,19 @@ public static class _EventTypes
         return eventTypeRegistry;
     }
 
-    private static IEventTypeRegistry ConfigureTransportGuidlines(this IEventTypeRegistry eventTypeRegistry)
+    private static IEventTypeRegistry ConfigureTransportGuidelines(this IEventTypeRegistry eventTypeRegistry)
     {
         eventTypeRegistry.Register<InspectionDeletionEvent>();
-        eventTypeRegistry.Register<InspectionEvent>();
+        eventTypeRegistry.Register<InspectionUpdateEvent>();
 
         return eventTypeRegistry;
     }
 
     private static IEventTypeRegistry ConfigureTransportInventory(this IEventTypeRegistry eventTypeRegistry)
     {
-        eventTypeRegistry.Register<BusinessObjectInspectorEvent>();
-        eventTypeRegistry.Register<BusinessObjectEvent>();
+        eventTypeRegistry.Register<BusinessObjectInspectorCreationEvent>();
+        eventTypeRegistry.Register<BusinessObjectInspectorDeletionEvent>();
+        eventTypeRegistry.Register<BusinessObjectUpdateEvent>();
         eventTypeRegistry.Register<BusinessObjectDeletionEvent>();
 
         return eventTypeRegistry;

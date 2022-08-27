@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Routing;
 using System;
 using System.IO;
 using System.Security.Claims;
-using Super.Paula.Shared.Authorization;
+using Super.Paula.Shared.Security;
 
 namespace Super.Paula.Application.Administration;
 

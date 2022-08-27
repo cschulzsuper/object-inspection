@@ -8,19 +8,19 @@ namespace Super.Paula.Application.Auditing;
 
 public class BusinessObjectInspectionEventHandler : IBusinessObjectInspectionEventHandler
 {
-    public async Task HandleAsync(EventHandlerContext context, InspectionEvent @event)
+    public async Task HandleAsync(EventHandlerContext context, InspectionUpdateEvent updateEvent)
     {
         var businessObjectInspectionManager = context.Services.GetRequiredService<IBusinessObjectInspectionManager>();
 
         var businessObjectInspections = businessObjectInspectionManager.GetQueryable()
-            .Where(x => x.Inspection == @event.UniqueName)
+            .Where(x => x.Inspection == updateEvent.UniqueName)
             .AsEnumerable();
 
         foreach (var businessObjectInspection in businessObjectInspections)
         {
-            businessObjectInspection.InspectionDisplayName = @event.DisplayName;
-            businessObjectInspection.InspectionText = @event.Text;
-            businessObjectInspection.Activated = @event.Activated;
+            businessObjectInspection.InspectionDisplayName = updateEvent.DisplayName;
+            businessObjectInspection.InspectionText = updateEvent.Text;
+            businessObjectInspection.Activated = updateEvent.Activated;
 
             await businessObjectInspectionManager.UpdateAsync(businessObjectInspection);
         }

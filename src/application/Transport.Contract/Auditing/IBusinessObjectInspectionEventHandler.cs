@@ -4,7 +4,7 @@ using Super.Paula.Shared.Orchestration;
 namespace Super.Paula.Application.Auditing;
 
 public interface IBusinessObjectInspectionEventHandler :
-    IEventHandler<InspectionEvent>,
+    IEventHandler<InspectionUpdateEvent>,
     IEventHandler<InspectionDeletionEvent>
 {
 }
