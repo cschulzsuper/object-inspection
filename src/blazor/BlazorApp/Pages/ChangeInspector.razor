@@ -42,7 +42,7 @@
     else 
     {
         <div class="container-fluid pb-4 mb-5">
-            <AuthorizedButton Policy="AuditingFull" type="submit" class="btn btn-sm btn-primary">@Translator[$"Submit"]</AuthorizedButton>
+            <AuthorizedButton Policy="OnlyInspector" type="submit" class="btn btn-sm btn-primary">@Translator[$"Submit"]</AuthorizedButton>
         </div>
     }
 
@@ -62,7 +62,7 @@
 </div>
 
 <div class="container-fluid pb-4 mb-5">
-    <AuthorizedButton Policy="AuditingFull" @onclick="OnSubmitAvatarAsync" class="btn btn-sm btn-primary">@Translator[$"Submit"]</AuthorizedButton>
+    <AuthorizedButton Policy="OnlyInspector" @onclick="OnSubmitAvatarAsync" class="btn btn-sm btn-primary">@Translator[$"Submit"]</AuthorizedButton>
 </div>
 
 @code {

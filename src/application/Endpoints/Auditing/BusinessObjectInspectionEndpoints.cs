@@ -33,18 +33,18 @@ public static class BusinessObjectInspectionEndpoints
     }
 
     private static Delegate Get =>
-        [Authorize("AuditingLimited")]
+        [Authorize("OnlyInspectorOrObserver")]
         (IBusinessObjectInspectionRequestHandler requestHandler, string businessObject, string inspection)
             => requestHandler.GetAsync(businessObject, inspection);
 
     private static Delegate GetAllForBusinessObject =>
-        [Authorize("AuditingLimited")]
+        [Authorize("OnlyInspectorOrObserver")]
         (IBusinessObjectInspectionRequestHandler requestHandler,
             string businessObject)
             => requestHandler.GetAllForBusinessObject(businessObject);
 
     private static Delegate Create =>
-        [Authorize("ManagementFull")]
+        [Authorize("OnlyChief")]
         (IBusinessObjectInspectionRequestHandler requestHandler,
             string businessObject,
             BusinessObjectInspectionRequest request)
@@ -52,7 +52,7 @@ public static class BusinessObjectInspectionEndpoints
             => requestHandler.CreateAsync(businessObject, request);
 
     private static Delegate Replace =>
-        [Authorize("ManagementFull")]
+        [Authorize("OnlyChief")]
         (IBusinessObjectInspectionRequestHandler requestHandler,
             string businessObject,
             string inspection,
@@ -61,7 +61,7 @@ public static class BusinessObjectInspectionEndpoints
             => requestHandler.ReplaceAsync(businessObject, inspection, request);
 
     private static Delegate Delete =>
-        [Authorize("ManagementFull")]
+        [Authorize("OnlyChief")]
         (IBusinessObjectInspectionRequestHandler requestHandler,
             string businessObject,
             string inspection,
@@ -70,7 +70,7 @@ public static class BusinessObjectInspectionEndpoints
             => requestHandler.DeleteAsync(businessObject, inspection, etag);
 
     private static Delegate ReplaceAuditSchedule =>
-        [Authorize("ManagementFull")]
+        [Authorize("OnlyChief")]
         (IBusinessObjectInspectionRequestHandler requestHandler,
             string businessObject,
             string inspection,
@@ -79,7 +79,7 @@ public static class BusinessObjectInspectionEndpoints
             => requestHandler.ReplaceAuditScheduleAsync(businessObject, inspection, request);
 
     private static Delegate CreateAuditOmission =>
-        [Authorize("ManagementFull")]
+        [Authorize("OnlyChief")]
         (IBusinessObjectInspectionRequestHandler requestHandler,
             string businessObject,
             string inspection,
@@ -88,7 +88,7 @@ public static class BusinessObjectInspectionEndpoints
             => requestHandler.CreateAuditOmissionAsync(businessObject, inspection, request);
 
     private static Delegate CreateAudit =>
-        [Authorize("AuditingLimited")]
+        [Authorize("OnlyInspectorOrObserver")]
         (IBusinessObjectInspectionRequestHandler requestHandler,
             string businessObject,
             string inspection,
@@ -97,7 +97,7 @@ public static class BusinessObjectInspectionEndpoints
             => requestHandler.CreateAuditAsync(businessObject, inspection, request);
 
     private static Delegate ReplaceAudit =>
-        [Authorize("AuditingLimited")]
+        [Authorize("OnlyInspectorOrObserver")]
         (IBusinessObjectInspectionRequestHandler requestHandler,
             string businessObject,
             string inspection,
@@ -106,7 +106,7 @@ public static class BusinessObjectInspectionEndpoints
             => requestHandler.ReplaceAuditAsync(businessObject, inspection, request);
 
     private static Delegate ReplaceAuditAnnotation =>
-        [Authorize("AuditingLimited")]
+        [Authorize("OnlyInspectorOrObserver")]
         (IBusinessObjectInspectionRequestHandler requestHandler,
             string businessObject,
             string inspection,

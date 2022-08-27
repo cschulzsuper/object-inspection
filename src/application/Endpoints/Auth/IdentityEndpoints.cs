@@ -24,27 +24,27 @@ public static class IdentityEndpoints
     }
 
     private static Delegate Get =>
-        [Authorize("Maintenance")]
+        [Authorize("OnlyMaintainer")]
     (IIdentityRequestHandler requestHandler, string identity)
             => requestHandler.GetAsync(identity);
 
     private static Delegate GetAll =>
-        [Authorize("Maintenance")]
+        [Authorize("OnlyMaintainer")]
     (IIdentityRequestHandler requestHandler)
             => requestHandler.GetAll();
 
     private static Delegate Create =>
-        [Authorize("Maintenance")]
+        [Authorize("OnlyMaintainer")]
     (IIdentityRequestHandler requestHandler, IdentityRequest request)
             => requestHandler.CreateAsync(request);
 
     private static Delegate Replace =>
-        [Authorize("Maintenance")]
+        [Authorize("OnlyMaintainer")]
     (IIdentityRequestHandler requestHandler, string identity, IdentityRequest request)
             => requestHandler.ReplaceAsync(identity, request);
 
     private static Delegate Delete =>
-        [Authorize("Maintenance")]
+        [Authorize("OnlyMaintainer")]
     (IIdentityRequestHandler requestHandler, string identity, [FromHeader(Name = "If-Match")] string etag)
             => requestHandler.DeleteAsync(identity, etag);
 }

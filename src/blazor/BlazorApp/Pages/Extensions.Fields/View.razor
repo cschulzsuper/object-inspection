@@ -4,7 +4,7 @@
 @inject NavigationManager NavigationManager
 @inject IExtensionRequestHandler ExtensionRequestHandler
 
-@attribute [Authorize("ManagementRead")]
+@attribute [Authorize("OnlyChiefOrObserver")]
 
 <PageTitle>@Translator[$"Extension fields"]</PageTitle>
 

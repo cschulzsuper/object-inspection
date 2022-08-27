@@ -5,7 +5,7 @@
 @inject IIdentityRequestHandler IdentityHandler
 @inject IAuthenticationRequestHandler AuthenticationHandler
 
-@attribute [Authorize("Maintenance")]
+@attribute [Authorize("OnlyMaintainer")]
 
 <PageTitle>@Translator[$"Identities"]</PageTitle>
 

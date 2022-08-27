@@ -6,7 +6,7 @@
 @inject IBusinessObjectRequestHandler BusinessObjectHandler
 @inject IBusinessObjectInspectionRequestHandler BusinessObjectInspectionHandler
 
-@attribute [Authorize("AuditingLimited")]
+@attribute [Authorize("OnlyInspectorOrObserver")]
 
 <DemoNote>
     @Translator.Markdown($"One or more inspection can make up a check list for a business object. An optional schedule can be defined.")
@@ -16,7 +16,7 @@
     <h1>@Translator[$"Inspections"]</h1>
 </div>
 
-<AuthorizeView Policy="ManagementRead">
+<AuthorizeView Policy="OnlyChiefOrObserver">
     <Authorized>
         <div class="container-fluid m-2">
             <button id="assignmentMode" class="btn @(_mode == Mode.AssignmentMode ? "btn-primary" : "btn-outline-secondary")"
@@ -48,7 +48,7 @@ else
                 <th class="col-2 d-none d-lg-table-cell">@Translator[$"Unique name"]</th>
                 <th class="col-12 col-lg-10">@Translator[$"Display name"]</th>
 
-                <AuthorizeView Policy="ManagementRead">
+                <AuthorizeView Policy="OnlyChiefOrObserver">
                     <Authorized>
                         <th class=@(_mode == Mode.AssignmentMode ? "" : "d-none d-lg-table-cell")></th>
                         <th class=@(_mode == Mode.ScheduleMode ? "" : "d-none d-lg-table-cell")></th>
@@ -67,12 +67,12 @@ else
                         <BusinessObjectInspectionResponseToggle Inspection="inspection"/>
                     </td>
 
-                    <AuthorizeView Policy="ManagementRead">
+                    <AuthorizeView Policy="OnlyChiefOrObserver">
                         <Authorized>
                             <td class=@(_mode == Mode.AssignmentMode ? "" : "d-none d-lg-table-cell")>
                                 @if (_inspectionBusinessObjects!.ContainsKey(inspection.Inspection))
                         {
-                            <AuthorizedButton Policy="ManagementFull" 
+                            <AuthorizedButton Policy="OnlyChief" 
                                             id="@($"unassign-{inspection.Inspection}")"
                                             class="btn btn-primary btn-block"
                                             title="@Translator[$"Unassign"]"
@@ -80,7 +80,7 @@ else
                         }
                         else
                         {
-                            <AuthorizedButton Policy="ManagementFull" 
+                            <AuthorizedButton Policy="OnlyChief" 
                                             id="@($"assign-{inspection.Inspection}")"
                                             class="btn btn-primary btn-block"
                                             title="@Translator[$"Assign"]"
@@ -95,7 +95,7 @@ else
                                         @onclick="() => Schedule(inspection)"><span class="oi oi-clock"/></button>
                             </td>
                             <td class=@(_mode == Mode.DropMode ? "" : "d-none d-lg-table-cell")>
-                                <AuthorizedButton Policy="ManagementFull" 
+                                <AuthorizedButton Policy="OnlyChief" 
                                         id="@($"drop-{inspection.Inspection}")"
                                         class="btn btn-primary btn-block"
                                         title="@Translator[$"Drop"]"

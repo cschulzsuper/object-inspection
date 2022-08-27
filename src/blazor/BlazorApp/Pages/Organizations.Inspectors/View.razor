@@ -7,7 +7,7 @@
 @inject ITranslator<View> Translator
 @inject NavigationManager NavigationManager
 
-@attribute [Authorize("ManagementRead")]
+@attribute [Authorize("OnlyChiefOrObserver")]
 
 <PageTitle>@Translator[$"Inspectors"]</PageTitle>
 
@@ -38,7 +38,7 @@ else
         <tr>
             <th scope="col" class="col-6">@Translator[$"Unique name"]</th>
             <th scope="col" class="col-6">@Translator[$"Identity"]</th>
-            <AuthorizeView Policy="Maintenance">
+            <AuthorizeView Policy="OnlyMaintainer">
                 <Authorized>
                     <th scope="col"></th>
                 </Authorized>
@@ -53,7 +53,7 @@ else
                 <td>@inspector.UniqueName</td>
                 <td>@inspector.Identity</td>
 
-                <AuthorizeView Policy="Maintenance">
+                <AuthorizeView Policy="OnlyMaintainer">
                     <Authorized>
                         <td>
                             @if (inspector.Activated &&

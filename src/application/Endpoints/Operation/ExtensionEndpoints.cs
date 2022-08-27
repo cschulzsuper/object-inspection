@@ -34,32 +34,32 @@ public static class ExtensionEndpoints
     }
 
     private static Delegate Get =>
-        [Authorize("AuditingLimited")]
+        [Authorize("OnlyInspectorOrObserver")]
     (IExtensionRequestHandler requestHandler, string aggregateType)
             => requestHandler.GetAsync(aggregateType);
 
     private static Delegate GetAll =>
-        [Authorize("ManagementRead")]
+        [Authorize("OnlyChiefOrObserver")]
     (IExtensionRequestHandler requestHandler)
             => requestHandler.GetAll();
 
     private static Delegate Create =>
-        [Authorize("ManagementFull")]
+        [Authorize("OnlyChief")]
     (IExtensionRequestHandler requestHandler, ExtensionRequest request)
             => requestHandler.CreateAsync(request);
 
     private static Delegate Delete =>
-        [Authorize("ManagementFull")]
+        [Authorize("OnlyChief")]
     (IExtensionRequestHandler requestHandler, string aggregateType, [FromHeader(Name = "If-Match")] string etag)
             => requestHandler.DeleteAsync(aggregateType, etag);
 
     private static Delegate CreateField =>
-        [Authorize("ManagementFull")]
+        [Authorize("OnlyChief")]
     (IExtensionRequestHandler requestHandler, string aggregateType, ExtensionFieldRequest request)
             => requestHandler.CreateFieldAsync(aggregateType, request);
 
     private static Delegate DeleteField =>
-        [Authorize("ManagementFull")]
+        [Authorize("OnlyChief")]
     (IExtensionRequestHandler requestHandler, string aggregateType, string field, [FromHeader(Name = "If-Match")] string etag)
             => requestHandler.DeleteFieldAsync(aggregateType, field, etag);
 }

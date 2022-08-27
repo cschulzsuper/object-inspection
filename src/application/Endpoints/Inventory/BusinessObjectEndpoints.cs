@@ -30,12 +30,12 @@ public static class BusinessObjectEndpoints
     }
 
     private static Delegate Get =>
-        [Authorize("AuditingLimited")]
+        [Authorize("OnlyInspectorOrObserver")]
     (IBusinessObjectRequestHandler requestHandler, string businessObject)
             => requestHandler.GetAsync(businessObject);
 
     private static Delegate GetAll =>
-        [Authorize("ManagementRead")]
+        [Authorize("OnlyChiefOrObserver")]
     (IBusinessObjectRequestHandler requestHandler,
             [FromQuery(Name = "q")] string query,
             [FromQuery(Name = "s")] int? skip,
@@ -44,22 +44,22 @@ public static class BusinessObjectEndpoints
             => requestHandler.GetAll(query, skip ?? 0, take, cancellationToken);
 
     private static Delegate Create =>
-        [Authorize("ManagementFull")]
+        [Authorize("OnlyChief")]
     (IBusinessObjectRequestHandler requestHandler, BusinessObjectRequest request)
             => requestHandler.CreateAsync(request);
 
     private static Delegate Replace =>
-        [Authorize("ManagementFull")]
+        [Authorize("OnlyChief")]
     (IBusinessObjectRequestHandler requestHandler, string businessObject, BusinessObjectRequest request)
             => requestHandler.ReplaceAsync(businessObject, request);
 
     private static Delegate Delete =>
-        [Authorize("ManagementFull")]
+        [Authorize("OnlyChief")]
     (IBusinessObjectRequestHandler requestHandler, string businessObject, [FromHeader(Name = "If-Match")] string etag)
             => requestHandler.DeleteAsync(businessObject, etag);
 
     private static Delegate Search =>
-        [Authorize("ManagementRead")]
+        [Authorize("OnlyChiefOrObserver")]
     (IBusinessObjectRequestHandler requestHandler,
             [FromQuery(Name = "q")] string query)
             => requestHandler.SearchAsync(query);

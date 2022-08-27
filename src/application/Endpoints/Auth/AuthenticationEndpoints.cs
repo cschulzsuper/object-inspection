@@ -48,7 +48,7 @@ public static class AuthenticationEndpoints
             => requestHandler.ChangeSecretAsync(request);
 
     private static Delegate Reset =>
-        [Authorize("Maintenance")]
+        [Authorize("OnlyMaintainer")]
     (IAuthenticationRequestHandler requestHandler, string identity, [FromHeader(Name = "If-Match")] string etag)
             => requestHandler.ResetAsync(identity, etag);
 }

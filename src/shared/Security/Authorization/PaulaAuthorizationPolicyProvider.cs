@@ -15,15 +15,15 @@ public class PaulaAuthorizationPolicyProvider : IAuthorizationPolicyProvider
         => Task.FromResult(
             policyName switch
             {
-                "InspectorRead" => _Policies.InspectorReadPolicy,
-                "IdentityRead" => _Policies.IdentityReadPolicy,
-                "Maintenance" => _Policies.MaintenancePolicy,
-                "ManagementFull" => _Policies.ManagementFullPolicy,
-                "ManagementRead" => _Policies.ManagementReadPolicy,
-                "AuditingFull" => _Policies.AuditingFullPolicy,
-                "AuditingLimited" => _Policies.AuditingLimitedPolicy,
+                "OnlyChief" => _Policies.OnlyChiefPolicy,
+                "OnlyChiefOrObserver" => _Policies.OnlyChiefOrObserverPolicy,
+                "OnlyChiefOrObserverOrInspectorOwner" => _Policies.OnlyChiefOrObserverOrInspectorOwnerPolicy,
+                "OnlyImpersonator" => _Policies.OnlyImpersonatorPolicy,
+                "OnlyInspector" => _Policies.OnlyInspectorPolicy,
+                "OnlyInspectorOrObserver" => _Policies.OnlyInspectorOrObserverPolicy,
+                "OnlyMaintainer" => _Policies.OnlyMaintainerPolicy,
+                "OnlyMaintainerOrIdentityOwner" => _Policies.OnlyMaintainerOrIdentityOwnerPolicy,
 
-                "Impersonation" => _Policies.ImpersonationPolicy,
                 _ => null
             });
 }

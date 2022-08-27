@@ -3,7 +3,7 @@
 @inject ITranslator<Index> Translator
 @inject NavigationManager NavigationManager
 
-@attribute [Authorize("AuditingLimited")]
+@attribute [Authorize("OnlyInspectorOrObserver")]
 
 <PageTitle>@Translator[$"Welcome"]</PageTitle>
 

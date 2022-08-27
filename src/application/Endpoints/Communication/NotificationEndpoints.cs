@@ -29,32 +29,32 @@ public static class NotificationEndpoints
     }
 
     private static Delegate Get =>
-        [Authorize("AuditingLimited")]
+        [Authorize("OnlyInspectorOrObserver")]
     (INotificationRequestHandler requestHandler, string inspector, int date, int time)
             => requestHandler.GetAsync(inspector, date, time);
 
     private static Delegate GetAll =>
-        [Authorize("AuditingLimited")]
+        [Authorize("OnlyInspectorOrObserver")]
     (INotificationRequestHandler requestHandler)
             => requestHandler.GetAll();
 
     private static Delegate GetAllForInspector =>
-        [Authorize("AuditingLimited")]
+        [Authorize("OnlyInspectorOrObserver")]
     (INotificationRequestHandler requestHandler, string inspector)
             => requestHandler.GetAllForInspector(inspector);
 
     private static Delegate Create =>
-        [Authorize("Maintenance")]
+        [Authorize("OnlyMaintainer")]
     (INotificationRequestHandler requestHandler, string inspector, NotificationRequest request)
             => requestHandler.CreateAsync(inspector, request);
 
     private static Delegate Replace =>
-        [Authorize("Maintenance")]
+        [Authorize("OnlyMaintainer")]
     (INotificationRequestHandler requestHandler, string inspector, int date, int time, NotificationRequest request)
             => requestHandler.ReplaceAsync(inspector, date, time, request);
 
     private static Delegate Delete =>
-        [Authorize("AuditingFull")]
+        [Authorize("OnlyInspector")]
     (INotificationRequestHandler requestHandler, string inspector, int date, int time, [FromHeader(Name = "If-Match")] string etag)
             => requestHandler.DeleteAsync(inspector, date, time, etag);
 }

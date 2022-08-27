@@ -30,37 +30,37 @@ public static class InspectionEndpoints
     }
 
     private static Delegate Get =>
-        [Authorize("AuditingLimited")]
+        [Authorize("OnlyInspectorOrObserver")]
         (IInspectionRequestHandler requestHandler, string inspection)
             => requestHandler.GetAsync(inspection);
 
     private static Delegate GetAll =>
-        [Authorize("AuditingLimited")]
+        [Authorize("OnlyInspectorOrObserver")]
         (IInspectionRequestHandler requestHandler)
             => requestHandler.GetAll();
 
     private static Delegate Create =>
-        [Authorize("ManagementFull")]
+        [Authorize("OnlyChief")]
         (IInspectionRequestHandler requestHandler, InspectionRequest request)
             => requestHandler.CreateAsync(request);
 
     private static Delegate Replace =>
-        [Authorize("ManagementFull")]
+        [Authorize("OnlyChief")]
         (IInspectionRequestHandler requestHandler, string inspection, InspectionRequest request)
             => requestHandler.ReplaceAsync(inspection, request);
 
     private static Delegate Delete =>
-        [Authorize("ManagementFull")]
+        [Authorize("OnlyChief")]
         (IInspectionRequestHandler requestHandler, string inspection, [FromHeader(Name = "If-Match")] string etag)
             => requestHandler.DeleteAsync(inspection, etag);
 
     private static Delegate Activate =>
-        [Authorize("ManagementFull")]
+        [Authorize("OnlyChief")]
         (IInspectionRequestHandler requestHandler, string inspection, [FromHeader(Name = "If-Match")] string etag)
             => requestHandler.ActivateAsync(inspection, etag);
 
     private static Delegate Deactivate =>
-        [Authorize("ManagementFull")]
+        [Authorize("OnlyChief")]
         (IInspectionRequestHandler requestHandler, string inspection, [FromHeader(Name = "If-Match")] string etag)
             => requestHandler.DeactivateAsync(inspection, etag);
 }

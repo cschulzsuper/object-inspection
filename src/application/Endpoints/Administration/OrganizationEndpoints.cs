@@ -30,39 +30,39 @@ public static class OrganizationEndpoints
     }
 
     private static Delegate Get =>
-        [Authorize("Maintenance")]
+        [Authorize("OnlyMaintainer")]
     (IOrganizationRequestHandler requestHandler, string organization)
             => requestHandler.GetAsync(organization);
 
     private static Delegate GetAll =>
-        [Authorize("Maintenance")]
+        [Authorize("OnlyMaintainer")]
     (IOrganizationRequestHandler requestHandler)
             => requestHandler.GetAll();
 
     private static Delegate Create =>
-        [Authorize("Maintenance")]
+        [Authorize("OnlyMaintainer")]
     [UseOrganizationFromRoute]
     (IOrganizationRequestHandler requestHandler, OrganizationRequest request)
                 => requestHandler.CreateAsync(request);
 
     private static Delegate Replace =>
-        [Authorize("Maintenance")]
+        [Authorize("OnlyMaintainer")]
     (IOrganizationRequestHandler requestHandler, string organization, OrganizationRequest request)
             => requestHandler.ReplaceAsync(organization, request);
 
     private static Delegate Delete =>
-        [Authorize("Maintenance")]
+        [Authorize("OnlyMaintainer")]
     [UseOrganizationFromRoute]
     (IOrganizationRequestHandler requestHandler, string organization, [FromHeader(Name = "If-Match")] string etag)
             => requestHandler.DeleteAsync(organization, etag);
 
     private static Delegate Activate =>
-        [Authorize("Maintenance")]
+        [Authorize("OnlyMaintainer")]
     (IOrganizationRequestHandler requestHandler, string organization, [FromHeader(Name = "If-Match")] string etag)
             => requestHandler.ActivateAsync(organization, etag);
 
     private static Delegate Deactivate =>
-        [Authorize("Maintenance")]
+        [Authorize("OnlyMaintainer")]
     (IOrganizationRequestHandler requestHandler, string organization, [FromHeader(Name = "If-Match")] string etag)
             => requestHandler.DeactivateAsync(organization, etag);
 }

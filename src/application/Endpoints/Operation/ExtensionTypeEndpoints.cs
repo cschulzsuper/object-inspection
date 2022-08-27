@@ -22,7 +22,7 @@ public static class ExtensionTypeEndpoints
     }
 
     private static Delegate GetAll =>
-        [Authorize("ManagementRead")]
+        [Authorize("OnlyChiefOrObserver")]
         (IExtensionAggregateTypeRequestHandler requestHandler)
             => requestHandler.GetAll();
 }
