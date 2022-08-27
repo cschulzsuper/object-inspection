@@ -121,20 +121,20 @@ internal sealed class Receiver : IAsyncDisposable
         }
     }
 
-    public async Task<IDisposable> OnAsync<T1, TResult>(string methodName, Func<T1, TResult> handler)
+    public async Task<IDisposable> OnAsync<T1>(string methodName, Func<T1, Task> handler)
     {
         var subscription = _hubConnection.On(methodName, handler);
         await EnsureStartedAsync();
         return subscription;
     }
 
-    public async Task<IDisposable> OnAsync<T1, T2, TResult>(string methodName, Func<T1, T2, TResult> handler)
+    public async Task<IDisposable> OnAsync<T1, T2>(string methodName, Func<T1, T2, Task> handler)
     {
         var subscription = _hubConnection.On(methodName, handler);
         await EnsureStartedAsync();
         return subscription;
     }
-    public async Task<IDisposable> OnAsync<T1, T2, T3, TResult>(string methodName, Func<T1, T2, T3, TResult> handler)
+    public async Task<IDisposable> OnAsync<T1, T2, T3>(string methodName, Func<T1, T2, T3, Task> handler)
     {
         var subscription = _hubConnection.On(methodName, handler);
         await EnsureStartedAsync();

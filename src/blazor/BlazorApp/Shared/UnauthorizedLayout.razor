@@ -1,0 +1,18 @@
+﻿@inherits LayoutComponentBase
+
+<div class="empty-layout text-center">
+    <main>
+        @Body
+    </main>
+</div>
+
+<Footer />
+
+@code {
+    private bool collapsed = true;
+
+    private void ToggleNavMenu()
+    {
+        collapsed = !collapsed;
+    }
+}

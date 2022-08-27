@@ -53,7 +53,7 @@ public class EventProcessingManager : IEventProcessingManager
         }
         catch (Exception exception)
         {
-            throw new ManagementException($"Could not update event processing '{eventProcessing.Id}'.", exception);
+            throw new ManagementException($"Could not update event processing '{eventProcessing.EventId}'.", exception);
         }
     }
 
@@ -67,7 +67,7 @@ public class EventProcessingManager : IEventProcessingManager
         }
         catch (Exception exception)
         {
-            throw new ManagementException($"Could not delete event processing '{eventProcessing.Id}'.", exception);
+            throw new ManagementException($"Could not delete event processing '{eventProcessing.EventId}'.", exception);
         }
     }
 
@@ -87,8 +87,8 @@ public class EventProcessingManager : IEventProcessingManager
 
     private static void EnsureInsertable(EventProcessing eventProcessing)
         => Validator.Ensure($"event processing with unique name '{eventProcessing.Name}'",
-            EventProcessingValidator.IdIsNotEmpty(eventProcessing.Id),
-            EventProcessingValidator.IdIsGuid(eventProcessing.Id),
+            EventProcessingValidator.IdIsNotEmpty(eventProcessing.EventId),
+            EventProcessingValidator.IdIsGuid(eventProcessing.EventId),
             EventProcessingValidator.NameIsNotEmpty(eventProcessing.Name),
             EventProcessingValidator.NameHasKebabCase(eventProcessing.Name),
             EventProcessingValidator.NameIsNotTooLong(eventProcessing.Name),
@@ -108,9 +108,9 @@ public class EventProcessingManager : IEventProcessingManager
             EventProcessingValidator.CreationTimeIsInDayTimeRange(eventProcessing.CreationTime));
 
     private static void EnsureUpdateable(EventProcessing eventProcessing)
-        => Validator.Ensure($"event processing with id '{eventProcessing.Id}'",
-            EventProcessingValidator.IdIsNotEmpty(eventProcessing.Id),
-            EventProcessingValidator.IdIsGuid(eventProcessing.Id),
+        => Validator.Ensure($"event processing with id '{eventProcessing.EventId}'",
+            EventProcessingValidator.IdIsNotEmpty(eventProcessing.EventId),
+            EventProcessingValidator.IdIsGuid(eventProcessing.EventId),
             EventProcessingValidator.NameIsNotEmpty(eventProcessing.Name),
             EventProcessingValidator.NameHasKebabCase(eventProcessing.Name),
             EventProcessingValidator.NameIsNotTooLong(eventProcessing.Name),
@@ -130,7 +130,7 @@ public class EventProcessingManager : IEventProcessingManager
             EventProcessingValidator.CreationTimeIsInDayTimeRange(eventProcessing.CreationTime));
 
     private static void EnsureDeletable(EventProcessing eventProcessing)
-        => Validator.Ensure($"event processing with id '{eventProcessing.Id}'",
-            EventProcessingValidator.IdIsNotEmpty(eventProcessing.Id),
-            EventProcessingValidator.IdIsGuid(eventProcessing.Id));
+        => Validator.Ensure($"event processing with id '{eventProcessing.EventId}'",
+            EventProcessingValidator.IdIsNotEmpty(eventProcessing.EventId),
+            EventProcessingValidator.IdIsGuid(eventProcessing.EventId));
 }

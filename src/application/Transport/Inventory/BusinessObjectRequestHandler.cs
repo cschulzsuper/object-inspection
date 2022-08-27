@@ -144,7 +144,10 @@ public class BusinessObjectRequestHandler : IBusinessObjectRequestHandler
 
         foreach (var freeText in freeTexts)
         {
-            query = query.Where(x => x.DisplayName.Contains(freeText));
+            query = query.Where(x => 
+                x.DisplayName.Contains(freeText) ||
+                x.Inspector.Contains(freeText) ||
+                x.UniqueName.Contains(freeText));
         }
 
         return query.OrderByDescending(x => x.UniqueName);

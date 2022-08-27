@@ -1,80 +1,79 @@
 ﻿@page "/business-objects/create"
+@using Super.Paula.Application.Localization.Exceptions
+@using Super.Paula.Application.Operation.Exceptions
 
 @inject ITranslator<Create> Translator
 @inject NavigationManager NavigationManager
-@inject IBusinessObjectRequestHandler BusinessObjectHandler
+@inject IBusinessObjectRequestHandler BusinessObjectRequestHandler
 @inject IExtensionRequestHandler ExtensionRequestHandler
 
 @attribute [Authorize("ManagementRead")]
 
-<div class="container-fluid">
-    <h1>@Translator[$"Create business object"]</h1>
+<PageTitle>@Translator[$"Create business object"]</PageTitle>
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">@Translator[$"Create business object"]</h1>
 </div>
 
-@if (_extension == null)
-{
-    <p><em>Loading...</em></p>
-}
-else 
-{
-    <EditForm Model="@_request" OnValidSubmit="@OnValidSubmitAsync">
-        <DataAnnotationsValidator />
+<EditForm Model="@_request" OnValidSubmit="@OnValidSubmitAsync">
+    <DataAnnotationsValidator/>
 
-        <div class="container-fluid">
-            <div class="form-group">
-                <label>@Translator[$"Display name"]</label>
-                <InputText 
-                    class="form-control" 
-                    id="businessObjectDisplayName" @bind-Value="_request.DisplayName" />
-            </div>
-            <div class="form-group">
-                <label>@Translator[$"Unique name"]</label>
-                <InputText 
-                    class="form-control" 
-                    id="businessObjectUniqueName" @bind-Value="_request.UniqueName" />
-            </div>
-            <div class="form-group">
-                <label>@Translator[$"Inspector"]</label>
-                <InputText 
-                    class="form-control" 
-                    id="businessObjectInspector" @bind-Value="_request.Inspector" />
-            </div>
+    <div class="container-fluid pb-3 mb-3 border-bottom">
+        <div class="form-floating mt-3">
+            <InputText class="form-control"
+                       id="businessObjectUniqueName" @bind-Value="_request.UniqueName" />
+            <label for="businessObjectUniqueName">@Translator[$"Unique name"]</label>
         </div>
+        <div class="form-floating mt-3">
+            <InputText
+                class="form-control"
+                id="businessObjectDisplayName" @bind-Value="_request.DisplayName"/>
+            <label for="businessObjectDisplayName">@Translator[$"Display name"]</label>
+        </div>
+        <div class="form-floating mt-3">
+            <InputText
+                class="form-control"
+                id="businessObjectInspector" @bind-Value="_request.Inspector"/>
+            <label for="businessObjectInspector">@Translator[$"Inspector"]</label>
+        </div>
+    </div>
 
-        <div class="container-fluid">
-            @foreach(var extensionField in _extension.Fields)
+    @if (_extension != null)
     {
-        <div class="form-group">
-                    <label>@Translator[extensionField.DisplayName]</label>
+        <div class="container-fluid pb-3 mb-3 border-bottom">
+            @foreach (var extensionField in _extension.Fields)
+            {
+                <div class="form-floating mt-3">
                     <input
                         class="form-control"
                         id="@GetExtensionFieldInputId(extensionField)"
                         value="@_request[extensionField.DataName]"
-                        @onchange="@(e => _request[extensionField.DataName] = e.Value)" />
+                        @onchange="@(e => _request[extensionField.DataName] = e.Value)"/>
+                    <label for="@GetExtensionFieldInputId(extensionField)">@Translator[extensionField.DisplayName]</label>
                 </div>
-    }
+            }
         </div>
+    }
 
-        @if(context.GetValidationMessages().Any())
-{
-    <div class="container-fluid">
-                <div class="card card-body tex-wrap">
-                    <ValidationSummary />    
-                </div>
+    @if (context.GetValidationMessages().Any())
+    {
+        <div class="container-fluid pb-4 mb-5">
+            <div class="card card-body tex-wrap">
+                <ValidationSummary/>
             </div>
-} 
-else 
-{
-    <div class="container-fluid">
-                <AuthorizedButton Policy="ManagementFull" 
-                    id="submit"
-                    type="submit"
-                    class="btn btn-primary">@Translator[$"Submit"]</AuthorizedButton>
-            </div>
-}
+        </div>
+    }
+    else
+    {
+        <div class="container-fluid pb-4 mb-5">
+            <AuthorizedButton Policy="ManagementFull"
+                              id="submit"
+                              type="submit"
+                              class="btn btn-sm btn-primary">@Translator[$"Submit"]</AuthorizedButton>
+        </div>
+    }
 
-    </EditForm>
-}
+</EditForm>
 
 @code {
     private ExtensionResponse? _extension;
@@ -83,12 +82,16 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        _extension = await ExtensionRequestHandler.GetAsync(ExtensionAggregateTypes.BusinessObject);
+        try
+        {
+            _extension = await ExtensionRequestHandler.GetAsync(ExtensionAggregateTypes.BusinessObject);
+        }
+        catch (ExtensionNotFoundException) { }
     }
 
     private async Task OnValidSubmitAsync()
     {
-        await BusinessObjectHandler.CreateAsync(_request);
+        await BusinessObjectRequestHandler.CreateAsync(_request);
         NavigationManager.NavigateTo("/business-objects");
     }
 

@@ -1,0 +1,176 @@
+﻿@page "/organizations/{organization}/inspectors"
+
+@inject IAuthorizationRequestHandler AuthorizationRequestHandler
+@inject IInspectorRequestHandler InspectorRequestHandler
+@inject IOrganizationRequestHandler OrganizationRequestHandler
+
+@inject ITranslator<View> Translator
+@inject NavigationManager NavigationManager
+
+@attribute [Authorize("ManagementRead")]
+
+<PageTitle>@Translator[$"Inspectors"]</PageTitle>
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">@Translator[$"Inspectors"]</h1>
+    @if (_inspectors?.Any() != true &&
+         _meOrganistation != Organization)
+    {
+        <div class="btn-toolbar mb-2 mb-md-0">
+            <div class="btn-group me-2">
+                <button id="repair" class="btn btn-sm btn-outline-secondary" title="@Translator[$"Repair"]"
+                        @onclick="RepairAsync"><span class="oi oi-wrench"/></button> </div>
+        </div>
+    }
+</div>
+
+<div class="table-responsive">
+
+@if (_inspectors == null || _organization == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table table-striped table-sm" id="inspectorsTable">
+
+        <thead>
+        <tr>
+            <th scope="col" class="col-6">@Translator[$"Unique name"]</th>
+            <th scope="col" class="col-6">@Translator[$"Identity"]</th>
+            <AuthorizeView Policy="Maintenance">
+                <Authorized>
+                    <th scope="col"></th>
+                </Authorized>
+            </AuthorizeView>
+        </tr>
+        </thead>
+
+        <tbody>
+        @foreach (var inspector in _inspectors.Values)
+        {
+            <tr>
+                <td>@inspector.UniqueName</td>
+                <td>@inspector.Identity</td>
+
+                <AuthorizeView Policy="Maintenance">
+                    <Authorized>
+                        <td>
+                            @if (inspector.Activated &&
+                                 _organization?.Activated == true &&
+                                 inspector.UniqueName != _meInspector)
+                            {
+                                <button class="btn btn-sm btn-outline-danger btn-block" title="@Translator[$"Impersonate"]"
+                                        @onclick="() => ImpersonateAsync(inspector.UniqueName)"><span class="oi oi-eye"/></button>
+                            }
+                        </td>
+                    </Authorized>
+                </AuthorizeView>
+
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+</div>
+
+@code {
+
+    [Parameter]
+    public string Organization { get; set; } = string.Empty;
+
+    private OrganizationResponse? _organization;
+
+    private IDictionary<string, InspectorResponse>? _inspectors;
+
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthenticationState { get; set; } = null!;
+
+    private string? _meInspector;
+
+    private string? _meOrganistation;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        _meInspector = (await AuthenticationState).User.GetInspector();
+        _meOrganistation = (await AuthenticationState).User.GetOrganization();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _inspectors = new Dictionary<string, InspectorResponse>();
+
+            _organization = await OrganizationRequestHandler.GetAsync(Organization);
+
+            var response = InspectorRequestHandler.GetAllForOrganization(Organization);
+
+            await foreach (var inspector in response)
+            {
+                _inspectors.Add(inspector.UniqueName, inspector);
+                StateHasChanged();
+            }
+
+            StateHasChanged();
+        }
+    }
+
+    public void Create()
+        => NavigationManager.NavigateTo("/inspectors/create");
+
+    public void Edit(string inspector)
+        => NavigationManager.NavigateTo($"/inspectors/{inspector}/edit");
+
+    public async Task RepairAsync()
+    {
+        if (_organization == null)
+        {
+            return;
+        }
+
+        await OrganizationRequestHandler.InitializeAsync(_organization.UniqueName, new InitializeOrganizationRequest
+        {
+            Inspector = _organization.ChiefInspector,
+            ETag = _organization.ETag
+        });
+
+        NavigationManager.NavigateTo(NavigationManager.Uri, true);
+    }
+
+    public async Task DeleteAsync(InspectorResponse inspector)
+    {
+        await InspectorRequestHandler.DeleteAsync(inspector.UniqueName, inspector.ETag);
+
+        _inspectors!.Remove(inspector.UniqueName);
+    }
+
+    public async Task ActivateAsync(InspectorResponse inspector)
+    {
+        var response = await InspectorRequestHandler.ActivateAsync(inspector.UniqueName, inspector.ETag);
+
+        _inspectors![inspector.UniqueName].Activated = true;
+        _inspectors![inspector.UniqueName].ETag = response.ETag;
+    }
+
+    public async Task DeactivateAsync(InspectorResponse inspector)
+    {
+        var response = await InspectorRequestHandler.DeactivateAsync(inspector.UniqueName, inspector.ETag);
+
+        _inspectors![inspector.UniqueName].Activated = false;
+        _inspectors![inspector.UniqueName].ETag = response.ETag;
+    }
+
+    public async Task ImpersonateAsync(string inspector)
+    {
+        var organization = (await AuthenticationState).User.GetOrganization();
+
+        await AuthorizationRequestHandler.StartImpersonationAsync(
+            Organization ?? organization,
+            inspector);
+
+        NavigationManager.NavigateTo("/");
+    }
+
+}

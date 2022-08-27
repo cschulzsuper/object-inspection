@@ -56,9 +56,9 @@ A couple of things need to be setup, if you want to start Paula yourself.
 * Create the first identity. 
   * `https://localhost:5002/sign-up`
 * Create the first organization. 
-  * `https://localhost:5002/register-organization`
+  * `https://localhost:5002/organizations/register`
 * Create the chief inspector of the first organization. 
-  * `https://localhost:5002/register-chief-inspector/{organization}`
+  * `https://localhost:5002/organizations/{organization}/register`
 
 ## Adventure Tours
 

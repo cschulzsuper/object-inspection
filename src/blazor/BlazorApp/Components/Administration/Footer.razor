@@ -1,0 +1,77 @@
+﻿@inject BuildInfo BuildInfo
+@inject ITranslator<Footer> Translator
+
+<footer class="footer fixed-bottom">
+    <div class="copyright">
+        &copy; Copyright @DateTime.Now.Year
+        <a href="https://github.com/cschulzsuper">Christian Schulz</a>.
+        @if (_buildString != null)
+        {
+            <span class="d-none d-md-inline-block">@_buildString.Value</span>
+        }
+    </div>
+</footer>
+
+@code {
+
+    private MarkupString? _buildString = null;
+
+    protected override void OnInitialized()
+    {
+        GenerateBuildString();
+    }
+
+    private void GenerateBuildString()
+    {
+        if (_buildString != null)
+        {
+            return;
+        }
+
+        var runtime = BuildInfo.Runtime;
+
+        var branch = BuildInfo.Branch;
+        var branchUrl = $"https://github.com/cschulzsuper/paula/tree/{BuildInfo.Branch}";
+
+        var hash = BuildInfo.Branch;
+        var hashUrl = $"https://github.com/cschulzsuper/paula/tree/{BuildInfo.Hash}";
+
+        var build = BuildInfo.Branch;
+        var buildUrl = $"https://github.com/cschulzsuper/paula/tree/{BuildInfo.Build}";
+
+        var makeRuntimeString = 
+            !string.IsNullOrWhiteSpace(BuildInfo.Runtime);
+
+        var makeCommitString = 
+            makeRuntimeString &&
+            !string.IsNullOrWhiteSpace(BuildInfo.Branch) &&
+            !string.IsNullOrWhiteSpace(BuildInfo.Hash) &&
+            !string.IsNullOrWhiteSpace(BuildInfo.ShortHash);
+
+        var makeBuildString = 
+            makeCommitString &&
+            !string.IsNullOrWhiteSpace(BuildInfo.Build);
+
+        if (makeBuildString)
+        {
+            _buildString = Translator.Markdown(
+                $@"Powered by {runtime}, deployed from [{branch}]({branchUrl}) commit [{hash}]({hashUrl}) via build [{build}]({buildUrl}).");
+
+            return;
+        }
+
+        if (makeCommitString)
+        {
+            _buildString = Translator.Markdown(
+                $@"Powered by {runtime}, deployed from [{branch}]({branchUrl}) commit [{hash}]({hashUrl}).");
+
+            return;
+        }
+
+        if (makeCommitString)
+        {
+            _buildString = Translator.Markdown($"Powered by {runtime}.");
+            return;
+        }
+    }
+}

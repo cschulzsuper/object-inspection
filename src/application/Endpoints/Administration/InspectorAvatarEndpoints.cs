@@ -29,21 +29,21 @@ public static class InspectorAvatarEndpoints
 
     private static Delegate Get =>
         [Authorize("AuditingLimited")]
-    async (IInspectorAvatarRequestHandler requestHandler, string inspector)
+        async (IInspectorAvatarRequestHandler requestHandler, string inspector)
                     => Results.File(await requestHandler.ReadAsync(inspector));
 
     private static Delegate GetMe =>
         [Authorize("AuditingLimited")]
-    async (IInspectorAvatarRequestHandler requestHandler, ClaimsPrincipal user)
+        async (IInspectorAvatarRequestHandler requestHandler, ClaimsPrincipal user)
                     => Results.File(await requestHandler.ReadAsync(user.GetInspector()));
 
     private static Delegate PutMe =>
         [Authorize("AuditingFull")]
-    (IInspectorAvatarRequestHandler requestHandler, ClaimsPrincipal user, Stream body)
+        (IInspectorAvatarRequestHandler requestHandler, ClaimsPrincipal user, Stream body)
                     => requestHandler.WriteAsync(body, user.GetInspector());
 
     private static Delegate DeleteMe =>
         [Authorize("AuditingFull")]
-    (IInspectorAvatarRequestHandler requestHandler, ClaimsPrincipal user)
+        (IInspectorAvatarRequestHandler requestHandler, ClaimsPrincipal user)
                     => requestHandler.DeleteAsync(user.GetInspector());
 }

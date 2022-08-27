@@ -34,7 +34,7 @@ public class InspectorManager : IInspectorManager
 
     public IQueryable<Inspector> GetQueryableWhereBusinessObject(string businessObject)
         => _inspectorRepository.GetPartitionQueryable(
-            $"SELECT * FROM c WHERE ARRAY_CONTAINS(c.BusinessObjects, {{\"UniqueName\": {businessObject}}}, true)");
+            $"SELECT * FROM c WHERE ARRAY_CONTAINS(c.businessObjects, {{\"uniqueName\": {businessObject}}}, true)");
 
     public IAsyncEnumerable<Inspector> GetAsyncEnumerable()
         => _inspectorRepository.GetPartitionAsyncEnumerable();

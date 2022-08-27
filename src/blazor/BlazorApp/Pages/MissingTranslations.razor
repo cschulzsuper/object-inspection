@@ -3,44 +3,51 @@
 @inject ITranslationRequestHandler TranslationHandler
 @inject ITranslator<MissingTranslations> Translator
 
-<div class="container-fluid">
-    <h1>@Translator[$"Missing Translations"]</h1>
+@attribute [Authorize]
+
+<PageTitle>@Translator[$"Missing translations"]</PageTitle>
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 id="indexHeadline" class="h2">@Translator[$"Missing translations"]</h1>
 </div>
 
 @if (_missingTranslations != null)
 {
-    <div class="container-fluid">
+    <div class="table-responsive">
         <pre>
-            @foreach (var missingTranslation in _missingTranslations)
-    {
-        @($"[({CategoryString(missingTranslation)},{HashString(missingTranslation)})] = {ValueString(missingTranslation)},\n");
-    }
+            <code>
+                @foreach (var missingTranslation in _missingTranslations)
+                {
+                    @($"[({CategoryString(missingTranslation)},{HashString(missingTranslation)})] = {ValueString(missingTranslation)},\n");
+                }
+            </code>
         </pre>
     </div>
 }
 
 @code {
-private IEnumerable<TranslationResponse>? _missingTranslations;
 
-protected override void OnInitialized()
-{
-var searchResponse = TranslationHandler.Search("placeholder:true");
+    private IEnumerable<TranslationResponse>? _missingTranslations;
 
-_missingTranslations = searchResponse.TotalCount != searchResponse.TopResults.Count
-    ? searchResponse.TopResults
-    : TranslationHandler.GetAll("placeholder:true", 0, searchResponse.TotalCount);
+    protected override void OnInitialized()
+    {
+        var searchResponse = TranslationHandler.Search("placeholder:true");
 
-}
+        _missingTranslations = searchResponse.TotalCount != searchResponse.TopResults.Count
+            ? searchResponse.TopResults
+            : TranslationHandler.GetAll("placeholder:true", 0, searchResponse.TotalCount);
 
-private string CategoryString(TranslationResponse translation)
-=> translation.Category == null
-    ? "null"
-    : $"\"{translation.Category}\"";
+    }
 
-private string HashString(TranslationResponse translation)
-=> $"\"{translation.Hash}\"";
+    private string CategoryString(TranslationResponse translation)
+        => translation.Category == null
+            ? "null"
+            : $"\"{translation.Category}\"";
 
-private string ValueString(TranslationResponse translation)
-=> $"\"{translation.Value}\"";
+    private string HashString(TranslationResponse translation)
+        => $"\"{translation.Hash}\"";
+
+    private string ValueString(TranslationResponse translation)
+        => $"\"{translation.Value}\"";
 
 }

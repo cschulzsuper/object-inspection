@@ -1,0 +1,92 @@
+﻿@page "/extensions/{aggregateType}/fields"
+
+@inject ITranslator<View> Translator
+@inject NavigationManager NavigationManager
+@inject IExtensionRequestHandler ExtensionRequestHandler
+
+@attribute [Authorize("ManagementRead")]
+
+<PageTitle>@Translator[$"Extension fields"]</PageTitle>
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">@Translator[$"Extension fields"]</h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <div class="btn-group me-2">
+            <button type="button" class="btn btn-sm btn-outline-secondary" title="@Translator[$"Create"]" @onclick="@Create"><span class="oi oi-plus" /></button>
+        </div>
+    </div>
+</div>
+
+<DemoNote>
+    @Translator.Markdown($"An extension field represents one additonal field in an extended type. A field color could be added to the bussiness object type.")
+</DemoNote>
+
+<div class="table-responsive">
+
+    @if (_extension == null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else
+    {
+        <table class="table table-striped table-sm">
+            <thead>
+            <tr>
+                <th scope="col" class="col-4 col-sm-3">@Translator[$"Unique name"]</th>
+                <th scope="col" class="col-4 col-sm-3">@Translator[$"Display name"]</th>
+                <th scope="col" class="col-4 col-sm-3">@Translator[$"Data type"]</th>
+                <th scope="col" class="col-sm-3 d-none d-sm-table-cell">@Translator[$"Data name"]</th>
+                <th scope="col"></th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var extensionField in _extension.Fields)
+            {
+                <tr>
+                    <td>@extensionField.UniqueName</td>
+                    <td>@extensionField.DisplayName</td>
+                    <td>@extensionField.DataType</td>
+                    <td class="d-none d-sm-table-cell">@extensionField.DataName</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-danger btn-block" title="@Translator[$"Delete"]"
+                                @onclick="() => DeleteAsync(extensionField)"><span class="oi oi-trash"/></button>
+                    </td>
+
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+
+</div>
+
+@code {
+
+    [Parameter]
+    public string AggregateType { get; set; } = string.Empty;
+
+    private ExtensionResponse? _extension;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _extension = await ExtensionRequestHandler.GetAsync(AggregateType);
+
+            StateHasChanged();
+        }
+    }
+
+    public void Create()
+        => NavigationManager.NavigateTo("/extensions/{type}/fields/create");
+
+    public async Task DeleteAsync(ExtensionFieldResponse field)
+    {
+        var response = await ExtensionRequestHandler.DeleteFieldAsync(_extension!.AggregateType, field.UniqueName, _extension!.ETag);
+
+        _extension.ETag = response.ETag;
+
+        _extension!.Fields.Remove(field);
+    }
+
+}

@@ -10,20 +10,20 @@ public class AuthorizationRequestHandler : IAuthorizationRequestHandler
 {
     private readonly IInspectorManager _inspectorManager;
     private readonly IIdentityInspectorManager _identityInspectorManager;
-    private readonly IAuthorizationTokenHandler _tokenAuthorizatioFilter;
+    private readonly IAuthorizationTokenHandler _authorizationTokenHandler;
     private readonly IConnectionManager _connectionManager;
     private readonly ClaimsPrincipal _user;
 
     public AuthorizationRequestHandler(
         IInspectorManager inspectorManager,
         IIdentityInspectorManager identityInspectorManager,
-        IAuthorizationTokenHandler tokenAuthorizatioFilter,
+        IAuthorizationTokenHandler authorizationTokenHandler,
         IConnectionManager connectionManager,
         ClaimsPrincipal user)
     {
         _inspectorManager = inspectorManager;
         _identityInspectorManager = identityInspectorManager;
-        _tokenAuthorizatioFilter = tokenAuthorizatioFilter;
+        _authorizationTokenHandler = authorizationTokenHandler;
         _connectionManager = connectionManager;
         _user = user;
     }
@@ -46,7 +46,7 @@ public class AuthorizationRequestHandler : IAuthorizationRequestHandler
             $"{token.Organization}:{token.Inspector}",
             token.Proof!);
 
-        _tokenAuthorizatioFilter.RewriteAuthorizations(token);
+        _authorizationTokenHandler.RewriteAuthorizations(token);
 
         return ValueTask.FromResult(token.ToBase64String());
     }
@@ -68,17 +68,16 @@ public class AuthorizationRequestHandler : IAuthorizationRequestHandler
         token.ImpersonatorInspector = _user.GetInspector();
         token.ImpersonatorOrganization = _user.GetOrganization();
 
-        _tokenAuthorizatioFilter.RewriteAuthorizations(token);
+        _authorizationTokenHandler.RewriteAuthorizations(token);
 
         return ValueTask.FromResult(token.ToBase64String());
     }
 
     public ValueTask<string> StopImpersonationAsync()
     {
-        var inspector = _inspectorManager.GetQueryable()
+        var inspector = _identityInspectorManager.GetQueryable()
            .Single(x =>
                x.Activated &&
-               x.OrganizationActivated &&
                x.UniqueName == _user.GetImpersonatorInspector() &&
                x.Organization == _user.GetImpersonatorOrganization());
 
@@ -89,7 +88,7 @@ public class AuthorizationRequestHandler : IAuthorizationRequestHandler
         token.ImpersonatorInspector = null;
         token.ImpersonatorOrganization = null;
 
-        _tokenAuthorizatioFilter.RewriteAuthorizations(token);
+        _authorizationTokenHandler.RewriteAuthorizations(token);
 
         return ValueTask.FromResult(token.ToBase64String());
     }

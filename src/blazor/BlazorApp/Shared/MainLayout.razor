@@ -1,5 +1,7 @@
 ﻿@inherits LayoutComponentBase
 
+@implements IDisposable
+
 @inject Application.Administration.IAuthorizationRequestHandler AuthorizationHandler
 @inject Application.Auth.IAuthenticationRequestHandler AuthenticationHandler
 
@@ -7,49 +9,51 @@
 @inject AppEnvironment AppEnvironment
 @inject ITranslator<MainLayout> Translator
 @inject ILocalStorage LocalStorage
-@inject BuildInfo BuildInfo
 
-<div class="page">
-    <div class="sidebar text-nowrap">
-        <NavMenu />
+<header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+    <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#">@Translator[$"Objektprüfung"]</a>
+    <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" @onclick="ToggleNavMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="navbar-nav align-items-center">
+
+        <AuthorizeView Policy="Impersonation">
+            <Authorized>
+                <a type="button" class="nav-link pe-3" title="@Translator[$"Stop impersonation"]"
+                    @onclick="() => StopImpersonationAsync()">
+                <span class="oi oi-power-standby" aria-hidden="true"/></a>
+            </Authorized>
+        </AuthorizeView>
+
+        <AuthorizeView>
+            <Authorized>
+                @if (AppEnvironment.IsDevelopment)
+                {
+                    <select class="form-select form-select-sm my-2 text-start" @onchange="e => AuthorizationFilterChanged(e.Value)" value="@_authorizationFilter">
+                        <option value="">---</option>
+                        <option value="Impersonator|Maintainer|Inspector|Chief|Observer">Maintainer</option>
+                        <option value="Impersonator|Inspector|Chief|Observer">Chief</option>
+                        <option value="Impersonator|Inspector|Observer">Inspector</option>
+                    </select>
+                }
+                <NavLink class="nav-link px-3" Match="NavLinkMatch.All" href="change-inspector" title="@Translator[$"Change Inspector"]">
+                    <InspectorAvatar Size="32" Inspector="me"/>
+                </NavLink>
+
+                <SignOutButton class="nav-link pe-3" id="signOut" />
+
+            </Authorized>
+        </AuthorizeView>
+
     </div>
-    <main>
-        <div class="top-row px-4">
-            <AuthorizeView Policy="Impersonation">
-                <Authorized>
-                    <button type="button" class="nav-link btn btn-secondary ml-3" title="@Translator[$"Stop impersonation"]"
-                        @onclick="() => StopImpersonationAsync()">
-                        <span class="oi oi-power-standby" aria-hidden="true"/></button>
-                </Authorized>
-            </AuthorizeView>
+</header>
 
-            <AuthorizeView>
-                <Authorized>
-                    @if(AppEnvironment.IsDevelopment)
-            {
-                <select class="btn btn-secondary ml-3 mr-3 text-left" @onchange="e => AuthorizationFilterChanged(e.Value)" value="@_authorizationFilter">
-                            <option value="">---</option>
-                            <option value="Impersonator|Maintainer|Inspector|Chief|Observer">Maintainer</option>
-                            <option value="Impersonator|Inspector|Chief|Observer">Chief</option>
-                            <option value="Impersonator|Inspector|Observer">Inspector</option>
-                        </select>
-            }
+<div class="container-fluid">
+    <div class="row">
 
-                    <NavLink class="nav-link" Match="NavLinkMatch.All" href="change-avatar" title="@Translator[$"Change Avatar"]">
-                        <InspectorAvatar Size="32" Inspector="me" />
-                    </NavLink>
+        <NavMenu Collapsed="@_navMenuCollapsed" />
 
-                    <NavLink class="nav-link" Match="NavLinkMatch.All" href="change-secret" title="@Translator[$"Change Password"]">
-                        <span class="oi oi-key" aria-hidden="true"/>
-                    </NavLink>
-
-                    <SignOutButton class="nav-link btn" id="signOut"/>
-
-                </Authorized>
-            </AuthorizeView>
-        </div>
-
-        <article class="content px-4 text-nowrap">
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
             <ErrorBoundary @ref="errorBoundaryArticle">
                 <ChildContent>
                     @Body             
@@ -58,162 +62,125 @@
                     <div class="alert alert-danger">
                         <p>@Translate(context)</p>
                         @if(context is ProblemDetailsException problems && problems.Errors != null)
-                {
-                    <ul>
-                            @foreach(var problem in problems.Errors.SelectMany(x => x.Value))
-                    {
-                        <li>@problem</li>
-                    }
+                        {
+                            <ul>
+                                @foreach(var problem in problems.Errors.SelectMany(x => x.Value))
+                                {
+                                    <li>@problem</li>
+                                }
                             </ul>
-                }
+                        }
                         <p>
                             @if(context is HttpRequestException requestException && 
-                        (requestException.StatusCode == HttpStatusCode.Unauthorized || 
-                         requestException.StatusCode == HttpStatusCode.Forbidden))
-                    {
-                         <a class="alert-link" href="javascript:void(0);" @onclick=RecoverAndGoHome>@Translator[$"Go to Homepage"]</a>                                
-                         <span> - </span>
-                         <a class="alert-link" href="javascript:void(0);" @onclick=RecoverAndSignOutAsync>@Translator[$"Sign Out"]</a>                                
-                         <span> - </span>
-                    }
+                                (requestException.StatusCode == HttpStatusCode.Unauthorized || 
+                                 requestException.StatusCode == HttpStatusCode.Forbidden))
+                            {
+                                <a class="alert-link" href="javascript:void(0);" @onclick=RecoverAndGoHome>@Translator[$"Go to Homepage"]</a>                                
+                                <span> - </span>
+                                <a class="alert-link" href="javascript:void(0);" @onclick=RecoverAndSignOutAsync>@Translator[$"Sign Out"]</a>                                
+                                <span> - </span>
+                            }
                             <a class="alert-link" href="javascript:void(0);" @onclick=Recover>@Translator[$"Try Again"]</a>
                         </p>
                     </div>
                 </ErrorContent>
             </ErrorBoundary>
-        </article>
-    </main>
-    <footer class="footer fixed-bottom">
-        <div class="copyright">&copy; Copyright @DateTime.Now.Year 
-             <a href="https://github.com/cschulzsuper">Christian Schulz</a>. 
-             @if (_buildString != null) 
-     {
-        <span class="d-none d-md-inline-block">@_buildString.Value</span>
-     }
-        </div>
-    </footer>
+        </main>
+    </div>
 </div>
+
+<Footer/>
 
 @code {
 
-private string _authorizationFilter = string.Empty;
+    private string _authorizationFilter = string.Empty;
 
-private MarkupString? _buildString = null;
+    private bool _navMenuCollapsed = true;
 
-private ErrorBoundary? errorBoundaryArticle = null!;
+    private ErrorBoundary? errorBoundaryArticle = null!;
 
-protected override async Task OnInitializedAsync()
-{
-GenerateBuildString();
-await base.OnInitializedAsync();
-}
-
-private void Recover()
-{
-errorBoundaryArticle?.Recover();
-}
-
-private void RecoverAndGoHome()
-{
-errorBoundaryArticle?.Recover();
-NavigationManager.NavigateTo("/", true);
-}
-
-private async Task RecoverAndSignOutAsync()
-{
-await AuthenticationHandler.SignOutAsync();
-errorBoundaryArticle?.Recover();
-NavigationManager.NavigateTo("/", true);
-}
-
-private string Translate(Exception exception)
-{
-if(exception is ProblemDetailsException problems && 
-    problems.TitleFormat != null &&
-    problems.TitleArguments != null)
-{
-    return Translator[problems.TitleFormat, problems.TitleArguments];
-}
-
-return Translator[exception.Message];
-}
-
-public async Task StopImpersonationAsync()
-{
-try
-{
-    await AuthorizationHandler.StopImpersonationAsync();
-}
-catch(HttpRequestException e) when (e.StatusCode == HttpStatusCode.Unauthorized)
-{
-    if ((await LocalStorage.ContainKeyAsync("token")) ||
-        (await LocalStorage.ContainKeyAsync("authorization-filter")))
+    protected override void OnInitialized()
     {
-        await LocalStorage.RemoveItemAsync("token");
-        await LocalStorage.RemoveItemAsync("authorization-filter");
+        NavigationManager.LocationChanged += NavigationManagerOnLocationChanged;
     }
-} 
-finally
-{
-    NavigationManager.NavigateTo("/");
-}
-}
 
-public async Task AuthorizationFilterChanged(object? value)
-{
-_authorizationFilter = ((string)value!);
+    public void Dispose()
+    {
+        NavigationManager.LocationChanged -= NavigationManagerOnLocationChanged;
+        GC.SuppressFinalize(true);
+    }
 
-var authorizationFilter = _authorizationFilter
-    .Split('|')
-    .Where(x => !string.IsNullOrWhiteSpace(x))
-    .ToArray();
+    private void NavigationManagerOnLocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+        _navMenuCollapsed = true;
+        StateHasChanged();
+    }
 
-await LocalStorage.SetItemAsync("authorization-filter", authorizationFilter);
-}
+    private void ToggleNavMenu()
+    {
+        _navMenuCollapsed = !_navMenuCollapsed;
+    }
 
-private void GenerateBuildString()
-{
-if (_buildString != null )
-{
-    return;
-}
+    private void Recover()
+    {
+        errorBoundaryArticle?.Recover();
+    }
 
-var makeRuntimeString =
-   !string.IsNullOrWhiteSpace(BuildInfo.Runtime);
+    private void RecoverAndGoHome()
+    {
+        errorBoundaryArticle?.Recover();
+        NavigationManager.NavigateTo("/", true);
+    }
 
-var makeCommitString = makeRuntimeString &&
-    !string.IsNullOrWhiteSpace(BuildInfo.Branch) &&
-    !string.IsNullOrWhiteSpace(BuildInfo.Hash) &&
-    !string.IsNullOrWhiteSpace(BuildInfo.ShortHash);
+    private async Task RecoverAndSignOutAsync()
+    {
+        await AuthenticationHandler.SignOutAsync();
+        errorBoundaryArticle?.Recover();
+        NavigationManager.NavigateTo("/", true);
+    }
 
-var makeBuildString = makeCommitString &&
-    !string.IsNullOrWhiteSpace(BuildInfo.Build);
+    private string Translate(Exception exception)
+    {
+        if (exception is ProblemDetailsException problems &&
+            problems.TitleFormat != null &&
+            problems.TitleArguments != null)
+        {
+            return Translator[problems.TitleFormat, problems.TitleArguments];
+        }
 
-if(makeBuildString)
-{
-    _buildString = Translator.Markdown(
-        $@"Powered by {BuildInfo.Runtime}, 
-deployed from [{BuildInfo.Branch}](https://github.com/cschulzsuper/paula/tree/{BuildInfo.Branch}) 
-commit [{BuildInfo.ShortHash}](https://github.com/cschulzsuper/paula/commit/{BuildInfo.Hash}) 
-via build [{BuildInfo.Build}](https://github.com/cschulzsuper/paula/actions/runs/{BuildInfo.Build}).");
+        return Translator[exception.Message];
+    }
 
-    return;
-}
+    public async Task StopImpersonationAsync()
+    {
+        try
+        {
+            await AuthorizationHandler.StopImpersonationAsync();
+        }
+        catch (HttpRequestException e) when (e.StatusCode == HttpStatusCode.Unauthorized)
+        {
+            if ((await LocalStorage.ContainKeyAsync("token")) ||
+                (await LocalStorage.ContainKeyAsync("authorization-filter")))
+            {
+                await LocalStorage.RemoveItemAsync("token");
+                await LocalStorage.RemoveItemAsync("authorization-filter");
+            }
+        }
+        finally
+        {
+            NavigationManager.NavigateTo("/");
+        }
+    }
 
-if(makeCommitString)
-{
-    _buildString = Translator.Markdown(
-        $@"Powered by {BuildInfo.Runtime} and 
-deployed from [{BuildInfo.Branch}](https://github.com/cschulzsuper/paula/tree/{BuildInfo.Branch}) 
-commit [{BuildInfo.ShortHash}](https://github.com/cschulzsuper/paula/commit/{BuildInfo.Hash}).");
+    public async Task AuthorizationFilterChanged(object? value)
+    {
+        _authorizationFilter = ((string)value!);
 
-    return;
-}
+        var authorizationFilter = _authorizationFilter
+            .Split('|')
+            .Where(x => !string.IsNullOrWhiteSpace(x))
+            .ToArray();
 
-if(makeCommitString)
-{
-    _buildString = Translator.Markdown($"Powered by {BuildInfo.Runtime}.");
-    return;
-}
-}
+        await LocalStorage.SetItemAsync("authorization-filter", authorizationFilter);
+    }
 }

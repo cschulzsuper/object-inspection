@@ -1,68 +1,59 @@
-.navbar-toggler {
-    background-color: rgba(255, 255, 255, 0.1);
+.sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 100; /* Behind the navbar */
+    padding: 48px 0 0; /* Height of navbar */
+    box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
 }
 
-.top-row {
-    height: 3.5rem;
-    background-color: rgba(0,0,0,0.4);
+.sidebar-sticky {
+    position: relative;
+    top: 0;
+    height: calc(100vh - 48px);
+    padding-top: .5rem;
+    overflow-x: hidden;
+    overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
 }
 
-.navbar-brand {
-    font-size: 1.1rem;
+
+.sidebar ::deep .nav-link {
+    font-weight: 500;
+    color: #333;
+    padding-left: 1.75em;
 }
 
-::deep .oi {
-    width: 2rem;
-    font-size: 1.1rem;
-    vertical-align: text-top;
-    top: -2px;
-}
-
-.nav-item {
-    font-size: 0.9rem;
-    padding-bottom: 0.5rem;
-}
-
-    .nav-item div {
-        background-color: rgba(0,0,0,0.1);
-        border-radius: 4px;
-        font-weight: bold;
+    .sidebar ::deep .nav-link .oi {
+        margin-right: 4px;
+        color: #727272;
     }
 
-    .nav-item:first-of-type {
-        padding-top: 1rem;
+    .sidebar ::deep .nav-link .avatar {
+        margin-right: 4px;
     }
 
-    .nav-item:last-of-type {
-        padding-bottom: 1rem;
-    }
 
-    .nav-item ::deep a {
-        color: #582A12;
-        border-radius: 4px;
-        height: 3rem;
-        display: flex;
-        align-items: center;
-        line-height: 3rem;
-    }
+.sidebar ::deep .nav-link.active {
+    color: #6074A1;
+}
 
-        .nav-item ::deep a.active {
-            background-color: rgba(255,255,255,0.25);
-            color: #6C6E68;
-        }
+.sidebar ::deep .nav-link:hover .oi,
+.sidebar ::deep .nav-link.active .oi {
+    color: inherit;
+}
 
-        .nav-item ::deep a:hover {
-            background-color: rgba(255,255,255,0.1);
-            color: #6C6E68;
-        }
+.sidebar-heading {
+    font-size: .75rem;
+    text-transform: uppercase;
+}
 
 @media (min-width: 768px) {
-    .navbar-toggler {
-        display: none;
-    }
-
     .collapse {
-        /* Never collapse the sidebar for wide screens */
         display: block;
     }
+}
+
+.sidebar {
+    overflow-y: auto;
 }

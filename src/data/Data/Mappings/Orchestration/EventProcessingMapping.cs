@@ -15,7 +15,7 @@ public class EventProcessingMapping : IEntityTypeConfiguration<EventProcessing>
             .HasValueGenerator<EventProcessingPartitionKeyValueGenerator>();
 
         builder
-             .HasKey(PartitionKey, nameof(EventProcessing.Subscriber), nameof(EventProcessing.Id));
+             .HasKey(PartitionKey, nameof(EventProcessing.EventId), nameof(EventProcessing.Subscriber), nameof(EventProcessing.Name));
 
         builder
             .ToContainer("_orchestration")
@@ -30,7 +30,7 @@ public class EventProcessingMapping : IEntityTypeConfiguration<EventProcessing>
             .IsETagConcurrency();
 
         builder
-            .Property(x => x.Id)
+            .Property(x => x.EventId)
             .HasMaxLength(140)
             .IsRequired();
 

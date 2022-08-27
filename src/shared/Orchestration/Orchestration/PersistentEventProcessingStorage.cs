@@ -40,7 +40,7 @@ public class PersistentEventProcessingStorage : IEventProcessingStorage
             Subscriber = subscriberName,
             CreationTime = @event.CreationTime,
             CreationDate = @event.CreationDate,
-            Id = @event.Id.ToString(),
+            EventId = @event.Id.ToString(),
             Data = Base64Encoder.ObjectToBase64(@event),
             User = Base64Encoder.ObjectToBase64(user.ToToken()),
             OperationId = Activity.Current?.RootId ?? Guid.NewGuid().ToString(),
@@ -96,7 +96,7 @@ public class PersistentEventProcessingStorage : IEventProcessingStorage
         var @event = _eventProcessingManager.GetQueryable()
             .SingleOrDefault(x =>
                 x.Subscriber == subscriberName &&
-                x.Id == eventId.ToString());
+                x.EventId == eventId.ToString());
 
         if (@event is not null and not { State: "in-progress" })
         {
@@ -126,7 +126,7 @@ public class PersistentEventProcessingStorage : IEventProcessingStorage
         var @event = _eventProcessingManager.GetQueryable()
             .SingleOrDefault(x =>
                 x.Subscriber == subscriberName &&
-                x.Id == eventId.ToString());
+                x.EventId == eventId.ToString());
 
         if (@event is { State: "in-progress" })
         {
@@ -145,7 +145,7 @@ public class PersistentEventProcessingStorage : IEventProcessingStorage
         var @event = _eventProcessingManager.GetQueryable()
             .SingleOrDefault(x =>
                 x.Subscriber == subscriberName &&
-                x.Id == eventId.ToString());
+                x.EventId == eventId.ToString());
 
         if (@event is { State: "in-progress" })
         {

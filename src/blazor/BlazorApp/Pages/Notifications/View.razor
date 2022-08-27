@@ -7,17 +7,19 @@
 
 @implements IAsyncDisposable
 
+@attribute [Authorize("AuditingLimited")]
+
+<PageTitle>@Translator[$"Notification"]</PageTitle>
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">@Translator[$"Notification"]</h1>
+</div>
+
 <DemoNote>
     @Translator.Markdown($"Notifications give information about changes related to the daily work.")
 </DemoNote>
 
-@attribute [Authorize("AuditingLimited")]
-
-<div class="container-fluid">
-    <h1>@Translator[$"Notification"]</h1>
-</div>
-
-<div class="container-fluid">
+<div class="table-responsive">
 @if (_notifications == null)
 {
     <p><em>Loading...</em></p>
@@ -25,19 +27,21 @@
 else
 {
     @foreach (var notification in _notifications)
-{
-    <div class="card mb-3">
+    {
+        <div class="card mb-3">
+            <div class="card-header text-end">
+                <AuthorizedButton Policy="AuditingFull"
+                                  id="@($"delete-{notification.Date}-{notification.Time}")"
+                                  class="btn btn-sm btn-close"
+                                  title="@Translator[$"Delete"]"
+                                  @onclick="() => RemoveAsync(notification)"/>
+            </div>
             <div class="card-body">
                 <h6 class="card-subtitle text-muted mb-1">@(new DateTimeNumbers(notification.Date, notification.Time).ToLocalDateTimeString())</h6>
                 <p class="card-text tex-wrap">@notification.Text</p>
-                <AuthorizedButton Policy="AuditingFull" 
-                    id="@($"delete-{notification.Date}-{notification.Time}")"
-                    class="btn btn-primary delete" 
-                    title="@Translator[$"Delete"]"
-                    @onclick="() => RemoveAsync(notification)"><span class="oi oi-trash"/></AuthorizedButton>
             </div>
         </div>
-}
+    }
 }
 </div>
 
@@ -101,5 +105,4 @@ else
             notification.Time,
             notification.ETag);
     }
-
 }

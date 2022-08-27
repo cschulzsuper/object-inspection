@@ -1,10 +1,12 @@
-﻿namespace Super.Paula.Application.Orchestration;
+﻿using System;
+
+namespace Super.Paula.Application.Orchestration;
 
 public class Event
 {
     public string ETag { get; set; } = string.Empty;
 
-    public string Id { get; set; } = string.Empty;
+    public string EventId { get; set; } = string.Empty;
 
     public string Name { get; set; } = string.Empty;
 

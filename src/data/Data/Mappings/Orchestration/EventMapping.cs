@@ -15,7 +15,7 @@ public class EventMapping : IEntityTypeConfiguration<Event>
             .HasValueGenerator<EventPartitionKeyValueGenerator>();
 
         builder
-             .HasKey(PartitionKey, nameof(Event.Id));
+             .HasKey(PartitionKey, nameof(Event.EventId));
 
         builder
             .ToContainer("_orchestration")
@@ -30,7 +30,7 @@ public class EventMapping : IEntityTypeConfiguration<Event>
             .IsETagConcurrency();
 
         builder
-            .Property(x => x.Id)
+            .Property(x => x.EventId)
             .HasMaxLength(140)
             .IsRequired();
 

@@ -39,7 +39,7 @@ public class PersistentEventStorage : IEventStorage
             Name = eventName,
             CreationTime = @event.CreationTime,
             CreationDate = @event.CreationDate,
-            Id = @event.Id.ToString(),
+            EventId = @event.Id.ToString(),
             Data = Base64Encoder.ObjectToBase64(@event),
             User = Base64Encoder.ObjectToBase64(user.ToToken()),
             OperationId = Activity.Current?.RootId ?? Guid.NewGuid().ToString(),
@@ -93,7 +93,7 @@ public class PersistentEventStorage : IEventStorage
     public async ValueTask<bool> SetEventAsInProgressAsync(Guid eventId)
     {
         var @event = _eventManager.GetQueryable()
-            .SingleOrDefault(x => x.Id == eventId.ToString());
+            .SingleOrDefault(x => x.EventId == eventId.ToString());
 
         if (@event is not null and not { State: "in-progress" })
         {
@@ -121,7 +121,7 @@ public class PersistentEventStorage : IEventStorage
     public async ValueTask SetEventCompletionAsync(Guid eventId)
     {
         var @event = _eventManager.GetQueryable()
-            .SingleOrDefault(x => x.Id == eventId.ToString());
+            .SingleOrDefault(x => x.EventId == eventId.ToString());
 
         if (@event is { State: "in-progress" })
         {
@@ -138,7 +138,7 @@ public class PersistentEventStorage : IEventStorage
     public async ValueTask SetEventFailureAsync(Guid eventId, Exception? exception)
     {
         var @event = _eventManager.GetQueryable()
-            .SingleOrDefault(x => x.Id == eventId.ToString());
+            .SingleOrDefault(x => x.EventId == eventId.ToString());
 
         if (@event is not null and not { State: "in-progress" })
         {

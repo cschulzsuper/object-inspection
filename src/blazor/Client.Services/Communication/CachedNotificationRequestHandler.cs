@@ -19,15 +19,15 @@ public class CachedNotificationRequestHandler : INotificationRequestHandler, IDi
     private readonly SemaphoreSlim _notificationResponseCacheSemaphore;
     private bool _notificationResponseCached;
 
-    private readonly AuthenticationStateProvider _AuthenticationStateProvider;
+    private readonly AuthenticationStateProvider _authenticationStateProvider;
 
     public CachedNotificationRequestHandler(
         INotificationRequestHandler notificationRequestHandler,
         INotificationCallbackHandler notificationCallbackHandler,
-        AuthenticationStateProvider AuthenticationStateProvider)
+        AuthenticationStateProvider authenticationStateProvider)
     {
-        _AuthenticationStateProvider = AuthenticationStateProvider;
-        _AuthenticationStateProvider.AuthenticationStateChanged += AuthenticationStateChanged;
+        _authenticationStateProvider = authenticationStateProvider;
+        _authenticationStateProvider.AuthenticationStateChanged += AuthenticationStateChanged;
 
         _notificationRequestHandler = notificationRequestHandler;
         _notificationCallbackHandler = notificationCallbackHandler;
@@ -41,7 +41,7 @@ public class CachedNotificationRequestHandler : INotificationRequestHandler, IDi
 
     public void Dispose()
     {
-        _AuthenticationStateProvider.AuthenticationStateChanged -= AuthenticationStateChanged;
+        _authenticationStateProvider.AuthenticationStateChanged -= AuthenticationStateChanged;
 
         GC.SuppressFinalize(this);
     }

@@ -6,10 +6,12 @@ using Super.Paula.Shared.ErrorHandling;
 using Super.Paula.Shared.JsonConversion;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Super.Paula.Application.Operation.Exceptions;
 
 namespace Super.Paula.Client.Operation;
 
@@ -88,11 +90,19 @@ public class ExtensionRequestHandler : IExtensionRequestHandler
 
     public async ValueTask<ExtensionResponse> GetAsync(string aggregateType)
     {
-        var responseMessage = await _httpClient.GetAsync($"extensions/{aggregateType}");
+        try
+        {
+            var responseMessage = await _httpClient.GetAsync($"extensions/{aggregateType}");
 
-        responseMessage.RuleOutProblems();
-        responseMessage.EnsureSuccessStatusCode();
+            responseMessage.RuleOutProblems();
+            responseMessage.EnsureSuccessStatusCode();
 
-        return (await responseMessage.Content.ReadFromJsonAsync<ExtensionResponse>())!;
+            return (await responseMessage.Content.ReadFromJsonAsync<ExtensionResponse>())!;
+        }
+        catch (HttpRequestException exception) when (exception.StatusCode == HttpStatusCode.NotFound)
+        {
+            throw new ExtensionNotFoundException($"Could not query extension {aggregateType}", exception);
+        }
+
     }
 }

@@ -1,0 +1,30 @@
+﻿@inject NavigationManager NavigationManager
+
+@inject ITranslator<UnauthorizedRedirect> Translator
+
+<PageTitle>@Translator["Unauthorized"]</PageTitle>
+
+<p role="alert">@Translator[$"Sorry, there's nothing at this address."]</p>
+
+@code {
+
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthenticationState { get; set; } = null!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var user = (await AuthenticationState).User;
+
+        if (user.Identity?.IsAuthenticated != true)
+        {
+            NavigationManager.NavigateTo("/sign-in");
+            return;
+        }
+
+        if (!user.HasInspector())
+        {
+            NavigationManager.NavigateTo("/inspectors/sign-in");
+            return;
+        }
+    }
+}
