@@ -34,41 +34,44 @@
         @if (_initialSearch != null && _initialSearch.TopResults.Count > 0)
         {
             <thead>
-                <tr>
-                    <th scope="col" class="col-2 d-none d-lg-table-cell">@Translator[$"Unique name"]</th>
-                    <th scope="col" class="col-8">@Translator[$"Display name"]</th>
-                    <th scope="col" class="col-2 d-none d-sm-table-cell">@Translator[$"Inspector"]</th>
-                    <th scope="col"></th>
-                    <th scope="col"></th>
-                    <th scope="col"></th>
-                    <th scope="col"></th>
-                </tr>
+            <tr>
+                <th scope="col" class="col-3 d-none d-lg-table-cell">@Translator[$"Unique name"]</th>
+                <th scope="col" class="col-9">@Translator[$"Display name"]</th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+            </tr>
             </thead>
         }
         <tbody>
-            <Virtualize @ref="Container" Context="businessObject" ItemsProvider="@GetItemsProviderResultAsync">
-                <tr>
-                    <td class="d-none d-lg-table-cell">@businessObject.UniqueName</td>
-                    <td>@businessObject.DisplayName</td>
-                    <td class="d-none d-sm-table-cell">@businessObject.Inspector</td>
-                    <td>
-                        <button class="btn btn-sm btn-outline-info btn-block" title="@Translator[$"Edit"]"
+        <Virtualize @ref="Container" Context="businessObject" ItemsProvider="@GetItemsProviderResultAsync">
+            <tr>
+                <td class="d-none d-lg-table-cell">@businessObject.UniqueName</td>
+                <td>@businessObject.DisplayName</td>
+                <td>
+                    <button class="btn btn-sm btn-outline-info btn-block" title="@Translator[$"Edit"]"
                             @onclick="() => Edit(businessObject.UniqueName)"><span class="oi oi-pencil"/></button>
-                    </td>
-                    <td>
-                        <AuthorizedButton Policy="OnlyChief" class="btn btn-sm btn-outline-danger btn-block" title="@Translator[$"Delete"]"
-                            @onclick="() => DeleteAsync(businessObject)"><span class="oi oi-trash"/></AuthorizedButton>
-                    </td>
-                    <td>
-                        <button class="btn btn-sm btn-outline-info btn-block" title="@Translator[$"Inspections"]"
+                </td>
+                <td>
+                    <AuthorizedButton Policy="OnlyChief" class="btn btn-sm btn-outline-danger btn-block" title="@Translator[$"Delete"]"
+                                      @onclick="() => DeleteAsync(businessObject)"><span class="oi oi-trash"/></AuthorizedButton>
+                </td>
+                <td>
+                    <button class="btn btn-sm btn-outline-info btn-block" title="@Translator[$"Inspections"]"
                             @onclick="() => NavigateToInspections(businessObject.UniqueName)"><span class="oi oi-list"/></button>
-                    </td>
-                    <td>
-                        <button class="btn btn-sm btn-outline-info btn-block" title="@Translator[$"Audit history"]"
+                </td>
+                <td>
+                    <button class="btn btn-sm btn-outline-info btn-block" title="@Translator[$"Inspectors"]"
+                            @onclick="() => NavigateToInspectors(businessObject.UniqueName)"><span class="oi oi-people" /></button>
+                </td>
+                <td>
+                    <button class="btn btn-sm btn-outline-info btn-block" title="@Translator[$"Audit history"]"
                             @onclick="() => NavigateToInspectionAuditHistory(businessObject.UniqueName)"><span class="oi oi-clipboard"/></button>
-                    </td>
-                </tr>
-            </Virtualize>
+                </td>
+            </tr>
+        </Virtualize>
         </tbody>
     </table>
 
@@ -191,7 +194,10 @@
 
     public void NavigateToInspections(string businessObject)
         => NavigationManager.NavigateTo($"/business-objects/{businessObject}/inspections");
-    
+
+    public void NavigateToInspectors(string businessObject)
+        => NavigationManager.NavigateTo($"/business-objects/{businessObject}/inspectors");
+
     public void NavigateToInspectionAuditHistory(string businessObject)
         => NavigationManager.NavigateTo($"/business-objects/{businessObject}/audit-history");
 

@@ -21,6 +21,7 @@ public static class _Endpoints
             .MapAuthentication()
             .MapAuthorization()
             .MapBusinessObject()
+            .MapBusinessObjectInspector()
             .MapBusinessObjectInspection()
             .MapBusinessObjectInspectionAuditRecord()
             .MapExtension()

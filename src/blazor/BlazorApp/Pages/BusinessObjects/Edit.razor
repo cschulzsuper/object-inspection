@@ -31,10 +31,6 @@ else
                 <InputText class="form-control" id="businessObjectDisplayName" @bind-Value="_request.DisplayName"/>
                 <label for="businessObjectDisplayName">@Translator[$"Display name"]</label>
             </div>
-            <div class="form-floating mt-3">
-                <InputText class="form-control" id="businessObjectInspector" @bind-Value="_request.Inspector"/>
-                <label for="businessObjectInspector">@Translator[$"Inspector"]</label>
-            </div>
         </div>
 
         @if (_extension != null)
@@ -88,7 +84,6 @@ else
 
         _request = new BusinessObjectRequest
         {
-            Inspector = response.Inspector,
             DisplayName = response.DisplayName,
             UniqueName = response.UniqueName,
             ETag = response.ETag,

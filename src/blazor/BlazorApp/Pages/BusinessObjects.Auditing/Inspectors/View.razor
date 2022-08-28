@@ -1,0 +1,166 @@
+﻿@page "/business-objects/{businessObject}/inspectors"
+@using Super.Paula.Shared.Security
+
+@inject ITranslator<View> Translator
+@inject NavigationManager NavigationManager
+@inject IInspectorRequestHandler InspectorRequestHandler
+@inject IBusinessObjectRequestHandler BusinessObjectRequestHandler
+@inject IBusinessObjectInspectorRequestHandler BusinessObjectInspectorRequestHandler
+
+@attribute [Authorize("OnlyInspectorOrObserver")]
+
+<PageTitle>@Translator[$"Inspectors"]</PageTitle>
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">@Translator[$"Inspectors"]</h1>
+</div>
+
+<DemoNote>
+    @Translator.Markdown($"One or more inspectors can be assigend to a business object.")
+</DemoNote>
+
+<div class="table-responsive">
+
+@if (RelevantInspectors == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table table-striped table-sm">
+        <thead>
+        <tr>
+            <th scope="col" class="col-12">@Translator[$"Unique name"]</th>
+            <th scope="col"></th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var inspector in RelevantInspectors)
+        {
+            <tr>
+                <td class="d-none d-lg-table-cell">@inspector.Inspector</td>
+
+                <AuthorizeView Policy="OnlyChiefOrObserver">
+                    <Authorized>
+                        <td>
+                            @if (_inspectorBusinessObjects!.ContainsKey(inspector.Inspector))
+                            {
+                                <AuthorizedButton Policy="OnlyChief"
+                                                  id="@($"unassign-{inspector.Inspector}")"
+                                                  class="btn btn-sm btn-primary btn-block"
+                                                  title="@Translator[$"Unassign"]"
+                                                  @onclick="() => UnassignAsync(inspector)"><span class="oi oi-minus"/></AuthorizedButton>
+                            }
+                            else
+                            {
+                                <AuthorizedButton Policy="OnlyChief"
+                                                  id="@($"assign-{inspector.Inspector}")"
+                                                  class="btn btn-sm btn-primary btn-block"
+                                                  title="@Translator[$"Assign"]"
+                                                  @onclick="() => AssignAsync(inspector)"><span class="oi oi-plus"/></AuthorizedButton>
+                            }
+                        </td>
+                    </Authorized>
+                </AuthorizeView>
+
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+</div>
+
+@code {
+
+    [Parameter]
+    public string BusinessObject { get; set; } = null!;
+
+    private IDictionary<string, BusinessObjectInspectorResponse>? _inspectorBusinessObjects;
+
+    private IDictionary<string, BusinessObjectInspectorResponse>? _inspectors;
+
+    private BusinessObjectResponse? _businessObject;
+
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthenticationState { get; set; } = null!;
+
+    public IEnumerable<BusinessObjectInspectorResponse>? RelevantInspectors
+        => _inspectorBusinessObjects?
+                .Concat(_inspectors!
+                    .Where(x => !_inspectorBusinessObjects.ContainsKey(x.Key)))
+                .OrderBy(x => x.Key)
+                .Select(x => x.Value);
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await QueryAsync();
+            StateHasChanged();
+        }
+    }
+
+    public async Task QueryAsync()
+    {
+        _inspectors = new Dictionary<string, BusinessObjectInspectorResponse>();
+
+        _businessObject = await BusinessObjectRequestHandler.GetAsync(BusinessObject);
+
+        var isChief = (await AuthenticationState).User.HasAuthorization("Chief");
+
+        if (isChief)
+        {
+            var inspectorResponse = InspectorRequestHandler.GetAll();
+
+            await foreach (var inspector in inspectorResponse)
+            {
+                _inspectors!.Add(inspector.UniqueName, new BusinessObjectInspectorResponse
+                {
+                    Inspector = inspector.UniqueName,
+                    BusinessObject = _businessObject.UniqueName,
+                    BusinessObjectDisplayName = _businessObject.DisplayName
+                });
+                this.StateHasChanged();
+            }
+        }
+
+        _inspectorBusinessObjects = new Dictionary<string, BusinessObjectInspectorResponse>();
+
+        var inspectors = BusinessObjectInspectorRequestHandler.GetAllForBusinessObject(BusinessObject);
+
+        await foreach (var inspector in inspectors)
+        {
+            _inspectorBusinessObjects!.Add(inspector.Inspector, inspector);
+
+            this.StateHasChanged();
+        }
+    }
+
+    public async Task AssignAsync(BusinessObjectInspectorResponse inspector)
+    {
+        var response = await BusinessObjectInspectorRequestHandler.CreateAsync(
+            BusinessObject!,
+            new BusinessObjectInspectorRequest
+            {
+                BusinessObjectDisplayName = inspector.BusinessObjectDisplayName,
+                Inspector = inspector.Inspector,
+            });
+
+        inspector.ETag = response.ETag;
+
+        _inspectorBusinessObjects!.Add(inspector.Inspector, inspector);
+        StateHasChanged();
+    }
+
+    public async Task UnassignAsync(BusinessObjectInspectorResponse inspector)
+    {
+        await BusinessObjectInspectorRequestHandler.DeleteAsync(
+            BusinessObject!,
+            inspector.Inspector,
+            inspector.ETag);
+
+        _inspectorBusinessObjects!.Remove(inspector.Inspector);
+        StateHasChanged();
+    }
+}

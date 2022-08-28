@@ -30,12 +30,6 @@
                 id="businessObjectDisplayName" @bind-Value="_request.DisplayName"/>
             <label for="businessObjectDisplayName">@Translator[$"Display name"]</label>
         </div>
-        <div class="form-floating mt-3">
-            <InputText
-                class="form-control"
-                id="businessObjectInspector" @bind-Value="_request.Inspector"/>
-            <label for="businessObjectInspector">@Translator[$"Inspector"]</label>
-        </div>
     </div>
 
     @if (_extension != null)

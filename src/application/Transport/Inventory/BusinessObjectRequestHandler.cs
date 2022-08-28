@@ -12,7 +12,6 @@ public class BusinessObjectRequestHandler : IBusinessObjectRequestHandler
 {
     private const string SearchTermKeyFreeText = "";
     private const string SearchTermKeyBusinessObject = "business-object";
-    private const string SearchTermKeyInspector = "inspector";
 
     private readonly IBusinessObjectManager _businessObjectManager;
     private readonly IBusinessObjectEventService _businessObjectEventService;
@@ -31,7 +30,6 @@ public class BusinessObjectRequestHandler : IBusinessObjectRequestHandler
 
         return new BusinessObjectResponse
         {
-            Inspector = entity.Inspector,
             DisplayName = entity.DisplayName,
             UniqueName = entity.UniqueName,
             ETag = entity.ETag
@@ -45,7 +43,6 @@ public class BusinessObjectRequestHandler : IBusinessObjectRequestHandler
                 .Take(take)
                 .Select(entity => new BusinessObjectResponse
                 {
-                    Inspector = entity.Inspector,
                     DisplayName = entity.DisplayName,
                     UniqueName = entity.UniqueName,
                     ETag = entity.ETag
@@ -61,7 +58,6 @@ public class BusinessObjectRequestHandler : IBusinessObjectRequestHandler
         var topResult = queryable.Take(50)
             .Select(entity => new BusinessObjectResponse
             {
-                Inspector = entity.Inspector,
                 DisplayName = entity.DisplayName,
                 UniqueName = entity.UniqueName,
                 ETag = entity.ETag
@@ -79,17 +75,14 @@ public class BusinessObjectRequestHandler : IBusinessObjectRequestHandler
     {
         var entity = new BusinessObject
         {
-            Inspector = request.Inspector,
             DisplayName = request.DisplayName,
             UniqueName = request.UniqueName,
         };
 
         await _businessObjectManager.InsertAsync(entity);
-        await _businessObjectEventService.CreateBusinessObjectInspectorCreationEventAsync(entity);
 
         return new BusinessObjectResponse
         {
-            Inspector = entity.Inspector,
             DisplayName = entity.DisplayName,
             UniqueName = entity.UniqueName,
             ETag = entity.ETag
@@ -100,21 +93,13 @@ public class BusinessObjectRequestHandler : IBusinessObjectRequestHandler
     {
         var entity = await _businessObjectManager.GetAsync(businessObject);
 
-        var oldInspector = entity.Inspector;
 
-        entity.Inspector = request.Inspector;
         entity.DisplayName = request.DisplayName;
         entity.UniqueName = request.UniqueName;
         entity.ETag = request.ETag;
 
         await _businessObjectManager.UpdateAsync(entity);
         await _businessObjectEventService.CreateBusinessObjectUpdateEventAsync(entity);
-
-        if (entity.Inspector != oldInspector)
-        {
-            await _businessObjectEventService.CreateBusinessObjectInspectorCreationEventAsync(entity);
-            await _businessObjectEventService.CreateBusinessObjectInspectorDeletionEventAsync(entity, oldInspector);
-        }
     }
 
     public async ValueTask DeleteAsync(string businessObject, string etag)
@@ -125,25 +110,21 @@ public class BusinessObjectRequestHandler : IBusinessObjectRequestHandler
 
         await _businessObjectManager.DeleteAsync(entity);
         await _businessObjectEventService.CreateBusinessObjectDeletionEventAsync(businessObject);
-        await _businessObjectEventService.CreateBusinessObjectInspectorDeletionEventAsync(entity, entity.Inspector);
     }
 
     private static IQueryable<BusinessObject> WhereSearchQuery(IQueryable<BusinessObject> query, string searchQuery)
     {
         var searchTerms = SearchQueryParser.Parse(searchQuery);
         var businessObjects = searchTerms.GetValidSearchTermValues<string>(SearchTermKeyBusinessObject);
-        var inspectors = searchTerms.GetValidSearchTermValues<string>(SearchTermKeyInspector);
         var freeTexts = searchTerms.GetValidSearchTermValues<string>(SearchTermKeyFreeText).Where(x => x.Length > 3).ToArray();
 
         query = query
-             .Where(x => !businessObjects.Any() || businessObjects.Contains(x.UniqueName))
-             .Where(x => !inspectors.Any() || inspectors.Contains(x.Inspector));
+             .Where(x => !businessObjects.Any() || businessObjects.Contains(x.UniqueName));
 
         foreach (var freeText in freeTexts)
         {
             query = query.Where(x => 
                 x.DisplayName.Contains(freeText) ||
-                x.Inspector.Contains(freeText) ||
                 x.UniqueName.Contains(freeText));
         }
 

@@ -7,7 +7,6 @@ public class BusinessObject
     public string ETag { get; set; } = string.Empty;
     public string UniqueName { get; set; } = string.Empty;
     public string DisplayName { get; set; } = string.Empty;
-    public string Inspector { get; set; } = string.Empty;
 
     private readonly IDictionary<string, object> _data = new Dictionary<string, object>();
 

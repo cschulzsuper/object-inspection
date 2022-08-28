@@ -2,13 +2,11 @@
 
 public static class ExtensionAggregateTypes
 {
-    public readonly static string[] All = new string[]
+    public static readonly string[] All =
     {
-    Inspector,
-    Inspection,
-    BusinessObject,
-    BusinessObjectInspection,
-    BusinessObjectInspectionAuditRecord
+        Inspector,
+        Inspection,
+        BusinessObject
     };
 
     public const string Inspector
@@ -19,10 +17,4 @@ public static class ExtensionAggregateTypes
 
     public const string BusinessObject
         = "business-object";
-
-    public const string BusinessObjectInspection
-        = "business-object-inspection";
-
-    public const string BusinessObjectInspectionAuditRecord
-        = "business-object-inspection-audit-record";
 }

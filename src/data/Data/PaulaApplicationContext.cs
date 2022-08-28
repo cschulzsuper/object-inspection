@@ -33,6 +33,7 @@ public class PaulaApplicationContext : PaulaContext
             modelBuilder.ApplyConfiguration(new BusinessObjectMapping(State, _extensions));
 
             // Auditing
+            modelBuilder.ApplyConfiguration(new BusinessObjectInspectorMapping(State));
             modelBuilder.ApplyConfiguration(new BusinessObjectInspectionMapping(State));
             modelBuilder.ApplyConfiguration(new BusinessObjectInspectionAuditRecordMapping(State));
 

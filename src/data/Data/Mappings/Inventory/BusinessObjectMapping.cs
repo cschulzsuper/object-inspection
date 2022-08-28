@@ -50,11 +50,6 @@ public class BusinessObjectMapping : IEntityTypeConfiguration<BusinessObject>
             .HasMaxLength(140)
             .IsRequired();
 
-        builder
-            .Property(x => x.Inspector)
-            .HasMaxLength(140)
-            .IsRequired();
-
         var extension = _extensions.Get(ExtensionAggregateTypes.BusinessObject);
 
         if (extension != null)

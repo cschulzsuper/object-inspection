@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using Super.Paula.Shared.Validation;
 
-namespace Super.Paula.Application.Inventory.Events;
+namespace Super.Paula.Application.Auditing.Events;
 
 [AllowedSubscriber(AllowedSubscribers.Inspector)]
 [AllowedSubscriber(AllowedSubscribers.Notification)]

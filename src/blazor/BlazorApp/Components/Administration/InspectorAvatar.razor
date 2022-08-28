@@ -46,7 +46,7 @@ else
     }
 
     private string GetImageUrl()
-        => $"{AppSettings.Server}/inspectors/{Inspector}/avatar?access_token={_token}";
+        => $"{AppSettings.Server}inspectors/{Inspector}/avatar?access_token={_token}";
 
     protected override async Task OnParametersSetAsync()
     {

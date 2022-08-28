@@ -10,7 +10,6 @@ public class BusinessObjectResponseJsonConverter : JsonConverter<BusinessObjectR
     private static readonly JsonEncodedText UniqueName = JsonEncodedText.Encode("uniqueName");
     private static readonly JsonEncodedText DisplayName = JsonEncodedText.Encode("displayName");
     private static readonly JsonEncodedText ETag = JsonEncodedText.Encode("etag");
-    private static readonly JsonEncodedText Inspector = JsonEncodedText.Encode("inspector");
 
     public override BusinessObjectResponse Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
@@ -18,7 +17,7 @@ public class BusinessObjectResponseJsonConverter : JsonConverter<BusinessObjectR
 
         if (reader.TokenType != JsonTokenType.StartObject)
         {
-            throw new JsonException("Unexcepted end when reading JSON.");
+            throw new JsonException("Unexpected end when reading JSON.");
         }
 
         while (reader.Read() && reader.TokenType != JsonTokenType.EndObject)
@@ -28,7 +27,7 @@ public class BusinessObjectResponseJsonConverter : JsonConverter<BusinessObjectR
 
         if (reader.TokenType != JsonTokenType.EndObject)
         {
-            throw new JsonException("Unexcepted end when reading JSON.");
+            throw new JsonException("Unexpected end when reading JSON.");
         }
 
         return response;
@@ -36,12 +35,7 @@ public class BusinessObjectResponseJsonConverter : JsonConverter<BusinessObjectR
 
     internal static void ReadValue(ref Utf8JsonReader reader, BusinessObjectResponse value, JsonSerializerOptions options)
     {
-        if (reader.TryReadStringProperty(Inspector, out var stringValue))
-        {
-            value.Inspector = stringValue;
-            return;
-        }
-        if (reader.TryReadStringProperty(DisplayName, out stringValue))
+        if (reader.TryReadStringProperty(DisplayName, out var stringValue))
         {
             value.DisplayName = stringValue;
             return;
@@ -68,7 +62,6 @@ public class BusinessObjectResponseJsonConverter : JsonConverter<BusinessObjectR
     {
         writer.WriteStartObject();
 
-        writer.WriteStringIfNotNull(Inspector, value.Inspector);
         writer.WriteStringIfNotNull(UniqueName, value.UniqueName);
         writer.WriteStringIfNotNull(DisplayName, value.DisplayName);
         writer.WriteStringIfNotNull(ETag, value.ETag);

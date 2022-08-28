@@ -33,6 +33,8 @@ public static class _EventTypes
 
     private static IEventTypeRegistry ConfigureTransportAuditing(this IEventTypeRegistry eventTypeRegistry)
     {
+        eventTypeRegistry.Register<BusinessObjectInspectorCreationEvent>();
+        eventTypeRegistry.Register<BusinessObjectInspectorDeletionEvent>();
         eventTypeRegistry.Register<BusinessObjectInspectionAuditScheduleEvent>();
 
         return eventTypeRegistry;
@@ -48,8 +50,6 @@ public static class _EventTypes
 
     private static IEventTypeRegistry ConfigureTransportInventory(this IEventTypeRegistry eventTypeRegistry)
     {
-        eventTypeRegistry.Register<BusinessObjectInspectorCreationEvent>();
-        eventTypeRegistry.Register<BusinessObjectInspectorDeletionEvent>();
         eventTypeRegistry.Register<BusinessObjectUpdateEvent>();
         eventTypeRegistry.Register<BusinessObjectDeletionEvent>();
 
