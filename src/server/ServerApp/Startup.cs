@@ -7,18 +7,18 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Options;
 using Super.Paula.Application.Operation;
-using Super.Paula.Server.Swagger;
 using Super.Paula.Shared.ErrorHandling;
 using Super.Paula.Shared.Validation;
-using Swashbuckle.AspNetCore.SwaggerGen;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Super.Paula.Server.Swagger;
 using Super.Paula.Shared.JsonConversion;
+using Super.Paula.Server.SwaggerGen;
+using Super.Paula.Server.SwaggerUI;
 
 namespace Super.Paula.Server;
 
@@ -45,8 +45,10 @@ public class Startup
         services.AddServer(_environment, _configuration);
 
         services.AddEndpointsApiExplorer();
-        services.AddSingleton<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerGenOptions>();
-        services.AddSwaggerGen();
+        services.AddSwaggerGen(setup =>
+        {
+            setup.ConfigureDefault();
+        });
 
         services.AddCors(options =>
             options.AddDefaultPolicy(policy =>
@@ -78,8 +80,11 @@ public class Startup
 
         if (_environment.IsDevelopment())
         {
-            app.UseSwagger();
-            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Super.Paula.Server V1"));
+            app.UseSwaggerUI(options =>
+            {
+                options.SwaggerEndpoint("/swagger/v1/swagger.json", "Super.Paula.Server V1");
+                options.UseAccessTokenRequestInterceptor();
+            });
         }
 
         app.UseHttpsRedirection();
@@ -95,6 +100,12 @@ public class Startup
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapServer();
+
+            if (_environment.IsDevelopment())
+            {
+                endpoints.MapSwagger(setupAction: setup => { setup.ConfigurePreSerializeFilters(); });
+            }
+
             endpoints.MapGet("", () => "It works!").WithTags("Health");
         });
 

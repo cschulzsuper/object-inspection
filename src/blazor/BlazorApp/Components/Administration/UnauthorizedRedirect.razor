@@ -22,7 +22,7 @@
             return;
         }
 
-        if (!user.HasInspector())
+        if (user.HasInspector())
         {
             NavigationManager.NavigateTo("/inspectors/sign-in");
             return;

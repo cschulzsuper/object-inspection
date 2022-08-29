@@ -142,6 +142,7 @@ public static class _Services
         services.AddScoped<PaulaContextState>();
 
         services.AddScoped<ExtensionProvider>();
+        services.AddScoped<ExtensionCacheKeyFactory>();
         services.AddSingleton<ExtensionCache>();
 
         services.AddScoped<IRepositoryCreator, RepositoryCreator>();

@@ -2,7 +2,6 @@
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Super.Paula.Application.Auditing.Events;
-using Super.Paula.Application.Inventory.Events;
 
 namespace Super.Paula.Application.Auditing;
 

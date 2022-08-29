@@ -16,6 +16,19 @@ public class ExtensionManager : IExtensionManager
         _extensionRepository = extensionRepository;
     }
 
+    public Extension Get(string aggregateType)
+    {
+        EnsureGetable(aggregateType);
+
+        var entity = _extensionRepository.GetByIdsOrDefault(aggregateType);
+        if (entity == null)
+        {
+            throw new ManagementException($"Extension for '{aggregateType}' was not found.");
+        }
+
+        return entity;
+    }
+
     public async ValueTask<Extension> GetAsync(string aggregateType)
     {
         EnsureGetable(aggregateType);
