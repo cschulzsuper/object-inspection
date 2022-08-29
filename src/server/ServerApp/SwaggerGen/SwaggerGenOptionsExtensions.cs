@@ -1,13 +1,13 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace Super.Paula.Server.Swagger;
+namespace Super.Paula.Server.SwaggerGen;
 
-public class ConfigureSwaggerGenOptions : IConfigureOptions<SwaggerGenOptions>
+public static class SwaggerGenOptionsExtensions
 {
-    public void Configure(SwaggerGenOptions options)
+
+    public static SwaggerGenOptions ConfigureDefault(this SwaggerGenOptions options)
     {
         options.AddSecurityDefinition("bearer", new OpenApiSecurityScheme
         {
@@ -16,9 +16,12 @@ public class ConfigureSwaggerGenOptions : IConfigureOptions<SwaggerGenOptions>
             In = ParameterLocation.Header
         });
 
-        options.OperationFilter<AuthorizationOperationFilter>();
+        options.OperationFilter<TokenAuthorizationOperationFilter>();
+
         options.SwaggerDoc("v1", new() { Title = "Super.Paula.Server", Version = "v1" });
 
         options.OrderActionsBy(x => x.RelativePath);
+
+        return options;
     }
 }

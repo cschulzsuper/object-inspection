@@ -78,12 +78,11 @@ public class AuthenticationRequestHandler : IAuthenticationRequestHandler
                 throw new TransportException($"The secret does not match.");
         }
 
-        var connectionProof = Convert.ToBase64String(
-            Encoding.UTF8.GetBytes($"{Guid.NewGuid()}"));
+        var connectionAccount = entity.UniqueName;
+        var connectionProof = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{Guid.NewGuid()}"));
+        var connectionProofType = ConnectionProofTypes.Authentication;
 
-        _connectionManager.Trace(
-            entity.UniqueName,
-            connectionProof);
+        _connectionManager.Trace(connectionAccount, connectionProof, connectionProofType);
 
         var token = new Token
         {

@@ -7,7 +7,7 @@ public class Connection : IRuntimeData
 {
     public string Correlation => Account;
 
-    public string Account { get; set; } = string.Empty;
+    public required string Account { get; set; } = string.Empty;
 
-    public ISet<string> Proof { get; } = new HashSet<string>();
+    public ISet<ConnectionProof> Proof { get; } = new HashSet<ConnectionProof>();
 }

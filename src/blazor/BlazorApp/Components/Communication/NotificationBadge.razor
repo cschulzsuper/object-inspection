@@ -38,7 +38,7 @@
 
         var user = (await AuthenticationState).User;
 
-        if (user.Identity!.IsAuthenticated && user.HasInspector())
+        if (user.IsAuthenticatedInspector())
         {
             await foreach (var _ in NotificationRequestHandler.GetAllForInspector(user.GetInspector()))
             {

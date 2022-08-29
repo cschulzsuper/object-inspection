@@ -40,5 +40,13 @@
 	</ItemGroup>
 
 
+	<ItemGroup>
+		<PackageReference Include="Serilog.Extensions.Logging.File" Version="2.0.0" ExcludeAssets="all" GeneratePathProperty="true"/>
+	</ItemGroup>
+	<Target Name="_CopySerilogDeps" AfterTargets="Build">
+		<Copy SourceFiles="$(PkgSerilog_Extensions_Logging_File)\lib\netstandard2.0\Serilog.Extensions.Logging.File.dll"
+		      DestinationFolder="$(PkgMicrosoft_AspNetCore_Components_WebAssembly_DevServer)\tools\BlazorDebugProxy"
+		      SkipUnchangedFiles="true"/>
+	</Target>
 
 </Project>
