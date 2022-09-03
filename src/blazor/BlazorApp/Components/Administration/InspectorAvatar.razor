@@ -7,7 +7,7 @@
 }
 else
 {
-    if (_token != null)
+    if (_badge != null)
     {
         <img id="avatar" class="rounded-circle @CssClass" height="@Size" width="@Size" src="@GetImageUrl()"/>
     }
@@ -17,7 +17,7 @@ else
 
 @code {
 
-    private string? _token = null;
+    private string? _badge = null;
 
     private string? _avatar = null;
 
@@ -38,15 +38,15 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        _token = (await AuthenticationState).User
-            .ToToken()
+        _badge = (await AuthenticationState).User
+            .ToBadge()
             .ToBase64String();
 
         await base.OnInitializedAsync();
     }
 
     private string GetImageUrl()
-        => $"{AppSettings.Server}inspectors/{Inspector}/avatar?access_token={_token}";
+        => $"{AppSettings.Server}inspectors/{Inspector}/avatar?access_token={_badge}";
 
     protected override async Task OnParametersSetAsync()
     {

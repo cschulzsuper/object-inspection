@@ -38,7 +38,7 @@ public class PersistentContinuationStorage : IContinuationStorage
             CreationDate = continuation.CreationDate,
             ContinuationId = continuation.Id.ToString(),
             Data = Base64Encoder.ObjectToBase64(continuation),
-            User = Base64Encoder.ObjectToBase64(user.ToToken()),
+            User = Base64Encoder.ObjectToBase64(user.ToBadge()),
             OperationId = Activity.Current?.RootId ?? Guid.NewGuid().ToString(),
         };
 
@@ -81,7 +81,7 @@ public class PersistentContinuationStorage : IContinuationStorage
 
             var user = new ClaimsPrincipal(
                 new ClaimsIdentity(
-                    Base64Encoder.Base64ToObject<Token>(continuation.User).ToClaims()));
+                    Base64Encoder.Base64ToObject<Badge>(continuation.User).ToClaims()));
 
             yield return (data, user);
         }

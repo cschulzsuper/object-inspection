@@ -33,7 +33,7 @@ internal sealed class Receiver : IAsyncDisposable
                 {
                     var authenticationState = await _AuthenticationStateProvider.GetAuthenticationStateAsync();
                     return authenticationState.User
-                        .ToToken()
+                        .ToBadge()
                         .ToBase64String();
                 };
             })

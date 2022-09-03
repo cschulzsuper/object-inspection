@@ -36,8 +36,7 @@ public class ExtendedAuthenticationRequestHandler : IAuthenticationRequestHandle
         {
             _logger.LogWarning(exception, $"Authentication invalid.");
 
-            await _localStorage.RemoveItemAsync("token");
-            await _localStorage.RemoveItemAsync("authorization-filter");
+            await _localStorage.RemoveItemAsync("badge");
         }
     }
 
@@ -54,8 +53,8 @@ public class ExtendedAuthenticationRequestHandler : IAuthenticationRequestHandle
     {
         var response = await _authenticationHandler.SignInAsync(identity, request);
 
-        var token = response.ToToken();
-        await _localStorage.SetItemAsync("token", token);
+        var badge = response.ToBadge();
+        await _localStorage.SetItemAsync("badge", badge);
 
         return response;
     }
@@ -68,12 +67,11 @@ public class ExtendedAuthenticationRequestHandler : IAuthenticationRequestHandle
         }
         catch (SignOutException exception)
         {
-            _logger.LogWarning(exception, $"Could not sign out gracefully.");
+            _logger.LogWarning(exception, "Could not sign out gracefully.");
         }
         finally
         {
-            await _localStorage.RemoveItemAsync("token");
-            await _localStorage.RemoveItemAsync("authorization-filter");
+            await _localStorage.RemoveItemAsync("badge");
         }
     }
 }

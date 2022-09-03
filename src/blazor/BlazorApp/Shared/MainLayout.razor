@@ -28,15 +28,6 @@
 
         <AuthorizeView>
             <Authorized>
-                @if (AppEnvironment.IsDevelopment)
-                {
-                    <select class="form-select form-select-sm my-2 text-start" @onchange="e => AuthorizationFilterChanged(e.Value)" value="@_authorizationFilter">
-                        <option value="">---</option>
-                        <option value="Impersonator|Maintainer|Inspector|Chief|Observer">Maintainer</option>
-                        <option value="Impersonator|Inspector|Chief|Observer">Chief</option>
-                        <option value="Impersonator|Inspector|Observer">Inspector</option>
-                    </select>
-                }
                 <NavLink class="nav-link px-3" Match="NavLinkMatch.All" href="change-inspector" title="@Translator[$"Change Inspector"]">
                     <InspectorAvatar Size="32" Inspector="me"/>
                 </NavLink>
@@ -93,8 +84,6 @@
 <Footer/>
 
 @code {
-
-    private string _authorizationFilter = string.Empty;
 
     private bool _navMenuCollapsed = true;
 
@@ -160,28 +149,14 @@
         }
         catch (HttpRequestException e) when (e.StatusCode == HttpStatusCode.Unauthorized)
         {
-            if ((await LocalStorage.ContainKeyAsync("token")) ||
-                (await LocalStorage.ContainKeyAsync("authorization-filter")))
+            if (await LocalStorage.ContainKeyAsync("token"))
             {
                 await LocalStorage.RemoveItemAsync("token");
-                await LocalStorage.RemoveItemAsync("authorization-filter");
             }
         }
         finally
         {
             NavigationManager.NavigateTo("/");
         }
-    }
-
-    public async Task AuthorizationFilterChanged(object? value)
-    {
-        _authorizationFilter = ((string)value!);
-
-        var authorizationFilter = _authorizationFilter
-            .Split('|')
-            .Where(x => !string.IsNullOrWhiteSpace(x))
-            .ToArray();
-
-        await LocalStorage.SetItemAsync("authorization-filter", authorizationFilter);
     }
 }

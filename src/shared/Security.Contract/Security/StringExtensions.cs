@@ -6,9 +6,9 @@ namespace Super.Paula.Shared.Security;
 
 public static class StringExtensions
 {
-    public static Token? ToToken(this string token)
-        => string.IsNullOrWhiteSpace(token)
+    public static Badge? ToBadge(this string badge)
+        => string.IsNullOrWhiteSpace(badge)
             ? null
-            : JsonSerializer.Deserialize<Token>(
-                    Convert.FromBase64String(token), CustomJsonSerializerOptions.Default);
+            : JsonSerializer.Deserialize<Badge>(
+                    Convert.FromBase64String(badge), CustomJsonSerializerOptions.Default);
 }

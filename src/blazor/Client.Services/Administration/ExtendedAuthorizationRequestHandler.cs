@@ -22,8 +22,8 @@ public class ExtendedAuthorizationRequestHandler : IAuthorizationRequestHandler
     {
         var response = await _authorizationHandler.AuthorizeAsync(organization, inspector);
 
-        var token = response.ToToken();
-        await _localStorage.SetItemAsync("token", token);
+        var badge = response.ToBadge();
+        await _localStorage.SetItemAsync("badge", badge);
 
         return response;
     }
@@ -32,8 +32,8 @@ public class ExtendedAuthorizationRequestHandler : IAuthorizationRequestHandler
     {
         var response = await _authorizationHandler.StartImpersonationAsync(organization, inspector);
 
-        var token = response.ToToken();
-        await _localStorage.SetItemAsync("token", token);
+        var badge = response.ToBadge();
+        await _localStorage.SetItemAsync("badge", badge);
 
         return response;
     }
@@ -42,8 +42,8 @@ public class ExtendedAuthorizationRequestHandler : IAuthorizationRequestHandler
     {
         var response = await _authorizationHandler.StopImpersonationAsync();
 
-        var token = response.ToToken();
-        await _localStorage.SetItemAsync("token", token);
+        var badge = response.ToBadge();
+        await _localStorage.SetItemAsync("badge", badge);
 
         return response;
     }

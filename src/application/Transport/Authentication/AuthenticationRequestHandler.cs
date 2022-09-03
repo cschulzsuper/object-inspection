@@ -14,18 +14,18 @@ namespace Super.Paula.Application.Authentication;
 public class AuthenticationRequestHandler : IAuthenticationRequestHandler
 {
     private readonly IIdentityManager _identityManager;
-    private readonly IConnectionManager _connectionManager;
+    private readonly IBadgeAuthenticationTracker _badgeAuthenticationTracker;
     private readonly IPasswordHasher<Identity> _passwordHasher;
     private readonly ClaimsPrincipal _user;
 
     public AuthenticationRequestHandler(
         IIdentityManager identityManager,
-        IConnectionManager connectionManager,
+        IBadgeAuthenticationTracker badgeAuthenticationTracker,
         IPasswordHasher<Identity> passwordHasher,
         ClaimsPrincipal principal)
     {
         _identityManager = identityManager;
-        _connectionManager = connectionManager;
+        _badgeAuthenticationTracker = badgeAuthenticationTracker;
         _passwordHasher = passwordHasher;
         _user = principal;
     }
@@ -78,30 +78,18 @@ public class AuthenticationRequestHandler : IAuthenticationRequestHandler
                 throw new TransportException($"The secret does not match.");
         }
 
-        var connectionAccount = entity.UniqueName;
-        var connectionProof = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{Guid.NewGuid()}"));
-        var connectionProofType = ConnectionProofTypes.Authentication;
+        var badge = _badgeAuthenticationTracker.Trace(_user, "identity", entity);
 
-        _connectionManager.Trace(connectionAccount, connectionProof, connectionProofType);
-
-        var token = new Token
-        {
-            Identity = entity.UniqueName,
-            Proof = connectionProof
-        };
-
-        return token.ToBase64String();
+        return badge;
     }
 
-    public async ValueTask SignOutAsync()
+    public ValueTask SignOutAsync()
     {
         try
         {
-            var inspector = await _identityManager.GetAsync(_user.GetIdentity());
+            _badgeAuthenticationTracker.Forget(_user);
 
-            _connectionManager.Forget(inspector.UniqueName);
-
-            await Task.CompletedTask;
+            return ValueTask.CompletedTask;
         }
         catch (Exception exception)
         {

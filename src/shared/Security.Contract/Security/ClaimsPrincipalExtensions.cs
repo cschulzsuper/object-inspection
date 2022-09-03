@@ -34,9 +34,6 @@ public static class ClaimsPrincipalExtensions
 
     public static string[] GetAuthorizations(this ClaimsPrincipal principal)
         => principal.FindAll("Authorization")
-            .Where(x =>
-                !principal.FindAll("AuthorizationFilter").Any() ||
-                principal.HasClaim("AuthorizationFilter", x.Value))
             .Select(x => x.Value)
             .ToArray();
 
@@ -81,22 +78,14 @@ public static class ClaimsPrincipalExtensions
 
     public static bool HasAnyAuthorization(this ClaimsPrincipal principal, IEnumerable<string> authorizations)
         => principal.FindAll("Authorization")
-            .Where(x => authorizations.Contains(x.Value))
-            .Any(x => !principal.FindAll("AuthorizationFilter").Any() ||
-                      principal.HasClaim("AuthorizationFilter", x.Value));
+            .Any(x => authorizations.Contains(x.Value));
 
     public static bool HasAnyAuthorization(this ClaimsPrincipal principal, params string[] authorizations)
         => principal.HasAnyAuthorization(authorizations.AsEnumerable());
 
-    public static bool HasAuthorizationFilter(this ClaimsPrincipal principal)
-        => principal.HasClaim(x => x.Type == "AuthorizationFilter");
-
-    public static bool HasAuthorizationFilter(this ClaimsPrincipal principal, string authorizationFilter)
-        => principal.HasClaim("AuthorizationFilter", authorizationFilter);
-
-    public static Token ToToken(this ClaimsPrincipal user)
+    public static Badge ToBadge(this ClaimsPrincipal user)
     {
-        var token = new Token()
+        var badge = new Badge
         {
             Identity = user.HasIdentity()
                 ? user.GetIdentity()
@@ -124,6 +113,6 @@ public static class ClaimsPrincipalExtensions
             Authorizations = user.GetAuthorizations(),
         };
 
-        return token;
+        return badge;
     }
 }

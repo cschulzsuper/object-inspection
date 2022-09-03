@@ -2,7 +2,7 @@
 
 namespace Super.Paula.Shared.Security;
 
-public class Token
+public class Badge
 {
     public string? Identity { get; set; }
     public string? Proof { get; set; }

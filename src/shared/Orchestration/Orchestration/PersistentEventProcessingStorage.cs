@@ -42,7 +42,7 @@ public class PersistentEventProcessingStorage : IEventProcessingStorage
             CreationDate = @event.CreationDate,
             EventId = @event.Id.ToString(),
             Data = Base64Encoder.ObjectToBase64(@event),
-            User = Base64Encoder.ObjectToBase64(user.ToToken()),
+            User = Base64Encoder.ObjectToBase64(user.ToBadge()),
             OperationId = Activity.Current?.RootId ?? Guid.NewGuid().ToString(),
         };
 
@@ -85,7 +85,7 @@ public class PersistentEventProcessingStorage : IEventProcessingStorage
 
             var user = new ClaimsPrincipal(
                 new ClaimsIdentity(
-                    Base64Encoder.Base64ToObject<Token>(@event.User).ToClaims()));
+                    Base64Encoder.Base64ToObject<Badge>(@event.User).ToClaims()));
 
             yield return (@event.Subscriber, data, user);
         }

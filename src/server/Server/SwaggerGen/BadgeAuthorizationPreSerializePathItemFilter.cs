@@ -6,7 +6,7 @@ using Super.Paula.Shared.Security;
 
 namespace Super.Paula.Server.SwaggerGen
 {
-    public class TokenAuthorizationPreSerializePathItemFilter : IPreSerializePathItemFilter
+    public class BadgeAuthorizationPreSerializePathItemFilter : IPreSerializePathItemFilter
     {
         public void Apply(OpenApiPathItem pathItem, PreSerializePathItemFilterContext pathItemContext)
         {

@@ -9,7 +9,7 @@ using Super.Paula.Shared.Security;
 
 namespace Super.Paula.Client.Security;
 
-public class TokenAuthenticationStateProvider : AuthenticationStateProvider
+public class BadgeAuthenticationStateProvider : AuthenticationStateProvider
 {
     private readonly ILocalStorage _localStorage;
     private readonly IAuthenticationRequestHandler _authenticationRequestHandler;
@@ -17,7 +17,7 @@ public class TokenAuthenticationStateProvider : AuthenticationStateProvider
 
     private static bool _verified = false;
 
-    public TokenAuthenticationStateProvider(
+    public BadgeAuthenticationStateProvider(
         ILocalStorage localStorage, 
         IAuthenticationRequestHandler authenticationRequestHandler)
     {
@@ -29,8 +29,7 @@ public class TokenAuthenticationStateProvider : AuthenticationStateProvider
 
     private void OnChanged(object? sender, LocalStorageEventArgs e)
     {
-        if (e.Key != "token" &&
-            e.Key != "authorization-filter")
+        if (e.Key != "token")
         {
             return;
         }
@@ -55,11 +54,9 @@ public class TokenAuthenticationStateProvider : AuthenticationStateProvider
 
     private async Task<AuthenticationState> CreateAuthenticationStateAsync()
     {
-        var token = await _localStorage.GetItemAsync<Token>("token");
-        var authorizationFilter = (await _localStorage.GetItemAsync<string[]>("authorization-filter"))
-            ?? Array.Empty<string>();
+        var badge = await _localStorage.GetItemAsync<Badge>("badge");
 
-        if (token == null)
+        if (badge == null)
         {
             return new AuthenticationState(
                 new ClaimsPrincipal(
@@ -67,11 +64,10 @@ public class TokenAuthenticationStateProvider : AuthenticationStateProvider
                         Enumerable.Empty<Claim>())));
         }
 
-        var claims = token.ToClaims()
-            .Concat(authorizationFilter.Select(x => new Claim("AuthorizationFilter", x)));
+        var claims = badge.ToClaims();
 
         return new AuthenticationState(
             new ClaimsPrincipal(
-                new ClaimsIdentity(claims, "password")));
+                new ClaimsIdentity(claims, "badge")));
     }
 }

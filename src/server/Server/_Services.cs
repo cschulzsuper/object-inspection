@@ -46,9 +46,11 @@ public static class _Services
     {
         services.AddAuthentication(options =>
         {
-            options.DefaultScheme = "bearer";
-            options.AddScheme<TokenAuthenticationHandler>("bearer", null);
+            options.DefaultScheme = "badge";
+            options.AddScheme<BadgeAuthenticationHandler>("badge", null);
         });
+
+        services.AddScoped<IBadgeAuthenticationTracker, BadgeAuthenticationTracker>();
 
         return services;
     }
@@ -58,8 +60,8 @@ public static class _Services
         services.AddAuthorization();
 
         services
-            .AddSingleton<IAuthorizationPolicyProvider, TokenAuthorizationPolicyProvider>()
-            .AddScoped<IAuthorizationMiddlewareResultHandler, TokenAuthorizationMiddlewareResultHandler>()
+            .AddSingleton<IAuthorizationPolicyProvider, BadgeAuthorizationPolicyProvider>()
+            .AddScoped<IAuthorizationMiddlewareResultHandler, BadgeAuthorizationMiddlewareResultHandler>()
             .AddScoped<IAuthorizationHandler, AnyAuthorizationClaimHandler>()
             .AddScoped<IAuthorizationHandler, IdentityClaimResourceHandler>()
             .AddScoped<IAuthorizationHandler, InspectorClaimResourceHandler>()

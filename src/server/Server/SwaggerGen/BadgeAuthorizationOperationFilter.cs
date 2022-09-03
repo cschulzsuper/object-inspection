@@ -8,12 +8,10 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Super.Paula.Server.SwaggerGen;
 
-public class TokenAuthorizationOperationFilter : IOperationFilter
+public class BadgeAuthorizationOperationFilter : IOperationFilter
 {
     public void Apply(OpenApiOperation operation, OperationFilterContext context)
     {
-        var c = new TokenAuthorizationPolicyProvider();
-
         var authorizeAttribute = (AuthorizeAttribute?) context.ApiDescription
             .ActionDescriptor
             .EndpointMetadata
@@ -24,7 +22,7 @@ public class TokenAuthorizationOperationFilter : IOperationFilter
             return;
         }
 
-        var tokenAuthorizations = GetTokenAuthorizations(authorizeAttribute.Policy);
+        var tokenAuthorizations = GetBadgeAuthorizations(authorizeAttribute.Policy);
 
         operation.Security = new List<OpenApiSecurityRequirement>
         {
@@ -45,7 +43,7 @@ public class TokenAuthorizationOperationFilter : IOperationFilter
         };
     }
 
-    private static string[] GetTokenAuthorizations(string? policy)
+    private static string[] GetBadgeAuthorizations(string? policy)
     {
         return policy switch
         {
