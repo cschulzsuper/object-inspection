@@ -5,6 +5,8 @@ using Super.Paula.Templates.Playwright.AdventureTours.Environment;
 using Super.Paula.Templates.Playwright.Auth;
 using Super.Paula.Templates.Playwright.Administration;
 
+using Playwright = Microsoft.Playwright;
+
 namespace Super.Paula.Templates.Playwright.AdventureTours.Steps;
 
 public sealed class InitializationAdministration : IStep
