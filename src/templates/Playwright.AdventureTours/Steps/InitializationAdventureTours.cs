@@ -8,8 +8,6 @@ using Super.Paula.Templates.Playwright.Guidelines;
 using Super.Paula.Templates.Playwright.Inventory;
 using System.Threading.Tasks;
 
-using Playwright = Microsoft.Playwright;
-
 namespace Super.Paula.Templates.Playwright.AdventureTours.Steps;
 
 public class InitializationAdventureTours : IStep

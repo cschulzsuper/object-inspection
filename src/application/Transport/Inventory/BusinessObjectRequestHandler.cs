@@ -80,6 +80,7 @@ public class BusinessObjectRequestHandler : IBusinessObjectRequestHandler
         };
 
         await _businessObjectManager.InsertAsync(entity);
+        await _businessObjectEventService.CreateBusinessObjectInspectorCreationEventAsync(entity);
 
         return new BusinessObjectResponse
         {
@@ -94,12 +95,19 @@ public class BusinessObjectRequestHandler : IBusinessObjectRequestHandler
         var entity = await _businessObjectManager.GetAsync(businessObject);
 
 
+        entity.Inspector = request.Inspector;
         entity.DisplayName = request.DisplayName;
         entity.UniqueName = request.UniqueName;
         entity.ETag = request.ETag;
 
         await _businessObjectManager.UpdateAsync(entity);
         await _businessObjectEventService.CreateBusinessObjectUpdateEventAsync(entity);
+
+        if (entity.Inspector != oldInspector)
+        {
+            await _businessObjectEventService.CreateBusinessObjectInspectorCreationEventAsync(entity);
+            await _businessObjectEventService.CreateBusinessObjectInspectorDeletionEventAsync(entity, oldInspector);
+        }
     }
 
     public async ValueTask DeleteAsync(string businessObject, string etag)
@@ -110,6 +118,7 @@ public class BusinessObjectRequestHandler : IBusinessObjectRequestHandler
 
         await _businessObjectManager.DeleteAsync(entity);
         await _businessObjectEventService.CreateBusinessObjectDeletionEventAsync(businessObject);
+        await _businessObjectEventService.CreateBusinessObjectInspectorDeletionEventAsync(entity, entity.Inspector);
     }
 
     private static IQueryable<BusinessObject> WhereSearchQuery(IQueryable<BusinessObject> query, string searchQuery)
