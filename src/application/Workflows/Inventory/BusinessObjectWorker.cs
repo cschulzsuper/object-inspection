@@ -21,10 +21,10 @@ public class BusinessObjectWorker : IWorker
         {
             var organizationUniqueNames = organizations.GetAllUniqueNames();
 
-            foreach (var organizaion in organizationUniqueNames)
+            foreach (var organization in organizationUniqueNames)
             {
                 using var serviceScope = context.Services.CreateScope();
-                SetupScope(organizaion, serviceScope);
+                SetupScope(organization, serviceScope);
 
                 var businessObjects = serviceScope.ServiceProvider
                     .GetRequiredService<IBusinessObjectQueries>()

@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Super.Paula.Application.Administration.Events;
-using Super.Paula.Shared.Authorization;
 using Super.Paula.Shared.Environment;
 using Super.Paula.Shared.Orchestration;
 using System.Threading.Tasks;
+using Super.Paula.Shared.Security;
 
 namespace Super.Paula.Application.Operation;
 

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Super.Paula.Application.Orchestration;
+﻿namespace Super.Paula.Application.Orchestration;
 
 public class Continuation
 {

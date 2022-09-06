@@ -1,9 +1,10 @@
 ﻿@inherits LayoutComponentBase
 
+@using Super.Paula.Application.Authentication
 @implements IDisposable
 
 @inject Application.Administration.IAuthorizationRequestHandler AuthorizationHandler
-@inject Application.Auth.IAuthenticationRequestHandler AuthenticationHandler
+@inject IAuthenticationRequestHandler AuthenticationHandler
 
 @inject NavigationManager NavigationManager   
 @inject AppEnvironment AppEnvironment

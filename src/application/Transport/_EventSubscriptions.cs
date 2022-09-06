@@ -29,10 +29,16 @@ public static class _EventSubscriptions
         eventBus.Subscribe<OrganizationUpdateEvent, InspectorEventHandler>(
             AllowedSubscribers.Inspector);
 
+        eventBus.Subscribe<BusinessObjectUpdateEvent, InspectorEventHandler>(
+            AllowedSubscribers.Inspector);
+
         eventBus.Subscribe<BusinessObjectDeletionEvent, InspectorEventHandler>(
             AllowedSubscribers.Inspector);
 
-        eventBus.Subscribe<BusinessObjectInspectorEvent, InspectorEventHandler>(
+        eventBus.Subscribe<BusinessObjectInspectorCreationEvent, InspectorEventHandler>(
+            AllowedSubscribers.Inspector);
+
+        eventBus.Subscribe<BusinessObjectInspectorDeletionEvent, InspectorEventHandler>(
             AllowedSubscribers.Inspector);
 
         eventBus.Subscribe<BusinessObjectInspectionAuditScheduleEvent, InspectorEventHandler>(
@@ -43,19 +49,19 @@ public static class _EventSubscriptions
 
     private static IEventBus ConfigureTransportAuditing(this IEventBus eventBus)
     {
-        eventBus.Subscribe<InspectionEvent, BusinessObjectInspectionEventHandler>(
+        eventBus.Subscribe<InspectionUpdateEvent, BusinessObjectInspectionEventHandler>(
             AllowedSubscribers.BusinessObjectInspection);
 
         eventBus.Subscribe<InspectionDeletionEvent, BusinessObjectInspectionEventHandler>(
             AllowedSubscribers.BusinessObjectInspection);
 
-        eventBus.Subscribe<BusinessObjectEvent, BusinessObjectInspectionAuditRecordEventHandler>(
+        eventBus.Subscribe<BusinessObjectUpdateEvent, BusinessObjectInspectionAuditRecordEventHandler>(
             AllowedSubscribers.BusinessObjectInspectionAuditRecord);
 
         eventBus.Subscribe<BusinessObjectDeletionEvent, BusinessObjectInspectionAuditRecordEventHandler>(
             AllowedSubscribers.BusinessObjectInspectionAuditRecord);
 
-        eventBus.Subscribe<InspectionEvent, BusinessObjectInspectionAuditRecordEventHandler>(
+        eventBus.Subscribe<InspectionUpdateEvent, BusinessObjectInspectionAuditRecordEventHandler>(
             AllowedSubscribers.BusinessObjectInspectionAuditRecord);
 
         eventBus.Subscribe<InspectionDeletionEvent, BusinessObjectInspectionAuditRecordEventHandler>(
@@ -67,10 +73,16 @@ public static class _EventSubscriptions
     private static IEventBus ConfigureTransportCommunication(this IEventBus eventBus)
     {
 
-        eventBus.Subscribe<BusinessObjectInspectorEvent, NotificationEventHandler>(
+        eventBus.Subscribe<BusinessObjectInspectorCreationEvent, NotificationEventHandler>(
             AllowedSubscribers.Notification);
 
-        eventBus.Subscribe<InspectorBusinessObjectEvent, NotificationEventHandler>(
+        eventBus.Subscribe<BusinessObjectInspectorDeletionEvent, NotificationEventHandler>(
+            AllowedSubscribers.Notification);
+
+        eventBus.Subscribe<InspectorBusinessObjectImmediacyDetectionEvent, NotificationEventHandler>(
+            AllowedSubscribers.Notification);
+
+        eventBus.Subscribe<InspectorBusinessObjectOverdueDetectionEvent, NotificationEventHandler>(
             AllowedSubscribers.Notification);
 
         return eventBus;

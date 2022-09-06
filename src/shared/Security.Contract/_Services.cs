@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Super.Paula.Shared.Authorization;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Security.Claims;
+using Super.Paula.Shared.Security;
 
 namespace Super.Paula.Shared;
 

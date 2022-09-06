@@ -18,9 +18,9 @@ public class InspectionEventService : IInspectionEventService
         _user = user;
     }
 
-    public async ValueTask CreateInspectionEventAsync(Inspection inspection)
+    public async ValueTask CreateInspectionUpdateEventAsync(Inspection inspection)
     {
-        var @event = new InspectionEvent(
+        var @event = new InspectionUpdateEvent(
             inspection.UniqueName,
             inspection.DisplayName,
             inspection.Text,

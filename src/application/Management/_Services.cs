@@ -1,13 +1,13 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.Extensions.DependencyInjection;
 using Super.Paula.Application.Administration;
 using Super.Paula.Application.Auditing;
-using Super.Paula.Application.Auth;
+using Super.Paula.Application.Authentication;
 using Super.Paula.Application.Communication;
 using Super.Paula.Application.Guidelines;
 using Super.Paula.Application.Inventory;
 using Super.Paula.Application.Operation;
 using Super.Paula.Application.Orchestration;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Super.Paula.Application;
 
@@ -18,13 +18,12 @@ public static class _Services
     {
         services.AddServerManagementAdministration();
         services.AddServerManagementAuditing();
-        services.AddServerManagementAuth();
+        services.AddServerManagementAuthentication();
         services.AddServerManagementCommunication();
         services.AddServerManagementGuidelines();
         services.AddServerManagementInventory();
         services.AddServerManagementOperation();
         services.AddServerManagementOrchestration();
-        services.AddServerManagementSetup();
 
         return services;
     }
@@ -47,7 +46,7 @@ public static class _Services
         return services;
     }
 
-    private static IServiceCollection AddServerManagementAuth(this IServiceCollection services)
+    private static IServiceCollection AddServerManagementAuthentication(this IServiceCollection services)
     {
         services.AddScoped<IIdentityManager, IdentityManager>();
 
@@ -92,11 +91,6 @@ public static class _Services
         services.AddScoped<IWorkerManager, WorkerManager>();
         services.AddScoped<IWorkerRuntimeManager, WorkerRuntimeManager>();
 
-        return services;
-    }
-
-    private static IServiceCollection AddServerManagementSetup(this IServiceCollection services)
-    {
         services.AddScoped<IExtensionManager, ExtensionManager>();
         services.AddScoped<IExtensionAggregateTypeManager, ExtensionAggregateTypeManager>();
         services.AddScoped<IExtensionFieldTypeManager, ExtensionFieldTypeManager>();

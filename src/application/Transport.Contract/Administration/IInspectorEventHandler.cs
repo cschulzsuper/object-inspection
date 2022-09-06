@@ -7,8 +7,10 @@ namespace Super.Paula.Application.Administration;
 
 public interface IInspectorEventHandler :
     IEventHandler<OrganizationUpdateEvent>,
+    IEventHandler<BusinessObjectUpdateEvent>,
     IEventHandler<BusinessObjectDeletionEvent>,
-    IEventHandler<BusinessObjectInspectorEvent>,
+    IEventHandler<BusinessObjectInspectorCreationEvent>,
+    IEventHandler<BusinessObjectInspectorDeletionEvent>,
     IEventHandler<BusinessObjectInspectionAuditScheduleEvent>
 {
 }

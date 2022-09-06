@@ -10,21 +10,21 @@ using Super.Paula.Application.Guidelines;
 using Super.Paula.Application.Inventory;
 using Super.Paula.Client.Administration;
 using Super.Paula.Client.Auditing;
-using Super.Paula.Client.Authentication;
 using Super.Paula.Client.Communication;
 using Super.Paula.Client.Guidelines;
 using Super.Paula.Client.Inventory;
 using Super.Paula.Client.Localization;
 using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
-using Super.Paula.Client.Auth;
-using Super.Paula.Application.Auth;
+using Super.Paula.Application.Authentication;
 using Super.Paula.Client.Storage;
 using Super.Paula.Application.Localization;
 using Super.Paula.Client.Operation;
-using Super.Paula.Shared.Authorization;
 using Super.Paula.Shared;
 using Super.Paula.Application.Operation;
+using Super.Paula.Client.Authentication;
+using Super.Paula.Client.Security;
+using Super.Paula.Shared.Security;
 
 namespace Super.Paula.Client;
 
@@ -53,7 +53,7 @@ public static class _Services
     private static IServiceCollection AddClientAuthorization(this IServiceCollection services)
     {
         services.AddAuthorizationCore();
-        services.AddSingleton<IAuthorizationPolicyProvider, PaulaAuthorizationPolicyProvider>();
+        services.AddSingleton<IAuthorizationPolicyProvider, TokenAuthorizationPolicyProvider>();
         services.AddScoped<IAuthorizationHandler, AnyAuthorizationClaimHandler>();
         services.AddScoped<AuthenticationStateProvider, TokenAuthenticationStateProvider>();
 
