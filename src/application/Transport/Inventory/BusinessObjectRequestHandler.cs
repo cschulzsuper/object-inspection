@@ -93,7 +93,6 @@ public class BusinessObjectRequestHandler : IBusinessObjectRequestHandler
     {
         var entity = await _businessObjectManager.GetAsync(businessObject);
 
-
         entity.DisplayName = request.DisplayName;
         entity.UniqueName = request.UniqueName;
         entity.ETag = request.ETag;
