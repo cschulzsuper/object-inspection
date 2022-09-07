@@ -9,29 +9,27 @@ namespace Super.Paula.Data;
 public class ExtensionProvider
 {
     private readonly IServiceProvider _services;
-    private readonly PaulaContextState _state;
-    private readonly ExtensionCache _cache;
+    private readonly ExtensionCache _extensionCache;
+    private readonly ExtensionCacheKeyFactory _extensionCacheKeyFactory;
 
     public ExtensionProvider(
         IServiceProvider services,
-        PaulaContextState state,
-        ExtensionCache cache)
+        ExtensionCache extensionCache,
+        ExtensionCacheKeyFactory extensionCacheKeyFactory)
     {
         _services = services;
-        _state = state;
-        _cache = cache;
+        _extensionCache = extensionCache;
+        _extensionCacheKeyFactory = extensionCacheKeyFactory;
     }
 
     public Extension? Get(string aggregateType)
     {
-        var extensionCacheKey = CreateKey(aggregateType);
+        var extensionCacheKey = _extensionCacheKeyFactory.Create(aggregateType);
 
-        if (_cache.TryGetValue(extensionCacheKey, out var value) && value != null)
+        if (_extensionCache.TryGetValue(extensionCacheKey, out var value))
         {
             return value;
         };
-
-        // TODO check if it exists
 
         var extension = _services
                 .GetRequiredService<PaulaContexts>().Operation
@@ -40,13 +38,9 @@ public class ExtensionProvider
 
         if (extension != null)
         {
-            _cache[extensionCacheKey] = extension;
+            _extensionCache[extensionCacheKey] = extension;
         }
 
         return extension;
     }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private string CreateKey(string type)
-        => $"{_state.CurrentOrganization}|{type}";
 }

@@ -7,6 +7,7 @@ namespace Super.Paula.Application.Operation;
 
 public interface IExtensionManager
 {
+    Extension Get(string extension);
     ValueTask<Extension> GetAsync(string extension);
     IQueryable<Extension> GetQueryable();
 

@@ -23,7 +23,7 @@ public class Repository<TEntity> : IRepository<TEntity>
         _partitionKeyValueGenerator = partitionKeyValueGenerator;
     }
 
-    public async ValueTask<TEntity> GetByIdAsync(object id)
+    public virtual async ValueTask<TEntity> GetByIdAsync(object id)
     {
         var entity = await _repositoryContext.FindAsync<TEntity>(AdjustForPartitionKey(id));
 
@@ -36,14 +36,14 @@ public class Repository<TEntity> : IRepository<TEntity>
         return entity;
     }
 
-    public async ValueTask<TEntity?> GetByIdOrDefaultAsync(object id)
+    public virtual async ValueTask<TEntity?> GetByIdOrDefaultAsync(object id)
     {
         var entity = await _repositoryContext.FindAsync<TEntity>(AdjustForPartitionKey(id));
         DetachEntity(entity);
         return entity;
     }
 
-    public async ValueTask<TEntity> GetByIdsAsync(params object[] ids)
+    public virtual async ValueTask<TEntity> GetByIdsAsync(params object[] ids)
     {
         var entity = await _repositoryContext.FindAsync<TEntity>(AdjustForPartitionKey(ids));
 
@@ -56,14 +56,14 @@ public class Repository<TEntity> : IRepository<TEntity>
         return entity;
     }
 
-    public TEntity? GetByIdsOrDefault(params object[] ids)
+    public virtual TEntity? GetByIdsOrDefault(params object[] ids)
     {
         var entity = _repositoryContext.Find<TEntity>(AdjustForPartitionKey(ids));
         DetachEntity(entity);
         return entity;
     }
 
-    public async ValueTask<TEntity?> GetByIdsOrDefaultAsync(params object[] ids)
+    public virtual async ValueTask<TEntity?> GetByIdsOrDefaultAsync(params object[] ids)
     {
         var entity = await _repositoryContext.FindAsync<TEntity>(AdjustForPartitionKey(ids));
         DetachEntity(entity);

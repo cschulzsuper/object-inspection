@@ -1,10 +1,19 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 
 namespace Super.Paula.Shared.Security;
 
 public static class ClaimsPrincipalExtensions
 {
+    public static bool IsAuthenticatedInspector(this ClaimsPrincipal principal)
+        => principal.Identity?.IsAuthenticated == true &&
+           principal.HasInspector();
+
+    public static bool IsAuthenticatedIdentity(this ClaimsPrincipal principal)
+        => principal.Identity?.IsAuthenticated == true &&
+           principal.HasIdentity();
+
     public static string GetIdentity(this ClaimsPrincipal principal)
         => principal.FindAll("Identity").First().Value;
 
@@ -70,11 +79,14 @@ public static class ClaimsPrincipalExtensions
     public static bool HasAuthorization(this ClaimsPrincipal principal, string authorization)
         => principal.HasClaim("Authorization", authorization);
 
-    public static bool HasAnyAuthorization(this ClaimsPrincipal principal, params string[] authorizations)
+    public static bool HasAnyAuthorization(this ClaimsPrincipal principal, IEnumerable<string> authorizations)
         => principal.FindAll("Authorization")
             .Where(x => authorizations.Contains(x.Value))
             .Any(x => !principal.FindAll("AuthorizationFilter").Any() ||
                       principal.HasClaim("AuthorizationFilter", x.Value));
+
+    public static bool HasAnyAuthorization(this ClaimsPrincipal principal, params string[] authorizations)
+        => principal.HasAnyAuthorization(authorizations.AsEnumerable());
 
     public static bool HasAuthorizationFilter(this ClaimsPrincipal principal)
         => principal.HasClaim(x => x.Type == "AuthorizationFilter");

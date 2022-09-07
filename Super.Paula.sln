@@ -116,6 +116,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Radio", "src\application\Ra
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Radio.Contract", "src\application\Radio.Contract\Radio.Contract.csproj", "{2CA9A4CB-A0AA-4053-B02D-AF8915CDE389}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server.Swagger", "src\server\Server.Swagger\Server.Swagger.csproj", "{3B617854-EB65-4322-82A2-F5975AAFAC9D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -270,6 +272,10 @@ Global
 		{2CA9A4CB-A0AA-4053-B02D-AF8915CDE389}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2CA9A4CB-A0AA-4053-B02D-AF8915CDE389}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2CA9A4CB-A0AA-4053-B02D-AF8915CDE389}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B617854-EB65-4322-82A2-F5975AAFAC9D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B617854-EB65-4322-82A2-F5975AAFAC9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B617854-EB65-4322-82A2-F5975AAFAC9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B617854-EB65-4322-82A2-F5975AAFAC9D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -314,6 +320,7 @@ Global
 		{338628A7-FDF8-4DE6-A4BF-48D92E84D940} = {4C38372C-AF86-4019-8B1E-4B4827E39D10}
 		{1D0866FE-BC59-493F-84D1-956275AA9645} = {140CA7C1-13C2-46AF-9A40-7B65C94FF5BC}
 		{2CA9A4CB-A0AA-4053-B02D-AF8915CDE389} = {140CA7C1-13C2-46AF-9A40-7B65C94FF5BC}
+		{3B617854-EB65-4322-82A2-F5975AAFAC9D} = {9C3CA4DD-C643-48F2-8D8D-6024F09DD88D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {167D4B81-B91A-4D40-AEEF-6CC3C49F9CD1}
