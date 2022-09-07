@@ -7,7 +7,6 @@ using Super.Paula.Application.Administration;
 using Super.Paula.Application.Operation;
 using Super.Paula.Shared.Environment;
 using Super.Paula.Shared.Security;
-using IAuthenticationHandler = Microsoft.AspNetCore.Authentication.IAuthenticationHandler;
 
 namespace Super.Paula.Server.Security;
 
@@ -67,10 +66,10 @@ public class TokenAuthenticationHandler : IAuthenticationHandler
 
     private string? GetTokenFromCookies()
     {
-        var hasAuthorizatioCookie = _context!.Request.Cookies
+        var hasAuthorizationCookie = _context!.Request.Cookies
             .TryGetValue("access_token", out var authorizationCookie);
 
-        return hasAuthorizatioCookie == true && !string.IsNullOrWhiteSpace(authorizationCookie)
+        return hasAuthorizationCookie == true && !string.IsNullOrWhiteSpace(authorizationCookie)
             ? authorizationCookie
             : null;
     }
@@ -94,39 +93,41 @@ public class TokenAuthenticationHandler : IAuthenticationHandler
             return null;
         }
 
-        if (token.Identity == null ||
-            token.Proof == null)
+        if (token.Identity == null || token.Proof == null)
         {
             return null;
         }
 
-        var validIdentity = _connectionManager!.Verify(
-            token.Identity,
-            token.Proof);
+        var connectionAccount = token.Identity;
+        var connectionProof = token.Proof;
+        var connectionProofType = ConnectionProofTypes.Authentication;
+
+        var validIdentity = _connectionManager!.Verify(connectionAccount, connectionProof, connectionProofType);
 
         if (!validIdentity)
         {
-            return null;
-        }
-
-        if (token.Organization != null &&
-            token.Inspector != null)
-        {
-            var validInspector = _connectionManager!.Verify(
-                $"{token.Organization}:{token.Inspector}",
-                token.Proof);
-
-            if (!validInspector &&
-                _appSettings!.MaintainerIdentity == token.Identity)
+            if (token.Organization != null &&
+                token.Inspector != null)
             {
-                validInspector = _connectionManager!.Verify(
-                    $"{token.ImpersonatorOrganization}:{token.ImpersonatorInspector}",
-                    token.Proof);
-            }
 
-            if (!validInspector)
-            {
-                return null;
+                connectionAccount = $"{token.Organization}:{token.Inspector}";
+                connectionProof = token.Proof;
+                connectionProofType = ConnectionProofTypes.Authorization;
+
+                var validInspector = _connectionManager!.Verify(connectionAccount, connectionProof, connectionProofType);
+
+                if (!validInspector &&
+                    _appSettings!.MaintainerIdentity == token.Identity)
+                {
+                    connectionAccount = $"{token.ImpersonatorOrganization}:{token.ImpersonatorInspector}";
+
+                    validInspector = _connectionManager!.Verify(connectionAccount, connectionProof, connectionProofType);
+                }
+
+                if (!validInspector)
+                {
+                    return null;
+                }
             }
         }
 

@@ -3,6 +3,8 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Super.Paula.Shared.Security;
+using System;
+using System.Text;
 
 namespace Super.Paula.Application.Administration;
 
@@ -39,12 +41,14 @@ public class AuthorizationRequestHandler : IAuthorizationRequestHandler
 
         var token = _user.ToToken();
 
-        token.Inspector = identityInspector.Inspector;
         token.Organization = identityInspector.Organization;
+        token.Inspector = identityInspector.Inspector;
 
-        _connectionManager.Trace(
-            $"{token.Organization}:{token.Inspector}",
-            token.Proof!);
+        var connectionAccount = $"{token.Organization}:{token.Inspector}";
+        var connectionProof = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{Guid.NewGuid()}"));
+        var connectionProofType = ConnectionProofTypes.Authorization;
+
+        _connectionManager.Trace(connectionAccount, connectionProof, connectionProofType);
 
         _authorizationTokenHandler.RewriteAuthorizations(token);
 
