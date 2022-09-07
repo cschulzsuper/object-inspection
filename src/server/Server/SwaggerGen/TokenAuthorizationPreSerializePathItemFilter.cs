@@ -11,7 +11,7 @@ namespace Super.Paula.Server.SwaggerGen
         public void Apply(OpenApiPathItem pathItem, PreSerializePathItemFilterContext pathItemContext)
         {
             var user = pathItemContext.HttpContext.User;
-            if (user.IsAuthenticatedIdentity())
+            if (!user.IsAuthenticatedIdentity())
             {
                 return;
             }

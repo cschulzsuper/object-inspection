@@ -16,9 +16,9 @@ internal class InspectorCallbackHandler : IInspectorCallbackHandler
     public Task<IDisposable> OnBusinessObjectCreationAsync(Func<string, InspectorBusinessObjectResponse, Task> handler)
         => _receiver.OnAsync("InspectorBusinessObjectCreation", handler);
 
-    public Task<IDisposable> OnBusinessObjectDeletionAsync(Func<string, string, Task> handler)
+    public Task<IDisposable> OnBusinessObjectUpdateAsync(Func<string, InspectorBusinessObjectResponse, Task> handler)
         => _receiver.OnAsync("InspectorBusinessObjectUpdate", handler);
 
-    public Task<IDisposable> OnBusinessObjectUpdateAsync(Func<string, InspectorBusinessObjectResponse, Task> handler)
+    public Task<IDisposable> OnBusinessObjectDeletionAsync(Func<string, string, Task> handler)
         => _receiver.OnAsync("InspectorBusinessObjectDeletion", handler);
 }

@@ -3,8 +3,6 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Super.Paula.Shared.Security;
-using System.Text;
-using System;
 
 namespace Super.Paula.Application.Administration;
 
