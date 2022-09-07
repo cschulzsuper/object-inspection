@@ -16,11 +16,6 @@ public class BusinessObjectRequest
     [UniqueName]
     public string UniqueName { get; set; } = string.Empty;
 
-    [KebabCase]
-    [StringLength(140)]
-    [UniqueName]
-    public string Inspector { get; set; } = string.Empty;
-
     [Required]
     [StringLength(140)]
     public string DisplayName { get; set; } = string.Empty;

@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using Super.Paula.Templates.Playwright.Auth;
 using Super.Paula.Templates.Playwright.Auditing;
 
+using Playwright = Microsoft.Playwright;
+
 namespace Super.Paula.Templates.Playwright.AdventureToursAuditing.Steps;
 
 public class AdventureToursAuditing : IStep
@@ -31,7 +33,6 @@ public class AdventureToursAuditing : IStep
 
         var adventureToursDemoIdentity = _appSettings.DemoIdentity;
         var adventureToursDemoPassword = _appSettings.DemoPassword;
-        var adventureToursDemoInspector = _appSettings.DemoIdentity;
 
         await page.SignInAsync(
             adventureToursDemoIdentity,

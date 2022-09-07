@@ -35,9 +35,7 @@ public class ExtendedAuthenticationRequestHandler : IAuthenticationRequestHandle
         catch (Exception exception)
         {
             _logger.LogWarning(exception, $"Authentication invalid.");
-        }
-        finally
-        {
+
             await _localStorage.RemoveItemAsync("token");
             await _localStorage.RemoveItemAsync("authorization-filter");
         }

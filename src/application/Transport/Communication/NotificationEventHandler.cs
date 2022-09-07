@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Super.Paula.Application.Administration.Events;
+using Super.Paula.Application.Auditing.Events;
 using Super.Paula.Application.Communication.Responses;
-using Super.Paula.Application.Inventory.Events;
 using Super.Paula.Shared;
 using Super.Paula.Shared.Orchestration;
 using System.Threading.Tasks;
@@ -23,7 +23,7 @@ public class NotificationEventHandler : INotificationEventHandler
             Date = date,
             Time = time,
             Target = $"business-objects/{@event.UniqueName}",
-            Text = $"You are not longer the inspector for {@event.DisplayName}!"
+            Text = $"You are now the inspector for {@event.DisplayName}!"
         };
 
         await notificationManager.InsertAsync(notification);
@@ -54,7 +54,7 @@ public class NotificationEventHandler : INotificationEventHandler
             Date = date,
             Time = time,
             Target = $"business-objects/{@event.UniqueName}",
-            Text = $"You are now the inspector for {@event.DisplayName}!"
+            Text = $"You are not longer the inspector for {@event.DisplayName}!"
         };
 
         await notificationManager.InsertAsync(notification);

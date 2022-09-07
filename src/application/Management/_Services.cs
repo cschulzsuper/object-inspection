@@ -43,6 +43,8 @@ public static class _Services
         services.AddScoped<IBusinessObjectInspectionManager, BusinessObjectInspectionManager>();
         services.AddScoped<IBusinessObjectInspectionAuditRecordManager, BusinessObjectInspectionAuditRecordManager>();
 
+        services.AddScoped<IBusinessObjectInspectorManager, BusinessObjectInspectorManager>();
+
         return services;
     }
 

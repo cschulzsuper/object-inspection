@@ -172,11 +172,16 @@ public static class _Services
             services
                 .AddHttpClient<IBusinessObjectInspectionRequestHandler, BusinessObjectInspectionRequestHandler>()
                 .AddHttpMessageHandler<TokenAuthenticationMessageHandler>();
+
+            services
+                .AddHttpClient<IBusinessObjectInspectorRequestHandler, BusinessObjectInspectorRequestHandler>()
+                .AddHttpMessageHandler<TokenAuthenticationMessageHandler>();
         }
         else
         {
             services.AddHttpClientHandler<IBusinessObjectInspectionAuditRecordRequestHandler, BusinessObjectInspectionAuditRecordRequestHandler>();
             services.AddHttpClientHandler<IBusinessObjectInspectionRequestHandler, BusinessObjectInspectionRequestHandler>();
+            services.AddHttpClientHandler<IBusinessObjectInspectorRequestHandler, BusinessObjectInspectorRequestHandler>();
         }
 
         return services;

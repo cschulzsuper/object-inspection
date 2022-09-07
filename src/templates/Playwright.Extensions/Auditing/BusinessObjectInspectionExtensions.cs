@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace Super.Paula.Templates.Playwright.Auditing;
 
-public static class PageExtensions
+public static class BusinessObjectInspectionExtensions
 {
     public static async Task CreateBusinessObjectInspectionAsync(this IPage page, string businessObject, string inspection)
     {

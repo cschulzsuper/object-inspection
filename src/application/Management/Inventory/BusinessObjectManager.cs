@@ -97,9 +97,6 @@ public class BusinessObjectManager : IBusinessObjectManager
             yield return BusinessObjectValidator.UniqueNameHasValidValue(businessObject.UniqueName);
             yield return BusinessObjectValidator.DisplayNameIsNotEmpty(businessObject.DisplayName);
             yield return BusinessObjectValidator.DisplayNameIsNotTooLong(businessObject.DisplayName);
-            yield return BusinessObjectValidator.InspectorIsNotNull(businessObject.Inspector);
-            yield return BusinessObjectValidator.InspectorHasKebabCase(businessObject.Inspector);
-            yield return BusinessObjectValidator.InspectorIsNotTooLong(businessObject.Inspector);
         }
 
         Validator.Ensure($"business object with unique name '{businessObject.UniqueName}'", Ensurences());
@@ -115,9 +112,6 @@ public class BusinessObjectManager : IBusinessObjectManager
             yield return BusinessObjectValidator.UniqueNameHasValidValue(businessObject.UniqueName);
             yield return BusinessObjectValidator.DisplayNameIsNotEmpty(businessObject.DisplayName);
             yield return BusinessObjectValidator.DisplayNameIsNotTooLong(businessObject.DisplayName);
-            yield return BusinessObjectValidator.InspectorIsNotNull(businessObject.Inspector);
-            yield return BusinessObjectValidator.InspectorHasKebabCase(businessObject.Inspector);
-            yield return BusinessObjectValidator.InspectorIsNotTooLong(businessObject.Inspector);
         }
 
         Validator.Ensure($"business object with unique name '{businessObject.UniqueName}'", Ensurences());

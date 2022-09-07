@@ -54,6 +54,9 @@ public static class _Services
         services.AddScoped<IBusinessObjectInspectionRequestHandler, BusinessObjectInspectionRequestHandler>();
         services.AddScoped<IBusinessObjectInspectionEventService, BusinessObjectInspectionEventService>();
 
+        services.AddScoped<IBusinessObjectInspectorRequestHandler, BusinessObjectInspectorRequestHandler>();
+        services.AddScoped<IBusinessObjectInspectorEventService, BusinessObjectInspectorEventService>();
+
         return services;
     }
 

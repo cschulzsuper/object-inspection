@@ -8,6 +8,8 @@ using Super.Paula.Templates.Playwright.Guidelines;
 using Super.Paula.Templates.Playwright.Inventory;
 using System.Threading.Tasks;
 
+using Playwright = Microsoft.Playwright;
+
 namespace Super.Paula.Templates.Playwright.AdventureTours.Steps;
 
 public class InitializationAdventureTours : IStep
@@ -50,12 +52,19 @@ public class InitializationAdventureTours : IStep
         await page.CreateExtensionAsync("business-object");
         await page.CreateExtensionFieldAsync("business-object", "color", "Color", "color");
 
-        await page.CreateBusinessObjectAsync("Radio #1234", "radio-1234", adventureToursDemoInspector, "Color");
-        await page.CreateBusinessObjectAsync("Radio #1424", "radio-1424", adventureToursDemoInspector, "Color");
-        await page.CreateBusinessObjectAsync("GPS Tracker #2234", "gps-tracker-2234", adventureToursDemoInspector, "Color");
-        await page.CreateBusinessObjectAsync("GPS Tracker #2424", "gps-tracker-2424", adventureToursDemoInspector, "Color");
-        await page.CreateBusinessObjectAsync("Flashlight #134", "flashlight-134", adventureToursDemoInspector, "Color");
-        await page.CreateBusinessObjectAsync("Flashlight #142", "flashlight-142", adventureToursDemoInspector, "Color");
+        await page.CreateBusinessObjectAsync("Radio #1234", "radio-1234", "Color");
+        await page.CreateBusinessObjectAsync("Radio #1424", "radio-1424", "Color");
+        await page.CreateBusinessObjectAsync("GPS Tracker #2234", "gps-tracker-2234", "Color");
+        await page.CreateBusinessObjectAsync("GPS Tracker #2424", "gps-tracker-2424", "Color");
+        await page.CreateBusinessObjectAsync("Flashlight #134", "flashlight-134", "Color");
+        await page.CreateBusinessObjectAsync("Flashlight #142", "flashlight-142", "Color");
+
+        await page.CreateBusinessObjectInspectorAsync("radio-1234", adventureToursDemoInspector);
+        await page.CreateBusinessObjectInspectorAsync("radio-1424", adventureToursDemoInspector);
+        await page.CreateBusinessObjectInspectorAsync("gps-tracker-2234", adventureToursDemoInspector);
+        await page.CreateBusinessObjectInspectorAsync("gps-tracker-2424", adventureToursDemoInspector);
+        await page.CreateBusinessObjectInspectorAsync("flashlight-134", adventureToursDemoInspector);
+        await page.CreateBusinessObjectInspectorAsync("flashlight-142", adventureToursDemoInspector);
 
         await page.CreateInspectionAsync("Charged", "charged");
         await page.CreateInspectionAsync("Operational", "operational");

@@ -25,7 +25,7 @@ public class AuthenticationRequestHandler : IAuthenticationRequestHandler
 
     public async ValueTask VerifyAsync()
     {
-        var responseMessage = await _httpClient.PostAsync("identities/me/verfiy", null);
+        var responseMessage = await _httpClient.PostAsync("identities/me/verify", null);
 
         responseMessage.RuleOutProblems();
         responseMessage.EnsureSuccessStatusCode();

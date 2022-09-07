@@ -105,14 +105,14 @@ public static class _Services
 
         services.AddDbContext<PaulaOperationContext>((services, options) =>
         {
-            var appSeetings = services.GetRequiredService<AppSettings>();
+            var appSettings = services.GetRequiredService<AppSettings>();
 
             options.ReplaceService<IModelCacheKeyFactory, PaulaOperationContextModelCacheKeyFactory>();
 
             options.UseCosmos(
-                appSeetings.CosmosEndpoint,
-                appSeetings.CosmosKey,
-                appSeetings.CosmosDatabase,
+                appSettings.CosmosEndpoint,
+                appSettings.CosmosKey,
+                appSettings.CosmosDatabase,
                 options =>
                 {
                     if (isDevelopment)
@@ -158,6 +158,7 @@ public static class _Services
         services.AddScoped(RepositoryFactory<Worker, PaulaAdministrationContext>());
 
         services.AddScoped(RepositoryFactory<BusinessObject, PaulaApplicationContext>());
+        services.AddScoped(RepositoryFactory<BusinessObjectInspector, PaulaApplicationContext>());
         services.AddScoped(RepositoryFactory<BusinessObjectInspection, PaulaApplicationContext>());
         services.AddScoped(RepositoryFactory<BusinessObjectInspectionAuditRecord, PaulaApplicationContext>());
         services.AddScoped(RepositoryFactory<Inspection, PaulaApplicationContext>());
@@ -165,6 +166,7 @@ public static class _Services
         services.AddScoped(RepositoryFactory<Notification, PaulaApplicationContext>());
 
         services.AddScoped<IPartitionKeyValueGenerator<BusinessObject>, BusinessObjectPartitionKeyValueGenerator>();
+        services.AddScoped<IPartitionKeyValueGenerator<BusinessObjectInspector>, BusinessObjectInspectorPartitionKeyValueGenerator>();
         services.AddScoped<IPartitionKeyValueGenerator<BusinessObjectInspection>, BusinessObjectInspectionPartitionKeyValueGenerator>();
         services.AddScoped<IPartitionKeyValueGenerator<BusinessObjectInspectionAuditRecord>, BusinessObjectInspectionAuditRecordPartitionKeyValueGenerator>();
         services.AddScoped<IPartitionKeyValueGenerator<Identity>, IdentityPartitionKeyValueGenerator>();

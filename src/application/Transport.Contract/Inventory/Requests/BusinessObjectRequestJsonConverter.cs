@@ -9,7 +9,6 @@ public class BusinessObjectRequestJsonConverter : JsonConverter<BusinessObjectRe
 {
     private static readonly JsonEncodedText UniqueName = JsonEncodedText.Encode("uniqueName");
     private static readonly JsonEncodedText DisplayName = JsonEncodedText.Encode("displayName");
-    private static readonly JsonEncodedText Inspector = JsonEncodedText.Encode("inspector");
     private static readonly JsonEncodedText ETag = JsonEncodedText.Encode("etag");
 
     public override BusinessObjectRequest Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
@@ -18,7 +17,7 @@ public class BusinessObjectRequestJsonConverter : JsonConverter<BusinessObjectRe
 
         if (reader.TokenType != JsonTokenType.StartObject)
         {
-            throw new JsonException("Unexcepted end when reading JSON.");
+            throw new JsonException("Unexpected end when reading JSON.");
         }
 
         while (reader.Read() && reader.TokenType != JsonTokenType.EndObject)
@@ -28,7 +27,7 @@ public class BusinessObjectRequestJsonConverter : JsonConverter<BusinessObjectRe
 
         if (reader.TokenType != JsonTokenType.EndObject)
         {
-            throw new JsonException("Unexcepted end when reading JSON.");
+            throw new JsonException("Unexpected end when reading JSON.");
         }
 
         return request;
@@ -36,13 +35,7 @@ public class BusinessObjectRequestJsonConverter : JsonConverter<BusinessObjectRe
 
     internal static void ReadValue(ref Utf8JsonReader reader, BusinessObjectRequest value, JsonSerializerOptions options)
     {
-        if (reader.TryReadStringProperty(Inspector, out var stringValue))
-        {
-            value.Inspector = stringValue;
-            return;
-        }
-
-        if (reader.TryReadStringProperty(DisplayName, out stringValue))
+        if (reader.TryReadStringProperty(DisplayName, out var stringValue))
         {
             value.DisplayName = stringValue;
             return;
@@ -71,7 +64,6 @@ public class BusinessObjectRequestJsonConverter : JsonConverter<BusinessObjectRe
     {
         writer.WriteStartObject();
 
-        writer.WriteStringIfNotNull(Inspector, value.Inspector);
         writer.WriteStringIfNotNull(UniqueName, value.UniqueName);
         writer.WriteStringIfNotNull(DisplayName, value.DisplayName);
         writer.WriteStringIfNotNull(ETag, value.ETag);
