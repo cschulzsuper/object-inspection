@@ -12,8 +12,6 @@ public class TokenAuthorizationOperationFilter : IOperationFilter
 {
     public void Apply(OpenApiOperation operation, OperationFilterContext context)
     {
-        var c = new TokenAuthorizationPolicyProvider();
-
         var authorizeAttribute = (AuthorizeAttribute?) context.ApiDescription
             .ActionDescriptor
             .EndpointMetadata
