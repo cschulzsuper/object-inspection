@@ -1,5 +1,4 @@
-﻿@using Super.Paula.Shared.Security
-@inject NavigationManager NavigationManager
+﻿@inject NavigationManager NavigationManager
 
 @inject ITranslator<UnauthorizedRedirect> Translator
 
@@ -16,13 +15,13 @@
     {
         var user = (await AuthenticationState).User;
 
-        if (user.Identity?.IsAuthenticated != true)
+        if (!user.IsAuthenticatedIdentity())
         {
             NavigationManager.NavigateTo("/sign-in");
             return;
         }
 
-        if (user.HasInspector())
+        if (user.Claims.HasInspector())
         {
             NavigationManager.NavigateTo("/inspectors/sign-in");
             return;

@@ -8,7 +8,7 @@ public class IdentityClaimResourceHandler : AuthorizationHandler<IdentityClaimRe
 {
     protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, IdentityClaimResourceRequirement requirement)
     {
-        var isAuthorized = context.User.HasAnyAuthorization(requirement.Authorizations);
+        var isAuthorized = context.User.Claims.HasAnyAuthorization(requirement.Authorizations);
 
         if (isAuthorized)
         {

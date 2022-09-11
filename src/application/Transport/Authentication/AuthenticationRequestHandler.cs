@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Super.Paula.Application.Authentication.Exceptions;
 using Super.Paula.Application.Authentication.Requests;
 using Super.Paula.Application.Authentication.Responses;
-using Super.Paula.Application.Operation;
+using Super.Paula.BadgeSecurity;
 using Super.Paula.Shared.Security;
 
 namespace Super.Paula.Application.Authentication;
@@ -14,25 +13,28 @@ namespace Super.Paula.Application.Authentication;
 public class AuthenticationRequestHandler : IAuthenticationRequestHandler
 {
     private readonly IIdentityManager _identityManager;
-    private readonly IBadgeAuthenticationTracker _badgeAuthenticationTracker;
+    private readonly IBadgeHandler _badgeHandler;
+    private readonly IBadgeProofManager _badgeManager;
     private readonly IPasswordHasher<Identity> _passwordHasher;
     private readonly ClaimsPrincipal _user;
 
     public AuthenticationRequestHandler(
         IIdentityManager identityManager,
-        IBadgeAuthenticationTracker badgeAuthenticationTracker,
+        IBadgeHandler badgeHandler,
+        IBadgeProofManager badgeManager,
         IPasswordHasher<Identity> passwordHasher,
         ClaimsPrincipal principal)
     {
         _identityManager = identityManager;
-        _badgeAuthenticationTracker = badgeAuthenticationTracker;
+        _badgeHandler = badgeHandler;
+        _badgeManager = badgeManager;
         _passwordHasher = passwordHasher;
         _user = principal;
     }
 
     public async ValueTask ChangeSecretAsync(ChangeIdentitySecretRequest request)
     {
-        var identity = await _identityManager.GetAsync(_user.GetIdentity());
+        var identity = await _identityManager.GetAsync(_user.Claims.GetIdentity());
 
         var oldSecretVerification = _passwordHasher.VerifyHashedPassword(identity, identity.Secret, request.OldSecret);
         if (oldSecretVerification == PasswordVerificationResult.Failed)
@@ -78,7 +80,7 @@ public class AuthenticationRequestHandler : IAuthenticationRequestHandler
                 throw new TransportException($"The secret does not match.");
         }
 
-        var badge = _badgeAuthenticationTracker.Trace(_user, "identity", entity);
+        var badge = _badgeHandler.Authorize(_user, "identity", entity);
 
         return badge;
     }
@@ -87,7 +89,7 @@ public class AuthenticationRequestHandler : IAuthenticationRequestHandler
     {
         try
         {
-            _badgeAuthenticationTracker.Forget(_user);
+            _badgeManager.Purge(_user);
 
             return ValueTask.CompletedTask;
         }

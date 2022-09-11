@@ -25,7 +25,7 @@ public class OrganizationContinuationService : IOrganizationContinuationService
         var continuation = new CreateInspectorContinuation(
             entity.UniqueName,
             entity.ChiefInspector,
-            _user.GetIdentity(),
+            _user.Claims.GetIdentity(),
             entity.Activated,
             entity.DisplayName,
             true);

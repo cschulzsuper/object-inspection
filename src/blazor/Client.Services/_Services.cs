@@ -22,6 +22,7 @@ using Super.Paula.Application.Localization;
 using Super.Paula.Client.Operation;
 using Super.Paula.Shared;
 using Super.Paula.Application.Operation;
+using Super.Paula.BadgeUsage;
 using Super.Paula.Client.Authentication;
 using Super.Paula.Client.Security;
 using Super.Paula.Shared.Security;
@@ -39,12 +40,14 @@ public static class _Services
         services.AddAppSettings();
         services.AddAppEnvironment(isDevelopment);
         services.AddBuildInfo();
+        services.AddBadgeEncoding(ClaimsJsonSerializerOptions.Options);
 
         services.AddClientAuthorization();
         services.AddClientLocalization();
-        services.AddClientRadio();
+        services.AddClientRadio(provider => provider.GetRequiredService<BadgeStorage>().GetOrDefaultAsync);
         services.AddClientTransport(isWebAssembly);
 
+        services.AddScoped<BadgeStorage>();
         services.AddScoped<ILocalStorage, TStorage>();
 
         return services;
@@ -69,7 +72,7 @@ public static class _Services
             var clientFactory = sp.GetRequiredService<ITypedHttpClientFactory<THandler>>();
 
             var factoryHandler = messageHandlerFactory.CreateHandler();
-            var fullHandler = new BadgeAuthenticationMessageHandler(sp.GetRequiredService<ILocalStorage>())
+            var fullHandler = new BadgeAuthenticationMessageHandler(sp.GetRequiredService<BadgeStorage>())
             {
                 InnerHandler = factoryHandler
             };
@@ -89,7 +92,7 @@ public static class _Services
             var clientFactory = sp.GetRequiredService<ITypedHttpClientFactory<THandler>>();
 
             var factoryHandler = messageHandlerFactory.CreateHandler();
-            var fullHandler = new BadgeAuthenticationMessageHandler(sp.GetRequiredService<ILocalStorage>())
+            var fullHandler = new BadgeAuthenticationMessageHandler(sp.GetRequiredService<BadgeStorage>())
             {
                 InnerHandler = factoryHandler
             };
@@ -150,7 +153,7 @@ public static class _Services
         services.AddScoped<IAuthorizationRequestHandler>(provider =>
             new ExtendedAuthorizationRequestHandler(
                 provider.GetRequiredService<AuthorizationRequestHandler>(),
-                provider.GetRequiredService<ILocalStorage>()));
+                provider.GetRequiredService<BadgeStorage>()));
 
         services.AddScoped<IInspectorRequestHandler>(provider =>
             new ExtendedInspectorRequestHandler(
@@ -209,7 +212,7 @@ public static class _Services
             new ExtendedAuthenticationRequestHandler(
                 provider.GetRequiredService<ILogger<ExtendedAuthenticationRequestHandler>>(),
                 provider.GetRequiredService<AuthenticationRequestHandler>(),
-                provider.GetRequiredService<ILocalStorage>()));
+                provider.GetRequiredService<BadgeStorage>()));
 
         return services;
     }

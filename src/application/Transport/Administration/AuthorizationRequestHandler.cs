@@ -1,9 +1,8 @@
 ﻿using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Super.Paula.BadgeSecurity;
 using Super.Paula.Shared.Security;
-using System;
-using System.Text;
 
 namespace Super.Paula.Application.Administration;
 
@@ -11,31 +10,31 @@ public class AuthorizationRequestHandler : IAuthorizationRequestHandler
 {
     private readonly IInspectorManager _inspectorManager;
     private readonly IIdentityInspectorManager _identityInspectorManager;
-    private readonly IBadgeAuthenticationTracker _badgeAuthenticationTracker;
+    private readonly IBadgeHandler _badgeHandler;
     private readonly ClaimsPrincipal _user;
 
     public AuthorizationRequestHandler(
         IInspectorManager inspectorManager,
         IIdentityInspectorManager identityInspectorManager,
-        IBadgeAuthenticationTracker badgeAuthenticationTracker,
+        IBadgeHandler badgeHandler,
         ClaimsPrincipal user)
     {
         _inspectorManager = inspectorManager;
         _identityInspectorManager = identityInspectorManager;
-        _badgeAuthenticationTracker = badgeAuthenticationTracker;
+        _badgeHandler = badgeHandler;
         _user = user;
     }
 
     public ValueTask<string> AuthorizeAsync(string organization, string inspector)
     {
         var entity = _identityInspectorManager
-            .GetIdentityBasedQueryable(_user.GetIdentity())
+            .GetIdentityBasedQueryable(_user.Claims.GetIdentity())
             .Single(x =>
                 x.Activated &&
                 x.Inspector == inspector &&
                 x.Organization == organization);
 
-        var badge = _badgeAuthenticationTracker.Trace(_user, "inspector", entity);
+        var badge = _badgeHandler.Authorize(_user, "inspector", entity);
         
         return ValueTask.FromResult(badge);
     }
@@ -50,7 +49,7 @@ public class AuthorizationRequestHandler : IAuthorizationRequestHandler
                 x.Organization == organization);
 
 
-        var badge = _badgeAuthenticationTracker.Trace(_user, "impersonator", entity);
+        var badge = _badgeHandler.Authorize(_user, "impersonator", entity);
 
         return ValueTask.FromResult(badge);
     }
@@ -60,10 +59,10 @@ public class AuthorizationRequestHandler : IAuthorizationRequestHandler
         var entity = _identityInspectorManager.GetQueryable()
            .Single(x =>
                x.Activated &&
-               x.Inspector == _user.GetImpersonatorInspector() &&
-               x.Organization == _user.GetImpersonatorOrganization());
+               x.Inspector == _user.Claims.GetImpersonatorInspector() &&
+               x.Organization == _user.Claims.GetImpersonatorOrganization());
 
-        var badge = _badgeAuthenticationTracker.Trace(_user, "inspector", entity);
+        var badge = _badgeHandler.Authorize(_user, "inspector", entity);
 
         return ValueTask.FromResult(badge);
     }

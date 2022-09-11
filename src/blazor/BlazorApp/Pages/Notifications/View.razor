@@ -4,8 +4,6 @@
 @inject NavigationManager NavigationManager
 @inject INotificationCallbackHandler NotificationCallbackHandler
 @inject INotificationRequestHandler NotificationRequestHandler
-
-@using Super.Paula.Shared.Security
 @implements IAsyncDisposable
 
 @attribute [Authorize("OnlyInspectorOrObserver")]
@@ -74,7 +72,7 @@ else
     {
         _notifications = new List<NotificationResponse>();
 
-        var inspector = (await AuthenticationState).User.GetInspector();
+        var inspector = (await AuthenticationState).User.Claims.GetInspector();
 
         await foreach (var notification in NotificationRequestHandler.GetAllForInspector(inspector))
         {

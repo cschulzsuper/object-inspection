@@ -1,5 +1,7 @@
-﻿@using Super.Paula.Shared.Security
+﻿@using Super.Paula.Client.Security
+
 @inject AppSettings AppSettings
+@inject BadgeStorage BadgeStorage
 
 @if (_avatar != null)
 {
@@ -30,17 +32,12 @@ else
     [Parameter]
     public int Size { get; set; } = 32;
 
-    [CascadingParameter]
-    public Task<AuthenticationState> AuthenticationState { get; set; } = null!;
-
     [Parameter]
     public string CssClass { get; set; } = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
-        _badge = (await AuthenticationState).User
-            .ToBadge()
-            .ToBase64String();
+        _badge = await BadgeStorage.GetOrDefaultAsync();
 
         await base.OnInitializedAsync();
     }

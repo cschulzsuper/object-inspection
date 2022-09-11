@@ -1,6 +1,8 @@
 ﻿using Super.Paula.Application.Administration;
 using Super.Paula.Client.Storage;
 using System.Threading.Tasks;
+using Super.Paula.BadgeUsage;
+using Super.Paula.Client.Security;
 using Super.Paula.Shared.Security;
 
 namespace Super.Paula.Client.Administration;
@@ -8,22 +10,21 @@ namespace Super.Paula.Client.Administration;
 public class ExtendedAuthorizationRequestHandler : IAuthorizationRequestHandler
 {
     private readonly IAuthorizationRequestHandler _authorizationHandler;
-    private readonly ILocalStorage _localStorage;
+    private readonly BadgeStorage _badgeStorage;
 
     public ExtendedAuthorizationRequestHandler(
         IAuthorizationRequestHandler authorizationHandler,
-        ILocalStorage localStorage)
+        BadgeStorage badgeStorage)
     {
         _authorizationHandler = authorizationHandler;
-        _localStorage = localStorage;
+        _badgeStorage = badgeStorage;
     }
 
     public async ValueTask<string> AuthorizeAsync(string organization, string inspector)
     {
         var response = await _authorizationHandler.AuthorizeAsync(organization, inspector);
 
-        var badge = response.ToBadge();
-        await _localStorage.SetItemAsync("badge", badge);
+        await _badgeStorage.SetAsync(response);
 
         return response;
     }
@@ -32,8 +33,7 @@ public class ExtendedAuthorizationRequestHandler : IAuthorizationRequestHandler
     {
         var response = await _authorizationHandler.StartImpersonationAsync(organization, inspector);
 
-        var badge = response.ToBadge();
-        await _localStorage.SetItemAsync("badge", badge);
+        await _badgeStorage.SetAsync(response);
 
         return response;
     }
@@ -42,8 +42,7 @@ public class ExtendedAuthorizationRequestHandler : IAuthorizationRequestHandler
     {
         var response = await _authorizationHandler.StopImpersonationAsync();
 
-        var badge = response.ToBadge();
-        await _localStorage.SetItemAsync("badge", badge);
+        await _badgeStorage.SetAsync(response);
 
         return response;
     }

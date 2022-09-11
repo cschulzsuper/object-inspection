@@ -7,7 +7,7 @@ public class AnyAuthorizationClaimHandler : AuthorizationHandler<AnyAuthorizatio
 {
     protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, AnyAuthorizationClaimRequirement requirement)
     {
-        var isAuthorized = context.User
+        var isAuthorized = context.User.Claims
             .HasAnyAuthorization(requirement.Authorizations);
 
         if (isAuthorized)

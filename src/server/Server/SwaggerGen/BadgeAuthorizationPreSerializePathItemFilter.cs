@@ -2,6 +2,7 @@
 using System.Linq;
 using Microsoft.OpenApi.Models;
 using System.Security.Claims;
+using Super.Paula.BadgeSecurity;
 using Super.Paula.Shared.Security;
 
 namespace Super.Paula.Server.SwaggerGen
@@ -27,7 +28,7 @@ namespace Super.Paula.Server.SwaggerGen
             }
         }
 
-        public bool IsAuthorized(IList<string> validAuthorizations, ClaimsPrincipal user)
+        public static bool IsAuthorized(IList<string> validAuthorizations, ClaimsPrincipal user)
         {
             var validAuthorizationRequired = validAuthorizations.Any();
 
@@ -36,7 +37,7 @@ namespace Super.Paula.Server.SwaggerGen
                 return true;
             }
 
-            var hasValidAuthorization = user.HasAnyAuthorization(validAuthorizations);
+            var hasValidAuthorization = user.Claims.HasAnyAuthorization(validAuthorizations);
             return hasValidAuthorization;
         }
     }

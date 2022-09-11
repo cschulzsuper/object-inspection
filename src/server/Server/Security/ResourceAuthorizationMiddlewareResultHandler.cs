@@ -9,7 +9,7 @@ using Super.Paula.Shared.Security;
 
 namespace Super.Paula.Server.Security;
 
-public class BadgeAuthorizationMiddlewareResultHandler : IAuthorizationMiddlewareResultHandler
+public class ResourceAuthorizationMiddlewareResultHandler : IAuthorizationMiddlewareResultHandler
 {
     private readonly AuthorizationMiddlewareResultHandler _defaultHandler = new AuthorizationMiddlewareResultHandler();
 
@@ -35,7 +35,7 @@ public class BadgeAuthorizationMiddlewareResultHandler : IAuthorizationMiddlewar
                 var inspector = context.Request.RouteValues.Single(x => x.Key is "inspector" or "identity");
 
                 // TODO something is wrong here why async and why _?
-                _ = 56 authorizationService.AuthorizeAsync(context.User, inspector, authorizationPolicy);
+                _ = authorizationService.AuthorizeAsync(context.User, inspector, authorizationPolicy);
 
                 authorizationResult = await policyEvaluator.AuthorizeAsync(authorizationPolicy, authenticateResult, context, inspector);
             }

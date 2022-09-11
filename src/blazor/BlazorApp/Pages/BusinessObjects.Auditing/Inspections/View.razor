@@ -1,5 +1,4 @@
 ﻿@page "/business-objects/{businessObject}/inspections"
-@using Super.Paula.Shared.Security
 
 @inject ITranslator<View> Translator
 @inject NavigationManager NavigationManager
@@ -169,7 +168,7 @@ else
 
         _businessObject = await BusinessObjectHandler.GetAsync(BusinessObject);
 
-        var isChief = (await AuthenticationState).User.HasAuthorization("Chief");
+        var isChief = (await AuthenticationState).User.Claims.HasAuthorization("Chief");
 
         if (isChief)
         {

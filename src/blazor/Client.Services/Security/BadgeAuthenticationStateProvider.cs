@@ -1,60 +1,47 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components.Authorization;
-using Super.Paula.Application.Authentication;
-using Super.Paula.Client.Storage;
-using Super.Paula.Shared.Security;
+using Super.Paula.BadgeUsage;
 
 namespace Super.Paula.Client.Security;
 
 public class BadgeAuthenticationStateProvider : AuthenticationStateProvider
 {
-    private readonly ILocalStorage _localStorage;
-    private readonly IAuthenticationRequestHandler _authenticationRequestHandler;
+    private readonly IBadgeEncoding _badgeEncoding;
+    private readonly BadgeStorage _badgeStorage;
     private Task<AuthenticationState>? _authenticationState;
 
-    private static bool _verified = false;
-
     public BadgeAuthenticationStateProvider(
-        ILocalStorage localStorage, 
-        IAuthenticationRequestHandler authenticationRequestHandler)
+        IBadgeEncoding badgeEncoding,
+        BadgeStorage badgeStorage)
     {
-        _localStorage = localStorage;
-        _localStorage.Changed += OnChanged;
-
-        _authenticationRequestHandler = authenticationRequestHandler;
+        _badgeEncoding = badgeEncoding;
+        _badgeStorage = badgeStorage;
+        _badgeStorage.OnChange(OnChangedAsync);
     }
 
-    private void OnChanged(object? sender, LocalStorageEventArgs e)
+    private Task OnChangedAsync(string? badge)
     {
-        if (e.Key != "token")
-        {
-            return;
-        }
-
         _authenticationState = null;
 
-        NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
+        NotifyAuthenticationStateChanged(CreateAuthenticationStateAsync(badge));
+
+        return Task.CompletedTask;
     }
 
     public override async Task<AuthenticationState> GetAuthenticationStateAsync()
     {
-        if (!_verified)
-        {
-            await _authenticationRequestHandler.VerifyAsync();
-            _verified = true;
-        }
+        var badge = await _badgeStorage.GetOrDefaultAsync();
 
-        _authenticationState ??= CreateAuthenticationStateAsync();
+        _authenticationState ??= CreateAuthenticationStateAsync(badge);
 
         return await _authenticationState;
     }
 
-    private async Task<AuthenticationState> CreateAuthenticationStateAsync()
+    private async Task<AuthenticationState> CreateAuthenticationStateAsync(string? badge)
     {
-        var badge = await _localStorage.GetItemAsync<Badge>("badge");
+        await Task.CompletedTask;
 
         if (badge == null)
         {
@@ -64,7 +51,7 @@ public class BadgeAuthenticationStateProvider : AuthenticationStateProvider
                         Enumerable.Empty<Claim>())));
         }
 
-        var claims = badge.ToClaims();
+        var claims = _badgeEncoding.Decode(badge);
 
         return new AuthenticationState(
             new ClaimsPrincipal(

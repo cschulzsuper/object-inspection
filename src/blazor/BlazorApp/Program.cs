@@ -1,12 +1,12 @@
 using Blazored.LocalStorage;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
-using Super.Paula.Client.Configuration;
-using System.Threading.Tasks;
-using System.Globalization;
 using Microsoft.JSInterop;
+using Super.Paula.Client.Configuration;
 using Super.Paula.Client.Storage;
-using Microsoft.AspNetCore.Components.Web;
+using System.Globalization;
+using System.Threading.Tasks;
 
 namespace Super.Paula.Client;
 

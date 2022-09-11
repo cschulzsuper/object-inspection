@@ -6,6 +6,8 @@ using Super.Paula.Application.Authentication;
 using Super.Paula.Application.Authentication.Exceptions;
 using Super.Paula.Application.Authentication.Requests;
 using Super.Paula.Application.Authentication.Responses;
+using Super.Paula.BadgeUsage;
+using Super.Paula.Client.Security;
 using Super.Paula.Shared.Security;
 
 namespace Super.Paula.Client.Administration;
@@ -14,16 +16,16 @@ public class ExtendedAuthenticationRequestHandler : IAuthenticationRequestHandle
 {
     private readonly ILogger<ExtendedAuthenticationRequestHandler> _logger;
     private readonly IAuthenticationRequestHandler _authenticationHandler;
-    private readonly ILocalStorage _localStorage;
+    private readonly BadgeStorage _badgeStorage;
 
     public ExtendedAuthenticationRequestHandler(
         ILogger<ExtendedAuthenticationRequestHandler> logger,
         IAuthenticationRequestHandler authenticationHandler,
-        ILocalStorage localStorage)
+        BadgeStorage badgeStorage)
     {
         _logger = logger;
         _authenticationHandler = authenticationHandler;
-        _localStorage = localStorage;
+        _badgeStorage = badgeStorage;
     }
 
     public async ValueTask VerifyAsync()
@@ -36,7 +38,7 @@ public class ExtendedAuthenticationRequestHandler : IAuthenticationRequestHandle
         {
             _logger.LogWarning(exception, $"Authentication invalid.");
 
-            await _localStorage.RemoveItemAsync("badge");
+            await _badgeStorage.SetAsync(null);
         }
     }
 
@@ -53,8 +55,7 @@ public class ExtendedAuthenticationRequestHandler : IAuthenticationRequestHandle
     {
         var response = await _authenticationHandler.SignInAsync(identity, request);
 
-        var badge = response.ToBadge();
-        await _localStorage.SetItemAsync("badge", badge);
+        await _badgeStorage.SetAsync(response);
 
         return response;
     }
@@ -71,7 +72,7 @@ public class ExtendedAuthenticationRequestHandler : IAuthenticationRequestHandle
         }
         finally
         {
-            await _localStorage.RemoveItemAsync("badge");
+            await _badgeStorage.SetAsync(null);
         }
     }
 }

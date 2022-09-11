@@ -9,6 +9,7 @@ using Super.Paula.RuntimeData;
 using Super.Paula.Server.Orchestration;
 using Super.Paula.Shared;
 using System.Diagnostics.CodeAnalysis;
+using Super.Paula.BadgeSecurity;
 using Super.Paula.Server.Security;
 using Super.Paula.Shared.Security;
 
@@ -44,13 +45,7 @@ public static class _Services
 
     public static IServiceCollection AddServerAuthentication(this IServiceCollection services)
     {
-        services.AddAuthentication(options =>
-        {
-            options.DefaultScheme = "badge";
-            options.AddScheme<BadgeAuthenticationHandler>("badge", null);
-        });
-
-        services.AddScoped<IBadgeAuthenticationTracker, BadgeAuthenticationTracker>();
+        services.AddBadgeAuthentication<BadgeProofManager, BadgeClaimsFilter, BadgeClaimsFactory>(ClaimsJsonSerializerOptions.Options);
 
         return services;
     }
@@ -61,7 +56,7 @@ public static class _Services
 
         services
             .AddSingleton<IAuthorizationPolicyProvider, BadgeAuthorizationPolicyProvider>()
-            .AddScoped<IAuthorizationMiddlewareResultHandler, BadgeAuthorizationMiddlewareResultHandler>()
+            .AddScoped<IAuthorizationMiddlewareResultHandler, ResourceAuthorizationMiddlewareResultHandler>()
             .AddScoped<IAuthorizationHandler, AnyAuthorizationClaimHandler>()
             .AddScoped<IAuthorizationHandler, IdentityClaimResourceHandler>()
             .AddScoped<IAuthorizationHandler, InspectorClaimResourceHandler>()

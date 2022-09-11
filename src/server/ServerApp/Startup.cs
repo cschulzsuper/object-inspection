@@ -14,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Serialization.Metadata;
 using System.Threading.Tasks;
 using Super.Paula.Server.Swagger;
 using Super.Paula.Shared.JsonConversion;
@@ -39,9 +40,9 @@ public class Startup
         {
             options.SerializerOptions.PropertyNameCaseInsensitive = true;
             options.SerializerOptions.PropertyNamingPolicy = new CustomJsonCamelCaseNamingPolicy();
-            options.SerializerOptions.Converters.Add(new ObjectJsonConverter());
+            // options.SerializerOptions.Converters.Add(new ObjectJsonConverter());
         });
-
+        
         services.AddServer(_environment, _configuration);
 
         services.AddEndpointsApiExplorer();

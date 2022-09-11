@@ -1,5 +1,4 @@
 ﻿@page "/organizations"
-@using Super.Paula.Shared.Security
 
 @inject ITranslator<View> Translator
 @inject NavigationManager NavigationManager
@@ -103,7 +102,7 @@
 
     protected override async Task OnParametersSetAsync()
     {
-        _organization = (await AuthenticationState).User.GetOrganization();
+        _organization = (await AuthenticationState).User.Claims.GetOrganization();
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)

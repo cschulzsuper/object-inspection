@@ -8,7 +8,7 @@ public class InspectorClaimResourceHandler : AuthorizationHandler<InspectorClaim
 {
     protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, InspectorClaimResourceRequirement requirement)
     {
-        var isAuthorized = context.User.HasAnyAuthorization(requirement.Authorizations);
+        var isAuthorized = context.User.Claims.HasAnyAuthorization(requirement.Authorizations);
 
         if (isAuthorized)
         {

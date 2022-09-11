@@ -1,23 +1,21 @@
-﻿using System.Security.Claims;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
-using Super.Paula.Shared.Security;
 
-namespace Super.Paula.Server.Security;
+namespace Super.Paula.BadgeSecurity;
 
 public class BadgeAuthenticationHandler : IAuthenticationHandler
 {
     private AuthenticationScheme? _scheme;
     private HttpContext? _context;
-    private IBadgeAuthenticationTracker? _tracker;
+    private IBadgeHandler? _handler;
 
     public Task InitializeAsync(AuthenticationScheme scheme, HttpContext context)
     {
         _scheme = scheme;
         _context = context;
-        _tracker = context.RequestServices.GetRequiredService<IBadgeAuthenticationTracker>();
+        _handler = context.RequestServices.GetRequiredService<IBadgeHandler>();
 
         return Task.CompletedTask;
     }
@@ -29,8 +27,12 @@ public class BadgeAuthenticationHandler : IAuthenticationHandler
             GetBadgeFromCookies() ??
             GetBadgeFromQuery();
 
-        var user = _tracker!.Verify(encodedBadge);
+        if (encodedBadge == null)
+        {
+            return Task.FromResult(AuthenticateResult.Fail("Authentication failed"));
+        }
 
+        var user = _handler!.Authenticate(encodedBadge);
         if (user == null)
         {
             return Task.FromResult(AuthenticateResult.Fail("Authentication failed"));

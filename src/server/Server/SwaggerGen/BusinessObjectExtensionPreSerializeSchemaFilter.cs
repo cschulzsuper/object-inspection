@@ -3,6 +3,7 @@ using Microsoft.OpenApi.Models;
 using Super.Paula.Application.Inventory.Requests;
 using Super.Paula.Application.Inventory.Responses;
 using Super.Paula.Application.Operation;
+using Super.Paula.BadgeSecurity;
 using Super.Paula.Shared.Security;
 
 namespace Super.Paula.Server.SwaggerGen

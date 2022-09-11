@@ -1,7 +1,6 @@
 ﻿@inject INotificationCallbackHandler NotificationCallbackHandler
 @inject INotificationRequestHandler NotificationRequestHandler
 
-@using Super.Paula.Shared.Security
 @implements IDisposable
 
 @if (_notificationCount > 0)
@@ -24,12 +23,9 @@
         {
             _notificationCreation = await NotificationCallbackHandler.OnCreationAsync(OnNotificationCreationAsync);
             _notificationDeletion = await NotificationCallbackHandler.OnDeletionAsync(OnNotificationDeletionAsync);
-        }
-    }
 
-    protected override async Task OnParametersSetAsync()
-    {
-        await CountAsync();
+            await CountAsync();
+        }
     }
 
     public async Task CountAsync()
@@ -40,7 +36,7 @@
 
         if (user.IsAuthenticatedInspector())
         {
-            await foreach (var _ in NotificationRequestHandler.GetAllForInspector(user.GetInspector()))
+            await foreach (var _ in NotificationRequestHandler.GetAllForInspector(user.Claims.GetInspector()))
             {
                 _notificationCount++;
             }

@@ -10,8 +10,7 @@ public class Base64Encoder
     {
         var json = JsonSerializer.Serialize(@object);
 
-        var coded = (char)0x00 + json;
-        var bytes = Encoding.Default.GetBytes(coded);
+        var bytes = Encoding.Default.GetBytes(json);
 
         return Convert.ToBase64String(bytes);
     }
@@ -23,8 +22,6 @@ public class Base64Encoder
     {
         var bytes = Convert.FromBase64String(value);
         var json = Encoding.Default.GetString(bytes);
-
-        json = json.TrimStart((char)0x00);
 
         var @object = JsonSerializer.Deserialize(json, type);
 

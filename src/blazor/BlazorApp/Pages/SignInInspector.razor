@@ -1,5 +1,4 @@
 ﻿@page "/inspectors/sign-in"
-@using Super.Paula.Shared.Security
 
 @layout UnauthorizedLayout
 
@@ -49,7 +48,7 @@ else
 
         var user = (await AuthenticationState).User;
 
-        var identity = user.GetIdentity();
+        var identity = user.Claims.GetIdentity();
 
         var inspectorsResponse = InspectorRequestHandler.GetAllForIdentity(identity);
 
