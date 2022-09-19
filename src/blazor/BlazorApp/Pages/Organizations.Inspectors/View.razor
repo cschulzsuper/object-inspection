@@ -1,5 +1,4 @@
 ﻿@page "/organizations/{organization}/inspectors"
-@using Super.Paula.Shared.Security
 
 @inject IAuthorizationRequestHandler AuthorizationRequestHandler
 @inject IInspectorRequestHandler InspectorRequestHandler
@@ -94,8 +93,8 @@ else
 
     protected override async Task OnParametersSetAsync()
     {
-        _meInspector = (await AuthenticationState).User.GetInspector();
-        _meOrganistation = (await AuthenticationState).User.GetOrganization();
+        _meInspector = (await AuthenticationState).User.Claims.GetInspector();
+        _meOrganistation = (await AuthenticationState).User.Claims.GetOrganization();
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -165,7 +164,7 @@ else
 
     public async Task ImpersonateAsync(string inspector)
     {
-        var organization = (await AuthenticationState).User.GetOrganization();
+        var organization = (await AuthenticationState).User.Claims.GetOrganization();
 
         await AuthorizationRequestHandler.StartImpersonationAsync(
             Organization ?? organization,

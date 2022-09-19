@@ -30,7 +30,6 @@ public static class _Services
     private static IServiceCollection AddServerTransportAdministration(this IServiceCollection services)
     {
         services.AddScoped<IAuthorizationRequestHandler, AuthorizationRequestHandler>();
-        services.AddScoped<IAuthorizationTokenHandler, AuthorizationTokenHandler>();
 
         services.AddScoped<IInspectorRequestHandler, InspectorRequestHandler>();
         services.AddScoped<IInspectorEventService, InspectorEventService>();

@@ -27,11 +27,11 @@ public class ApplicationEventHandler : IApplicationEventHandler
         await applicationManager.PrugeAsync(@event.UniqueName);
     }
 
-    private void Guard(EventHandlerContext context)
+    private static void Guard(EventHandlerContext context)
     {
         var appSettings = context.Services.GetRequiredService<AppSettings>();
 
-        var contextUserIdentity = context.User.GetIdentity();
+        var contextUserIdentity = context.User.Claims.GetIdentity();
         var contextUserIdentityUnauthorized =
             appSettings.MaintainerIdentity != contextUserIdentity;
 

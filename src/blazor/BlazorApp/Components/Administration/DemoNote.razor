@@ -1,5 +1,4 @@
-﻿@using Super.Paula.Shared.Security
-@inject AppSettings AppSettings
+﻿@inject AppSettings AppSettings
 @inject ITranslator<DemoNote> Translator
 
 @if (_showDemo)
@@ -17,20 +16,21 @@
 @code {
 
 
-[Parameter]
-public RenderFragment ChildContent { get; set; } = null!;
+    [Parameter]
+    public RenderFragment ChildContent { get; set; } = null!;
 
-[CascadingParameter]
-private Task<AuthenticationState> AuthenticationState { get; set; } = null!;
+    [CascadingParameter]
+    private Task<AuthenticationState> AuthenticationState { get; set; } = null!;
 
-public bool _showDemo = false;
+    public bool _showDemo = false;
 
-protected override async Task OnParametersSetAsync()
-{
-var user = (await AuthenticationState).User;
-if (user.HasIdentity())
-{
-    _showDemo = user.GetIdentity() == AppSettings.DemoIdentity;
-}
-}
+    protected override async Task OnParametersSetAsync()
+    {
+        var user = (await AuthenticationState).User;
+        if (user.Claims.HasIdentity())
+        {
+            _showDemo = user.Claims.GetIdentity() == AppSettings.DemoIdentity;
+        }
+    }
+
 }

@@ -17,7 +17,6 @@ public sealed class InspectorBroadcaster : IInspectorBroadcaster, IDisposable
 
     public InspectorBroadcaster(HubContextResolver hubContextResolver, ClaimsPrincipal claimsPrincipal)
     {
-
         _radioHubContext = hubContextResolver.GetHubContext("Radio");
         _claimsPrincipal = claimsPrincipal;
     }
@@ -25,7 +24,6 @@ public sealed class InspectorBroadcaster : IInspectorBroadcaster, IDisposable
     public void Dispose()
     {
         _disposed = true;
-        GC.SuppressFinalize(this);
     }
 
     public async Task SendInspectorBusinessObjectCreationAsync(string inspector, InspectorBusinessObjectResponse response)
@@ -35,7 +33,7 @@ public sealed class InspectorBroadcaster : IInspectorBroadcaster, IDisposable
             return;
         }
 
-        var userId = $"{_claimsPrincipal.GetOrganization()}:{inspector}";
+        var userId = $"{_claimsPrincipal.Claims.GetOrganization()}:{inspector}";
         await _radioHubContext.Clients.User(userId).SendAsync("InspectorBusinessObjectCreation", inspector, response);
     }
 
@@ -46,7 +44,7 @@ public sealed class InspectorBroadcaster : IInspectorBroadcaster, IDisposable
             return;
         }
 
-        var userId = $"{_claimsPrincipal.GetOrganization()}:{inspector}";
+        var userId = $"{_claimsPrincipal.Claims.GetOrganization()}:{inspector}";
         await _radioHubContext.Clients.User(userId).SendAsync("InspectorBusinessObjectUpdate", inspector, response);
     }
 
@@ -57,7 +55,7 @@ public sealed class InspectorBroadcaster : IInspectorBroadcaster, IDisposable
             return;
         }
 
-        var userId = $"{_claimsPrincipal.GetOrganization()}:{inspector}";
+        var userId = $"{_claimsPrincipal.Claims.GetOrganization()}:{inspector}";
         await _radioHubContext.Clients.User(userId).SendAsync("InspectorBusinessObjectDeletion", inspector, businessObject);
     }
 }

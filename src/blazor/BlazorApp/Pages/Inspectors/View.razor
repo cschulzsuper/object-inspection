@@ -1,5 +1,4 @@
 ﻿@page "/inspectors"
-@using Super.Paula.Shared.Security
 
 @inject IAuthorizationRequestHandler AuthorizationRequestHandler
 @inject IInspectorRequestHandler InspectorRequestHandler
@@ -98,7 +97,7 @@
 
     protected override async Task OnParametersSetAsync()
     {
-        _inspector = (await AuthenticationState).User.GetInspector();
+        _inspector = (await AuthenticationState).User.Claims.GetInspector();
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)

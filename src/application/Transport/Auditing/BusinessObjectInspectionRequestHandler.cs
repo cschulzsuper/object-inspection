@@ -231,7 +231,7 @@ public class BusinessObjectInspectionRequestHandler : IBusinessObjectInspectionR
 
         entity.Audit.AuditDate = request.RequestDate;
         entity.Audit.AuditTime = request.RequestTime;
-        entity.Audit.Inspector = _user.GetInspector();
+        entity.Audit.Inspector = _user.Claims.GetInspector();
         entity.Audit.Annotation = string.Empty;
         entity.Audit.Result = request.Result;
         entity.ETag = request.ETag;
@@ -259,7 +259,7 @@ public class BusinessObjectInspectionRequestHandler : IBusinessObjectInspectionR
 
         entity.ETag = request.ETag;
 
-        entity.Audit.Inspector = _user.GetInspector();
+        entity.Audit.Inspector = _user.Claims.GetInspector();
         entity.Audit.Result = request.Result;
 
         await _businessObjectInspectionManager.UpdateAsync(entity);
@@ -278,7 +278,7 @@ public class BusinessObjectInspectionRequestHandler : IBusinessObjectInspectionR
 
         entity.ETag = request.ETag;
 
-        entity.Audit.Inspector = _user.GetInspector();
+        entity.Audit.Inspector = _user.Claims.GetInspector();
         entity.Audit.Annotation = request.Annotation;
 
         await _businessObjectInspectionManager.UpdateAsync(entity);

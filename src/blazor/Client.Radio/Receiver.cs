@@ -4,38 +4,31 @@ using Super.Paula.Shared.Environment;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Super.Paula.Shared.Security;
 
 namespace Super.Paula.Client;
 
 internal sealed class Receiver : IAsyncDisposable
 {
     private readonly HubConnection _hubConnection;
-    private readonly AuthenticationStateProvider _AuthenticationStateProvider;
-
+    private readonly AuthenticationStateProvider _authenticationStateProvider;
     private readonly SemaphoreSlim _hubConnectionSemaphore;
 
     private bool _disposed;
 
     public Receiver(
-        AuthenticationStateProvider AuthenticationStateProvider,
+        AuthenticationStateProvider authenticationStateProvider,
+        ReceiverAccessTokenProvider receiverAccessTokenProvider,
         AppSettings appSettings)
     {
-        _AuthenticationStateProvider = AuthenticationStateProvider;
-        _AuthenticationStateProvider.AuthenticationStateChanged += AuthenticationStateChangedAsync;
+        _authenticationStateProvider = authenticationStateProvider;
+        _authenticationStateProvider.AuthenticationStateChanged += AuthenticationStateChangedAsync;
 
         _hubConnection = new HubConnectionBuilder()
         .WithUrl(
             new Uri(new Uri(appSettings.Server), "/radio"),
             options =>
             {
-                options.AccessTokenProvider = async () =>
-                {
-                    var authenticationState = await _AuthenticationStateProvider.GetAuthenticationStateAsync();
-                    return authenticationState.User
-                        .ToToken()
-                        .ToBase64String();
-                };
+                options.AccessTokenProvider = receiverAccessTokenProvider.Invoke;
             })
         .WithAutomaticReconnect()
         .Build();
@@ -56,7 +49,7 @@ internal sealed class Receiver : IAsyncDisposable
 
             await _hubConnectionSemaphore.WaitAsync();
 
-            _AuthenticationStateProvider.AuthenticationStateChanged -= AuthenticationStateChangedAsync;
+            _authenticationStateProvider.AuthenticationStateChanged -= AuthenticationStateChangedAsync;
 
             await _hubConnection.DisposeAsync();
         }
@@ -86,7 +79,7 @@ internal sealed class Receiver : IAsyncDisposable
 
             if (_hubConnection.State == HubConnectionState.Disconnected)
             {
-                var authenticationState = await _AuthenticationStateProvider.GetAuthenticationStateAsync();
+                var authenticationState = await _authenticationStateProvider.GetAuthenticationStateAsync();
                 if (authenticationState.User.Identity?.IsAuthenticated == true)
                 {
                     await _hubConnection.StartAsync();

@@ -1,5 +1,7 @@
-﻿@using Super.Paula.Shared.Security
+﻿@using Super.Paula.Client.Security
+
 @inject AppSettings AppSettings
+@inject BadgeStorage BadgeStorage
 
 @if (_avatar != null)
 {
@@ -7,7 +9,7 @@
 }
 else
 {
-    if (_token != null)
+    if (_badge != null)
     {
         <img id="avatar" class="rounded-circle @CssClass" height="@Size" width="@Size" src="@GetImageUrl()"/>
     }
@@ -17,7 +19,7 @@ else
 
 @code {
 
-    private string? _token = null;
+    private string? _badge = null;
 
     private string? _avatar = null;
 
@@ -30,23 +32,18 @@ else
     [Parameter]
     public int Size { get; set; } = 32;
 
-    [CascadingParameter]
-    public Task<AuthenticationState> AuthenticationState { get; set; } = null!;
-
     [Parameter]
     public string CssClass { get; set; } = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
-        _token = (await AuthenticationState).User
-            .ToToken()
-            .ToBase64String();
+        _badge = await BadgeStorage.GetOrDefaultAsync();
 
         await base.OnInitializedAsync();
     }
 
     private string GetImageUrl()
-        => $"{AppSettings.Server}inspectors/{Inspector}/avatar?access_token={_token}";
+        => $"{AppSettings.Server}inspectors/{Inspector}/avatar?access_token={_badge}";
 
     protected override async Task OnParametersSetAsync()
     {

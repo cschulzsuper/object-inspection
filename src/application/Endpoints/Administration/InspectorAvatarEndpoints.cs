@@ -35,15 +35,15 @@ public static class InspectorAvatarEndpoints
     private static Delegate GetMe =>
         [Authorize("OnlyInspectorOrObserver")]
         async (IInspectorAvatarRequestHandler requestHandler, ClaimsPrincipal user)
-                    => Results.File(await requestHandler.ReadAsync(user.GetInspector()));
+                    => Results.File(await requestHandler.ReadAsync(user.Claims.GetInspector()));
 
     private static Delegate PutMe =>
         [Authorize("OnlyInspector")]
         (IInspectorAvatarRequestHandler requestHandler, ClaimsPrincipal user, Stream body)
-                    => requestHandler.WriteAsync(body, user.GetInspector());
+                    => requestHandler.WriteAsync(body, user.Claims.GetInspector());
 
     private static Delegate DeleteMe =>
         [Authorize("OnlyInspector")]
         (IInspectorAvatarRequestHandler requestHandler, ClaimsPrincipal user)
-                    => requestHandler.DeleteAsync(user.GetInspector());
+                    => requestHandler.DeleteAsync(user.Claims.GetInspector());
 }

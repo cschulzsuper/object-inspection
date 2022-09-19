@@ -6,7 +6,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Super.Paula.Application.Orchestration;
-using Super.Paula.Shared.Security;
+using Super.Paula.BadgeUsage;
 
 namespace Super.Paula.Shared.Orchestration;
 
@@ -15,17 +15,20 @@ public class PersistentEventProcessingStorage : IEventProcessingStorage
     private readonly ILogger<PersistentEventProcessingStorage> _logger;
     private readonly IEventProcessingManager _eventProcessingManager;
     private readonly IEventTypeRegistry _eventRegistry;
+    private readonly IBadgeEncoding _badgeEncoding;
     private readonly EventProcessingAwaiter _eventProcessingAwaiter;
 
     public PersistentEventProcessingStorage(
         ILogger<PersistentEventProcessingStorage> logger,
         IEventProcessingManager eventProcessingManager,
         IEventTypeRegistry eventRegistry,
+        IBadgeEncoding badgeEncoding,
         EventProcessingAwaiter eventProcessingAwaiter)
     {
         _logger = logger;
         _eventProcessingManager = eventProcessingManager;
         _eventRegistry = eventRegistry;
+        _badgeEncoding = badgeEncoding;
         _eventProcessingAwaiter = eventProcessingAwaiter;
     }
 
@@ -41,8 +44,8 @@ public class PersistentEventProcessingStorage : IEventProcessingStorage
             CreationTime = @event.CreationTime,
             CreationDate = @event.CreationDate,
             EventId = @event.Id.ToString(),
-            Data = Base64Encoder.ObjectToBase64(@event),
-            User = Base64Encoder.ObjectToBase64(user.ToToken()),
+            Data = (char)0x00 + Base64Encoder.ObjectToBase64(@event),
+            User = (char)0x00 + _badgeEncoding.Encode(user.Claims),
             OperationId = Activity.Current?.RootId ?? Guid.NewGuid().ToString(),
         };
 
@@ -81,13 +84,15 @@ public class PersistentEventProcessingStorage : IEventProcessingStorage
                 continue;
             }
 
-            var data = (EventBase)Base64Encoder.Base64ToObject(@event.Data, eventType);
+            var encodedData = @event.Data.TrimStart((char)0x00);
+            var decodedData = (EventBase)Base64Encoder.Base64ToObject(encodedData, eventType);
 
-            var user = new ClaimsPrincipal(
+            var encodedUser = @event.User.TrimStart((char)0x00);
+            var decodedUser = new ClaimsPrincipal(
                 new ClaimsIdentity(
-                    Base64Encoder.Base64ToObject<Token>(@event.User).ToClaims()));
+                    _badgeEncoding.Decode(encodedUser)));
 
-            yield return (@event.Subscriber, data, user);
+            yield return (@event.Subscriber, decodedData, decodedUser);
         }
     }
 

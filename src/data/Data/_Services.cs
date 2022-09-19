@@ -217,12 +217,12 @@ public static class _Services
         var user = services.GetRequiredService<ClaimsPrincipal>();
         var state = services.GetRequiredService<PaulaContextState>();
 
-        state.CurrentOrganization = user.HasOrganization()
-           ? user.GetOrganization()
+        state.CurrentOrganization = user.Claims.HasOrganization()
+           ? user.Claims.GetOrganization()
            : string.Empty;
 
-        state.CurrentInspector = user.HasInspector()
-           ? user.GetInspector()
+        state.CurrentInspector = user.Claims.HasInspector()
+           ? user.Claims.GetInspector()
            : string.Empty;
 
         return services

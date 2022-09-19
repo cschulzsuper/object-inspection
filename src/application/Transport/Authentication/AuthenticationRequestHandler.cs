@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Super.Paula.Application.Authentication.Exceptions;
 using Super.Paula.Application.Authentication.Requests;
 using Super.Paula.Application.Authentication.Responses;
-using Super.Paula.Application.Operation;
+using Super.Paula.BadgeSecurity;
 using Super.Paula.Shared.Security;
 
 namespace Super.Paula.Application.Authentication;
@@ -14,25 +13,28 @@ namespace Super.Paula.Application.Authentication;
 public class AuthenticationRequestHandler : IAuthenticationRequestHandler
 {
     private readonly IIdentityManager _identityManager;
-    private readonly IConnectionManager _connectionManager;
+    private readonly IBadgeHandler _badgeHandler;
+    private readonly IBadgeProofManager _badgeManager;
     private readonly IPasswordHasher<Identity> _passwordHasher;
     private readonly ClaimsPrincipal _user;
 
     public AuthenticationRequestHandler(
         IIdentityManager identityManager,
-        IConnectionManager connectionManager,
+        IBadgeHandler badgeHandler,
+        IBadgeProofManager badgeManager,
         IPasswordHasher<Identity> passwordHasher,
         ClaimsPrincipal principal)
     {
         _identityManager = identityManager;
-        _connectionManager = connectionManager;
+        _badgeHandler = badgeHandler;
+        _badgeManager = badgeManager;
         _passwordHasher = passwordHasher;
         _user = principal;
     }
 
     public async ValueTask ChangeSecretAsync(ChangeIdentitySecretRequest request)
     {
-        var identity = await _identityManager.GetAsync(_user.GetIdentity());
+        var identity = await _identityManager.GetAsync(_user.Claims.GetIdentity());
 
         var oldSecretVerification = _passwordHasher.VerifyHashedPassword(identity, identity.Secret, request.OldSecret);
         if (oldSecretVerification == PasswordVerificationResult.Failed)
@@ -78,30 +80,18 @@ public class AuthenticationRequestHandler : IAuthenticationRequestHandler
                 throw new TransportException($"The secret does not match.");
         }
 
-        var connectionAccount = entity.UniqueName;
-        var connectionProof = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{Guid.NewGuid()}"));
-        var connectionProofType = ConnectionProofTypes.Authentication;
+        var badge = _badgeHandler.Authorize(_user, "identity", entity);
 
-        _connectionManager.Trace(connectionAccount, connectionProof, connectionProofType);
-
-        var token = new Token
-        {
-            Identity = entity.UniqueName,
-            Proof = connectionProof
-        };
-
-        return token.ToBase64String();
+        return badge;
     }
 
-    public async ValueTask SignOutAsync()
+    public ValueTask SignOutAsync()
     {
         try
         {
-            var inspector = await _identityManager.GetAsync(_user.GetIdentity());
+            _badgeManager.Purge(_user);
 
-            _connectionManager.Forget(inspector.UniqueName);
-
-            await Task.CompletedTask;
+            return ValueTask.CompletedTask;
         }
         catch (Exception exception)
         {

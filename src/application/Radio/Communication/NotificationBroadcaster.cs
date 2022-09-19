@@ -34,7 +34,7 @@ public sealed class NotificationBroadcaster : INotificationBroadcaster, IDisposa
             return;
         }
 
-        var userId = $"{_claimsPrincipal.GetOrganization()}:{response.Inspector}";
+        var userId = $"{_claimsPrincipal.Claims.GetOrganization()}:{response.Inspector}";
         await _radioHubContext.Clients.User(userId).SendAsync("NotificationCreation", response);
     }
 
@@ -45,7 +45,7 @@ public sealed class NotificationBroadcaster : INotificationBroadcaster, IDisposa
             return;
         }
 
-        var userId = $"{_claimsPrincipal.GetOrganization()}:{inspector}";
+        var userId = $"{_claimsPrincipal.Claims.GetOrganization()}:{inspector}";
         await _radioHubContext.Clients.User(userId).SendAsync("NotificationDeletion", inspector, date, time);
     }
 }

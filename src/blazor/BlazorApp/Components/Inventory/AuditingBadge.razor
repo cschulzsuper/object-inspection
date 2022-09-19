@@ -1,6 +1,5 @@
 ﻿@inject IInspectorCallbackHandler InspectorCallbackHandler
 @inject IInspectorRequestHandler InspectorRequestHandler
-
 @using Super.Paula.Shared.Security
 @implements IDisposable
 
@@ -28,12 +27,9 @@
             _inspectorBusinessObjectCreation = await InspectorCallbackHandler.OnBusinessObjectCreationAsync(OnBusinessObjectCreationAsync);
             _inspectorBusinessObjectUpdate = await InspectorCallbackHandler.OnBusinessObjectUpdateAsync(OnBusinessObjectUpdateAsync);
             _inspectorBusinessObjectDeletion = await InspectorCallbackHandler.OnBusinessObjectDeletionAsync(OnBusinessObjectDeletionAsync);
-        }
-    }
 
-    protected override async Task OnParametersSetAsync()
-    {
-        await CountAsync();
+            await CountAsync();
+        }
     }
 
     public void Dispose()

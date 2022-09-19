@@ -3,10 +3,9 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Super.Paula.Shared.Security;
 
-[SuppressMessage("Style", "IDE1006")]
-public static class _Policies
+public static class BadgeAuthorizationPolicies
 {
-    public static AuthorizationPolicy AnonymousePolicy =>
+    public static AuthorizationPolicy AnonymousPolicy =>
         new AuthorizationPolicyBuilder()
             .RequireAssertion(_ => true)
             .Build();

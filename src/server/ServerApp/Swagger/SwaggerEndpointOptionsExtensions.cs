@@ -9,7 +9,7 @@ public static class SwaggerEndpointOptionsExtensions
     public static SwaggerEndpointOptions ConfigurePreSerializeFilters(this SwaggerEndpointOptions options)
     {
         options.AddPreSerializeSchemaFilter<BusinessObjectExtensionPreSerializeSchemaFilter>();
-        options.AddPreSerializePathItemFilter<TokenAuthorizationPreSerializePathItemFilter>();
+        options.AddPreSerializePathItemFilter<BadgeAuthorizationPreSerializePathItemFilter>();
         options.AddPreSerializeDocumentFilter<EmptyPathItemPreSerializeDocumentFilter>();
 
         return options;

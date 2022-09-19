@@ -19,16 +19,16 @@ public sealed class ExtendedInspectorRequestHandler : IInspectorRequestHandler, 
     private readonly SemaphoreSlim _currentInspectorResponseCacheSemaphore;
     private InspectorResponse? _currentInspectorResponseCache;
 
-    private readonly AuthenticationStateProvider _AuthenticationStateProvider;
+    private readonly AuthenticationStateProvider _authenticationStateProvider;
 
     public ExtendedInspectorRequestHandler(
         IInspectorRequestHandler inspectorRequestHandler,
         IInspectorCallbackHandler inspectorCallbackHandler,
-        AuthenticationStateProvider AuthenticationStateProvider)
+        AuthenticationStateProvider authenticationStateProvider)
     {
 
-        _AuthenticationStateProvider = AuthenticationStateProvider;
-        _AuthenticationStateProvider.AuthenticationStateChanged += AuthenticationStateChanged;
+        _authenticationStateProvider = authenticationStateProvider;
+        _authenticationStateProvider.AuthenticationStateChanged += AuthenticationStateChanged;
 
         _inspectorRequestHandler = inspectorRequestHandler;
         _inspectorCallbackHandler = inspectorCallbackHandler;
@@ -41,7 +41,7 @@ public sealed class ExtendedInspectorRequestHandler : IInspectorRequestHandler, 
 
     public void Dispose()
     {
-        _AuthenticationStateProvider.AuthenticationStateChanged -= AuthenticationStateChanged;
+        _authenticationStateProvider.AuthenticationStateChanged -= AuthenticationStateChanged;
 
         GC.SuppressFinalize(this);
     }
@@ -80,9 +80,9 @@ public sealed class ExtendedInspectorRequestHandler : IInspectorRequestHandler, 
 
     public async ValueTask<InspectorResponse> GetAsync(string inspector)
     {
-        var user = (await _AuthenticationStateProvider.GetAuthenticationStateAsync()).User;
+        var user = (await _authenticationStateProvider.GetAuthenticationStateAsync()).User;
 
-        if (!user.HasInspector(inspector))
+        if (!user.Claims.HasInspector(inspector))
         {
             return await _inspectorRequestHandler.GetAsync(inspector);
         }
@@ -122,9 +122,9 @@ public sealed class ExtendedInspectorRequestHandler : IInspectorRequestHandler, 
 
     private async Task InternalOnBusinessObjectDeletionAsync(string inspector, string businessObject)
     {
-        var user = (await _AuthenticationStateProvider.GetAuthenticationStateAsync()).User;
+        var user = (await _authenticationStateProvider.GetAuthenticationStateAsync()).User;
 
-        if (!user.HasInspector(inspector))
+        if (!user.Claims.HasInspector(inspector))
         {
             return;
         }
@@ -149,9 +149,9 @@ public sealed class ExtendedInspectorRequestHandler : IInspectorRequestHandler, 
 
     private async Task InternalOnBusinessObjectUpdateAsync(string inspector, InspectorBusinessObjectResponse businessObject)
     {
-        var user = (await _AuthenticationStateProvider.GetAuthenticationStateAsync()).User;
+        var user = (await _authenticationStateProvider.GetAuthenticationStateAsync()).User;
 
-        if (!user.HasInspector(inspector))
+        if (!user.Claims.HasInspector(inspector))
         {
             return;
         }
@@ -177,9 +177,9 @@ public sealed class ExtendedInspectorRequestHandler : IInspectorRequestHandler, 
 
     private async Task InternalOnBusinessObjectCreationAsync(string inspector, InspectorBusinessObjectResponse businessObject)
     {
-        var user = (await _AuthenticationStateProvider.GetAuthenticationStateAsync()).User;
+        var user = (await _authenticationStateProvider.GetAuthenticationStateAsync()).User;
 
-        if (!user.HasInspector(inspector))
+        if (!user.Claims.HasInspector(inspector))
         {
             return;
         }

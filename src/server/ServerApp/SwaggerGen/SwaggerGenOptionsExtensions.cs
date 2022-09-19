@@ -16,7 +16,7 @@ public static class SwaggerGenOptionsExtensions
             In = ParameterLocation.Header
         });
 
-        options.OperationFilter<TokenAuthorizationOperationFilter>();
+        options.OperationFilter<BadgeAuthorizationOperationFilter>();
 
         options.SwaggerDoc("v1", new() { Title = "Super.Paula.Server", Version = "v1" });
 

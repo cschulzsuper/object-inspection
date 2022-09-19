@@ -32,7 +32,7 @@ public class InspectorRequestHandler : IInspectorRequestHandler
 
     public async ValueTask<InspectorResponse> CreateAsync(InspectorRequest request)
     {
-        var organization = await _organizationManager.GetAsync(_user.GetOrganization());
+        var organization = await _organizationManager.GetAsync(_user.Claims.GetOrganization());
 
         var entity = new Inspector
         {
@@ -101,7 +101,7 @@ public class InspectorRequestHandler : IInspectorRequestHandler
 
     public async ValueTask<InspectorResponse> GetCurrentAsync()
     {
-        var entity = await _inspectorManager.GetAsync(_user.GetInspector());
+        var entity = await _inspectorManager.GetAsync(_user.Claims.GetInspector());
 
         return new InspectorResponse
         {

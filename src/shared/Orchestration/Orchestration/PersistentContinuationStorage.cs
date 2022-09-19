@@ -6,7 +6,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Super.Paula.Application.Orchestration;
-using Super.Paula.Shared.Security;
+using Super.Paula.BadgeUsage;
 
 namespace Super.Paula.Shared.Orchestration;
 
@@ -15,17 +15,20 @@ public class PersistentContinuationStorage : IContinuationStorage
     private readonly ILogger<PersistentContinuationStorage> _logger;
     private readonly IContinuationManager _continuationManager;
     private readonly IContinuationRegistry _continuationRegistry;
+    private readonly IBadgeEncoding _badgeEncoding;
     private readonly ContinuationAwaiter _continuationAwaiter;
 
     public PersistentContinuationStorage(
         ILogger<PersistentContinuationStorage> logger,
         IContinuationManager continuationManager,
         IContinuationRegistry continuationRegistry,
+        IBadgeEncoding badgeEncoding,
         ContinuationAwaiter continuationAwaiter)
     {
         _logger = logger;
         _continuationManager = continuationManager;
         _continuationRegistry = continuationRegistry;
+        _badgeEncoding = badgeEncoding;
         _continuationAwaiter = continuationAwaiter;
     }
 
@@ -37,8 +40,8 @@ public class PersistentContinuationStorage : IContinuationStorage
             CreationTime = continuation.CreationTime,
             CreationDate = continuation.CreationDate,
             ContinuationId = continuation.Id.ToString(),
-            Data = Base64Encoder.ObjectToBase64(continuation),
-            User = Base64Encoder.ObjectToBase64(user.ToToken()),
+            Data = (char)0x00 + Base64Encoder.ObjectToBase64(continuation),
+            User = (char)0x00 + _badgeEncoding.Encode(user.Claims),
             OperationId = Activity.Current?.RootId ?? Guid.NewGuid().ToString(),
         };
 
@@ -77,13 +80,15 @@ public class PersistentContinuationStorage : IContinuationStorage
                 continue;
             }
 
-            var data = (ContinuationBase)Base64Encoder.Base64ToObject(continuation.Data, continuationType);
+            var encodedData = continuation.Data.TrimStart((char)0x00); 
+            var decodedData = (ContinuationBase)Base64Encoder.Base64ToObject(encodedData, continuationType);
 
-            var user = new ClaimsPrincipal(
+            var encodedUser = continuation.User.TrimStart((char)0x00);
+            var decodedUser = new ClaimsPrincipal(
                 new ClaimsIdentity(
-                    Base64Encoder.Base64ToObject<Token>(continuation.User).ToClaims()));
+                    _badgeEncoding.Decode(encodedUser)));
 
-            yield return (data, user);
+            yield return (decodedData, decodedUser);
         }
     }
 

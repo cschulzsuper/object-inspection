@@ -1,10 +1,8 @@
-﻿using Super.Paula.Application.Operation;
-using System.Linq;
+﻿using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Super.Paula.BadgeSecurity;
 using Super.Paula.Shared.Security;
-using System;
-using System.Text;
 
 namespace Super.Paula.Application.Administration;
 
@@ -12,47 +10,33 @@ public class AuthorizationRequestHandler : IAuthorizationRequestHandler
 {
     private readonly IInspectorManager _inspectorManager;
     private readonly IIdentityInspectorManager _identityInspectorManager;
-    private readonly IAuthorizationTokenHandler _authorizationTokenHandler;
-    private readonly IConnectionManager _connectionManager;
+    private readonly IBadgeHandler _badgeHandler;
     private readonly ClaimsPrincipal _user;
 
     public AuthorizationRequestHandler(
         IInspectorManager inspectorManager,
         IIdentityInspectorManager identityInspectorManager,
-        IAuthorizationTokenHandler authorizationTokenHandler,
-        IConnectionManager connectionManager,
+        IBadgeHandler badgeHandler,
         ClaimsPrincipal user)
     {
         _inspectorManager = inspectorManager;
         _identityInspectorManager = identityInspectorManager;
-        _authorizationTokenHandler = authorizationTokenHandler;
-        _connectionManager = connectionManager;
+        _badgeHandler = badgeHandler;
         _user = user;
     }
 
     public ValueTask<string> AuthorizeAsync(string organization, string inspector)
     {
-        var identityInspector = _identityInspectorManager
-            .GetIdentityBasedQueryable(_user.GetIdentity())
+        var entity = _identityInspectorManager
+            .GetIdentityBasedQueryable(_user.Claims.GetIdentity())
             .Single(x =>
                 x.Activated &&
                 x.Inspector == inspector &&
                 x.Organization == organization);
 
-        var token = _user.ToToken();
-
-        token.Organization = identityInspector.Organization;
-        token.Inspector = identityInspector.Inspector;
-
-        var connectionAccount = $"{token.Organization}:{token.Inspector}";
-        var connectionProof = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{Guid.NewGuid()}"));
-        var connectionProofType = ConnectionProofTypes.Authorization;
-
-        _connectionManager.Trace(connectionAccount, connectionProof, connectionProofType);
-
-        _authorizationTokenHandler.RewriteAuthorizations(token);
-
-        return ValueTask.FromResult(token.ToBase64String());
+        var badge = _badgeHandler.Authorize(_user, "inspector", entity);
+        
+        return ValueTask.FromResult(badge);
     }
 
     public ValueTask<string> StartImpersonationAsync(string organization, string inspector)
@@ -64,36 +48,22 @@ public class AuthorizationRequestHandler : IAuthorizationRequestHandler
                 x.UniqueName == inspector &&
                 x.Organization == organization);
 
-        var token = _user.ToToken();
 
-        token.Proof = _user.GetProof();
-        token.Inspector = entity.UniqueName;
-        token.Organization = entity.Organization;
-        token.ImpersonatorInspector = _user.GetInspector();
-        token.ImpersonatorOrganization = _user.GetOrganization();
+        var badge = _badgeHandler.Authorize(_user, "impersonator", entity);
 
-        _authorizationTokenHandler.RewriteAuthorizations(token);
-
-        return ValueTask.FromResult(token.ToBase64String());
+        return ValueTask.FromResult(badge);
     }
 
     public ValueTask<string> StopImpersonationAsync()
     {
-        var inspector = _identityInspectorManager.GetQueryable()
+        var entity = _identityInspectorManager.GetQueryable()
            .Single(x =>
                x.Activated &&
-               x.UniqueName == _user.GetImpersonatorInspector() &&
-               x.Organization == _user.GetImpersonatorOrganization());
+               x.Inspector == _user.Claims.GetImpersonatorInspector() &&
+               x.Organization == _user.Claims.GetImpersonatorOrganization());
 
-        var token = _user.ToToken();
+        var badge = _badgeHandler.Authorize(_user, "inspector", entity);
 
-        token.Inspector = inspector.UniqueName;
-        token.Organization = inspector.Organization;
-        token.ImpersonatorInspector = null;
-        token.ImpersonatorOrganization = null;
-
-        _authorizationTokenHandler.RewriteAuthorizations(token);
-
-        return ValueTask.FromResult(token.ToBase64String());
+        return ValueTask.FromResult(badge);
     }
 }

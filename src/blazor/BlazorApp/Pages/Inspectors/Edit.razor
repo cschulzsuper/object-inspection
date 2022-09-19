@@ -1,5 +1,4 @@
 ﻿@page "/inspectors/{inspector}/edit"
-@using Super.Paula.Shared.Security
 
 @inject ITranslator<Edit> Translator
 @inject NavigationManager NavigationManager
@@ -73,7 +72,7 @@ else
 
     protected override async Task OnParametersSetAsync()
     {
-        _inspector = (await AuthenticationState).User.GetInspector();
+        _inspector = (await AuthenticationState).User.Claims.GetInspector();
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)

@@ -14,6 +14,7 @@
 	<ItemGroup>
 		<ProjectReference Include="..\..\application\Endpoints\Endpoints.csproj" />
 		<ProjectReference Include="..\..\application\Management\Management.csproj" />
+		<ProjectReference Include="..\..\packages\BadgeSecurity.AspNetCore\BadgeSecurity.AspNetCore.csproj" />
 		<ProjectReference Include="..\..\shared\Orchestration\Orchestration.csproj" />
 		<ProjectReference Include="..\..\shared\Security\Security.csproj" />
 		<ProjectReference Include="..\..\application\Radio\Radio.csproj" />

@@ -8,14 +8,14 @@ public class CustomJsonSerializerOptions
     {
         PropertyNameCaseInsensitive = true,
         PropertyNamingPolicy = new CustomJsonCamelCaseNamingPolicy(),
-        Converters = { new ObjectJsonConverter() }
+        Converters = { /* new ObjectJsonConverter() */ }
     };
 
     public static readonly JsonSerializerOptions WebResponse = new JsonSerializerOptions
     {
         PropertyNameCaseInsensitive = true,
         PropertyNamingPolicy = new CustomJsonCamelCaseNamingPolicy(),
-        Converters = { new ObjectJsonConverter() },
+        Converters = { /* new ObjectJsonConverter() */ },
         DefaultBufferSize = 128
     };
 }

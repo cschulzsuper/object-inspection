@@ -9,7 +9,7 @@ using Super.Paula.Shared.Security;
 
 namespace Super.Paula.Server.Security;
 
-public class TokenAuthorizationMiddlewareResultHandler : IAuthorizationMiddlewareResultHandler
+public class ResourceAuthorizationMiddlewareResultHandler : IAuthorizationMiddlewareResultHandler
 {
     private readonly AuthorizationMiddlewareResultHandler _defaultHandler = new AuthorizationMiddlewareResultHandler();
 
@@ -32,8 +32,9 @@ public class TokenAuthorizationMiddlewareResultHandler : IAuthorizationMiddlewar
 
             if (hasItem)
             {
-                var inspector = context.Request.RouteValues.Single(x => x.Key == "inspector" || x.Key == "identity");
+                var inspector = context.Request.RouteValues.Single(x => x.Key is "inspector" or "identity");
 
+                // TODO something is wrong here why async and why _?
                 _ = authorizationService.AuthorizeAsync(context.User, inspector, authorizationPolicy);
 
                 authorizationResult = await policyEvaluator.AuthorizeAsync(authorizationPolicy, authenticateResult, context, inspector);
