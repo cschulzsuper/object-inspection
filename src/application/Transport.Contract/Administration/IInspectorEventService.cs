@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Super.Paula.Application.Administration;
+namespace ChristianSchulz.ObjectInspection.Application.Administration;
 
 public interface IInspectorEventService
 {

@@ -1,10 +1,10 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Super.Paula.Shared;
+using ChristianSchulz.ObjectInspection.Shared;
 using System.Threading.Tasks;
 
-namespace Super.Paula.Templates.Playwright.AdventureToursAuditing;
+namespace ChristianSchulz.ObjectInspection.Templates.Playwright.AdventureToursAuditing;
 
 public class Program
 {

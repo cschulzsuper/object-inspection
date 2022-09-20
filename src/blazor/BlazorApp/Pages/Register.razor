@@ -1,6 +1,6 @@
 ﻿@page "/register"
-@using Super.Paula.Application.Authentication
-@using Super.Paula.Application.Authentication.Requests
+@using ChristianSchulz.ObjectInspection.Application.Authentication
+@using ChristianSchulz.ObjectInspection.Application.Authentication.Requests
 
 @layout UnauthorizedLayout
 
@@ -32,30 +32,30 @@
     </div>
 
     @if (context.GetValidationMessages().Any())
-    {
-        <div class="card card-body tex-wrap">
+{
+    <div class="card card-body tex-wrap">
             <ValidationSummary/>
         </div>
-    }
-    else
-    {
-        <button id="submit"
+}
+else
+{
+    <button id="submit"
                 type="submit"
                 class="w-100 btn btn-lg btn-primary">
             @Translator[$"Sign up"]
         </button>
-        <small class="form-text text-muted"><a href="sign-in">@Translator[$"Sign in"]</a></small>
-    }
+    <small class="form-text text-muted"><a href="sign-in">@Translator[$"Sign in"]</a></small>
+}
 
 </EditForm>
 
 @code {
-    private RegisterIdentityRequest model = new RegisterIdentityRequest();
+private RegisterIdentityRequest model = new RegisterIdentityRequest();
 
-    private async Task OnValidSubmitAsync()
-    {
-        await AuthenticationHandler.RegisterAsync(model);
-        NavigationManager.NavigateTo("/");
-    }
+private async Task OnValidSubmitAsync()
+{
+    await AuthenticationHandler.RegisterAsync(model);
+    NavigationManager.NavigateTo("/");
+}
 
 }

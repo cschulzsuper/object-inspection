@@ -1,7 +1,7 @@
-﻿using Super.Paula.Shared.Validation;
+﻿using ChristianSchulz.ObjectInspection.Shared.Validation;
 using System;
 
-namespace Super.Paula.Application.Guidelines;
+namespace ChristianSchulz.ObjectInspection.Application.Guidelines;
 
 public static class InspectionValidator
 {

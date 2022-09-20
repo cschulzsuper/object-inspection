@@ -1,7 +1,7 @@
-﻿using Super.Paula.Server.SwaggerGen;
+﻿using ChristianSchulz.ObjectInspection.Server.SwaggerGen;
 using Swashbuckle.AspNetCore.Swagger;
 
-namespace Super.Paula.Server.Swagger;
+namespace ChristianSchulz.ObjectInspection.Server.Swagger;
 
 public static class SwaggerEndpointOptionsExtensions
 {

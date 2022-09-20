@@ -4,7 +4,7 @@
 		<TargetFramework>net7.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<LangVersion>Preview</LangVersion>
-		<RootNamespace>Super.Paula.RuntimeData</RootNamespace>
+		<RootNamespace>ChristianSchulz.ObjectInspection.RuntimeData</RootNamespace>
 	</PropertyGroup>
 
 </Project>

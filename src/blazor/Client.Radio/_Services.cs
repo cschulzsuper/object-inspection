@@ -1,9 +1,9 @@
 ﻿using System;
 using Microsoft.Extensions.DependencyInjection;
-using Super.Paula.Client.Administration;
-using Super.Paula.Client.Communication;
+using ChristianSchulz.ObjectInspection.Client.Administration;
+using ChristianSchulz.ObjectInspection.Client.Communication;
 
-namespace Super.Paula.Client;
+namespace ChristianSchulz.ObjectInspection.Client;
 
 public static class _Services
 {

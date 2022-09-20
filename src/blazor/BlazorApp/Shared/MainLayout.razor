@@ -1,6 +1,6 @@
 ﻿@inherits LayoutComponentBase
 
-@using Super.Paula.Application.Authentication
+@using ChristianSchulz.ObjectInspection.Application.Authentication
 @implements IDisposable
 
 @inject Application.Administration.IAuthorizationRequestHandler AuthorizationHandler
@@ -54,24 +54,24 @@
                     <div class="alert alert-danger">
                         <p>@Translate(context)</p>
                         @if(context is ProblemDetailsException problems && problems.Errors != null)
-                        {
-                            <ul>
+                    {
+                        <ul>
                                 @foreach(var problem in problems.Errors.SelectMany(x => x.Value))
-                                {
-                                    <li>@problem</li>
-                                }
+                            {
+                                <li>@problem</li>
+                            }
                             </ul>
-                        }
+                    }
                         <p>
                             @if(context is HttpRequestException requestException && 
-                                (requestException.StatusCode == HttpStatusCode.Unauthorized || 
-                                 requestException.StatusCode == HttpStatusCode.Forbidden))
-                            {
-                                <a class="alert-link" href="javascript:void(0);" @onclick=RecoverAndGoHome>@Translator[$"Go to Homepage"]</a>                                
-                                <span> - </span>
-                                <a class="alert-link" href="javascript:void(0);" @onclick=RecoverAndSignOutAsync>@Translator[$"Sign Out"]</a>                                
-                                <span> - </span>
-                            }
+                            (requestException.StatusCode == HttpStatusCode.Unauthorized || 
+                             requestException.StatusCode == HttpStatusCode.Forbidden))
+                        {
+                            <a class="alert-link" href="javascript:void(0);" @onclick=RecoverAndGoHome>@Translator[$"Go to Homepage"]</a>                                
+                            <span> - </span>
+                            <a class="alert-link" href="javascript:void(0);" @onclick=RecoverAndSignOutAsync>@Translator[$"Sign Out"]</a>                                
+                            <span> - </span>
+                        }
                             <a class="alert-link" href="javascript:void(0);" @onclick=Recover>@Translator[$"Try Again"]</a>
                         </p>
                     </div>
@@ -85,78 +85,78 @@
 
 @code {
 
-    private bool _navMenuCollapsed = true;
+private bool _navMenuCollapsed = true;
 
-    private ErrorBoundary? errorBoundaryArticle = null!;
+private ErrorBoundary? errorBoundaryArticle = null!;
 
-    protected override void OnInitialized()
+protected override void OnInitialized()
+{
+    NavigationManager.LocationChanged += NavigationManagerOnLocationChanged;
+}
+
+public void Dispose()
+{
+    NavigationManager.LocationChanged -= NavigationManagerOnLocationChanged;
+    GC.SuppressFinalize(true);
+}
+
+private void NavigationManagerOnLocationChanged(object? sender, LocationChangedEventArgs e)
+{
+    _navMenuCollapsed = true;
+    StateHasChanged();
+}
+
+private void ToggleNavMenu()
+{
+    _navMenuCollapsed = !_navMenuCollapsed;
+}
+
+private void Recover()
+{
+    errorBoundaryArticle?.Recover();
+}
+
+private void RecoverAndGoHome()
+{
+    errorBoundaryArticle?.Recover();
+    NavigationManager.NavigateTo("/", true);
+}
+
+private async Task RecoverAndSignOutAsync()
+{
+    await AuthenticationHandler.SignOutAsync();
+    errorBoundaryArticle?.Recover();
+    NavigationManager.NavigateTo("/", true);
+}
+
+private string Translate(Exception exception)
+{
+    if (exception is ProblemDetailsException problems &&
+        problems.TitleFormat != null &&
+        problems.TitleArguments != null)
     {
-        NavigationManager.LocationChanged += NavigationManagerOnLocationChanged;
+        return Translator[problems.TitleFormat, problems.TitleArguments];
     }
 
-    public void Dispose()
-    {
-        NavigationManager.LocationChanged -= NavigationManagerOnLocationChanged;
-        GC.SuppressFinalize(true);
-    }
+    return Translator[exception.Message];
+}
 
-    private void NavigationManagerOnLocationChanged(object? sender, LocationChangedEventArgs e)
+public async Task StopImpersonationAsync()
+{
+    try
     {
-        _navMenuCollapsed = true;
-        StateHasChanged();
+        await AuthorizationHandler.StopImpersonationAsync();
     }
-
-    private void ToggleNavMenu()
+    catch (HttpRequestException e) when (e.StatusCode == HttpStatusCode.Unauthorized)
     {
-        _navMenuCollapsed = !_navMenuCollapsed;
-    }
-
-    private void Recover()
-    {
-        errorBoundaryArticle?.Recover();
-    }
-
-    private void RecoverAndGoHome()
-    {
-        errorBoundaryArticle?.Recover();
-        NavigationManager.NavigateTo("/", true);
-    }
-
-    private async Task RecoverAndSignOutAsync()
-    {
-        await AuthenticationHandler.SignOutAsync();
-        errorBoundaryArticle?.Recover();
-        NavigationManager.NavigateTo("/", true);
-    }
-
-    private string Translate(Exception exception)
-    {
-        if (exception is ProblemDetailsException problems &&
-            problems.TitleFormat != null &&
-            problems.TitleArguments != null)
+        if (await LocalStorage.ContainKeyAsync("token"))
         {
-            return Translator[problems.TitleFormat, problems.TitleArguments];
-        }
-
-        return Translator[exception.Message];
-    }
-
-    public async Task StopImpersonationAsync()
-    {
-        try
-        {
-            await AuthorizationHandler.StopImpersonationAsync();
-        }
-        catch (HttpRequestException e) when (e.StatusCode == HttpStatusCode.Unauthorized)
-        {
-            if (await LocalStorage.ContainKeyAsync("token"))
-            {
-                await LocalStorage.RemoveItemAsync("token");
-            }
-        }
-        finally
-        {
-            NavigationManager.NavigateTo("/");
+            await LocalStorage.RemoveItemAsync("token");
         }
     }
+    finally
+    {
+        NavigationManager.NavigateTo("/");
+    }
+}
 }

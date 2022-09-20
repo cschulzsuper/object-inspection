@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 
-namespace Super.Paula.Shared.Security;
+namespace ChristianSchulz.ObjectInspection.Shared.Security;
 
 public class IdentityClaimResourceHandler : AuthorizationHandler<IdentityClaimResourceRequirement>
 {

@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Super.Paula.Application.Orchestration;
+using ChristianSchulz.ObjectInspection.Application.Orchestration;
 
-namespace Super.Paula.Data.Mappings.Orchestration;
+namespace ChristianSchulz.ObjectInspection.Data.Mappings.Orchestration;
 
 public class WorkerMapping : IEntityTypeConfiguration<Worker>
 {

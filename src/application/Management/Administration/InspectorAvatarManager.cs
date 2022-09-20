@@ -1,11 +1,11 @@
-﻿using Super.Paula.Application.Administration.Exceptions;
-using Super.Paula.BlobStorage;
-using Super.Paula.BlobStorage.Exceptions;
+﻿using ChristianSchulz.ObjectInspection.Application.Administration.Exceptions;
+using ChristianSchulz.ObjectInspection.BlobStorage;
+using ChristianSchulz.ObjectInspection.BlobStorage.Exceptions;
 using System;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace Super.Paula.Application.Administration;
+namespace ChristianSchulz.ObjectInspection.Application.Administration;
 
 public class InspectorAvatarManager : IInspectorAvatarManager
 {

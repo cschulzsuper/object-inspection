@@ -1,11 +1,8 @@
-﻿using Super.Paula.Application.Administration;
-using Super.Paula.Client.Storage;
+﻿using ChristianSchulz.ObjectInspection.Application.Administration;
 using System.Threading.Tasks;
-using Super.Paula.BadgeUsage;
-using Super.Paula.Client.Security;
-using Super.Paula.Shared.Security;
+using ChristianSchulz.ObjectInspection.Client.Security;
 
-namespace Super.Paula.Client.Administration;
+namespace ChristianSchulz.ObjectInspection.Client.Administration;
 
 public class ExtendedAuthorizationRequestHandler : IAuthorizationRequestHandler
 {

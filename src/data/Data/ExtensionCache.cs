@@ -1,8 +1,8 @@
-﻿using Super.Paula.Application.Operation;
+﻿using ChristianSchulz.ObjectInspection.Application.Operation;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Super.Paula.Data;
+namespace ChristianSchulz.ObjectInspection.Data;
 
 public class ExtensionCache
 {

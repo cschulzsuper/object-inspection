@@ -1,9 +1,9 @@
-﻿using Super.Paula.Application.Inventory;
-using Super.Paula.Application.Inventory.Requests;
-using Super.Paula.Application.Inventory.Responses;
-using Super.Paula.Shared.Environment;
-using Super.Paula.Shared.ErrorHandling;
-using Super.Paula.Shared.JsonConversion;
+﻿using ChristianSchulz.ObjectInspection.Application.Inventory;
+using ChristianSchulz.ObjectInspection.Application.Inventory.Requests;
+using ChristianSchulz.ObjectInspection.Application.Inventory.Responses;
+using ChristianSchulz.ObjectInspection.Shared.Environment;
+using ChristianSchulz.ObjectInspection.Shared.ErrorHandling;
+using ChristianSchulz.ObjectInspection.Shared.JsonConversion;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -13,7 +13,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Super.Paula.Client.Inventory;
+namespace ChristianSchulz.ObjectInspection.Client.Inventory;
 
 public class BusinessObjectRequestHandler : IBusinessObjectRequestHandler
 {

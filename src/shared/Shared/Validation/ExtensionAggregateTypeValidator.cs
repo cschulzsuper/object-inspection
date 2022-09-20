@@ -1,6 +1,6 @@
-﻿using Super.Paula.Application.Operation;
+﻿using ChristianSchulz.ObjectInspection.Application.Operation;
 
-namespace Super.Paula.Shared.Validation;
+namespace ChristianSchulz.ObjectInspection.Shared.Validation;
 
 public static class ExtensionAggregateTypeValidator
 {

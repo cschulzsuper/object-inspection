@@ -1,11 +1,11 @@
-﻿using Super.Paula.Application.Administration.Events;
-using Super.Paula.Application.Auditing.Events;
-using Super.Paula.Application.Guidelines.Events;
-using Super.Paula.Application.Inventory.Events;
-using Super.Paula.Shared.Orchestration;
+﻿using ChristianSchulz.ObjectInspection.Application.Administration.Events;
+using ChristianSchulz.ObjectInspection.Application.Auditing.Events;
+using ChristianSchulz.ObjectInspection.Application.Guidelines.Events;
+using ChristianSchulz.ObjectInspection.Application.Inventory.Events;
+using ChristianSchulz.ObjectInspection.Shared.Orchestration;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Super.Paula.Application;
+namespace ChristianSchulz.ObjectInspection.Application;
 
 [SuppressMessage("Style", "IDE1006")]
 public static class _EventTypes

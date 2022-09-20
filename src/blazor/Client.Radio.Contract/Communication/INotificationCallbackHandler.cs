@@ -1,8 +1,8 @@
-﻿using Super.Paula.Application.Communication.Responses;
+﻿using ChristianSchulz.ObjectInspection.Application.Communication.Responses;
 using System;
 using System.Threading.Tasks;
 
-namespace Super.Paula.Client.Communication;
+namespace ChristianSchulz.ObjectInspection.Client.Communication;
 
 public interface INotificationCallbackHandler
 {

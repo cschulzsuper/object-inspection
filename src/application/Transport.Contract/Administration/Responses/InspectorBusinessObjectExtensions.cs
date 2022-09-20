@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace Super.Paula.Application.Administration.Responses;
+namespace ChristianSchulz.ObjectInspection.Application.Administration.Responses;
 
 public static class InspectorBusinessObjectExtensions
 {

@@ -1,9 +1,9 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using Microsoft.Extensions.DependencyInjection;
-using Super.Paula.BadgeUsage;
+using ChristianSchulz.ObjectInspection.BadgeUsage;
 
-namespace Super.Paula.BadgeSecurity;
+namespace ChristianSchulz.ObjectInspection.BadgeSecurity;
 
 [SuppressMessage("Style", "IDE1006")]
 public static class _Services

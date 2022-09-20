@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Super.Paula.BadgeSecurity
+namespace ChristianSchulz.ObjectInspection.BadgeSecurity;
+
+public interface IBadgeClaimsFactory
 {
-    public interface IBadgeClaimsFactory
-    {
-        public ICollection<Claim> Create(BadgeCreationContext context);
-    }
+    public ICollection<Claim> Create(BadgeCreationContext context);
 }

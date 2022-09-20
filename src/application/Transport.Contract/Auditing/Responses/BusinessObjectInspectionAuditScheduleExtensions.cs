@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace Super.Paula.Application.Auditing.Responses;
+namespace ChristianSchulz.ObjectInspection.Application.Auditing.Responses;
 
 public static class BusinessObjectInspectionAuditScheduleExtensions
 {

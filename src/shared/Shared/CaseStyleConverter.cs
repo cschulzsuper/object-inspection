@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 
-namespace Super.Paula.Shared;
+namespace ChristianSchulz.ObjectInspection.Shared;
 
 public static class CaseStyleConverter
 {

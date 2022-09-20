@@ -1,7 +1,7 @@
-﻿using Super.Paula.Shared.ErrorHandling;
+﻿using ChristianSchulz.ObjectInspection.Shared.ErrorHandling;
 using System;
 
-namespace Super.Paula.BlobStorage.Exceptions;
+namespace ChristianSchulz.ObjectInspection.BlobStorage.Exceptions;
 
 public class BlobStorageException : Exception, IFormattableException
 {

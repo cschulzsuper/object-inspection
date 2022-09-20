@@ -2,7 +2,7 @@
 using System.Text.Json;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Super.Paula.BadgeUsage;
+namespace ChristianSchulz.ObjectInspection.BadgeUsage;
 
 [SuppressMessage("Style", "IDE1006")]
 public static class _Services

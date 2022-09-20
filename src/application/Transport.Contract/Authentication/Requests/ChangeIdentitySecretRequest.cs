@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Super.Paula.Application.Authentication.Requests;
+namespace ChristianSchulz.ObjectInspection.Application.Authentication.Requests;
 
 public class ChangeIdentitySecretRequest
 {

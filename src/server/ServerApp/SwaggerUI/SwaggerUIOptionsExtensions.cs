@@ -2,12 +2,12 @@
 using Microsoft.AspNetCore.Builder;
 using Swashbuckle.AspNetCore.SwaggerUI;
 
-namespace Super.Paula.Server.SwaggerUI
+namespace ChristianSchulz.ObjectInspection.Server.SwaggerUI;
+
+public static class SwaggerUIOptionsExtensions
 {
-    public static class SwaggerUIOptionsExtensions
-    {
-        private const string AccessTokenRequestInterceptorJavaScript =
-            """
+    private const string AccessTokenRequestInterceptorJavaScript =
+        """
               (req) => 
               {
                 var queryString = new URLSearchParams(window.location.search);
@@ -22,14 +22,13 @@ namespace Super.Paula.Server.SwaggerUI
               }
             """;
 
-        public static SwaggerUIOptions UseAccessTokenRequestInterceptor(this SwaggerUIOptions options)
-        {
-            var accessTokenRequestInterceptorJavaScript = AccessTokenRequestInterceptorJavaScript
-                .Replace(Environment.NewLine, string.Empty);
+    public static SwaggerUIOptions UseAccessTokenRequestInterceptor(this SwaggerUIOptions options)
+    {
+        var accessTokenRequestInterceptorJavaScript = AccessTokenRequestInterceptorJavaScript
+            .Replace(Environment.NewLine, string.Empty);
 
-            options.UseRequestInterceptor(accessTokenRequestInterceptorJavaScript);
+        options.UseRequestInterceptor(accessTokenRequestInterceptorJavaScript);
 
-            return options;
-        }
+        return options;
     }
 }

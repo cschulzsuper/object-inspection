@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Super.Paula.Application.Auditing;
+namespace ChristianSchulz.ObjectInspection.Application.Auditing;
 
 public class BusinessObjectInspectionAuditSchedule
 {

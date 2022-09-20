@@ -2,7 +2,7 @@
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace Super.Paula.Shared.Orchestration;
+namespace ChristianSchulz.ObjectInspection.Shared.Orchestration;
 
 public interface IEventProcessor
 {

@@ -34,74 +34,74 @@ else
         </div>
 
         @if (_extension != null)
-        {
-            <div class="container-fluid pb-3 mb-3 border-bottom">
+    {
+        <div class="container-fluid pb-3 mb-3 border-bottom">
                 @foreach (var extensionField in _extension.Fields)
-                {
-                    <div class="form-floating mt-3">
+            {
+                <div class="form-floating mt-3">
                         <input class="form-control"
                                id="@GetExtensionFieldInputId(extensionField)"
                                value="@_request[extensionField.DataName]"
                                @onchange="@(e => _request[extensionField.DataName] = e.Value)"/>
                         <label for="@GetExtensionFieldInputId(extensionField)">@Translator[extensionField.DisplayName]</label>
                     </div>
-                }
+            }
             </div>
-        }
+    }
 
         @if (context.GetValidationMessages().Any())
-        {
-            <div class="container-fluid pb-4 mb-5">
+    {
+        <div class="container-fluid pb-4 mb-5">
                 <div class="card card-body tex-wrap">
                     <ValidationSummary/>
                 </div>
             </div>
-        }
-        else
-        {
-            <div class="container-fluid pb-4 mb-5">
+    }
+    else
+    {
+        <div class="container-fluid pb-4 mb-5">
                 <AuthorizedButton Policy="OnlyChief" type="submit" class="btn btn-sm btn-primary">@Translator[$"Submit"]</AuthorizedButton>
             </div>
-        }
+    }
 
     </EditForm>
 }
 
 @code {
 
-    [Parameter]
-    public string BusinessObject { get; set; } = string.Empty;
+[Parameter]
+public string BusinessObject { get; set; } = string.Empty;
 
-    private ExtensionResponse? _extension;
+private ExtensionResponse? _extension;
 
-    private BusinessObjectRequest? _request = null;
+private BusinessObjectRequest? _request = null;
 
-    protected override async Task OnInitializedAsync()
+protected override async Task OnInitializedAsync()
+{
+    _extension = await ExtensionRequestHandler.GetAsync(ExtensionAggregateTypes.BusinessObject);
+
+    var response = await BusinessObjectHandler.GetAsync(BusinessObject);
+
+    _request = new BusinessObjectRequest
     {
-        _extension = await ExtensionRequestHandler.GetAsync(ExtensionAggregateTypes.BusinessObject);
+        DisplayName = response.DisplayName,
+        UniqueName = response.UniqueName,
+        ETag = response.ETag,
+    };
 
-        var response = await BusinessObjectHandler.GetAsync(BusinessObject);
-
-        _request = new BusinessObjectRequest
-        {
-            DisplayName = response.DisplayName,
-            UniqueName = response.UniqueName,
-            ETag = response.ETag,
-        };
-
-        foreach (var extension in response)
-        {
-            _request[extension.Key] = response[extension.Key];
-        }
-    }
-
-    private async Task OnValidSubmitAsync()
+    foreach (var extension in response)
     {
-        await BusinessObjectHandler.ReplaceAsync(BusinessObject, _request!);
-        NavigationManager.NavigateTo("/business-objects");
+        _request[extension.Key] = response[extension.Key];
     }
+}
 
-    private string GetExtensionFieldInputId(ExtensionFieldResponse extensionField)
-        => $"businessObject{char.ToUpperInvariant(extensionField.DataName[0])}{extensionField.DataName[1..]}";
+private async Task OnValidSubmitAsync()
+{
+    await BusinessObjectHandler.ReplaceAsync(BusinessObject, _request!);
+    NavigationManager.NavigateTo("/business-objects");
+}
+
+private string GetExtensionFieldInputId(ExtensionFieldResponse extensionField)
+    => $"businessObject{char.ToUpperInvariant(extensionField.DataName[0])}{extensionField.DataName[1..]}";
 
 }

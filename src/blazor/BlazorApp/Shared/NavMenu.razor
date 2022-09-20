@@ -1,4 +1,4 @@
-﻿@using Super.Paula.Application.Authentication
+﻿@using ChristianSchulz.ObjectInspection.Application.Authentication
 @inject AppEnvironment AppEnvironment
 @inject ITranslator<NavMenu> Translator
 @inject IAuthenticationRequestHandler AuthenticationHandler
@@ -23,13 +23,13 @@
                         </NavLink>
                     </li>
                     @if(AppEnvironment.IsDevelopment)
-                    {
-                        <li class="nav-item">
+                {
+                    <li class="nav-item">
                             <NavLink class="nav-link" Match="NavLinkMatch.All" href="missing-translations">
                                 <span class="oi oi-globe" aria-hidden="true"/>@Translator[$"Missing Translations"]
                             </NavLink>
                         </li>
-                    }
+                }
                 </Authorized>
             </AuthorizeView>
         </ul>
@@ -140,8 +140,8 @@
 
                     <ul class="nav flex-column mb-2">
                         <li class="nav-item">
-                            <NavLink class="nav-link" Match="NavLinkMatch.All" href="change-inspector" title="@Translator[$"Change inspector"]">
-                                <InspectorAvatar Size="16" Inspector="me" CssClass="avatar" />@Translator[$"Change inspector"]
+                            <NavLink class="nav-link" Match="NavLinkMatch.All" href="change-inspector" title="@Translator[$"Change Inspector"]">
+                                <InspectorAvatar Size="16" Inspector="me" CssClass="avatar" />@Translator[$"Change Inspector"]
                             </NavLink>
                         </li>
                         <li class="nav-item">
@@ -157,13 +157,13 @@
 
 @code {
 
-    [Parameter]
-    public bool Collapsed { get; set; }
+[Parameter]
+public bool Collapsed { get; set; }
 
-    private string NavMenuCssClass()
-    {
-        return Collapsed
-            ? "collapse"
-            : "";
-    }
+private string NavMenuCssClass()
+{
+    return Collapsed
+        ? "collapse"
+        : "";
+}
 }

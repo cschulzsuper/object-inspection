@@ -3,7 +3,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
 
-namespace Super.Paula.Shared.Orchestration;
+namespace ChristianSchulz.ObjectInspection.Shared.Orchestration;
 
 public sealed class InMemoryContinuationRegistry : IContinuationRegistry
 {

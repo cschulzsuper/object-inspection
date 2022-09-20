@@ -1,6 +1,6 @@
-﻿using Super.Paula.Shared;
+﻿using ChristianSchulz.ObjectInspection.Shared;
 
-namespace Super.Paula.Client.Localization;
+namespace ChristianSchulz.ObjectInspection.Client.Localization;
 
 public class TranslationCategoryProvider
 {
@@ -19,7 +19,7 @@ public class TranslationCategoryProvider
             return null;
         }
 
-        var typeNameWithoutRoot = typeName.Replace("Super.Paula.Client", string.Empty);
+        var typeNameWithoutRoot = typeName.Replace("ChristianSchulz.ObjectInspection.Client", string.Empty);
 
         var categoryCamelCase = typeNameWithoutRoot
             .Replace(".", string.Empty)

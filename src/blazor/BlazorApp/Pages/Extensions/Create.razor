@@ -25,32 +25,32 @@
     </div>
 
     @if (context.GetValidationMessages().Any())
-    {
-        <div class="container-fluid pb-4 mb-5">
+{
+    <div class="container-fluid pb-4 mb-5">
             <div class="card card-body tex-wrap">
                 <ValidationSummary/>
             </div>
         </div>
-    }
-    else
-    {
-        <div class="container-fluid pb-4 mb-5">
+}
+else
+{
+    <div class="container-fluid pb-4 mb-5">
             <AuthorizedButton Policy="OnlyChief"
                               id="submit"
                               type="submit"
                               class="btn btn-sm btn-primary">@Translator[$"Submit"]</AuthorizedButton>
         </div>
-    }
+}
 
 </EditForm>
 
 @code {
-    private ExtensionRequest _request = new ExtensionRequest();
+private ExtensionRequest _request = new ExtensionRequest();
 
-    private async Task OnValidSubmitAsync()
-    {
-        await ExtensionRequestHandler.CreateAsync(_request);
-        NavigationManager.NavigateTo("/extensions");
-    }
+private async Task OnValidSubmitAsync()
+{
+    await ExtensionRequestHandler.CreateAsync(_request);
+    NavigationManager.NavigateTo("/extensions");
+}
 
 }

@@ -1,13 +1,13 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Super.Paula.Data;
-using Super.Paula.Shared;
-using Super.Paula.Templates.Playwright.AdventureTours.Environment;
-using Super.Paula.Templates.Playwright.AdventureTours.Steps;
+using ChristianSchulz.ObjectInspection.Data;
+using ChristianSchulz.ObjectInspection.Shared;
+using ChristianSchulz.ObjectInspection.Templates.Playwright.AdventureTours.Environment;
+using ChristianSchulz.ObjectInspection.Templates.Playwright.AdventureTours.Steps;
 using System.Threading.Tasks;
 
-namespace Super.Paula.Templates.Playwright.AdventureTours;
+namespace ChristianSchulz.ObjectInspection.Templates.Playwright.AdventureTours;
 
 public class Program
 {
@@ -30,8 +30,8 @@ public class Program
 
                     return new AdventureToursSettings
                     {
-                        MaintainerPassword = configuration["Paula:MaintainerPassword"] ?? string.Empty,
-                        ChiefPassword = configuration["Paula:ChiefPassword"] ?? string.Empty
+                        MaintainerPassword = configuration["ObjectInspection:MaintainerPassword"] ?? string.Empty,
+                        ChiefPassword = configuration["ObjectInspection:ChiefPassword"] ?? string.Empty
                     };
                 });
 

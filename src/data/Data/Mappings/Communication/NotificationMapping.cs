@@ -1,16 +1,16 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Super.Paula.Application.Communication;
+using ChristianSchulz.ObjectInspection.Application.Communication;
 
-namespace Super.Paula.Data.Mappings.Communication;
+namespace ChristianSchulz.ObjectInspection.Data.Mappings.Communication;
 
 public class NotificationMapping : IEntityTypeConfiguration<Notification>
 {
     public string PartitionKey = nameof(PartitionKey);
 
-    private readonly PaulaContextState _state;
+    private readonly ObjectInspectionContextState _state;
 
-    public NotificationMapping(PaulaContextState state)
+    public NotificationMapping(ObjectInspectionContextState state)
     {
         _state = state;
     }

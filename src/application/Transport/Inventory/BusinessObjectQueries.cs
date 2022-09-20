@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 
-namespace Super.Paula.Application.Inventory;
+namespace ChristianSchulz.ObjectInspection.Application.Inventory;
 
 public class BusinessObjectQueries : IBusinessObjectQueries
 {

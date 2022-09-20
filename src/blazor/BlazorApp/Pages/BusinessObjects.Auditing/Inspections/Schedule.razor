@@ -33,54 +33,54 @@ else
         </div>
 
         @if (context.GetValidationMessages().Any())
-        {
-            <div class="container-fluid pb-4 mb-5">
+    {
+        <div class="container-fluid pb-4 mb-5">
                 <div class="card card-body tex-wrap">
                     <ValidationSummary/>
                 </div>
             </div>
-        }
-        else
-        {
-            <div class="container-fluid pb-4 mb-5">
+    }
+    else
+    {
+        <div class="container-fluid pb-4 mb-5">
                 <AuthorizedButton Policy="OnlyChief" id="submit" type="submit" class="btn btn-sm btn-primary">@Translator[$"Submit"]</AuthorizedButton>
             </div>
-        }
+    }
 
     </EditForm>
 }
 
 @code {
 
-    [Parameter]
-    public string BusinessObject { get; set; } = string.Empty;
+[Parameter]
+public string BusinessObject { get; set; } = string.Empty;
 
-    [Parameter]
-    public string Inspection { get; set; } = string.Empty;
+[Parameter]
+public string Inspection { get; set; } = string.Empty;
 
-    private BusinessObjectInspectionAuditScheduleRequest? _request = null;
+private BusinessObjectInspectionAuditScheduleRequest? _request = null;
 
-    protected override async Task OnInitializedAsync()
+protected override async Task OnInitializedAsync()
+{
+    var response = await BusinessObjectInspectionHandler.GetAsync(BusinessObject, Inspection);
+
+    if (response != null)
     {
-        var response = await BusinessObjectInspectionHandler.GetAsync(BusinessObject, Inspection);
+        var expression = response.AuditSchedule.Expressions.FirstOrDefault();
 
-        if (response != null)
+        _request = new BusinessObjectInspectionAuditScheduleRequest
         {
-            var expression = response.AuditSchedule.Expressions.FirstOrDefault();
-
-            _request = new BusinessObjectInspectionAuditScheduleRequest
-            {
-                Threshold = response.AuditSchedule.Threshold,
-                Schedule = expression?.CronExpression ?? string.Empty,
-                ETag = response.ETag
-            };
-        }
+            Threshold = response.AuditSchedule.Threshold,
+            Schedule = expression?.CronExpression ?? string.Empty,
+            ETag = response.ETag
+        };
     }
+}
 
-    private async Task OnValidSubmitAsync()
-    {
-        await BusinessObjectInspectionHandler.ReplaceAuditScheduleAsync(BusinessObject, Inspection, _request!);
-        NavigationManager.NavigateTo($"/business-objects/{BusinessObject}/inspections");
-    }
+private async Task OnValidSubmitAsync()
+{
+    await BusinessObjectInspectionHandler.ReplaceAuditScheduleAsync(BusinessObject, Inspection, _request!);
+    NavigationManager.NavigateTo($"/business-objects/{BusinessObject}/inspections");
+}
 
 }

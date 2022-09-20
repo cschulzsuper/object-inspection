@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Routing;
 using System;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Super.Paula.Application;
+namespace ChristianSchulz.ObjectInspection.Application;
 
 [SuppressMessage("Style", "IDE1006")]
 public static class _Extensions

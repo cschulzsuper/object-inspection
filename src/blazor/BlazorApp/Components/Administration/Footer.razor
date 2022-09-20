@@ -6,9 +6,9 @@
         &copy; Copyright @DateTime.Now.Year
         <a href="https://github.com/cschulzsuper">Christian Schulz</a>.
         @if (_buildString != null)
-        {
-            <span class="d-none d-md-inline-block">@_buildString.Value</span>
-        }
+    {
+        <span class="d-none d-md-inline-block">@_buildString.Value</span>
+    }
     </div>
 </footer>
 
@@ -31,24 +31,24 @@
         var runtime = BuildInfo.Runtime;
 
         var branch = BuildInfo.Branch;
-        var branchUrl = $"https://github.com/cschulzsuper/paula/tree/{BuildInfo.Branch}";
+        var branchUrl = $"https://github.com/cschulzsuper/object-inspection/tree/{BuildInfo.Branch}";
 
         var hash = BuildInfo.ShortHash;
-        var hashUrl = $"https://github.com/cschulzsuper/paula/tree/{BuildInfo.Hash}";
+        var hashUrl = $"https://github.com/cschulzsuper/object-inspection/tree/{BuildInfo.Hash}";
 
         var build = BuildInfo.Build;
-        var buildUrl = $"https://github.com/cschulzsuper/paula/tree/{BuildInfo.Build}";
+        var buildUrl = $"https://github.com/cschulzsuper/object-inspection/tree/{BuildInfo.Build}";
 
-        var makeRuntimeString = 
+        var makeRuntimeString =
             !string.IsNullOrWhiteSpace(BuildInfo.Runtime);
 
-        var makeCommitString = 
+        var makeCommitString =
             makeRuntimeString &&
             !string.IsNullOrWhiteSpace(BuildInfo.Branch) &&
             !string.IsNullOrWhiteSpace(BuildInfo.Hash) &&
             !string.IsNullOrWhiteSpace(BuildInfo.ShortHash);
 
-        var makeBuildString = 
+        var makeBuildString =
             makeCommitString &&
             !string.IsNullOrWhiteSpace(BuildInfo.Build);
 

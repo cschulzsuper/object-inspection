@@ -1,12 +1,12 @@
 ﻿using Microsoft.Playwright;
-using Super.Paula.Shared.Environment;
+using ChristianSchulz.ObjectInspection.Shared.Environment;
 using System.Threading.Tasks;
-using Super.Paula.Templates.Playwright.Auth;
-using Super.Paula.Templates.Playwright.Auditing;
+using ChristianSchulz.ObjectInspection.Templates.Playwright.Auth;
+using ChristianSchulz.ObjectInspection.Templates.Playwright.Auditing;
 
 using Playwright = Microsoft.Playwright;
 
-namespace Super.Paula.Templates.Playwright.AdventureToursAuditing.Steps;
+namespace ChristianSchulz.ObjectInspection.Templates.Playwright.AdventureToursAuditing.Steps;
 
 public class AdventureToursAuditing : IStep
 {

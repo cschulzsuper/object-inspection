@@ -1,4 +1,4 @@
-﻿namespace Super.Paula.Application.Guidelines.Responses;
+﻿namespace ChristianSchulz.ObjectInspection.Application.Guidelines.Responses;
 
 public class ActivateInspectionResponse
 {

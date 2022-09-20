@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
-using Super.Paula.Application.Operation.Requests;
+using ChristianSchulz.ObjectInspection.Application.Operation.Requests;
 using System;
 
-namespace Super.Paula.Application.Operation;
+namespace ChristianSchulz.ObjectInspection.Application.Operation;
 
 public static class ExtensionEndpoints
 {

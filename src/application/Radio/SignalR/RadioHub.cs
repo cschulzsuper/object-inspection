@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.SignalR;
-using Super.Paula.Shared.SignalR;
+using ChristianSchulz.ObjectInspection.Shared.SignalR;
 
-namespace Super.Paula.Application.SignalR;
+namespace ChristianSchulz.ObjectInspection.Application.SignalR;
 
 [HubName("Radio")]
 public class RadioHub : Hub

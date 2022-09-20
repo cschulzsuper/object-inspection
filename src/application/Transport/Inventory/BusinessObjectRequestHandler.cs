@@ -1,12 +1,12 @@
-﻿using Super.Paula.Application.Inventory.Requests;
-using Super.Paula.Application.Inventory.Responses;
-using Super.Paula.Shared;
+﻿using ChristianSchulz.ObjectInspection.Application.Inventory.Requests;
+using ChristianSchulz.ObjectInspection.Application.Inventory.Responses;
+using ChristianSchulz.ObjectInspection.Shared;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Super.Paula.Application.Inventory;
+namespace ChristianSchulz.ObjectInspection.Application.Inventory;
 
 public class BusinessObjectRequestHandler : IBusinessObjectRequestHandler
 {

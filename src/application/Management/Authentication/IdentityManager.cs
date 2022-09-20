@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Super.Paula.Data;
-using Super.Paula.Shared.Validation;
+using ChristianSchulz.ObjectInspection.Data;
+using ChristianSchulz.ObjectInspection.Shared.Validation;
 
-namespace Super.Paula.Application.Authentication;
+namespace ChristianSchulz.ObjectInspection.Application.Authentication;
 
 public class IdentityManager : IIdentityManager
 {

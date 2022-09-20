@@ -1,8 +1,8 @@
-﻿using Super.Paula.Shared.Orchestration;
+﻿using ChristianSchulz.ObjectInspection.Shared.Orchestration;
 using System.ComponentModel.DataAnnotations;
-using Super.Paula.Shared.Validation;
+using ChristianSchulz.ObjectInspection.Shared.Validation;
 
-namespace Super.Paula.Application.Auditing.Events;
+namespace ChristianSchulz.ObjectInspection.Application.Auditing.Events;
 
 [AllowedSubscriber(AllowedSubscribers.Inspector)]
 public record BusinessObjectInspectionAuditScheduleEvent(

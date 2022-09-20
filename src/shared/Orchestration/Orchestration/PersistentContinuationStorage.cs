@@ -5,10 +5,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Super.Paula.Application.Orchestration;
-using Super.Paula.BadgeUsage;
+using ChristianSchulz.ObjectInspection.Application.Orchestration;
+using ChristianSchulz.ObjectInspection.BadgeUsage;
 
-namespace Super.Paula.Shared.Orchestration;
+namespace ChristianSchulz.ObjectInspection.Shared.Orchestration;
 
 public class PersistentContinuationStorage : IContinuationStorage
 {

@@ -1,11 +1,11 @@
-﻿using Super.Paula.Application.Administration.Continuation;
-using Super.Paula.Shared.Orchestration;
+﻿using ChristianSchulz.ObjectInspection.Application.Administration.Continuation;
+using ChristianSchulz.ObjectInspection.Shared.Orchestration;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Super.Paula.Shared.Security;
+using ChristianSchulz.ObjectInspection.Shared.Security;
 
-namespace Super.Paula.Application.Administration;
+namespace ChristianSchulz.ObjectInspection.Application.Administration;
 
 public class OrganizationContinuationService : IOrganizationContinuationService
 {

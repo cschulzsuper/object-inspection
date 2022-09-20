@@ -2,18 +2,18 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Super.Paula.Application;
-using Super.Paula.BlobStorage;
-using Super.Paula.Data;
-using Super.Paula.RuntimeData;
-using Super.Paula.Server.Orchestration;
-using Super.Paula.Shared;
+using ChristianSchulz.ObjectInspection.Application;
+using ChristianSchulz.ObjectInspection.BlobStorage;
+using ChristianSchulz.ObjectInspection.Data;
+using ChristianSchulz.ObjectInspection.RuntimeData;
+using ChristianSchulz.ObjectInspection.Server.Orchestration;
+using ChristianSchulz.ObjectInspection.Shared;
 using System.Diagnostics.CodeAnalysis;
-using Super.Paula.BadgeSecurity;
-using Super.Paula.Server.Security;
-using Super.Paula.Shared.Security;
+using ChristianSchulz.ObjectInspection.BadgeSecurity;
+using ChristianSchulz.ObjectInspection.Server.Security;
+using ChristianSchulz.ObjectInspection.Shared.Security;
 
-namespace Super.Paula.Server;
+namespace ChristianSchulz.ObjectInspection.Server;
 
 [SuppressMessage("Style", "IDE1006")]
 public static class _Services
@@ -25,7 +25,7 @@ public static class _Services
         services.AddHostedService<WorkerService>();
 
         var isDevelopment = environment.IsDevelopment();
-        var blobStorageConnectionString = configuration["Paula:BlobStorageConnectionString"] ?? string.Empty;
+        var blobStorageConnectionString = configuration["ObjectInspection:BlobStorageConnectionString"] ?? string.Empty;
 
         services
             .AddAppEnvironment(isDevelopment)

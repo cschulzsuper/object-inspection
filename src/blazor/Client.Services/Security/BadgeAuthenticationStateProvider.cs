@@ -2,9 +2,9 @@
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components.Authorization;
-using Super.Paula.BadgeUsage;
+using ChristianSchulz.ObjectInspection.BadgeUsage;
 
-namespace Super.Paula.Client.Security;
+namespace ChristianSchulz.ObjectInspection.Client.Security;
 
 public class BadgeAuthenticationStateProvider : AuthenticationStateProvider
 {

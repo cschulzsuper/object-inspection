@@ -1,10 +1,10 @@
 ﻿using Microsoft.Extensions.Hosting;
-using Super.Paula.Templates.Playwright.AdventureToursAuditing.Steps;
+using ChristianSchulz.ObjectInspection.Templates.Playwright.AdventureToursAuditing.Steps;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Super.Paula.Templates.Playwright.AdventureToursAuditing;
+namespace ChristianSchulz.ObjectInspection.Templates.Playwright.AdventureToursAuditing;
 
 public class HostedService : IHostedService
 {

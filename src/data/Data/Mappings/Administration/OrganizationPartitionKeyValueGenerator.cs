@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.ValueGeneration;
-using Super.Paula.Application.Administration;
+using ChristianSchulz.ObjectInspection.Application.Administration;
 using System.Collections.Generic;
 
-namespace Super.Paula.Data.Mappings.Administration;
+namespace ChristianSchulz.ObjectInspection.Data.Mappings.Administration;
 
 public class OrganizationPartitionKeyValueGenerator : ValueGenerator<string>, IPartitionKeyValueGenerator<Organization>
 {
@@ -11,12 +11,12 @@ public class OrganizationPartitionKeyValueGenerator : ValueGenerator<string>, IP
 
     public override string Next(EntityEntry entry)
         => Value(
-            (entry.Context as PaulaContext)!.State,
+            (entry.Context as ObjectInspectionContext)!.State,
             (entry.Entity as Organization)!);
 
-    public string Value(PaulaContextState state, Organization entity)
+    public string Value(ObjectInspectionContextState state, Organization entity)
         => "organization";
 
-    public string Value(PaulaContextState state, Queue<object> partitionKeyComponents)
+    public string Value(ObjectInspectionContextState state, Queue<object> partitionKeyComponents)
         => "organization";
 }

@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Super.Paula.Application.Operation;
+namespace ChristianSchulz.ObjectInspection.Application.Operation;
 
 public interface IApplicationManager
 {

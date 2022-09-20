@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.ValueGeneration;
-using Super.Paula.Application.Communication;
+using ChristianSchulz.ObjectInspection.Application.Communication;
 using System.Collections.Generic;
 
-namespace Super.Paula.Data.Mappings.Communication;
+namespace ChristianSchulz.ObjectInspection.Data.Mappings.Communication;
 
 public class NotificationPartitionKeyValueGenerator : ValueGenerator<string>, IPartitionKeyValueGenerator<Notification>
 {
@@ -11,12 +11,12 @@ public class NotificationPartitionKeyValueGenerator : ValueGenerator<string>, IP
 
     public override string Next(EntityEntry entry)
         => Value(
-            (entry.Context as PaulaContext)!.State,
+            (entry.Context as ObjectInspectionContext)!.State,
             (entry.Entity as Notification)!);
 
-    public string Value(PaulaContextState state, Notification entity)
+    public string Value(ObjectInspectionContextState state, Notification entity)
         => $"notification|{entity.Inspector}";
 
-    public string Value(PaulaContextState state, Queue<object> partitionKeyComponents)
+    public string Value(ObjectInspectionContextState state, Queue<object> partitionKeyComponents)
         => $"notification|{partitionKeyComponents.Dequeue()}";
 }

@@ -35,35 +35,35 @@ else
         </thead>
         <tbody>
         @foreach (var inspector in RelevantInspectors)
-        {
-            <tr>
+    {
+        <tr>
                 <td class="d-none d-lg-table-cell">@inspector.Inspector</td>
 
                 <AuthorizeView Policy="OnlyChiefOrObserver">
                     <Authorized>
                         <td>
                             @if (_inspectorBusinessObjects!.ContainsKey(inspector.Inspector))
-                            {
-                                <AuthorizedButton Policy="OnlyChief"
+                        {
+                            <AuthorizedButton Policy="OnlyChief"
                                                   id="@($"unassign-{inspector.Inspector}")"
                                                   class="btn btn-sm btn-primary btn-block"
                                                   title="@Translator[$"Unassign"]"
                                                   @onclick="() => UnassignAsync(inspector)"><span class="oi oi-minus"/></AuthorizedButton>
-                            }
-                            else
-                            {
-                                <AuthorizedButton Policy="OnlyChief"
+                        }
+                        else
+                        {
+                            <AuthorizedButton Policy="OnlyChief"
                                                   id="@($"assign-{inspector.Inspector}")"
                                                   class="btn btn-sm btn-primary btn-block"
                                                   title="@Translator[$"Assign"]"
                                                   @onclick="() => AssignAsync(inspector)"><span class="oi oi-plus"/></AuthorizedButton>
-                            }
+                        }
                         </td>
                     </Authorized>
                 </AuthorizeView>
 
             </tr>
-        }
+    }
         </tbody>
     </table>
 }
@@ -72,94 +72,94 @@ else
 
 @code {
 
-    [Parameter]
-    public string BusinessObject { get; set; } = null!;
+[Parameter]
+public string BusinessObject { get; set; } = null!;
 
-    private IDictionary<string, BusinessObjectInspectorResponse>? _inspectorBusinessObjects;
+private IDictionary<string, BusinessObjectInspectorResponse>? _inspectorBusinessObjects;
 
-    private IDictionary<string, BusinessObjectInspectorResponse>? _inspectors;
+private IDictionary<string, BusinessObjectInspectorResponse>? _inspectors;
 
-    private BusinessObjectResponse? _businessObject;
+private BusinessObjectResponse? _businessObject;
 
-    [CascadingParameter]
-    public Task<AuthenticationState> AuthenticationState { get; set; } = null!;
+[CascadingParameter]
+public Task<AuthenticationState> AuthenticationState { get; set; } = null!;
 
-    public IEnumerable<BusinessObjectInspectorResponse>? RelevantInspectors
-        => _inspectorBusinessObjects?
-                .Concat(_inspectors!
-                    .Where(x => !_inspectorBusinessObjects.ContainsKey(x.Key)))
-                .OrderBy(x => x.Key)
-                .Select(x => x.Value);
+public IEnumerable<BusinessObjectInspectorResponse>? RelevantInspectors
+    => _inspectorBusinessObjects?
+            .Concat(_inspectors!
+                .Where(x => !_inspectorBusinessObjects.ContainsKey(x.Key)))
+            .OrderBy(x => x.Key)
+            .Select(x => x.Value);
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+protected override async Task OnAfterRenderAsync(bool firstRender)
+{
+    if (firstRender)
     {
-        if (firstRender)
-        {
-            await QueryAsync();
-            StateHasChanged();
-        }
+        await QueryAsync();
+        StateHasChanged();
     }
+}
 
-    public async Task QueryAsync()
+public async Task QueryAsync()
+{
+    _inspectors = new Dictionary<string, BusinessObjectInspectorResponse>();
+
+    _businessObject = await BusinessObjectRequestHandler.GetAsync(BusinessObject);
+
+    var isChief = (await AuthenticationState).User.Claims.HasAuthorization("Chief");
+
+    if (isChief)
     {
-        _inspectors = new Dictionary<string, BusinessObjectInspectorResponse>();
+        var inspectorResponse = InspectorRequestHandler.GetAll();
 
-        _businessObject = await BusinessObjectRequestHandler.GetAsync(BusinessObject);
-
-        var isChief = (await AuthenticationState).User.Claims.HasAuthorization("Chief");
-
-        if (isChief)
+        await foreach (var inspector in inspectorResponse)
         {
-            var inspectorResponse = InspectorRequestHandler.GetAll();
-
-            await foreach (var inspector in inspectorResponse)
+            _inspectors!.Add(inspector.UniqueName, new BusinessObjectInspectorResponse
             {
-                _inspectors!.Add(inspector.UniqueName, new BusinessObjectInspectorResponse
-                {
-                    Inspector = inspector.UniqueName,
-                    BusinessObject = _businessObject.UniqueName,
-                    BusinessObjectDisplayName = _businessObject.DisplayName
-                });
-                this.StateHasChanged();
-            }
-        }
-
-        _inspectorBusinessObjects = new Dictionary<string, BusinessObjectInspectorResponse>();
-
-        var inspectors = BusinessObjectInspectorRequestHandler.GetAllForBusinessObject(BusinessObject);
-
-        await foreach (var inspector in inspectors)
-        {
-            _inspectorBusinessObjects!.Add(inspector.Inspector, inspector);
-
+                Inspector = inspector.UniqueName,
+                BusinessObject = _businessObject.UniqueName,
+                BusinessObjectDisplayName = _businessObject.DisplayName
+            });
             this.StateHasChanged();
         }
     }
 
-    public async Task AssignAsync(BusinessObjectInspectorResponse inspector)
+    _inspectorBusinessObjects = new Dictionary<string, BusinessObjectInspectorResponse>();
+
+    var inspectors = BusinessObjectInspectorRequestHandler.GetAllForBusinessObject(BusinessObject);
+
+    await foreach (var inspector in inspectors)
     {
-        var response = await BusinessObjectInspectorRequestHandler.CreateAsync(
-            BusinessObject!,
-            new BusinessObjectInspectorRequest
-            {
-                BusinessObjectDisplayName = inspector.BusinessObjectDisplayName,
-                Inspector = inspector.Inspector,
-            });
-
-        inspector.ETag = response.ETag;
-
         _inspectorBusinessObjects!.Add(inspector.Inspector, inspector);
-        StateHasChanged();
-    }
 
-    public async Task UnassignAsync(BusinessObjectInspectorResponse inspector)
-    {
-        await BusinessObjectInspectorRequestHandler.DeleteAsync(
-            BusinessObject!,
-            inspector.Inspector,
-            inspector.ETag);
-
-        _inspectorBusinessObjects!.Remove(inspector.Inspector);
-        StateHasChanged();
+        this.StateHasChanged();
     }
+}
+
+public async Task AssignAsync(BusinessObjectInspectorResponse inspector)
+{
+    var response = await BusinessObjectInspectorRequestHandler.CreateAsync(
+        BusinessObject!,
+        new BusinessObjectInspectorRequest
+        {
+            BusinessObjectDisplayName = inspector.BusinessObjectDisplayName,
+            Inspector = inspector.Inspector,
+        });
+
+    inspector.ETag = response.ETag;
+
+    _inspectorBusinessObjects!.Add(inspector.Inspector, inspector);
+    StateHasChanged();
+}
+
+public async Task UnassignAsync(BusinessObjectInspectorResponse inspector)
+{
+    await BusinessObjectInspectorRequestHandler.DeleteAsync(
+        BusinessObject!,
+        inspector.Inspector,
+        inspector.ETag);
+
+    _inspectorBusinessObjects!.Remove(inspector.Inspector);
+    StateHasChanged();
+}
 }

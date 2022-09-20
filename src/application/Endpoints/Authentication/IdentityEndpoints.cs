@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
-using Super.Paula.Application.Authentication.Requests;
+using ChristianSchulz.ObjectInspection.Application.Authentication.Requests;
 
-namespace Super.Paula.Application.Authentication;
+namespace ChristianSchulz.ObjectInspection.Application.Authentication;
 
 public static class IdentityEndpoints
 {

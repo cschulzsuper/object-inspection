@@ -42,61 +42,61 @@ else
         </div>
 
         @if (context.GetValidationMessages().Any())
-        {
-            <div class="container-fluid pb-4 mb-5">
+    {
+        <div class="container-fluid pb-4 mb-5">
                 <div class="card card-body tex-wrap">
                     <ValidationSummary/>
                 </div>
             </div>
-        }
-        else
-        {
-            <div class="container-fluid pb-4 mb-5">
+    }
+    else
+    {
+        <div class="container-fluid pb-4 mb-5">
                 <button type="submit" class="btn btn-sm btn-primary">@Translator[$"Submit"]</button>
             </div>
-        }
+    }
     </EditForm>
 }
 
 @code {
 
-    [Parameter]
-    public string Organization { get; set; } = string.Empty;
+[Parameter]
+public string Organization { get; set; } = string.Empty;
 
-    private OrganizationRequest? _request = null;
+private OrganizationRequest? _request = null;
 
-    [CascadingParameter]
-    public Task<AuthenticationState> AuthenticationState { get; set; } = null!;
+[CascadingParameter]
+public Task<AuthenticationState> AuthenticationState { get; set; } = null!;
 
-    private string? _organization = null;
+private string? _organization = null;
 
-    protected override async Task OnParametersSetAsync()
+protected override async Task OnParametersSetAsync()
+{
+    _organization = (await AuthenticationState).User.Claims.GetOrganization();
+}
+
+protected override async Task OnAfterRenderAsync(bool firstRender)
+{
+    if (firstRender)
     {
-        _organization = (await AuthenticationState).User.Claims.GetOrganization();
-    }
+        var response = await OrganizationHandler.GetAsync(Organization);
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
+        _request = new OrganizationRequest
         {
-            var response = await OrganizationHandler.GetAsync(Organization);
+            ChiefInspector = response.ChiefInspector,
+            DisplayName = response.DisplayName,
+            UniqueName = response.UniqueName,
+            Activated = response.Activated,
+            ETag = response.ETag
+        };
 
-            _request = new OrganizationRequest
-            {
-                ChiefInspector = response.ChiefInspector,
-                DisplayName = response.DisplayName,
-                UniqueName = response.UniqueName,
-                Activated = response.Activated,
-                ETag = response.ETag
-            };
-
-            StateHasChanged();
-        }
+        StateHasChanged();
     }
+}
 
-    private async Task OnValidSubmitAsync()
-    {
-        await OrganizationHandler.ReplaceAsync(Organization, _request!);
-        NavigationManager.NavigateTo("/organizations");
-    }
+private async Task OnValidSubmitAsync()
+{
+    await OrganizationHandler.ReplaceAsync(Organization, _request!);
+    NavigationManager.NavigateTo("/organizations");
+}
 }

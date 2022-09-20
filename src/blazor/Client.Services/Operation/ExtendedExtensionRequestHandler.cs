@@ -1,12 +1,12 @@
-﻿using Super.Paula.Application.Operation;
-using Super.Paula.Application.Operation.Requests;
-using Super.Paula.Application.Operation.Responses;
+﻿using ChristianSchulz.ObjectInspection.Application.Operation;
+using ChristianSchulz.ObjectInspection.Application.Operation.Requests;
+using ChristianSchulz.ObjectInspection.Application.Operation.Responses;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Super.Paula.Application.Operation.Exceptions;
+using ChristianSchulz.ObjectInspection.Application.Operation.Exceptions;
 using System.Collections.Immutable;
 
-namespace Super.Paula.Client.Operation;
+namespace ChristianSchulz.ObjectInspection.Client.Operation;
 
 public class ExtendedExtensionRequestHandler : IExtensionRequestHandler
 {

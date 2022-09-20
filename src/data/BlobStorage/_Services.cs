@@ -2,7 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Super.Paula.BlobStorage;
+namespace ChristianSchulz.ObjectInspection.BlobStorage;
 
 [SuppressMessage("Style", "IDE1006")]
 public static class _Services
@@ -15,7 +15,7 @@ public static class _Services
         {
             builder
                 .AddBlobServiceClient(connectionString)
-                .WithName("PaulaBlobStorage")
+                .WithName("ObjectInspectionBlobStorage")
                 .ConfigureOptions(x => x.Retry.MaxRetries = 0);
         });
 

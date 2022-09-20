@@ -1,7 +1,7 @@
-﻿using Super.Paula.Shared.Validation;
+﻿using ChristianSchulz.ObjectInspection.Shared.Validation;
 using System;
 
-namespace Super.Paula.Application.Inventory;
+namespace ChristianSchulz.ObjectInspection.Application.Inventory;
 
 public static class BusinessObjectValidator
 {

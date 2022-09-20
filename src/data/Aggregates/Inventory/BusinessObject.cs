@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Super.Paula.Application.Inventory;
+namespace ChristianSchulz.ObjectInspection.Application.Inventory;
 
 public class BusinessObject
 {

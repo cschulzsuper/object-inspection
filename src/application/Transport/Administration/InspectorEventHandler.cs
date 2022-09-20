@@ -1,15 +1,15 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Super.Paula.Application.Administration.Events;
-using Super.Paula.Application.Administration.Responses;
-using Super.Paula.Application.Auditing.Events;
-using Super.Paula.Application.Inventory.Events;
-using Super.Paula.Shared.Orchestration;
+using ChristianSchulz.ObjectInspection.Application.Administration.Events;
+using ChristianSchulz.ObjectInspection.Application.Administration.Responses;
+using ChristianSchulz.ObjectInspection.Application.Auditing.Events;
+using ChristianSchulz.ObjectInspection.Application.Inventory.Events;
+using ChristianSchulz.ObjectInspection.Shared.Orchestration;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Super.Paula.Shared;
+using ChristianSchulz.ObjectInspection.Shared;
 
-namespace Super.Paula.Application.Administration;
+namespace ChristianSchulz.ObjectInspection.Application.Administration;
 
 public class InspectorEventHandler : IInspectorEventHandler
 {

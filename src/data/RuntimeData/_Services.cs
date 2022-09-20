@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Super.Paula.RuntimeData;
+namespace ChristianSchulz.ObjectInspection.RuntimeData;
 
 [SuppressMessage("Style", "IDE1006")]
 public static class _Services

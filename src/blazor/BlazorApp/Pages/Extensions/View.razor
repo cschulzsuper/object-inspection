@@ -24,12 +24,12 @@
 <div class="table-responsive">
 
     @if (_extensions == null)
-    {
-        <p><em>Loading...</em></p>
-    }
-    else
-    {
-        <table class="table table-striped table-sm">
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table table-striped table-sm">
             <thead>
             <tr>
                 <th scope="col" class="col-12">@Translator[$"Aggregate type"]</th>
@@ -39,8 +39,8 @@
             </thead>
             <tbody>
             @foreach (var extension in _extensions.Values)
-            {
-                <tr>
+        {
+            <tr>
                     <td>@extension.AggregateType</td>
                     <td>
                         <button class="btn btn-sm btn-outline-info btn-block" title="@Translator[$"Fields"]"
@@ -54,45 +54,45 @@
                     </td>
 
                 </tr>
-            }
+        }
             </tbody>
         </table>
-    }
+}
 
 </div>
 
 @code {
 
-    private IDictionary<string, ExtensionResponse>? _extensions;
+private IDictionary<string, ExtensionResponse>? _extensions;
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+protected override async Task OnAfterRenderAsync(bool firstRender)
+{
+    if (firstRender)
     {
-        if (firstRender)
+        _extensions = new Dictionary<string, ExtensionResponse>();
+
+        var response = ExtensionRequestHandler.GetAll();
+
+        await foreach (var identity in response)
         {
-            _extensions = new Dictionary<string, ExtensionResponse>();
-
-            var response = ExtensionRequestHandler.GetAll();
-
-            await foreach (var identity in response)
-            {
-                _extensions.Add(identity.AggregateType, identity);
-                StateHasChanged();
-            }
-
+            _extensions.Add(identity.AggregateType, identity);
             StateHasChanged();
         }
+
+        StateHasChanged();
     }
+}
 
-    public void Create()
-        => NavigationManager.NavigateTo("/extensions/create");
+public void Create()
+    => NavigationManager.NavigateTo("/extensions/create");
 
-    public async Task DeleteAsync(ExtensionResponse identity)
-    {
-        await ExtensionRequestHandler.DeleteAsync(identity.AggregateType, identity.ETag);
-        _extensions!.Remove(identity.AggregateType);
-    }
+public async Task DeleteAsync(ExtensionResponse identity)
+{
+    await ExtensionRequestHandler.DeleteAsync(identity.AggregateType, identity.ETag);
+    _extensions!.Remove(identity.AggregateType);
+}
 
-    public void NavigateToFields(string aggregateType)
-        => NavigationManager.NavigateTo($"/extensions/{aggregateType}/fields");
+public void NavigateToFields(string aggregateType)
+    => NavigationManager.NavigateTo($"/extensions/{aggregateType}/fields");
 
 }

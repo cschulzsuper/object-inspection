@@ -2,7 +2,7 @@
 using System.Text;
 using System.Text.Json;
 
-namespace Super.Paula.Shared;
+namespace ChristianSchulz.ObjectInspection.Shared;
 
 public class Base64Encoder
 {

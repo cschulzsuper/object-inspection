@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Super.Paula.Application.Localization;
-using Super.Paula.Application.Localization.Exceptions;
-using Super.Paula.Application.Localization.Requests;
-using Super.Paula.Shared.Environment;
+using ChristianSchulz.ObjectInspection.Application.Localization;
+using ChristianSchulz.ObjectInspection.Application.Localization.Exceptions;
+using ChristianSchulz.ObjectInspection.Application.Localization.Requests;
+using ChristianSchulz.ObjectInspection.Shared.Environment;
 using System;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Super.Paula.Client.Localization;
+namespace ChristianSchulz.ObjectInspection.Client.Localization;
 
 public class Translator<T> : ITranslator<T>
 {

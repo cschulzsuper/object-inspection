@@ -1,13 +1,12 @@
 ﻿using System.Security.Claims;
 
-namespace Super.Paula.BadgeSecurity
+namespace ChristianSchulz.ObjectInspection.BadgeSecurity;
+
+public interface IBadgeProofManager
 {
-    public interface IBadgeProofManager
-    {
-        public string Create(BadgeProofAuthorizationContext context);
+    public string Create(BadgeProofAuthorizationContext context);
 
-        public void Purge(ClaimsPrincipal user);
+    public void Purge(ClaimsPrincipal user);
 
-        public bool Verify(BadgeProofAuthenticationContext context);
-    }
+    public bool Verify(BadgeProofAuthenticationContext context);
 }

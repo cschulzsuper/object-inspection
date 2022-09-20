@@ -1,10 +1,10 @@
 ﻿using Microsoft.Extensions.Logging;
-using Super.Paula.Application.Administration.Exceptions;
+using ChristianSchulz.ObjectInspection.Application.Administration.Exceptions;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace Super.Paula.Application.Administration;
+namespace ChristianSchulz.ObjectInspection.Application.Administration;
 
 public class InspectorAvatarRequestHandler : IInspectorAvatarRequestHandler
 {

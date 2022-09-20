@@ -1,12 +1,12 @@
-﻿using Super.Paula.Application.Administration.Requests;
-using Super.Paula.Application.Administration.Responses;
+﻿using ChristianSchulz.ObjectInspection.Application.Administration.Requests;
+using ChristianSchulz.ObjectInspection.Application.Administration.Responses;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Super.Paula.Shared.Security;
+using ChristianSchulz.ObjectInspection.Shared.Security;
 
-namespace Super.Paula.Application.Administration;
+namespace ChristianSchulz.ObjectInspection.Application.Administration;
 
 public class InspectorRequestHandler : IInspectorRequestHandler
 {

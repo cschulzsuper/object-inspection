@@ -2,10 +2,10 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
-using Super.Paula.Application.Authentication.Requests;
-using Super.Paula.Application.Authentication.Responses;
+using ChristianSchulz.ObjectInspection.Application.Authentication.Requests;
+using ChristianSchulz.ObjectInspection.Application.Authentication.Responses;
 
-namespace Super.Paula.Application.Authentication;
+namespace ChristianSchulz.ObjectInspection.Application.Authentication;
 
 public class IdentityRequestHandler : IIdentityRequestHandler
 {

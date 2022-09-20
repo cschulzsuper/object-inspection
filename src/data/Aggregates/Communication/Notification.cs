@@ -1,4 +1,4 @@
-﻿namespace Super.Paula.Application.Communication;
+﻿namespace ChristianSchulz.ObjectInspection.Application.Communication;
 
 public class Notification
 {

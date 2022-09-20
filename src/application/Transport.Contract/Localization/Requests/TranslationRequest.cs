@@ -1,4 +1,4 @@
-﻿namespace Super.Paula.Application.Localization.Requests;
+﻿namespace ChristianSchulz.ObjectInspection.Application.Localization.Requests;
 
 public class TranslationRequest
 {

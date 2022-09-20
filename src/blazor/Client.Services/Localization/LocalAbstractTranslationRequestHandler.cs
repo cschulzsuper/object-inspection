@@ -1,12 +1,12 @@
-﻿using Super.Paula.Application.Localization;
-using Super.Paula.Application.Localization.Exceptions;
-using Super.Paula.Application.Localization.Requests;
-using Super.Paula.Application.Localization.Responses;
-using Super.Paula.Shared;
+﻿using ChristianSchulz.ObjectInspection.Application.Localization;
+using ChristianSchulz.ObjectInspection.Application.Localization.Exceptions;
+using ChristianSchulz.ObjectInspection.Application.Localization.Requests;
+using ChristianSchulz.ObjectInspection.Application.Localization.Responses;
+using ChristianSchulz.ObjectInspection.Shared;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Super.Paula.Client.Localization;
+namespace ChristianSchulz.ObjectInspection.Client.Localization;
 
 public abstract class LocalAbstractTranslationRequestHandler : ITranslationRequestHandler
 {

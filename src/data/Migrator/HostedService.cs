@@ -1,10 +1,10 @@
 ﻿using Microsoft.Extensions.Hosting;
-using Super.Paula.Migrator.Steps;
+using ChristianSchulz.ObjectInspection.Migrator.Steps;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Super.Paula.Migrator;
+namespace ChristianSchulz.ObjectInspection.Migrator;
 
 public class HostedService : IHostedService
 {

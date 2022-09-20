@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
-using Super.Paula.Application.Inventory.Requests;
+using ChristianSchulz.ObjectInspection.Application.Inventory.Requests;
 using System;
 using System.Threading;
 
-namespace Super.Paula.Application.Inventory;
+namespace ChristianSchulz.ObjectInspection.Application.Inventory;
 
 public static class BusinessObjectEndpoints
 {

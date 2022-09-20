@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace Super.Paula.Shared.Validation;
+namespace ChristianSchulz.ObjectInspection.Shared.Validation;
 
 public static class InvalidStringValidator
 {

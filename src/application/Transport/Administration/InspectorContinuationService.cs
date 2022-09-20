@@ -1,9 +1,9 @@
-﻿using Super.Paula.Application.Administration.Continuation;
-using Super.Paula.Shared.Orchestration;
+﻿using ChristianSchulz.ObjectInspection.Application.Administration.Continuation;
+using ChristianSchulz.ObjectInspection.Shared.Orchestration;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace Super.Paula.Application.Administration;
+namespace ChristianSchulz.ObjectInspection.Application.Administration;
 
 public class InspectorContinuationService : IInspectorContinuationService
 {

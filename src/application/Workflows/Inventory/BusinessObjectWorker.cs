@@ -1,15 +1,15 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Super.Paula.Application.Administration;
-using Super.Paula.Application.Auditing;
-using Super.Paula.Data;
-using Super.Paula.Shared;
-using Super.Paula.Shared.Orchestration;
+using ChristianSchulz.ObjectInspection.Application.Administration;
+using ChristianSchulz.ObjectInspection.Application.Auditing;
+using ChristianSchulz.ObjectInspection.Data;
+using ChristianSchulz.ObjectInspection.Shared;
+using ChristianSchulz.ObjectInspection.Shared.Orchestration;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Super.Paula.Application.Inventory;
+namespace ChristianSchulz.ObjectInspection.Application.Inventory;
 
 public class BusinessObjectWorker : IWorker
 {

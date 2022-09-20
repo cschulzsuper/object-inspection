@@ -5,7 +5,7 @@ using Microsoft.Extensions.Hosting;
 using System.IO;
 using System.Reflection;
 
-namespace Super.Paula.Client;
+namespace ChristianSchulz.ObjectInspection.Client;
 
 public class Program
 {

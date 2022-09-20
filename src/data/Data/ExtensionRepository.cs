@@ -1,9 +1,9 @@
 ﻿using System.Runtime.CompilerServices;
-using Super.Paula.Application.Operation;
-using Super.Paula.Data.Mappings;
+using ChristianSchulz.ObjectInspection.Application.Operation;
+using ChristianSchulz.ObjectInspection.Data.Mappings;
 using System.Threading.Tasks;
 
-namespace Super.Paula.Data;
+namespace ChristianSchulz.ObjectInspection.Data;
 
 public sealed class ExtensionRepository : Repository<Extension>
 {
@@ -11,13 +11,13 @@ public sealed class ExtensionRepository : Repository<Extension>
     private readonly ExtensionCacheKeyFactory _extensionCacheKeyFactory;
 
     public ExtensionRepository(
-        PaulaContexts paulaContexts,
-        PaulaContextState appState,
+        ObjectInspectionContexts objectInspectionContexts,
+        ObjectInspectionContextState objectInspectionContextState,
         IPartitionKeyValueGenerator<Extension> partitionKeyValueGenerator,
         ExtensionCache extensionCache,
         ExtensionCacheKeyFactory extensionCacheKeyFactory)
 
-        : base(paulaContexts.Operation, appState, partitionKeyValueGenerator)
+        : base(objectInspectionContexts.Operation, objectInspectionContextState, partitionKeyValueGenerator)
     {
         _extensionCache = extensionCache;
         _extensionCacheKeyFactory = extensionCacheKeyFactory;

@@ -1,4 +1,4 @@
-﻿namespace Super.Paula.Application.Operation.Responses;
+﻿namespace ChristianSchulz.ObjectInspection.Application.Operation.Responses;
 
 public class ExtensionFieldDeleteResponse
 {

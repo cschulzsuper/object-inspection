@@ -1,6 +1,6 @@
 ﻿@page "/change-inspector"
-@using Super.Paula.Application.Authentication
-@using Super.Paula.Application.Authentication.Requests
+@using ChristianSchulz.ObjectInspection.Application.Authentication
+@using ChristianSchulz.ObjectInspection.Application.Authentication.Requests
 
 @inject ITranslator<ChangeInspector> Translator
 @inject IInspectorAvatarRequestHandler InspectorAvatarRequestHandler
@@ -34,19 +34,19 @@
     </div>
 
     @if(context.GetValidationMessages().Any())
-    {
-        <div class="container-fluid pb-4 mb-5">
+{
+    <div class="container-fluid pb-4 mb-5">
             <div class="card card-body tex-wrap">
                 <ValidationSummary />    
             </div>
         </div>
-    } 
-    else 
-    {
-        <div class="container-fluid pb-4 mb-5">
+} 
+else 
+{
+    <div class="container-fluid pb-4 mb-5">
             <AuthorizedButton Policy="OnlyInspector" type="submit" class="btn btn-sm btn-primary">@Translator[$"Save password"]</AuthorizedButton>
         </div>
-    }
+}
 
 </EditForm>
 
@@ -68,28 +68,28 @@
 </div>
 
 @code {
-    private ChangeIdentitySecretRequest model = new ChangeIdentitySecretRequest();
+private ChangeIdentitySecretRequest model = new ChangeIdentitySecretRequest();
 
-    private IBrowserFile? _browserFile;
+private IBrowserFile? _browserFile;
 
-    private void OnInputFileChanged(InputFileChangeEventArgs e)
+private void OnInputFileChanged(InputFileChangeEventArgs e)
+{
+    _browserFile = e.File;
+    StateHasChanged();
+}
+
+private async Task OnSubmitAvatarAsync()
+{
+    if (_browserFile != null)
     {
-        _browserFile = e.File;
-        StateHasChanged();
+        await InspectorAvatarRequestHandler.WriteAsync(_browserFile.OpenReadStream(), "me");
+        NavigationManager.NavigateTo("/", true);
     }
+}
 
-    private async Task OnSubmitAvatarAsync()
-    {
-        if (_browserFile != null)
-        {
-            await InspectorAvatarRequestHandler.WriteAsync(_browserFile.OpenReadStream(), "me");
-            NavigationManager.NavigateTo("/", true);
-        }
-    }
-
-    private async Task OnSubmitSecretAsync()
-    {
-        await AuthenticationRequestHandler.ChangeSecretAsync(model);
-        NavigationManager.NavigateTo("/");
-    }
+private async Task OnSubmitSecretAsync()
+{
+    await AuthenticationRequestHandler.ChangeSecretAsync(model);
+    NavigationManager.NavigateTo("/");
+}
 }

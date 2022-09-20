@@ -43,10 +43,10 @@ var date = ISOWeek.ToDateTime(CalenderWeek.Year, CalenderWeek.Week, DayOfWeek.Mo
 
 if (date > new DateTime(1000, 1, 1))
 {
-    date = date.AddDays(-7);
-    CalenderWeek = new CalenderWeek(date);
+date = date.AddDays(-7);
+CalenderWeek = new CalenderWeek(date);
 
-    await CalenderWeekChanged.InvokeAsync(CalenderWeek);
+await CalenderWeekChanged.InvokeAsync(CalenderWeek);
 }
 }
 
@@ -56,10 +56,10 @@ var date = ISOWeek.ToDateTime(CalenderWeek.Year, CalenderWeek.Week, DayOfWeek.Mo
 
 if (date < new DateTime(9999,1,1))
 {
-    date = date.AddDays(7);
-    CalenderWeek = new CalenderWeek(date);
+date = date.AddDays(7);
+CalenderWeek = new CalenderWeek(date);
 
-    await CalenderWeekChanged.InvokeAsync(CalenderWeek);
+await CalenderWeekChanged.InvokeAsync(CalenderWeek);
 }
 }
 

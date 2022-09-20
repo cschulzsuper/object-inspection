@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
-namespace Super.Paula.Shared.Validation;
+namespace ChristianSchulz.ObjectInspection.Shared.Validation;
 
 public static class Validator
 {

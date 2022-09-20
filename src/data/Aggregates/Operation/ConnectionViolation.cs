@@ -1,6 +1,6 @@
-﻿using Super.Paula.RuntimeData;
+﻿using ChristianSchulz.ObjectInspection.RuntimeData;
 
-namespace Super.Paula.Application.Operation;
+namespace ChristianSchulz.ObjectInspection.Application.Operation;
 
 public class ConnectionViolation : IRuntimeData
 {

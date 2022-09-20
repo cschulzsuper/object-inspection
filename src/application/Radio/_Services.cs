@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
-using Super.Paula.Application.Administration;
-using Super.Paula.Application.Communication;
-using Super.Paula.Shared;
+using ChristianSchulz.ObjectInspection.Application.Administration;
+using ChristianSchulz.ObjectInspection.Application.Communication;
+using ChristianSchulz.ObjectInspection.Shared;
 using System.Diagnostics.CodeAnalysis;
-using Super.Paula.Application.SignalR;
+using ChristianSchulz.ObjectInspection.Application.SignalR;
 
-namespace Super.Paula.Application;
+namespace ChristianSchulz.ObjectInspection.Application;
 
 [SuppressMessage("Style", "IDE1006")]
 public static class _Services

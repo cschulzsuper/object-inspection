@@ -1,4 +1,4 @@
-﻿namespace Super.Paula.Templates.Playwright.AdventureTours.Environment;
+﻿namespace ChristianSchulz.ObjectInspection.Templates.Playwright.AdventureTours.Environment;
 
 public class AdventureToursSettings
 {

@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "Super.Paula.Server": {
+    "ChristianSchulz.ObjectInspection.Server": {
       "commandName": "Project",
       "launchUrl": "swagger",
       "environmentVariables": {

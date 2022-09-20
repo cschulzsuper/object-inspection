@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Super.Paula.Application.Authentication.Exceptions;
+namespace ChristianSchulz.ObjectInspection.Application.Authentication.Exceptions;
 
 public class SignOutException : Exception
 {

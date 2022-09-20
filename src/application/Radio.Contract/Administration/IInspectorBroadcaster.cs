@@ -1,7 +1,7 @@
-﻿using Super.Paula.Application.Administration.Responses;
+﻿using ChristianSchulz.ObjectInspection.Application.Administration.Responses;
 using System.Threading.Tasks;
 
-namespace Super.Paula.Application.Administration;
+namespace ChristianSchulz.ObjectInspection.Application.Administration;
 
 public interface IInspectorBroadcaster
 {

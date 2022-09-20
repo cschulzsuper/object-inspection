@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Super.Paula.BadgeSecurity
+namespace ChristianSchulz.ObjectInspection.BadgeSecurity;
+
+public interface IBadgeClaimsFilter
 {
-    public interface IBadgeClaimsFilter
-    {
-        void Apply(ICollection<Claim> claims);
-    }
+    void Apply(ICollection<Claim> claims);
 }

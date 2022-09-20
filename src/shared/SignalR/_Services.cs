@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.DependencyInjection;
-using Super.Paula.Shared.SignalR;
+using ChristianSchulz.ObjectInspection.Shared.SignalR;
 using System.Linq;
 
-namespace Super.Paula.Shared;
+namespace ChristianSchulz.ObjectInspection.Shared;
 
 public static class _Services
 {

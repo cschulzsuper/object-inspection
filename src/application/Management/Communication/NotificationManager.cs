@@ -1,11 +1,11 @@
-﻿using Super.Paula.Data;
-using Super.Paula.Shared.Validation;
+﻿using ChristianSchulz.ObjectInspection.Data;
+using ChristianSchulz.ObjectInspection.Shared.Validation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Super.Paula.Application.Communication;
+namespace ChristianSchulz.ObjectInspection.Application.Communication;
 
 public class NotificationManager : INotificationManager
 {

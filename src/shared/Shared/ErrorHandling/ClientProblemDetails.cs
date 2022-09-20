@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace Super.Paula.Shared.ErrorHandling;
+namespace ChristianSchulz.ObjectInspection.Shared.ErrorHandling;
 
 [JsonConverter(typeof(ClientProblemDetailsJsonConverter))]
 public class ClientProblemDetails

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Security.Claims;
 
-namespace Super.Paula.BadgeUsage;
+namespace ChristianSchulz.ObjectInspection.BadgeUsage;
 
 public interface IBadgeEncoding
 {

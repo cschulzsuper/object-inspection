@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Super.Paula.Data;
+namespace ChristianSchulz.ObjectInspection.Data;
 
 public class RepositoryException : Exception
 {

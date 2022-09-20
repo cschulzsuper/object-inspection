@@ -1,8 +1,8 @@
-﻿using Super.Paula.Application.Inventory;
-using Super.Paula.Shared.Orchestration;
+﻿using ChristianSchulz.ObjectInspection.Application.Inventory;
+using ChristianSchulz.ObjectInspection.Shared.Orchestration;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Super.Paula.Application;
+namespace ChristianSchulz.ObjectInspection.Application;
 
 [SuppressMessage("Style", "IDE1006")]
 public static class _Work

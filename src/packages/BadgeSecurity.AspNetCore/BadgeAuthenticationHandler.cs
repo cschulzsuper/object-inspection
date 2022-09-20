@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Super.Paula.BadgeSecurity;
+namespace ChristianSchulz.ObjectInspection.BadgeSecurity;
 
 public class BadgeAuthenticationHandler : IAuthenticationHandler
 {

@@ -1,9 +1,9 @@
-﻿using Super.Paula.Application.Guidelines.Events;
-using Super.Paula.Shared.Orchestration;
+﻿using ChristianSchulz.ObjectInspection.Application.Guidelines.Events;
+using ChristianSchulz.ObjectInspection.Shared.Orchestration;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace Super.Paula.Application.Guidelines;
+namespace ChristianSchulz.ObjectInspection.Application.Guidelines;
 
 public class InspectionEventService : IInspectionEventService
 {

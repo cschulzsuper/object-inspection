@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Super.Paula.Shared.JsonConversion;
+using ChristianSchulz.ObjectInspection.Shared.JsonConversion;
 
-namespace Super.Paula.Shared.Security;
+namespace ChristianSchulz.ObjectInspection.Shared.Security;
 
 public class ClaimsJsonConverter : JsonConverter<Claim[]>
 {

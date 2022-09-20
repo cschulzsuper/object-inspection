@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Concurrent;
 
-namespace Super.Paula.Shared.Orchestration;
+namespace ChristianSchulz.ObjectInspection.Shared.Orchestration;
 
 public sealed class InMemoryEventTypeRegistry : IEventTypeRegistry
 {

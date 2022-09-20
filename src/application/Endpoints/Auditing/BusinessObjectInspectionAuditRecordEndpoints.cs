@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
-using Super.Paula.Application.Auditing.Requests;
+using ChristianSchulz.ObjectInspection.Application.Auditing.Requests;
 using System;
 using System.Threading;
 
-namespace Super.Paula.Application.Auditing;
+namespace ChristianSchulz.ObjectInspection.Application.Auditing;
 
 public static class BusinessObjectInspectionAuditRecordEndpoints
 {

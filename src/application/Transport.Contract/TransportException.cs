@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Super.Paula.Application;
+namespace ChristianSchulz.ObjectInspection.Application;
 
 public class TransportException : Exception
 {

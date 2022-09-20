@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Super.Paula.Application.Inventory;
+using ChristianSchulz.ObjectInspection.Application.Inventory;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Super.Paula.Application;
+namespace ChristianSchulz.ObjectInspection.Application;
 
 [SuppressMessage("Style", "IDE1006")]
 public static class _Services

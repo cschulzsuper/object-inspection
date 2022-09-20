@@ -4,7 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace Super.Paula.Client;
+namespace ChristianSchulz.ObjectInspection.Client;
 
 public class Startup
 {

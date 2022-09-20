@@ -1,4 +1,4 @@
-﻿namespace Super.Paula.Application.Localization.Responses;
+﻿namespace ChristianSchulz.ObjectInspection.Application.Localization.Responses;
 
 public class TranslationResponse
 {

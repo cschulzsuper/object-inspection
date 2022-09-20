@@ -1,16 +1,13 @@
 ﻿using System;
 using Microsoft.Extensions.Logging;
-using Super.Paula.Client.Storage;
 using System.Threading.Tasks;
-using Super.Paula.Application.Authentication;
-using Super.Paula.Application.Authentication.Exceptions;
-using Super.Paula.Application.Authentication.Requests;
-using Super.Paula.Application.Authentication.Responses;
-using Super.Paula.BadgeUsage;
-using Super.Paula.Client.Security;
-using Super.Paula.Shared.Security;
+using ChristianSchulz.ObjectInspection.Application.Authentication;
+using ChristianSchulz.ObjectInspection.Application.Authentication.Exceptions;
+using ChristianSchulz.ObjectInspection.Application.Authentication.Requests;
+using ChristianSchulz.ObjectInspection.Application.Authentication.Responses;
+using ChristianSchulz.ObjectInspection.Client.Security;
 
-namespace Super.Paula.Client.Administration;
+namespace ChristianSchulz.ObjectInspection.Client.Administration;
 
 public class ExtendedAuthenticationRequestHandler : IAuthenticationRequestHandler
 {

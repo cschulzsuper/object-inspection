@@ -4,33 +4,32 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text.Json;
 
-namespace Super.Paula.BadgeUsage
+namespace ChristianSchulz.ObjectInspection.BadgeUsage;
+
+public class BadgeEncoding : IBadgeEncoding
 {
-    public class BadgeEncoding : IBadgeEncoding
+    private readonly JsonSerializerOptions _jsonSerializerOptions;
+
+    public BadgeEncoding(JsonSerializerOptions jsonSerializerOptions)
     {
-        private readonly JsonSerializerOptions _jsonSerializerOptions;
+        _jsonSerializerOptions = jsonSerializerOptions;
+    }
 
-        public BadgeEncoding(JsonSerializerOptions jsonSerializerOptions)
-        {
-            _jsonSerializerOptions = jsonSerializerOptions;
-        }
+    public ICollection<Claim> Decode(string badge)
+    {
+        var badgeClaims = string.IsNullOrWhiteSpace(badge)
+            ? Array.Empty<Claim>()
+            : JsonSerializer.Deserialize<Claim[]>(
+                Convert.FromBase64String(badge), _jsonSerializerOptions);
 
-        public ICollection<Claim> Decode(string badge)
-        {
-            var badgeClaims = string.IsNullOrWhiteSpace(badge)
-                ? Array.Empty<Claim>()
-                : JsonSerializer.Deserialize<Claim[]>(
-                    Convert.FromBase64String(badge), _jsonSerializerOptions);
+        return (badgeClaims ?? Array.Empty<Claim>()).ToList();
+    }
 
-            return (badgeClaims ?? Array.Empty<Claim>()).ToList();
-        }
+    public string Encode(IEnumerable<Claim> badgeClaims)
+    {
+        var badgeClaimList = badgeClaims as Claim[] ?? badgeClaims.ToArray();
 
-        public string Encode(IEnumerable<Claim> badgeClaims)
-        {
-            var badgeClaimList = badgeClaims as Claim[] ?? badgeClaims.ToArray();
-
-            return Convert.ToBase64String(
-                JsonSerializer.SerializeToUtf8Bytes(badgeClaimList, _jsonSerializerOptions));
-        }
+        return Convert.ToBase64String(
+            JsonSerializer.SerializeToUtf8Bytes(badgeClaimList, _jsonSerializerOptions));
     }
 }

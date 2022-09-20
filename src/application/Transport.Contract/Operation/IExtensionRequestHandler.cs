@@ -1,9 +1,9 @@
-﻿using Super.Paula.Application.Operation.Requests;
-using Super.Paula.Application.Operation.Responses;
+﻿using ChristianSchulz.ObjectInspection.Application.Operation.Requests;
+using ChristianSchulz.ObjectInspection.Application.Operation.Responses;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Super.Paula.Application.Operation;
+namespace ChristianSchulz.ObjectInspection.Application.Operation;
 
 public interface IExtensionRequestHandler
 {

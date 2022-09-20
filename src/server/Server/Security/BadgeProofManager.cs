@@ -1,24 +1,29 @@
 ﻿using System;
 using System.Security.Claims;
 using System.Text;
-using Super.Paula.Application.Administration;
-using Super.Paula.Application.Authentication;
-using Super.Paula.Application.Operation;
-using Super.Paula.BadgeSecurity;
-using Super.Paula.Shared.Environment;
-using Super.Paula.Shared.Security;
+using ChristianSchulz.ObjectInspection.Application.Administration;
+using ChristianSchulz.ObjectInspection.Application.Authentication;
+using ChristianSchulz.ObjectInspection.Application.Operation;
+using ChristianSchulz.ObjectInspection.BadgeSecurity;
+using ChristianSchulz.ObjectInspection.Shared.Environment;
+using ChristianSchulz.ObjectInspection.Shared.Security;
 
-namespace Super.Paula.Server.Security;
+namespace ChristianSchulz.ObjectInspection.Server.Security;
 
 public class BadgeProofManager : IBadgeProofManager
 {
     private readonly IConnectionManager _connectionManager;
     private readonly AppSettings _appSettings;
+    private readonly IOrganizationManager _organizationManager;
 
-    public BadgeProofManager(IConnectionManager connectionManager, AppSettings appSettings)
+    public BadgeProofManager(
+        IConnectionManager connectionManager, 
+        AppSettings appSettings,
+        IOrganizationManager organizationManager)
     {
         _connectionManager = connectionManager;
         _appSettings = appSettings;
+        _organizationManager = organizationManager;
     }
 
     public string Create(BadgeProofAuthorizationContext context)
@@ -98,8 +103,10 @@ public class BadgeProofManager : IBadgeProofManager
         if (context.Claims.HasOrganization() &&
             context.Claims.HasInspector())
         {
+            var userOrganization = context.Claims.GetOrganization();
+            var userInspector = context.Claims.GetInspector();
 
-            connectionAccount = $"{context.Claims.GetOrganization()}:{context.Claims.GetInspector()}";
+            connectionAccount = $"{userOrganization}:{userInspector}";
             connectionProof = context.Claims.GetProof();
             connectionProofType = ConnectionProofTypes.Authorization;
 
@@ -107,7 +114,7 @@ public class BadgeProofManager : IBadgeProofManager
 
             if (validInspector)
             {
-                return true;
+                return IsOrganizationActivated(userOrganization);
             }
 
             if (_appSettings.MaintainerIdentity != context.Claims.GetIdentity())
@@ -115,15 +122,25 @@ public class BadgeProofManager : IBadgeProofManager
                 return false;
             }
 
-            connectionAccount = $"{context.Claims.GetImpersonatorOrganization()}:{context.Claims.GetImpersonatorInspector()}";
+            userOrganization = context.Claims.GetImpersonatorOrganization();
+            userInspector = context.Claims.GetImpersonatorInspector();
+
+            connectionAccount = $"{userOrganization}:{userInspector}";
+
             validInspector = _connectionManager.Verify(connectionAccount, connectionProof, connectionProofType);
+
             if (validInspector)
             {
-                return true;
+                return IsOrganizationActivated(userOrganization);
             }
         }
 
         return false;
     }
 
+    private bool IsOrganizationActivated(string organization)
+    {
+        return _organizationManager
+            .Get(organization).Activated;
+    }
 }

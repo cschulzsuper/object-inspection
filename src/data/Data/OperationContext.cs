@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Super.Paula.Data.Mappings.Operation;
+using ChristianSchulz.ObjectInspection.Data.Mappings.Operation;
 
-namespace Super.Paula.Data;
+namespace ChristianSchulz.ObjectInspection.Data;
 
-public class PaulaOperationContext : PaulaContext
+public class OperationContext : ObjectInspectionContext
 {
-    public PaulaOperationContext(DbContextOptions<PaulaOperationContext> options, PaulaContextState state)
+    public OperationContext(DbContextOptions<OperationContext> options, ObjectInspectionContextState state)
         : base(options, state)
     {
 

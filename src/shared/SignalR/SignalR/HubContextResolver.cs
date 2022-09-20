@@ -3,7 +3,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 
-namespace Super.Paula.Shared.SignalR;
+namespace ChristianSchulz.ObjectInspection.Shared.SignalR;
 
 public class HubContextResolver
 {

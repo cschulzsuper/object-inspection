@@ -4,7 +4,7 @@
 		<TargetFramework>net7.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<LangVersion>Preview</LangVersion>
-		<RootNamespace>Super.Paula.Templates.Playwright.AdventureTours</RootNamespace>
+		<RootNamespace>ChristianSchulz.ObjectInspection.Templates.Playwright.AdventureTours</RootNamespace>
 		<UserSecretsId>b60582a0-a9df-4614-a837-b9ab58e3463d</UserSecretsId>
 		<OutputType>Exe</OutputType>
 	</PropertyGroup>

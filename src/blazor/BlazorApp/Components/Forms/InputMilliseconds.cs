@@ -5,7 +5,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 
-namespace Super.Paula.Client.Components.Forms;
+namespace ChristianSchulz.ObjectInspection.Client.Components.Forms;
 
 public class InputMilliseconds : InputBase<int>
 {

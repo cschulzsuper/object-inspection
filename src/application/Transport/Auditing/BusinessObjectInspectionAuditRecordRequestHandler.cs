@@ -1,12 +1,12 @@
-﻿using Super.Paula.Application.Auditing.Requests;
-using Super.Paula.Application.Auditing.Responses;
-using Super.Paula.Shared;
+﻿using ChristianSchulz.ObjectInspection.Application.Auditing.Requests;
+using ChristianSchulz.ObjectInspection.Application.Auditing.Responses;
+using ChristianSchulz.ObjectInspection.Shared;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Super.Paula.Application.Auditing;
+namespace ChristianSchulz.ObjectInspection.Application.Auditing;
 
 public class BusinessObjectInspectionAuditRecordRequestHandler : IBusinessObjectInspectionAuditRecordRequestHandler
 {

@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Super.Paula.Shared.Orchestration;
+using ChristianSchulz.ObjectInspection.Shared.Orchestration;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Super.Paula.Shared;
+namespace ChristianSchulz.ObjectInspection.Shared;
 
 [SuppressMessage("Style", "IDE1006")]
 public static class _Services

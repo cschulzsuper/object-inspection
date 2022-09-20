@@ -1,9 +1,9 @@
-﻿using Super.Paula.Application.Communication;
-using Super.Paula.Application.Communication.Requests;
-using Super.Paula.Application.Communication.Responses;
-using Super.Paula.Shared.Environment;
-using Super.Paula.Shared.ErrorHandling;
-using Super.Paula.Shared.JsonConversion;
+﻿using ChristianSchulz.ObjectInspection.Application.Communication;
+using ChristianSchulz.ObjectInspection.Application.Communication.Requests;
+using ChristianSchulz.ObjectInspection.Application.Communication.Responses;
+using ChristianSchulz.ObjectInspection.Shared.Environment;
+using ChristianSchulz.ObjectInspection.Shared.ErrorHandling;
+using ChristianSchulz.ObjectInspection.Shared.JsonConversion;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -11,7 +11,7 @@ using System.Net.Http.Json;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace Super.Paula.Client.Communication;
+namespace ChristianSchulz.ObjectInspection.Client.Communication;
 
 public sealed class NotificationRequestHandler : INotificationRequestHandler
 {

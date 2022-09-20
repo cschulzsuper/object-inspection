@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Security.Claims;
 
-namespace Super.Paula.BadgeSecurity;
+namespace ChristianSchulz.ObjectInspection.BadgeSecurity;
 
 public class BadgeProofAuthenticationContext
 {

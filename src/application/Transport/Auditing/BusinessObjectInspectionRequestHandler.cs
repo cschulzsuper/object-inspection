@@ -1,14 +1,14 @@
-﻿using Super.Paula.Application.Auditing.Requests;
-using Super.Paula.Application.Auditing.Responses;
-using Super.Paula.Shared;
+﻿using ChristianSchulz.ObjectInspection.Application.Auditing.Requests;
+using ChristianSchulz.ObjectInspection.Application.Auditing.Responses;
+using ChristianSchulz.ObjectInspection.Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Super.Paula.Shared.Security;
+using ChristianSchulz.ObjectInspection.Shared.Security;
 
-namespace Super.Paula.Application.Auditing;
+namespace ChristianSchulz.ObjectInspection.Application.Auditing;
 
 public class BusinessObjectInspectionRequestHandler : IBusinessObjectInspectionRequestHandler
 {
@@ -145,7 +145,7 @@ public class BusinessObjectInspectionRequestHandler : IBusinessObjectInspectionR
         await _businessObjectInspectionEventService.CreateBusinessObjectInspectionAuditScheduleEventAsync(inspections);
     }
 
-    public async ValueTask<BusinessObjectInspectionAuditScheduleResponse> ReplaceAuditScheduleAsync(string businessObject, string inspection, BusinessObjectInspectionAuditScheduleRequest request)
+    public async ValueTask<ReplaceBusinessObjectInspectionAuditScheduleResponse> ReplaceAuditScheduleAsync(string businessObject, string inspection, BusinessObjectInspectionAuditScheduleRequest request)
     {
         var entity = await _businessObjectInspectionManager.GetAsync(businessObject, inspection);
 
@@ -167,6 +167,7 @@ public class BusinessObjectInspectionRequestHandler : IBusinessObjectInspectionR
         }
 
         _businessObjectInspectionAuditScheduler.Schedule(entity);
+
         await _businessObjectInspectionManager.UpdateAsync(entity);
 
         var inspections = _businessObjectInspectionManager.GetQueryable()
@@ -175,8 +176,16 @@ public class BusinessObjectInspectionRequestHandler : IBusinessObjectInspectionR
 
         await _businessObjectInspectionEventService.CreateBusinessObjectInspectionAuditScheduleEventAsync(inspections);
 
-        var response = entity.AuditSchedule.ToResponse();
-        response.ETag = entity.ETag;
+        var response = new ReplaceBusinessObjectInspectionAuditScheduleResponse
+        {
+            ETag = entity.ETag,
+            Expressions = entity.AuditSchedule.Expressions.ToResponse(),
+            Threshold = entity.AuditSchedule.Threshold,
+            Omissions = entity.AuditSchedule.Omissions.ToResponse(),
+            Additionals = entity.AuditSchedule.Additionals.ToResponse(),
+            Appointments = entity.AuditSchedule.Appointments.ToResponse()
+        }; 
+
         return response;
     }
 

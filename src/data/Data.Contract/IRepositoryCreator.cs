@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Super.Paula.Data;
+namespace ChristianSchulz.ObjectInspection.Data;
 
 public interface IRepositoryCreator
 {

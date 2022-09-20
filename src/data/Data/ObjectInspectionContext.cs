@@ -1,18 +1,18 @@
 ﻿using System.Linq;
 using Microsoft.EntityFrameworkCore;
-using Super.Paula.Shared;
+using ChristianSchulz.ObjectInspection.Shared;
 
-namespace Super.Paula.Data;
+namespace ChristianSchulz.ObjectInspection.Data;
 
-public class PaulaContext : DbContext
+public class ObjectInspectionContext : DbContext
 {
-    public PaulaContext(DbContextOptions options, PaulaContextState state)
+    public ObjectInspectionContext(DbContextOptions options, ObjectInspectionContextState state)
         : base(options)
     {
         State = state;
     }
 
-    public PaulaContextState State { get; }
+    public ObjectInspectionContextState State { get; }
 
     protected void ApplyCamelCaseJsonPropertyNames(ModelBuilder modelBuilder)
     {

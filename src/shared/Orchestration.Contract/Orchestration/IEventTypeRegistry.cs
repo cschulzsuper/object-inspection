@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Super.Paula.Shared.Orchestration;
+namespace ChristianSchulz.ObjectInspection.Shared.Orchestration;
 
 public interface IEventTypeRegistry
 {

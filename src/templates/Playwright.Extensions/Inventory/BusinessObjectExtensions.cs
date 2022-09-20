@@ -1,7 +1,7 @@
 ﻿using Microsoft.Playwright;
 using System.Threading.Tasks;
 
-namespace Super.Paula.Templates.Playwright.Inventory;
+namespace ChristianSchulz.ObjectInspection.Templates.Playwright.Inventory;
 
 public static class BusinessObjectExtensions
 {

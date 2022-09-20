@@ -1,9 +1,9 @@
-﻿using Super.Paula.Application.Administration.Events;
-using Super.Paula.Shared.Orchestration;
+﻿using ChristianSchulz.ObjectInspection.Application.Administration.Events;
+using ChristianSchulz.ObjectInspection.Shared.Orchestration;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace Super.Paula.Application.Administration;
+namespace ChristianSchulz.ObjectInspection.Application.Administration;
 
 public class OrganizationEventService : IOrganizationEventService
 {

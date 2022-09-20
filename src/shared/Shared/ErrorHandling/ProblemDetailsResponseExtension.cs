@@ -3,7 +3,7 @@ using System.Net;
 using System.Net.Http;
 using System.Text.Json;
 
-namespace Super.Paula.Shared.ErrorHandling;
+namespace ChristianSchulz.ObjectInspection.Shared.ErrorHandling;
 
 public static class ProblemDetailsResponseExtension
 {

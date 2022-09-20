@@ -2,43 +2,43 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
-using Super.Paula.Application.Administration;
-using Super.Paula.Application.Auditing;
-using Super.Paula.Application.Communication;
-using Super.Paula.Application.Guidelines;
-using Super.Paula.Application.Inventory;
-using Super.Paula.Application.Operation;
-using Super.Paula.Application.Orchestration;
-using Super.Paula.Data.Mappings;
-using Super.Paula.Data.Mappings.Administration;
-using Super.Paula.Data.Mappings.Auditing;
-using Super.Paula.Data.Mappings.Communication;
-using Super.Paula.Data.Mappings.Guidelines;
-using Super.Paula.Data.Mappings.Inventory;
-using Super.Paula.Data.Mappings.Operation;
-using Super.Paula.Data.Mappings.Orchestration;
-using Super.Paula.Shared.Environment;
+using ChristianSchulz.ObjectInspection.Application.Administration;
+using ChristianSchulz.ObjectInspection.Application.Auditing;
+using ChristianSchulz.ObjectInspection.Application.Communication;
+using ChristianSchulz.ObjectInspection.Application.Guidelines;
+using ChristianSchulz.ObjectInspection.Application.Inventory;
+using ChristianSchulz.ObjectInspection.Application.Operation;
+using ChristianSchulz.ObjectInspection.Application.Orchestration;
+using ChristianSchulz.ObjectInspection.Data.Mappings;
+using ChristianSchulz.ObjectInspection.Data.Mappings.Administration;
+using ChristianSchulz.ObjectInspection.Data.Mappings.Auditing;
+using ChristianSchulz.ObjectInspection.Data.Mappings.Communication;
+using ChristianSchulz.ObjectInspection.Data.Mappings.Guidelines;
+using ChristianSchulz.ObjectInspection.Data.Mappings.Inventory;
+using ChristianSchulz.ObjectInspection.Data.Mappings.Operation;
+using ChristianSchulz.ObjectInspection.Data.Mappings.Orchestration;
+using ChristianSchulz.ObjectInspection.Shared.Environment;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net.Http;
 using System.Security.Claims;
-using Super.Paula.Application.Authentication;
-using Super.Paula.Data.Mappings.Authentication;
-using Super.Paula.Shared.Security;
+using ChristianSchulz.ObjectInspection.Application.Authentication;
+using ChristianSchulz.ObjectInspection.Data.Mappings.Authentication;
+using ChristianSchulz.ObjectInspection.Shared.Security;
 
-namespace Super.Paula.Data;
+namespace ChristianSchulz.ObjectInspection.Data;
 
 [SuppressMessage("Style", "IDE1006")]
 public static class _Services
 {
     public static IServiceCollection AddServerData(this IServiceCollection services, bool isDevelopment)
     {
-        services.AddDbContext<PaulaAdministrationContext>((services, options) =>
+        services.AddDbContext<AdministrationContext>((services, options) =>
         {
             var appSeetings = services.GetRequiredService<AppSettings>();
 
-            options.ReplaceService<IModelCacheKeyFactory, PaulaAdministrationContextModelCacheKeyFactory>();
+            options.ReplaceService<IModelCacheKeyFactory, AdministrationContextModelCacheKeyFactory>();
 
             options.UseCosmos(
                 appSeetings.CosmosEndpoint,
@@ -69,11 +69,11 @@ public static class _Services
             }
         });
 
-        services.AddDbContext<PaulaApplicationContext>((services, options) =>
+        services.AddDbContext<ApplicationContext>((services, options) =>
         {
             var appSeetings = services.GetRequiredService<AppSettings>();
 
-            options.ReplaceService<IModelCacheKeyFactory, PaulaApplicationContextModelCacheKeyFactory>();
+            options.ReplaceService<IModelCacheKeyFactory, ApplicationContextModelCacheKeyFactory>();
 
             options.UseCosmos(
                 appSeetings.CosmosEndpoint,
@@ -103,11 +103,11 @@ public static class _Services
             }
         });
 
-        services.AddDbContext<PaulaOperationContext>((services, options) =>
+        services.AddDbContext<OperationContext>((services, options) =>
         {
             var appSettings = services.GetRequiredService<AppSettings>();
 
-            options.ReplaceService<IModelCacheKeyFactory, PaulaOperationContextModelCacheKeyFactory>();
+            options.ReplaceService<IModelCacheKeyFactory, OperationContextModelCacheKeyFactory>();
 
             options.UseCosmos(
                 appSettings.CosmosEndpoint,
@@ -138,8 +138,8 @@ public static class _Services
         });
 
 
-        services.AddScoped<PaulaContexts>();
-        services.AddScoped<PaulaContextState>();
+        services.AddScoped<ObjectInspectionContexts>();
+        services.AddScoped<ObjectInspectionContextState>();
 
         services.AddScoped<ExtensionProvider>();
         services.AddScoped<ExtensionCacheKeyFactory>();
@@ -147,24 +147,24 @@ public static class _Services
 
         services.AddScoped<IRepositoryCreator, RepositoryCreator>();
 
-        services.AddScoped(RepositoryFactory<Identity, PaulaAdministrationContext>());
-        services.AddScoped(RepositoryFactory<IdentityInspector, PaulaAdministrationContext>());
-        services.AddScoped(RepositoryFactory<Organization, PaulaAdministrationContext>());
+        services.AddScoped(RepositoryFactory<Identity, AdministrationContext>());
+        services.AddScoped(RepositoryFactory<IdentityInspector, AdministrationContext>());
+        services.AddScoped(RepositoryFactory<Organization, AdministrationContext>());
 
         services.AddScoped<IRepository<Extension>, ExtensionRepository>();
 
-        services.AddScoped(RepositoryFactory<Continuation, PaulaAdministrationContext>());
-        services.AddScoped(RepositoryFactory<Event, PaulaAdministrationContext>());
-        services.AddScoped(RepositoryFactory<EventProcessing, PaulaAdministrationContext>());
-        services.AddScoped(RepositoryFactory<Worker, PaulaAdministrationContext>());
+        services.AddScoped(RepositoryFactory<Continuation, AdministrationContext>());
+        services.AddScoped(RepositoryFactory<Event, AdministrationContext>());
+        services.AddScoped(RepositoryFactory<EventProcessing, AdministrationContext>());
+        services.AddScoped(RepositoryFactory<Worker, AdministrationContext>());
 
-        services.AddScoped(RepositoryFactory<BusinessObject, PaulaApplicationContext>());
-        services.AddScoped(RepositoryFactory<BusinessObjectInspector, PaulaApplicationContext>());
-        services.AddScoped(RepositoryFactory<BusinessObjectInspection, PaulaApplicationContext>());
-        services.AddScoped(RepositoryFactory<BusinessObjectInspectionAuditRecord, PaulaApplicationContext>());
-        services.AddScoped(RepositoryFactory<Inspection, PaulaApplicationContext>());
-        services.AddScoped(RepositoryFactory<Inspector, PaulaApplicationContext>());
-        services.AddScoped(RepositoryFactory<Notification, PaulaApplicationContext>());
+        services.AddScoped(RepositoryFactory<BusinessObject, ApplicationContext>());
+        services.AddScoped(RepositoryFactory<BusinessObjectInspector, ApplicationContext>());
+        services.AddScoped(RepositoryFactory<BusinessObjectInspection, ApplicationContext>());
+        services.AddScoped(RepositoryFactory<BusinessObjectInspectionAuditRecord, ApplicationContext>());
+        services.AddScoped(RepositoryFactory<Inspection, ApplicationContext>());
+        services.AddScoped(RepositoryFactory<Inspector, ApplicationContext>());
+        services.AddScoped(RepositoryFactory<Notification, ApplicationContext>());
 
         services.AddScoped<IPartitionKeyValueGenerator<BusinessObject>, BusinessObjectPartitionKeyValueGenerator>();
         services.AddScoped<IPartitionKeyValueGenerator<BusinessObjectInspector>, BusinessObjectInspectorPartitionKeyValueGenerator>();
@@ -188,17 +188,17 @@ public static class _Services
     }
 
     private static Func<IServiceProvider, IRepository<TEntity>> RepositoryFactory<TEntity, TContext>()
-        where TContext : PaulaContext
+        where TContext : ObjectInspectionContext
         where TEntity : class
         => services =>
             new Repository<TEntity>(
                 services.GetRequiredService<TContext>(),
-                services.GetRequiredService<PaulaContextState>(),
+                services.GetRequiredService<ObjectInspectionContextState>(),
                 services.GetRequiredService<IPartitionKeyValueGenerator<TEntity>>());
 
     public static IServiceProvider ConfigureData(this IServiceProvider services, string? organization, string? inspector)
     {
-        var state = services.GetRequiredService<PaulaContextState>();
+        var state = services.GetRequiredService<ObjectInspectionContextState>();
 
         state.CurrentOrganization = organization != null
             ? $"{organization}"
@@ -215,7 +215,7 @@ public static class _Services
     public static IServiceProvider ConfigureData(this IServiceProvider services)
     {
         var user = services.GetRequiredService<ClaimsPrincipal>();
-        var state = services.GetRequiredService<PaulaContextState>();
+        var state = services.GetRequiredService<ObjectInspectionContextState>();
 
         state.CurrentOrganization = user.Claims.HasOrganization()
            ? user.Claims.GetOrganization()
@@ -231,7 +231,7 @@ public static class _Services
 
 
 
-    private static IServiceProvider ConfigureExtensionModelIndicator(this IServiceProvider services, PaulaContextState state)
+    private static IServiceProvider ConfigureExtensionModelIndicator(this IServiceProvider services, ObjectInspectionContextState state)
     {
         if (!string.IsNullOrWhiteSpace(state.CurrentOrganization))
         {

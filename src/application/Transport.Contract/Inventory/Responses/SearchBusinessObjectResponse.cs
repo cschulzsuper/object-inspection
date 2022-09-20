@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Immutable;
 
-namespace Super.Paula.Application.Inventory.Responses;
+namespace ChristianSchulz.ObjectInspection.Application.Inventory.Responses;
 
 public class SearchBusinessObjectResponse
 {

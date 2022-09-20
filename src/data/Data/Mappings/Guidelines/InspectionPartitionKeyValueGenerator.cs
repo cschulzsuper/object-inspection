@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.ValueGeneration;
-using Super.Paula.Application.Guidelines;
+using ChristianSchulz.ObjectInspection.Application.Guidelines;
 using System.Collections.Generic;
 
-namespace Super.Paula.Data.Mappings.Guidelines;
+namespace ChristianSchulz.ObjectInspection.Data.Mappings.Guidelines;
 
 public class InspectionPartitionKeyValueGenerator : ValueGenerator<string>, IPartitionKeyValueGenerator<Inspection>
 {
@@ -11,13 +11,13 @@ public class InspectionPartitionKeyValueGenerator : ValueGenerator<string>, IPar
 
     public override string Next(EntityEntry entry)
         => Value(
-            (entry.Context as PaulaContext)!.State,
+            (entry.Context as ObjectInspectionContext)!.State,
             (entry.Entity as Inspection)!);
 
-    public string Value(PaulaContextState state, Inspection entity)
+    public string Value(ObjectInspectionContextState state, Inspection entity)
         => "inspection";
 
-    public string Value(PaulaContextState state, Queue<object> partitionKeyComponents)
+    public string Value(ObjectInspectionContextState state, Queue<object> partitionKeyComponents)
         => "inspection";
 
 }

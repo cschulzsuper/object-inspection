@@ -1,13 +1,13 @@
-﻿using Super.Paula.Application.Operation;
-using Super.Paula.Shared.Environment;
-using Super.Paula.Shared.ErrorHandling;
-using Super.Paula.Shared.JsonConversion;
+﻿using ChristianSchulz.ObjectInspection.Application.Operation;
+using ChristianSchulz.ObjectInspection.Shared.Environment;
+using ChristianSchulz.ObjectInspection.Shared.ErrorHandling;
+using ChristianSchulz.ObjectInspection.Shared.JsonConversion;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text.Json;
 
-namespace Super.Paula.Client.Operation;
+namespace ChristianSchulz.ObjectInspection.Client.Operation;
 
 public class ExtensionAggregateTypeRequestHandler : IExtensionAggregateTypeRequestHandler
 {

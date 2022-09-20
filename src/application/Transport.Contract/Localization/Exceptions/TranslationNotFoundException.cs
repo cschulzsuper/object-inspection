@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Super.Paula.Application.Localization.Exceptions;
+namespace ChristianSchulz.ObjectInspection.Application.Localization.Exceptions;
 
 public class TranslationNotFoundException : Exception
 {

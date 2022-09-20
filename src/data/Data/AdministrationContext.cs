@@ -1,13 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Super.Paula.Data.Mappings.Administration;
-using Super.Paula.Data.Mappings.Authentication;
-using Super.Paula.Data.Mappings.Orchestration;
+using ChristianSchulz.ObjectInspection.Data.Mappings.Administration;
+using ChristianSchulz.ObjectInspection.Data.Mappings.Authentication;
+using ChristianSchulz.ObjectInspection.Data.Mappings.Orchestration;
 
-namespace Super.Paula.Data;
+namespace ChristianSchulz.ObjectInspection.Data;
 
-public class PaulaAdministrationContext : PaulaContext
+public class AdministrationContext : ObjectInspectionContext
 {
-    public PaulaAdministrationContext(DbContextOptions<PaulaAdministrationContext> options, PaulaContextState state)
+    public AdministrationContext(DbContextOptions<AdministrationContext> options, ObjectInspectionContextState state)
         : base(options, state)
     {
     }

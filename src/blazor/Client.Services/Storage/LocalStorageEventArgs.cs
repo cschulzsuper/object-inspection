@@ -1,3 +1,3 @@
-﻿namespace Super.Paula.Client.Storage;
+﻿namespace ChristianSchulz.ObjectInspection.Client.Storage;
 
 public record LocalStorageEventArgs(string Key);

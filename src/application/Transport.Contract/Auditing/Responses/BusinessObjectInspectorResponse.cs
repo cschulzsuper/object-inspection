@@ -1,4 +1,4 @@
-﻿namespace Super.Paula.Application.Auditing.Responses;
+﻿namespace ChristianSchulz.ObjectInspection.Application.Auditing.Responses;
 
 public class BusinessObjectInspectorResponse
 {

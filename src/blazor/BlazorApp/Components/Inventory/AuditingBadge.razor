@@ -1,6 +1,6 @@
 ﻿@inject IInspectorCallbackHandler InspectorCallbackHandler
 @inject IInspectorRequestHandler InspectorRequestHandler
-@using Super.Paula.Shared.Security
+@using ChristianSchulz.ObjectInspection.Shared.Security
 @implements IDisposable
 
 @if (_auditingCount > 0)
@@ -10,70 +10,70 @@
 
 @code {
 
-    private IDisposable? _inspectorBusinessObjectCreation;
-    private IDisposable? _inspectorBusinessObjectUpdate;
-    private IDisposable? _inspectorBusinessObjectDeletion;
+private IDisposable? _inspectorBusinessObjectCreation;
+private IDisposable? _inspectorBusinessObjectUpdate;
+private IDisposable? _inspectorBusinessObjectDeletion;
 
-    private long _auditingCount;
-    private bool _auditingDelayed;
+private long _auditingCount;
+private bool _auditingDelayed;
 
-    [CascadingParameter]
-    public Task<AuthenticationState> AuthenticationState { get; set; } = null!;
+[CascadingParameter]
+public Task<AuthenticationState> AuthenticationState { get; set; } = null!;
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+protected override async Task OnAfterRenderAsync(bool firstRender)
+{
+    if (firstRender)
     {
-        if (firstRender)
-        {
-            _inspectorBusinessObjectCreation = await InspectorCallbackHandler.OnBusinessObjectCreationAsync(OnBusinessObjectCreationAsync);
-            _inspectorBusinessObjectUpdate = await InspectorCallbackHandler.OnBusinessObjectUpdateAsync(OnBusinessObjectUpdateAsync);
-            _inspectorBusinessObjectDeletion = await InspectorCallbackHandler.OnBusinessObjectDeletionAsync(OnBusinessObjectDeletionAsync);
+        _inspectorBusinessObjectCreation = await InspectorCallbackHandler.OnBusinessObjectCreationAsync(OnBusinessObjectCreationAsync);
+        _inspectorBusinessObjectUpdate = await InspectorCallbackHandler.OnBusinessObjectUpdateAsync(OnBusinessObjectUpdateAsync);
+        _inspectorBusinessObjectDeletion = await InspectorCallbackHandler.OnBusinessObjectDeletionAsync(OnBusinessObjectDeletionAsync);
 
-            await CountAsync();
-        }
+        await CountAsync();
     }
+}
 
-    public void Dispose()
+public void Dispose()
+{
+    _inspectorBusinessObjectCreation?.Dispose();
+    _inspectorBusinessObjectUpdate?.Dispose();
+    _inspectorBusinessObjectDeletion?.Dispose();
+}
+
+public async Task CountAsync()
+{
+    _auditingCount = 0;
+    _auditingDelayed = false;
+
+    var user = (await AuthenticationState).User;
+
+    if (user.IsAuthenticatedInspector())
     {
-        _inspectorBusinessObjectCreation?.Dispose();
-        _inspectorBusinessObjectUpdate?.Dispose();
-        _inspectorBusinessObjectDeletion?.Dispose();
-    }
+        var inspector = await InspectorRequestHandler.GetCurrentAsync();
 
-    public async Task CountAsync()
-    {
-        _auditingCount = 0;
-        _auditingDelayed = false;
-
-        var user = (await AuthenticationState).User;
-
-        if (user.IsAuthenticatedInspector())
+        foreach (var businessObject in inspector.BusinessObjects)
         {
-            var inspector = await InspectorRequestHandler.GetCurrentAsync();
-
-            foreach (var businessObject in inspector.BusinessObjects)
+            if (businessObject.AuditScheduleDelayed)
             {
-                if (businessObject.AuditScheduleDelayed)
-                {
-                    _auditingDelayed = true;
-                }
+                _auditingDelayed = true;
+            }
 
-                if (businessObject.AuditScheduleDelayed ||
-                    businessObject.AuditSchedulePending)
-                {
-                    _auditingCount++;
-                }
+            if (businessObject.AuditScheduleDelayed ||
+                businessObject.AuditSchedulePending)
+            {
+                _auditingCount++;
             }
         }
-        StateHasChanged();
     }
+    StateHasChanged();
+}
 
-    public Task OnBusinessObjectCreationAsync(string _, InspectorBusinessObjectResponse __)
-        => InvokeAsync(CountAsync);
+public Task OnBusinessObjectCreationAsync(string _, InspectorBusinessObjectResponse __)
+    => InvokeAsync(CountAsync);
 
-    public Task OnBusinessObjectUpdateAsync(string _, InspectorBusinessObjectResponse __)
-        => InvokeAsync(CountAsync);
+public Task OnBusinessObjectUpdateAsync(string _, InspectorBusinessObjectResponse __)
+    => InvokeAsync(CountAsync);
 
-    public Task OnBusinessObjectDeletionAsync(string _, string __)
-        => InvokeAsync(CountAsync);
+public Task OnBusinessObjectDeletionAsync(string _, string __)
+    => InvokeAsync(CountAsync);
 
 }

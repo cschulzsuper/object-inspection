@@ -1,4 +1,4 @@
-﻿namespace Super.Paula.Application.Communication.Requests;
+﻿namespace ChristianSchulz.ObjectInspection.Application.Communication.Requests;
 
 public class NotificationRequest
 {

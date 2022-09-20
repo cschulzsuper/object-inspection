@@ -21,12 +21,12 @@
 <div class="table-responsive">
 
     @if (_organizations == null)
-    {
-        <p><em>Loading...</em></p>
-    }
-    else
-    {
-        <table class="table table-striped table-sm">
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table table-striped table-sm">
 
             <thead>
             <tr>
@@ -42,42 +42,42 @@
 
             <tbody>
             @foreach (var organization in _organizations.Values)
-            {
-                <tr>
+        {
+            <tr>
                     <td class="d-none d-md-table-cell">@organization.UniqueName</td>
                     <td>@organization.DisplayName</td>
                     <td class="d-none d-sm-table-cell">@organization.ChiefInspector</td>
                     @if (organization.Activated)
-                    {
-                        <td>
+                {
+                    <td>
                             @if (organization.UniqueName != _organization)
-                            {
-                                <button class="btn btn-sm btn-success btn-block" title="@Translator[$"Deactivate"]"
+                        {
+                            <button class="btn btn-sm btn-success btn-block" title="@Translator[$"Deactivate"]"
                                         @onclick="() => DeactivateAsync(organization)"><span class="oi oi-power-standby"/></button>
-                            }
+                        }
                         </td>
-                    }
-                    else
-                    {
-                        <td>
+                }
+                else
+                {
+                    <td>
                             @if (organization.UniqueName != _organization)
-                            {
+                        {
 
-                                <button class="btn btn-sm btn-outline-danger btn-block" title="@Translator[$"Activate"]"
+                            <button class="btn btn-sm btn-outline-danger btn-block" title="@Translator[$"Activate"]"
                                         @onclick="() => ActivateAsync(organization)"><span class="oi oi-power-standby"/></button>
-                            }
+                        }
                         </td>
-                    }
+                }
                     <td>
                         <button class="btn btn-sm btn-outline-info btn-block" title="@Translator[$"Edit"]"
                                 @onclick="() => Edit(organization.UniqueName)"><span class="oi oi-pencil"/></button>
                     </td>
                     <td>
                         @if (organization.UniqueName != _organization)
-                        {
-                            <button class="btn btn-sm btn-outline-danger btn-block" title="@Translator[$"Delete"]"
+                    {
+                        <button class="btn btn-sm btn-outline-danger btn-block" title="@Translator[$"Delete"]"
                                     @onclick="() => DeleteAsync(organization)"><span class="oi oi-trash"/></button>
-                        }
+                    }
                     </td>
                     <td>
                         <button class="btn btn-sm btn-outline-danger btn-block" title="@Translator[$"Inspectors"]"
@@ -85,71 +85,71 @@
                     </td>
 
                 </tr>
-            }
+        }
             </tbody>
         </table>
-    }
+}
 </div>
 
 @code {
 
-    private IDictionary<string, OrganizationResponse>? _organizations;
+private IDictionary<string, OrganizationResponse>? _organizations;
 
-    [CascadingParameter]
-    public Task<AuthenticationState> AuthenticationState { get; set; } = null!;
+[CascadingParameter]
+public Task<AuthenticationState> AuthenticationState { get; set; } = null!;
 
-    private string? _organization = null;
+private string? _organization = null;
 
-    protected override async Task OnParametersSetAsync()
+protected override async Task OnParametersSetAsync()
+{
+    _organization = (await AuthenticationState).User.Claims.GetOrganization();
+}
+
+protected override async Task OnAfterRenderAsync(bool firstRender)
+{
+    if (firstRender)
     {
-        _organization = (await AuthenticationState).User.Claims.GetOrganization();
-    }
+        _organizations = new Dictionary<string, OrganizationResponse>();
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
+        await foreach (var organization in OrganizationRequestHandler.GetAll())
         {
-            _organizations = new Dictionary<string, OrganizationResponse>();
-
-            await foreach (var organization in OrganizationRequestHandler.GetAll())
-            {
-                _organizations.Add(organization.UniqueName, organization);
-                StateHasChanged();
-            }
-
+            _organizations.Add(organization.UniqueName, organization);
             StateHasChanged();
         }
+
+        StateHasChanged();
     }
+}
 
-    public void Create()
-        => NavigationManager.NavigateTo("/organizations/create");
+public void Create()
+    => NavigationManager.NavigateTo("/organizations/create");
 
-    public async Task DeleteAsync(OrganizationResponse organization)
-    {
-        await OrganizationRequestHandler.DeleteAsync(organization.UniqueName, organization.ETag);
-        _organizations!.Remove(organization.UniqueName);
-    }
+public async Task DeleteAsync(OrganizationResponse organization)
+{
+    await OrganizationRequestHandler.DeleteAsync(organization.UniqueName, organization.ETag);
+    _organizations!.Remove(organization.UniqueName);
+}
 
-    public async Task ActivateAsync(OrganizationResponse organization)
-    {
-        var response = await OrganizationRequestHandler.ActivateAsync(organization.UniqueName, organization.ETag);
+public async Task ActivateAsync(OrganizationResponse organization)
+{
+    var response = await OrganizationRequestHandler.ActivateAsync(organization.UniqueName, organization.ETag);
 
-        _organizations![organization.UniqueName].Activated = true;
-        _organizations![organization.UniqueName].ETag = response.ETag;
-    }
+    _organizations![organization.UniqueName].Activated = true;
+    _organizations![organization.UniqueName].ETag = response.ETag;
+}
 
-    public async Task DeactivateAsync(OrganizationResponse organization)
-    {
-        var response = await OrganizationRequestHandler.DeactivateAsync(organization.UniqueName, organization.ETag);
+public async Task DeactivateAsync(OrganizationResponse organization)
+{
+    var response = await OrganizationRequestHandler.DeactivateAsync(organization.UniqueName, organization.ETag);
 
-        _organizations![organization.UniqueName].Activated = false;
-        _organizations![organization.UniqueName].ETag = response.ETag;
-    }
+    _organizations![organization.UniqueName].Activated = false;
+    _organizations![organization.UniqueName].ETag = response.ETag;
+}
 
-    public void Edit(string organization)
-        => NavigationManager.NavigateTo($"/organizations/{organization}/edit/");
+public void Edit(string organization)
+    => NavigationManager.NavigateTo($"/organizations/{organization}/edit/");
 
-    public void NavigateToInspectors(string organization)
-        => NavigationManager.NavigateTo($"/organizations/{organization}/inspectors");
+public void NavigateToInspectors(string organization)
+    => NavigationManager.NavigateTo($"/organizations/{organization}/inspectors");
 
 }

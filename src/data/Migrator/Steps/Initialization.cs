@@ -1,20 +1,20 @@
-﻿using Super.Paula.Data;
+﻿using ChristianSchulz.ObjectInspection.Data;
 using System.Threading.Tasks;
 
-namespace Super.Paula.Migrator.Steps;
+namespace ChristianSchulz.ObjectInspection.Migrator.Steps;
 
 public class Initialization : IStep
 {
-    private readonly PaulaAdministrationContext _paulaAdministrationContext;
+    private readonly AdministrationContext _administrationContext;
 
-    public Initialization(PaulaAdministrationContext paulaAdministrationContext)
+    public Initialization(AdministrationContext administrationContext)
     {
-        _paulaAdministrationContext = paulaAdministrationContext;
+        _administrationContext = administrationContext;
     }
 
     public Task ExecuteAsync()
     {
-        _paulaAdministrationContext.Database.EnsureCreated();
+        _administrationContext.Database.EnsureCreated();
 
         return Task.CompletedTask;
     }

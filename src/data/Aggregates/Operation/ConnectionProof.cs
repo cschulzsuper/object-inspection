@@ -1,7 +1,4 @@
-﻿using Super.Paula.RuntimeData;
-using System.Collections.Generic;
-
-namespace Super.Paula.Application.Operation;
+﻿namespace ChristianSchulz.ObjectInspection.Application.Operation;
 
 public record ConnectionProof
 {

@@ -1,16 +1,16 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Super.Paula.Application.Operation;
+using ChristianSchulz.ObjectInspection.Application.Operation;
 
-namespace Super.Paula.Data.Mappings.Operation;
+namespace ChristianSchulz.ObjectInspection.Data.Mappings.Operation;
 
 public class ExtensionMapping : IEntityTypeConfiguration<Extension>
 {
     public string PartitionKey = nameof(PartitionKey);
 
-    private readonly PaulaContextState _state;
+    private readonly ObjectInspectionContextState _state;
 
-    public ExtensionMapping(PaulaContextState state)
+    public ExtensionMapping(ObjectInspectionContextState state)
     {
         _state = state;
     }

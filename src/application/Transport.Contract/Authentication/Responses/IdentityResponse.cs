@@ -1,4 +1,4 @@
-﻿namespace Super.Paula.Application.Authentication.Responses;
+﻿namespace ChristianSchulz.ObjectInspection.Application.Authentication.Responses;
 
 public class IdentityResponse
 {

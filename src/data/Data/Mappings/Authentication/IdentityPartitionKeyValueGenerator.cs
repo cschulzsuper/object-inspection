@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.ValueGeneration;
-using Super.Paula.Application.Authentication;
+using ChristianSchulz.ObjectInspection.Application.Authentication;
 
-namespace Super.Paula.Data.Mappings.Authentication;
+namespace ChristianSchulz.ObjectInspection.Data.Mappings.Authentication;
 
 public class IdentityPartitionKeyValueGenerator : ValueGenerator<string>, IPartitionKeyValueGenerator<Identity>
 {
@@ -11,12 +11,12 @@ public class IdentityPartitionKeyValueGenerator : ValueGenerator<string>, IParti
 
     public override string Next(EntityEntry entry)
         => Value(
-            (entry.Context as PaulaContext)!.State,
+            (entry.Context as ObjectInspectionContext)!.State,
             (entry.Entity as Identity)!);
 
-    public string Value(PaulaContextState state, Identity entity)
+    public string Value(ObjectInspectionContextState state, Identity entity)
         => "default";
 
-    public string Value(PaulaContextState state, Queue<object> partitionKeyComponents)
+    public string Value(ObjectInspectionContextState state, Queue<object> partitionKeyComponents)
         => "default";
 }

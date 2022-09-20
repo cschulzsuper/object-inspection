@@ -1,8 +1,8 @@
 ﻿using System.Linq;
 using System.Security.Claims;
-using Super.Paula.BadgeUsage;
+using ChristianSchulz.ObjectInspection.BadgeUsage;
 
-namespace Super.Paula.BadgeSecurity;
+namespace ChristianSchulz.ObjectInspection.BadgeSecurity;
 
 public class BadgeHandler : IBadgeHandler
 {

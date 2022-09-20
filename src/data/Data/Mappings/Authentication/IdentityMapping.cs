@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Super.Paula.Application.Authentication;
+using ChristianSchulz.ObjectInspection.Application.Authentication;
 
-namespace Super.Paula.Data.Mappings.Authentication;
+namespace ChristianSchulz.ObjectInspection.Data.Mappings.Authentication;
 
 public class IdentityMapping : IEntityTypeConfiguration<Identity>
 {

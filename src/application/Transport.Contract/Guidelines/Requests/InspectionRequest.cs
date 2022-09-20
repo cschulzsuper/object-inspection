@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Super.Paula.Shared.Validation;
+using ChristianSchulz.ObjectInspection.Shared.Validation;
 
-namespace Super.Paula.Application.Guidelines.Requests;
+namespace ChristianSchulz.ObjectInspection.Application.Guidelines.Requests;
 
 public class InspectionRequest
 {

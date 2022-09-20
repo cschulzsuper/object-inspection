@@ -2,15 +2,15 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.DependencyInjection;
-using Super.Paula.Application;
-using Super.Paula.Application.Operation;
-using Super.Paula.Data;
-using Super.Paula.Shared;
-using Super.Paula.Shared.Orchestration;
+using ChristianSchulz.ObjectInspection.Application;
+using ChristianSchulz.ObjectInspection.Application.Operation;
+using ChristianSchulz.ObjectInspection.Data;
+using ChristianSchulz.ObjectInspection.Shared;
+using ChristianSchulz.ObjectInspection.Shared.Orchestration;
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
 
-namespace Super.Paula.Server;
+namespace ChristianSchulz.ObjectInspection.Server;
 
 [SuppressMessage("Style", "IDE1006")]
 public static class _Pipeline

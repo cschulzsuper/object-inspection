@@ -1,19 +1,19 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Super.Paula.Data.Mappings.Administration;
-using Super.Paula.Data.Mappings.Auditing;
-using Super.Paula.Data.Mappings.Communication;
-using Super.Paula.Data.Mappings.Guidelines;
-using Super.Paula.Data.Mappings.Inventory;
+using ChristianSchulz.ObjectInspection.Data.Mappings.Administration;
+using ChristianSchulz.ObjectInspection.Data.Mappings.Auditing;
+using ChristianSchulz.ObjectInspection.Data.Mappings.Communication;
+using ChristianSchulz.ObjectInspection.Data.Mappings.Guidelines;
+using ChristianSchulz.ObjectInspection.Data.Mappings.Inventory;
 
-namespace Super.Paula.Data;
+namespace ChristianSchulz.ObjectInspection.Data;
 
-public class PaulaApplicationContext : PaulaContext
+public class ApplicationContext : ObjectInspectionContext
 {
     private readonly ExtensionProvider _extensions;
 
-    public PaulaApplicationContext(
-        DbContextOptions<PaulaApplicationContext> options,
-        PaulaContextState state,
+    public ApplicationContext(
+        DbContextOptions<ApplicationContext> options,
+        ObjectInspectionContextState state,
         ExtensionProvider extensions)
 
         : base(options, state)

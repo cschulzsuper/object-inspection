@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Net.Mail;
-using Super.Paula.Shared.Validation;
+using ChristianSchulz.ObjectInspection.Shared.Validation;
 
-namespace Super.Paula.Application.Authentication;
+namespace ChristianSchulz.ObjectInspection.Application.Authentication;
 
 public static class IdentityValidator
 {
