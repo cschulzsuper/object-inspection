@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.Hosting;
-using Super.Paula.Shared.Orchestration;
+using ChristianSchulz.ObjectInspection.Shared.Orchestration;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Super.Paula.Server.Orchestration;
+namespace ChristianSchulz.ObjectInspection.Server.Orchestration;
 
 public class WorkerService : BackgroundService
 {

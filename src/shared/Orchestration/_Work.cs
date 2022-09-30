@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using Super.Paula.Shared.Orchestration;
+using ChristianSchulz.ObjectInspection.Shared.Orchestration;
 
-namespace Super.Paula.Shared;
+namespace ChristianSchulz.ObjectInspection.Shared;
 
 [SuppressMessage("Style", "IDE1006")]
 public static class _Work

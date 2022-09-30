@@ -22,34 +22,34 @@
     </div>
 
     @if(context.GetValidationMessages().Any())
-    {
-        <div class="card card-body tex-wrap">
+{
+    <div class="card card-body tex-wrap">
             <ValidationSummary />    
         </div>
-    }
-    else
-    {
-        <button
+}
+else
+{
+    <button
             id="submit"
             type="submit"
             class="w-100 btn btn-lg btn-primary">
             @Translator[$"Sign up"]
         </button>
-    }
+}
 
 </EditForm>
 
 @code {
 
-    private InitializeOrganizationRequest _model = new InitializeOrganizationRequest();
+private InitializeOrganizationRequest _model = new InitializeOrganizationRequest();
 
-    [Parameter]
-    public string Organization { get; set; } = null!;
+[Parameter]
+public string Organization { get; set; } = null!;
 
-    private async Task OnValidSubmitAsync()
-    {
-        await OrganizationHandler.InitializeAsync(Organization, _model);
-        NavigationManager.NavigateTo("/");
-    }
+private async Task OnValidSubmitAsync()
+{
+    await OrganizationHandler.InitializeAsync(Organization, _model);
+    NavigationManager.NavigateTo("/");
+}
 
 }

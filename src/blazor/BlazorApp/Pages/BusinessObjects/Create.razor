@@ -1,6 +1,6 @@
 ﻿@page "/business-objects/create"
-@using Super.Paula.Application.Localization.Exceptions
-@using Super.Paula.Application.Operation.Exceptions
+@using ChristianSchulz.ObjectInspection.Application.Localization.Exceptions
+@using ChristianSchulz.ObjectInspection.Application.Operation.Exceptions
 
 @inject ITranslator<Create> Translator
 @inject NavigationManager NavigationManager
@@ -33,11 +33,11 @@
     </div>
 
     @if (_extension != null)
-    {
-        <div class="container-fluid pb-3 mb-3 border-bottom">
+{
+    <div class="container-fluid pb-3 mb-3 border-bottom">
             @foreach (var extensionField in _extension.Fields)
-            {
-                <div class="form-floating mt-3">
+        {
+            <div class="form-floating mt-3">
                     <input
                         class="form-control"
                         id="@GetExtensionFieldInputId(extensionField)"
@@ -45,51 +45,51 @@
                         @onchange="@(e => _request[extensionField.DataName] = e.Value)"/>
                     <label for="@GetExtensionFieldInputId(extensionField)">@Translator[extensionField.DisplayName]</label>
                 </div>
-            }
+        }
         </div>
-    }
+}
 
     @if (context.GetValidationMessages().Any())
-    {
-        <div class="container-fluid pb-4 mb-5">
+{
+    <div class="container-fluid pb-4 mb-5">
             <div class="card card-body tex-wrap">
                 <ValidationSummary/>
             </div>
         </div>
-    }
-    else
-    {
-        <div class="container-fluid pb-4 mb-5">
+}
+else
+{
+    <div class="container-fluid pb-4 mb-5">
             <AuthorizedButton Policy="OnlyChief"
                               id="submit"
                               type="submit"
                               class="btn btn-sm btn-primary">@Translator[$"Submit"]</AuthorizedButton>
         </div>
-    }
+}
 
 </EditForm>
 
 @code {
-    private ExtensionResponse? _extension;
+private ExtensionResponse? _extension;
 
-    private BusinessObjectRequest _request = new BusinessObjectRequest();
+private BusinessObjectRequest _request = new BusinessObjectRequest();
 
-    protected override async Task OnInitializedAsync()
+protected override async Task OnInitializedAsync()
+{
+    try
     {
-        try
-        {
-            _extension = await ExtensionRequestHandler.GetAsync(ExtensionAggregateTypes.BusinessObject);
-        }
-        catch (ExtensionNotFoundException) { }
+        _extension = await ExtensionRequestHandler.GetAsync(ExtensionAggregateTypes.BusinessObject);
     }
+    catch (ExtensionNotFoundException) { }
+}
 
-    private async Task OnValidSubmitAsync()
-    {
-        await BusinessObjectRequestHandler.CreateAsync(_request);
-        NavigationManager.NavigateTo("/business-objects");
-    }
+private async Task OnValidSubmitAsync()
+{
+    await BusinessObjectRequestHandler.CreateAsync(_request);
+    NavigationManager.NavigateTo("/business-objects");
+}
 
-    private string GetExtensionFieldInputId(ExtensionFieldResponse extensionField)
-        => $"businessObject{char.ToUpperInvariant(extensionField.DataName[0])}{extensionField.DataName[1..]}";
+private string GetExtensionFieldInputId(ExtensionFieldResponse extensionField)
+    => $"businessObject{char.ToUpperInvariant(extensionField.DataName[0])}{extensionField.DataName[1..]}";
 
 }

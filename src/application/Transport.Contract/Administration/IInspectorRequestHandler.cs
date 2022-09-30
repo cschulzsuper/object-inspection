@@ -1,9 +1,9 @@
-﻿using Super.Paula.Application.Administration.Requests;
-using Super.Paula.Application.Administration.Responses;
+﻿using ChristianSchulz.ObjectInspection.Application.Administration.Requests;
+using ChristianSchulz.ObjectInspection.Application.Administration.Responses;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Super.Paula.Application.Administration;
+namespace ChristianSchulz.ObjectInspection.Application.Administration;
 
 public interface IInspectorRequestHandler
 {

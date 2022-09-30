@@ -1,4 +1,4 @@
-﻿namespace Super.Paula.Application.Orchestration;
+﻿namespace ChristianSchulz.ObjectInspection.Application.Orchestration;
 
 public interface IWorkerRuntimeManager
 {

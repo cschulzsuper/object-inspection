@@ -1,23 +1,22 @@
 ﻿using Microsoft.AspNetCore.SignalR;
-using Super.Paula.Shared.Security;
+using ChristianSchulz.ObjectInspection.Shared.Security;
 
-namespace Super.Paula.Application.SignalR
+namespace ChristianSchulz.ObjectInspection.Application.SignalR;
+
+public class RadioUserIdProvider : IUserIdProvider
 {
-    public class RadioUserIdProvider : IUserIdProvider
+    public string? GetUserId(HubConnectionContext connection)
     {
-        public string? GetUserId(HubConnectionContext connection)
+        var user = connection.User;
+
+        if (!user.Claims.HasInspector() || 
+            !user.Claims.HasOrganization())
         {
-            var user = connection.User;
-
-            if (!user.Claims.HasInspector() || 
-                !user.Claims.HasOrganization())
-            {
-                return null;
-            }
-
-            var userId = $"{user.Claims.GetOrganization()}:{user.Claims.GetInspector()}";
-
-            return userId;
+            return null;
         }
+
+        var userId = $"{user.Claims.GetOrganization()}:{user.Claims.GetInspector()}";
+
+        return userId;
     }
 }

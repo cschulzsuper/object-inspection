@@ -1,4 +1,4 @@
-﻿namespace Super.Paula.Application.Auditing;
+﻿namespace ChristianSchulz.ObjectInspection.Application.Auditing;
 
 public class BusinessObjectInspectionAuditRecord
 {

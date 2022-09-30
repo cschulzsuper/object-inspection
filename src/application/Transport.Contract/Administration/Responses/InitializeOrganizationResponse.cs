@@ -1,4 +1,4 @@
-﻿namespace Super.Paula.Application.Administration.Responses;
+﻿namespace ChristianSchulz.ObjectInspection.Application.Administration.Responses;
 
 public class InitializeOrganizationResponse
 {

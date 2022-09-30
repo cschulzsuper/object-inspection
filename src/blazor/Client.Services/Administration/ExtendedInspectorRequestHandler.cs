@@ -1,15 +1,15 @@
 ﻿using Microsoft.AspNetCore.Components.Authorization;
-using Super.Paula.Application.Administration;
-using Super.Paula.Application.Administration.Requests;
-using Super.Paula.Application.Administration.Responses;
+using ChristianSchulz.ObjectInspection.Application.Administration;
+using ChristianSchulz.ObjectInspection.Application.Administration.Requests;
+using ChristianSchulz.ObjectInspection.Application.Administration.Responses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Super.Paula.Shared.Security;
+using ChristianSchulz.ObjectInspection.Shared.Security;
 
-namespace Super.Paula.Client.Administration;
+namespace ChristianSchulz.ObjectInspection.Client.Administration;
 
 public sealed class ExtendedInspectorRequestHandler : IInspectorRequestHandler, IDisposable
 {

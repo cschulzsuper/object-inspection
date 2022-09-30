@@ -1,9 +1,8 @@
 ﻿using Microsoft.OpenApi.Models;
 
-namespace Super.Paula.Server.SwaggerGen
+namespace ChristianSchulz.ObjectInspection.Server.SwaggerGen;
+
+public interface IPreSerializeSchemaFilter
 {
-    public interface IPreSerializeSchemaFilter
-    {
-        void Apply(OpenApiSchema schema, PreSerializeSchemaFilterContext schemaContext);
-    }
+    void Apply(OpenApiSchema schema, PreSerializeSchemaFilterContext schemaContext);
 }

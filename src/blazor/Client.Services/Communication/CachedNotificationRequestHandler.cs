@@ -1,14 +1,14 @@
 ﻿using Microsoft.AspNetCore.Components.Authorization;
-using Super.Paula.Application.Communication;
-using Super.Paula.Application.Communication.Requests;
-using Super.Paula.Application.Communication.Responses;
+using ChristianSchulz.ObjectInspection.Application.Communication;
+using ChristianSchulz.ObjectInspection.Application.Communication.Requests;
+using ChristianSchulz.ObjectInspection.Application.Communication.Responses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Super.Paula.Client.Communication;
+namespace ChristianSchulz.ObjectInspection.Client.Communication;
 
 public class CachedNotificationRequestHandler : INotificationRequestHandler, IDisposable
 {

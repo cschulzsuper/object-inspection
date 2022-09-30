@@ -1,12 +1,12 @@
-﻿using Super.Paula.Application.Auditing.Events;
-using Super.Paula.Shared.Orchestration;
+﻿using ChristianSchulz.ObjectInspection.Application.Auditing.Events;
+using ChristianSchulz.ObjectInspection.Shared.Orchestration;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Super.Paula.Shared;
+using ChristianSchulz.ObjectInspection.Shared;
 
-namespace Super.Paula.Application.Auditing;
+namespace ChristianSchulz.ObjectInspection.Application.Auditing;
 
 public class BusinessObjectInspectionEventService : IBusinessObjectInspectionEventService
 {

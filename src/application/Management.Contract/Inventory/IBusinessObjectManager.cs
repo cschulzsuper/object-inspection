@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Super.Paula.Application.Inventory;
+namespace ChristianSchulz.ObjectInspection.Application.Inventory;
 
 public interface IBusinessObjectManager
 {

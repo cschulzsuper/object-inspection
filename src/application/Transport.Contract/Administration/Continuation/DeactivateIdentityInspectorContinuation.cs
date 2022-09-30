@@ -1,8 +1,8 @@
-﻿using Super.Paula.Shared.Orchestration;
+﻿using ChristianSchulz.ObjectInspection.Shared.Orchestration;
 using System.ComponentModel.DataAnnotations;
-using Super.Paula.Shared.Validation;
+using ChristianSchulz.ObjectInspection.Shared.Validation;
 
-namespace Super.Paula.Application.Administration.Continuation;
+namespace ChristianSchulz.ObjectInspection.Application.Administration.Continuation;
 
 public record DeactivateIdentityInspectorContinuation(
     [StringLength(140)]

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Super.Paula.Application.Authentication;
+namespace ChristianSchulz.ObjectInspection.Application.Authentication;
 
 public interface IIdentityManager
 {

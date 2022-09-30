@@ -1,15 +1,15 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
-using Super.Paula.Application.Administration;
-using Super.Paula.Application.Auditing;
-using Super.Paula.Application.Communication;
-using Super.Paula.Application.Guidelines;
-using Super.Paula.Application.Inventory;
-using Super.Paula.Application.Operation;
+using ChristianSchulz.ObjectInspection.Application.Administration;
+using ChristianSchulz.ObjectInspection.Application.Auditing;
+using ChristianSchulz.ObjectInspection.Application.Communication;
+using ChristianSchulz.ObjectInspection.Application.Guidelines;
+using ChristianSchulz.ObjectInspection.Application.Inventory;
+using ChristianSchulz.ObjectInspection.Application.Operation;
 using System.Diagnostics.CodeAnalysis;
-using Super.Paula.Application.Authentication;
+using ChristianSchulz.ObjectInspection.Application.Authentication;
 
-namespace Super.Paula.Application;
+namespace ChristianSchulz.ObjectInspection.Application;
 
 [SuppressMessage("Style", "IDE1006")]
 public static class _Services

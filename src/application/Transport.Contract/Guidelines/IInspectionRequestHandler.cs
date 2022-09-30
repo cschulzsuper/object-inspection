@@ -1,9 +1,9 @@
-﻿using Super.Paula.Application.Guidelines.Requests;
-using Super.Paula.Application.Guidelines.Responses;
+﻿using ChristianSchulz.ObjectInspection.Application.Guidelines.Requests;
+using ChristianSchulz.ObjectInspection.Application.Guidelines.Responses;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Super.Paula.Application.Guidelines;
+namespace ChristianSchulz.ObjectInspection.Application.Guidelines;
 
 public interface IInspectionRequestHandler
 {

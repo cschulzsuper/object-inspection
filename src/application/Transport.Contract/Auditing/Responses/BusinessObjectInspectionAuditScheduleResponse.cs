@@ -1,14 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Text.Json.Serialization;
 
-namespace Super.Paula.Application.Auditing.Responses;
+namespace ChristianSchulz.ObjectInspection.Application.Auditing.Responses;
 
 public class BusinessObjectInspectionAuditScheduleResponse
 {
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public string? ETag { get; set; } = null;
-
     public ISet<BusinessObjectInspectionAuditScheduleExpressionResponse> Expressions { get; set; } = ImmutableHashSet.Create<BusinessObjectInspectionAuditScheduleExpressionResponse>();
     public int Threshold { get; set; }
 

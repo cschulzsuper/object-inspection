@@ -1,7 +1,7 @@
-﻿using Super.Paula.Application.Administration.Continuation;
-using Super.Paula.Shared.Orchestration;
+﻿using ChristianSchulz.ObjectInspection.Application.Administration.Continuation;
+using ChristianSchulz.ObjectInspection.Shared.Orchestration;
 
-namespace Super.Paula.Application.Administration;
+namespace ChristianSchulz.ObjectInspection.Application.Administration;
 
 public interface IInspectorContinuationHandler :
     IContinuationHandler<CreateInspectorContinuation>

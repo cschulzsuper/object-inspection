@@ -1,4 +1,4 @@
-﻿namespace Super.Paula.Shared.Environment;
+﻿namespace ChristianSchulz.ObjectInspection.Shared.Environment;
 
 public class BuildInfo
 {

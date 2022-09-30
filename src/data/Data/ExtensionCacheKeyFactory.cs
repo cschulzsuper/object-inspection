@@ -1,16 +1,10 @@
-﻿using Super.Paula.Application.Operation;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Runtime.CompilerServices;
-
-namespace Super.Paula.Data;
+﻿namespace ChristianSchulz.ObjectInspection.Data;
 
 public class ExtensionCacheKeyFactory
 {
-    private readonly PaulaContextState _state;
+    private readonly ObjectInspectionContextState _state;
 
-    public ExtensionCacheKeyFactory(PaulaContextState state)
+    public ExtensionCacheKeyFactory(ObjectInspectionContextState state)
     {
         _state = state;
     }

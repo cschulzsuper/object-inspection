@@ -2,9 +2,9 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Security.Claims;
-using Super.Paula.Shared.Security;
+using ChristianSchulz.ObjectInspection.Shared.Security;
 
-namespace Super.Paula.Shared;
+namespace ChristianSchulz.ObjectInspection.Shared;
 
 [SuppressMessage("Style", "IDE1006")]
 public static class _Services

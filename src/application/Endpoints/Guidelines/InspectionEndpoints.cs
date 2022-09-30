@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
-using Super.Paula.Application.Guidelines.Requests;
+using ChristianSchulz.ObjectInspection.Application.Guidelines.Requests;
 using System;
 
-namespace Super.Paula.Application.Guidelines;
+namespace ChristianSchulz.ObjectInspection.Application.Guidelines;
 
 public static class InspectionEndpoints
 {

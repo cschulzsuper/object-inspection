@@ -1,6 +1,6 @@
-﻿namespace Super.Paula.Data;
+﻿namespace ChristianSchulz.ObjectInspection.Data;
 
-public class PaulaContextState
+public class ObjectInspectionContextState
 {
     public string CurrentOrganization { get; set; } = string.Empty;
     public string CurrentInspector { get; set; } = string.Empty;

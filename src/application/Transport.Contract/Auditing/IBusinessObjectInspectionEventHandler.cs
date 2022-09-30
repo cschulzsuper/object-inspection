@@ -1,7 +1,7 @@
-﻿using Super.Paula.Application.Guidelines.Events;
-using Super.Paula.Shared.Orchestration;
+﻿using ChristianSchulz.ObjectInspection.Application.Guidelines.Events;
+using ChristianSchulz.ObjectInspection.Shared.Orchestration;
 
-namespace Super.Paula.Application.Auditing;
+namespace ChristianSchulz.ObjectInspection.Application.Auditing;
 
 public interface IBusinessObjectInspectionEventHandler :
     IEventHandler<InspectionUpdateEvent>,

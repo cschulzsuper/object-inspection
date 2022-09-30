@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Routing;
 using System;
 
-namespace Super.Paula.Application.Operation;
+namespace ChristianSchulz.ObjectInspection.Application.Operation;
 
 public static class ExtensionTypeEndpoints
 {

@@ -1,6 +1,6 @@
 ﻿using System.Security.Claims;
 
-namespace Super.Paula.BadgeSecurity;
+namespace ChristianSchulz.ObjectInspection.BadgeSecurity;
 
 public class BadgeCreationContext
 {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Super.Paula.Shared.ErrorHandling;
+namespace ChristianSchulz.ObjectInspection.Shared.ErrorHandling;
 
 [AttributeUsage(AttributeTargets.Method)]
 public class ErrorMessageAttribute : Attribute

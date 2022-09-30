@@ -3,7 +3,7 @@ using System;
 using System.Security.Cryptography;
 using Xunit;
 
-namespace Super.Paula.Shared.Tests;
+namespace ChristianSchulz.ObjectInspection.Shared.Tests;
 
 public class TypeNameConverterTests
 {

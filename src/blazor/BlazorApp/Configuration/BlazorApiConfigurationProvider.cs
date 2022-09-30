@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace Super.Paula.Client.Configuration;
+namespace ChristianSchulz.ObjectInspection.Client.Configuration;
 
 public class BlazorApiConfigurationProvider : ConfigurationProvider
 {
@@ -24,19 +24,19 @@ public class BlazorApiConfigurationProvider : ConfigurationProvider
         var value = await _httpClient.GetStringAsync("api/settings/server");
         if (value != null)
         {
-            data.Add("Paula:Server", value);
+            data.Add("ObjectInspection:Server", value);
         }
 
         value = await _httpClient.GetStringAsync("api/settings/demoidentity");
         if (value != null)
         {
-            data.Add("Paula:DemoIdentity", value);
+            data.Add("ObjectInspection:DemoIdentity", value);
         }
 
         value = await _httpClient.GetStringAsync("api/settings/demopassword");
         if (value != null)
         {
-            data.Add("Paula:DemoPassword", value);
+            data.Add("ObjectInspection:DemoPassword", value);
         }
 
         value = await _httpClient.GetStringAsync("api/settings/build__hash");

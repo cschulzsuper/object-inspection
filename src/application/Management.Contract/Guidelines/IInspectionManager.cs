@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Super.Paula.Application.Guidelines;
+namespace ChristianSchulz.ObjectInspection.Application.Guidelines;
 
 public interface IInspectionManager
 {

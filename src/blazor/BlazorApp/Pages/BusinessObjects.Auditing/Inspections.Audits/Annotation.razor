@@ -37,60 +37,60 @@ else
         </div>
 
         @if (context.GetValidationMessages().Any())
-        {
-            <div class="container-fluid pb-4 mb-5">
+    {
+        <div class="container-fluid pb-4 mb-5">
                 <div class="card card-body tex-wrap">
                     <ValidationSummary/>
                 </div>
             </div>
-        }
-        else
-        {
-            <div class="container-fluid pb-4 mb-5">
+    }
+    else
+    {
+        <div class="container-fluid pb-4 mb-5">
                 <AuthorizedButton Policy="OnlyInspectorOrObserver"
                                   id="submit"
                                   type="submit"
                                   class="btn btn-sm btn-primary">@Translator[$"Submit"]</AuthorizedButton>
             </div>
-        }
+    }
 
     </EditForm>
 }
 
 @code {
 
-    [Parameter]
-    public string BusinessObject { get; set; } = string.Empty;
+[Parameter]
+public string BusinessObject { get; set; } = string.Empty;
 
-    [Parameter]
-    public string Inspection { get; set; } = string.Empty;
+[Parameter]
+public string Inspection { get; set; } = string.Empty;
 
-    [Parameter]
-    public int AuditDate { get; set; }
+[Parameter]
+public int AuditDate { get; set; }
 
-    [Parameter]
-    public int AuditTime { get; set; }
+[Parameter]
+public int AuditTime { get; set; }
 
-    private BusinessObjectInspectionResponse? _inspection = null;
+private BusinessObjectInspectionResponse? _inspection = null;
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+protected override async Task OnAfterRenderAsync(bool firstRender)
+{
+    if (firstRender)
     {
-        if (firstRender)
+        _inspection = await BusinessObjectInspectionHandler.GetAsync(BusinessObject, Inspection);
+        StateHasChanged();
+    }
+}
+
+private async Task OnValidSubmitAsync()
+{
+    await BusinessObjectInspectionHandler.ReplaceAuditAnnotationAsync(BusinessObject, Inspection,
+        new BusinessObjectInspectionAuditAnnotationRequest
         {
-            _inspection = await BusinessObjectInspectionHandler.GetAsync(BusinessObject, Inspection);
-            StateHasChanged();
-        }
-    }
-
-    private async Task OnValidSubmitAsync()
-    {
-        await BusinessObjectInspectionHandler.ReplaceAuditAnnotationAsync(BusinessObject, Inspection,
-            new BusinessObjectInspectionAuditAnnotationRequest
-            {
-                Annotation = _inspection!.AuditAnnotation,
-                ETag = _inspection.ETag
-            });
-        NavigationManager.NavigateTo($"/business-objects/{BusinessObject}/audit");
-    }
+            Annotation = _inspection!.AuditAnnotation,
+            ETag = _inspection.ETag
+        });
+    NavigationManager.NavigateTo($"/business-objects/{BusinessObject}/audit");
+}
 
 }

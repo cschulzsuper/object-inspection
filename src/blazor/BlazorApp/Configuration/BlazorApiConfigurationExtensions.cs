@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using System.Threading.Tasks;
 
-namespace Super.Paula.Client.Configuration;
+namespace ChristianSchulz.ObjectInspection.Client.Configuration;
 
 public static class BlazorApiConfigurationExtensions
 {

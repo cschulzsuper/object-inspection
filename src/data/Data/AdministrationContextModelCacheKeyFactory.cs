@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 
-namespace Super.Paula.Data;
+namespace ChristianSchulz.ObjectInspection.Data;
 
-public class PaulaAdministrationContextModelCacheKeyFactory : IModelCacheKeyFactory
+public class AdministrationContextModelCacheKeyFactory : IModelCacheKeyFactory
 {
     public object Create(DbContext context, bool designTime)
         => (context.GetType(), designTime);

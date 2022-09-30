@@ -1,41 +1,39 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
-using Super.Paula.Application.Inventory.Requests;
-using Super.Paula.Application.Inventory.Responses;
-using Super.Paula.Application.Operation;
-using Super.Paula.BadgeSecurity;
-using Super.Paula.Shared.Security;
+using ChristianSchulz.ObjectInspection.Application.Inventory.Requests;
+using ChristianSchulz.ObjectInspection.Application.Inventory.Responses;
+using ChristianSchulz.ObjectInspection.Application.Operation;
+using ChristianSchulz.ObjectInspection.Shared.Security;
 
-namespace Super.Paula.Server.SwaggerGen
+namespace ChristianSchulz.ObjectInspection.Server.SwaggerGen;
+
+public class BusinessObjectExtensionPreSerializeSchemaFilter : IPreSerializeSchemaFilter
 {
-    public class BusinessObjectExtensionPreSerializeSchemaFilter : IPreSerializeSchemaFilter
+    public void Apply(OpenApiSchema schema, PreSerializeSchemaFilterContext schemaContext)
     {
-        public void Apply(OpenApiSchema schema, PreSerializeSchemaFilterContext schemaContext)
+        if (schemaContext.SchemaName != nameof(BusinessObjectRequest) &&
+            schemaContext.SchemaName != nameof(BusinessObjectResponse))
         {
-            if (schemaContext.SchemaName != nameof(BusinessObjectRequest) &&
-                schemaContext.SchemaName != nameof(BusinessObjectResponse))
-            {
-                return;
-            }
+            return;
+        }
 
-            var user = schemaContext.HttpContext.User;
-            if (!user.IsAuthenticatedInspector())
-            {
-                return;
-            }
+        var user = schemaContext.HttpContext.User;
+        if (!user.IsAuthenticatedInspector())
+        {
+            return;
+        }
 
-            var extensionManager = schemaContext.HttpContext.RequestServices.GetRequiredService<IExtensionManager>();
-            var extension = extensionManager.GetAsync("business-object").Result;
+        var extensionManager = schemaContext.HttpContext.RequestServices.GetRequiredService<IExtensionManager>();
+        var extension = extensionManager.GetAsync("business-object").Result;
 
-            foreach (var extensionField in extension.Fields)
-            {
-                schema.Properties.Add(
-                    extensionField.DataName, 
-                    new OpenApiSchema
-                    {
-                        Type = extensionField.DataType
-                    });
-            }
+        foreach (var extensionField in extension.Fields)
+        {
+            schema.Properties.Add(
+                extensionField.DataName, 
+                new OpenApiSchema
+                {
+                    Type = extensionField.DataType
+                });
         }
     }
 }

@@ -4,7 +4,7 @@
 		<TargetFramework>net7.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<LangVersion>Preview</LangVersion>
-		<RootNamespace>Super.Paula.BadgeUsage</RootNamespace>
+		<RootNamespace>ChristianSchulz.ObjectInspection.BadgeUsage</RootNamespace>
 	</PropertyGroup>
 
 </Project>

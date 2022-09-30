@@ -1,7 +1,6 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 
-namespace Super.Paula.Shared.Security;
+namespace ChristianSchulz.ObjectInspection.Shared.Security;
 
 public static class BadgeAuthorizationPolicies
 {

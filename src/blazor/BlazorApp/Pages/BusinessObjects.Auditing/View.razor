@@ -22,12 +22,12 @@
 <div class="table-responsive">
 
     @if (_businessObjects == null)
-    {
-        <p><em>Loading...</em></p>
-    }
-    else
-    {
-        <table class="table table-striped table-sm">
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table table-striped table-sm">
 
             <thead>
             <tr>
@@ -40,8 +40,8 @@
 
             <tbody>
             @foreach (var businessObject in _businessObjects)
-            {
-                <tr class="@TableRowCss(businessObject)">
+        {
+            <tr class="@TableRowCss(businessObject)">
                     <td>
                         <div>@businessObject.DisplayName</div><small class="d-md-none">@PlannedAuditTime(businessObject)</small></td>
                     <td class="d-none d-md-table-cell">@PlannedAuditTime(businessObject)</td>
@@ -51,98 +51,98 @@
                                 @onclick="() => NavigateToInspectionAudit(businessObject.UniqueName)"><span class="oi oi-media-play"/></button>
                     </td>
                 </tr>
-            }
+        }
             </tbody>
 
         </table>
-    }
+}
 
 </div>
 
 @code {
 
-    private ICollection<InspectorBusinessObjectResponse>? _businessObjects = null;
+private ICollection<InspectorBusinessObjectResponse>? _businessObjects = null;
 
-    private IDisposable? _inspectorBusinessObjectCreation;
-    private IDisposable? _inspectorBusinessObjectUpdate;
-    private IDisposable? _inspectorBusinessObjectDeletion;
+private IDisposable? _inspectorBusinessObjectCreation;
+private IDisposable? _inspectorBusinessObjectUpdate;
+private IDisposable? _inspectorBusinessObjectDeletion;
 
-    protected override async Task OnParametersSetAsync()
+protected override async Task OnParametersSetAsync()
+{
+    await QueryAsync();
+}
+
+protected override async Task OnAfterRenderAsync(bool firstRender)
+{
+    if (firstRender)
     {
-        await QueryAsync();
+        _inspectorBusinessObjectCreation = await InspectorCallbackHandler.OnBusinessObjectCreationAsync(OnBusinessObjectCreation);
+        _inspectorBusinessObjectUpdate = await InspectorCallbackHandler.OnBusinessObjectUpdateAsync(OnBusinessObjectUpdate);
+        _inspectorBusinessObjectDeletion = await InspectorCallbackHandler.OnBusinessObjectDeletionAsync(OnBusinessObjectDeletion);
+    }
+}
+
+public Task OnBusinessObjectCreation(string _, InspectorBusinessObjectResponse __)
+    => InvokeAsync(QueryAsync);
+
+public Task OnBusinessObjectUpdate(string _, InspectorBusinessObjectResponse __)
+    => InvokeAsync(QueryAsync);
+
+public Task OnBusinessObjectDeletion(string _, string __)
+    => InvokeAsync(QueryAsync);
+
+private string TableRowCss(InspectorBusinessObjectResponse businessObject)
+{
+    if (businessObject.AuditScheduleDelayed)
+    {
+        return "text-danger font-weight-bold";
     }
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    if (businessObject.AuditSchedulePending)
     {
-        if (firstRender)
-        {
-            _inspectorBusinessObjectCreation = await InspectorCallbackHandler.OnBusinessObjectCreationAsync(OnBusinessObjectCreation);
-            _inspectorBusinessObjectUpdate = await InspectorCallbackHandler.OnBusinessObjectUpdateAsync(OnBusinessObjectUpdate);
-            _inspectorBusinessObjectDeletion = await InspectorCallbackHandler.OnBusinessObjectDeletionAsync(OnBusinessObjectDeletion);
-        }
+        return "text-success font-weight-bold";
     }
 
-    public Task OnBusinessObjectCreation(string _, InspectorBusinessObjectResponse __)
-        => InvokeAsync(QueryAsync);
+    return string.Empty;
+}
 
-    public Task OnBusinessObjectUpdate(string _, InspectorBusinessObjectResponse __)
-        => InvokeAsync(QueryAsync);
-
-    public Task OnBusinessObjectDeletion(string _, string __)
-        => InvokeAsync(QueryAsync);
-
-    private string TableRowCss(InspectorBusinessObjectResponse businessObject)
+private string PlannedAuditTime(InspectorBusinessObjectResponse businessObject)
+{
+    if (businessObject.AuditSchedulePlannedAuditDate == default &&
+        businessObject.AuditSchedulePlannedAuditTime == default)
     {
-        if (businessObject.AuditScheduleDelayed)
-        {
-            return "text-danger font-weight-bold";
-        }
-
-        if (businessObject.AuditSchedulePending)
-        {
-            return "text-success font-weight-bold";
-        }
-
         return string.Empty;
     }
 
-    private string PlannedAuditTime(InspectorBusinessObjectResponse businessObject)
-    {
-        if (businessObject.AuditSchedulePlannedAuditDate == default &&
-            businessObject.AuditSchedulePlannedAuditTime == default)
-        {
-            return string.Empty;
-        }
+    return new DateTimeNumbers(businessObject.AuditSchedulePlannedAuditDate, businessObject.AuditSchedulePlannedAuditTime)
+        .ToLocalDateTimeString();
+}
 
-        return new DateTimeNumbers(businessObject.AuditSchedulePlannedAuditDate, businessObject.AuditSchedulePlannedAuditTime)
-            .ToLocalDateTimeString();
-    }
+public async Task QueryAsync()
+{
+    var response = await InspectorRequestHandler.GetCurrentAsync();
 
-    public async Task QueryAsync()
-    {
-        var response = await InspectorRequestHandler.GetCurrentAsync();
+    _businessObjects = response.BusinessObjects
+        .OrderBy(x => x.AuditSchedulePlannedAuditDate)
+        .ThenBy(x => x.AuditSchedulePlannedAuditTime)
+        .ToList();
 
-        _businessObjects = response.BusinessObjects
-            .OrderBy(x => x.AuditSchedulePlannedAuditDate)
-            .ThenBy(x => x.AuditSchedulePlannedAuditTime)
-            .ToList();
+    StateHasChanged();
+}
 
-        StateHasChanged();
-    }
+public async ValueTask DisposeAsync()
+{
+    _inspectorBusinessObjectCreation?.Dispose();
+    _inspectorBusinessObjectUpdate?.Dispose();
+    _inspectorBusinessObjectDeletion?.Dispose();
 
-    public async ValueTask DisposeAsync()
-    {
-        _inspectorBusinessObjectCreation?.Dispose();
-        _inspectorBusinessObjectUpdate?.Dispose();
-        _inspectorBusinessObjectDeletion?.Dispose();
+    await ValueTask.CompletedTask;
+}
 
-        await ValueTask.CompletedTask;
-    }
+public void NavigateToInspections(string businessObject)
+    => NavigationManager.NavigateTo($"/business-objects/{businessObject}/inspections");
 
-    public void NavigateToInspections(string businessObject)
-        => NavigationManager.NavigateTo($"/business-objects/{businessObject}/inspections");
-
-    public void NavigateToInspectionAudit(string businessObject)
-        => NavigationManager.NavigateTo($"/business-objects/{businessObject}/audit");
+public void NavigateToInspectionAudit(string businessObject)
+    => NavigationManager.NavigateTo($"/business-objects/{businessObject}/audit");
 
 }

@@ -1,9 +1,9 @@
-﻿using Super.Paula.Shared.JsonConversion;
+﻿using ChristianSchulz.ObjectInspection.Shared.JsonConversion;
 using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Super.Paula.Application.Inventory.Requests;
+namespace ChristianSchulz.ObjectInspection.Application.Inventory.Requests;
 
 public class BusinessObjectRequestJsonConverter : JsonConverter<BusinessObjectRequest>
 {

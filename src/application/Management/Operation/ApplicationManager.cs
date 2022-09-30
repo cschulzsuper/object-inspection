@@ -1,7 +1,7 @@
-﻿using Super.Paula.Data;
+﻿using ChristianSchulz.ObjectInspection.Data;
 using System.Threading.Tasks;
 
-namespace Super.Paula.Application.Operation;
+namespace ChristianSchulz.ObjectInspection.Application.Operation;
 
 public class ApplicationManager : IApplicationManager
 {

@@ -1,9 +1,8 @@
 ﻿using Microsoft.OpenApi.Models;
 
-namespace Super.Paula.Server.SwaggerGen
+namespace ChristianSchulz.ObjectInspection.Server.SwaggerGen;
+
+public interface IPreSerializeDocumentFilter
 {
-    public interface IPreSerializeDocumentFilter
-    {
-        void Apply(OpenApiDocument document, PreSerializeDocumentFilterContext documentContext);
-    }
+    void Apply(OpenApiDocument document, PreSerializeDocumentFilterContext documentContext);
 }

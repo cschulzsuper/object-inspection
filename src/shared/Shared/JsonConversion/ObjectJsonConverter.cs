@@ -2,7 +2,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Super.Paula.Shared.JsonConversion;
+namespace ChristianSchulz.ObjectInspection.Shared.JsonConversion;
 
 public class ObjectJsonConverter : JsonConverter<object?>
 {

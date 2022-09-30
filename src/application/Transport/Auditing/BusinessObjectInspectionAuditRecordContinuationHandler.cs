@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Super.Paula.Application.Auditing.Continuations;
-using Super.Paula.Shared.Orchestration;
+using ChristianSchulz.ObjectInspection.Application.Auditing.Continuations;
+using ChristianSchulz.ObjectInspection.Shared.Orchestration;
 using System.Threading.Tasks;
 
-namespace Super.Paula.Application.Auditing;
+namespace ChristianSchulz.ObjectInspection.Application.Auditing;
 
 public class BusinessObjectInspectionAuditRecordContinuationHandler : IBusinessObjectInspectionAuditRecordContinuationHandler
 {

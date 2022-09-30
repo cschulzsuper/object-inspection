@@ -1,8 +1,8 @@
-﻿using Super.Paula.Application.Localization.Requests;
-using Super.Paula.Application.Localization.Responses;
+﻿using ChristianSchulz.ObjectInspection.Application.Localization.Requests;
+using ChristianSchulz.ObjectInspection.Application.Localization.Responses;
 using System.Collections.Generic;
 
-namespace Super.Paula.Application.Localization;
+namespace ChristianSchulz.ObjectInspection.Application.Localization;
 
 public interface ITranslationRequestHandler
 {

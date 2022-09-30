@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace Super.Paula.Application.Operation.Responses;
+namespace ChristianSchulz.ObjectInspection.Application.Operation.Responses;
 
 public static class ExtensionFieldExtensions
 {

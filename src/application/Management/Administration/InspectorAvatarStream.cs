@@ -1,4 +1,4 @@
-﻿using Super.Paula.Application.Administration.Exceptions;
+﻿using ChristianSchulz.ObjectInspection.Application.Administration.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Super.Paula.Application.Administration;
+namespace ChristianSchulz.ObjectInspection.Application.Administration;
 
 public class InspectorAvatarStream : Stream
 {

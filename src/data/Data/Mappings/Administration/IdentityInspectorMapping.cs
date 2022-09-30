@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Super.Paula.Application.Administration;
+using ChristianSchulz.ObjectInspection.Application.Administration;
 
-namespace Super.Paula.Data.Mappings.Administration;
+namespace ChristianSchulz.ObjectInspection.Data.Mappings.Administration;
 
 public class IdentityInspectorMapping : IEntityTypeConfiguration<IdentityInspector>
 {

@@ -1,6 +1,6 @@
 ﻿@page "/sign-in"
-@using Super.Paula.Application.Authentication
-@using Super.Paula.Application.Authentication.Requests
+@using ChristianSchulz.ObjectInspection.Application.Authentication
+@using ChristianSchulz.ObjectInspection.Application.Authentication.Requests
 
 @layout UnauthorizedLayout
 
@@ -21,70 +21,70 @@
         <InputText class="form-control" id="identityUniqueName" @bind-Value="model.Identity" placeholder="@Translator[$"Identity"]" />
         <label for="identityUniqueName">@Translator[$"Identity"]</label>
         @if(IsDemo)
-        {
-            <small class="form-text text-muted">@Translator.Markdown($"Please feel free to use the demo identity *{AppSettings.DemoIdentity}*")</small>    
-        }
+    {
+        <small class="form-text text-muted">@Translator.Markdown($"Please feel free to use the demo identity *{AppSettings.DemoIdentity}*")</small>    
+    }
     </div>
     
     <div class="form-floating mb-3 text-start">
         <InputText class="form-control" id="identitySecret" @bind-Value="model.Secret" type="password" placeholder="@Translator[$"Password"]" />
         <label for="identitySecret">@Translator[$"Password"]</label>
         @if (IsDemo)
-        {
-            <small class="form-text text-muted">@Translator.Markdown($"The demo identity password is *{AppSettings.DemoPassword}*")</small>
-        }
+    {
+        <small class="form-text text-muted">@Translator.Markdown($"The demo identity password is *{AppSettings.DemoPassword}*")</small>
+    }
     </div>
 
    
     @if(context.GetValidationMessages().Any())
-    {
-        <div class="card card-body tex-wrap">
+{
+    <div class="card card-body tex-wrap">
             <ValidationSummary />    
         </div>
-    }
-    else
-    {
-        <button id="submit"
+}
+else
+{
+    <button id="submit"
                 type="submit"
                 class="w-100 btn btn-lg btn-primary">
             @Translator[$"Sign in"]
         </button>
-        <small class="form-text text-muted"><a href="register">@Translator[$"Sign up"]</a></small>
-    }
+    <small class="form-text text-muted"><a href="register">@Translator[$"Sign up"]</a></small>
+}
 </EditForm>
 
 @code {
 
-    public class SignInModel
+public class SignInModel
+{
+    [Required]
+    [KebabCase]
+    [StringLength(140)]
+    [UniqueName]
+    public string Identity { get; set; } = string.Empty;
+
+    [Required]
+    [StringLength(140)]
+    public string Secret { get; set; } = string.Empty;
+}
+
+private SignInModel model = new SignInModel();
+
+private bool IsDemo =>
+    !string.IsNullOrWhiteSpace(AppSettings.DemoIdentity) &&
+    !string.IsNullOrWhiteSpace(AppSettings.DemoPassword);
+
+
+private async Task OnValidSubmitAsync()
+{
+    var request = new SignInIdentityRequest
     {
-        [Required]
-        [KebabCase]
-        [StringLength(140)]
-        [UniqueName]
-        public string Identity { get; set; } = string.Empty;
+        Secret = model.Secret
+    };
 
-        [Required]
-        [StringLength(140)]
-        public string Secret { get; set; } = string.Empty;
-    }
+    await AuthenticationHandler.SignInAsync(model.Identity, request);
 
-    private SignInModel model = new SignInModel();
-
-    private bool IsDemo =>
-        !string.IsNullOrWhiteSpace(AppSettings.DemoIdentity) &&
-        !string.IsNullOrWhiteSpace(AppSettings.DemoPassword);
-
-
-    private async Task OnValidSubmitAsync()
-    {
-        var request = new SignInIdentityRequest
-        {
-            Secret = model.Secret
-        };
-
-        await AuthenticationHandler.SignInAsync(model.Identity, request);
-
-        NavigationManager.NavigateTo("/inspectors/sign-in");
-    }
+    NavigationManager.NavigateTo("/inspectors/sign-in");
+}
 
 }

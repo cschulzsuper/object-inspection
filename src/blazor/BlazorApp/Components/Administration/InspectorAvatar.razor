@@ -1,4 +1,4 @@
-﻿@using Super.Paula.Client.Security
+﻿@using ChristianSchulz.ObjectInspection.Client.Security
 
 @inject AppSettings AppSettings
 @inject BadgeStorage BadgeStorage
@@ -9,74 +9,74 @@
 }
 else
 {
-    if (_badge != null)
-    {
-        <img id="avatar" class="rounded-circle @CssClass" height="@Size" width="@Size" src="@GetImageUrl()"/>
-    }
+if (_badge != null)
+{
+    <img id="avatar" class="rounded-circle @CssClass" height="@Size" width="@Size" src="@GetImageUrl()"/>
+}
 }
 
 @inject IInspectorAvatarRequestHandler FileBlobHandler
 
 @code {
 
-    private string? _badge = null;
+private string? _badge = null;
 
-    private string? _avatar = null;
+private string? _avatar = null;
 
-    [Parameter]
-    public IBrowserFile? Src { get; set; } = null;
+[Parameter]
+public IBrowserFile? Src { get; set; } = null;
 
-    [Parameter]
-    public string Inspector { get; set; } = "me";
+[Parameter]
+public string Inspector { get; set; } = "me";
 
-    [Parameter]
-    public int Size { get; set; } = 32;
+[Parameter]
+public int Size { get; set; } = 32;
 
-    [Parameter]
-    public string CssClass { get; set; } = string.Empty;
+[Parameter]
+public string CssClass { get; set; } = string.Empty;
 
-    protected override async Task OnInitializedAsync()
+protected override async Task OnInitializedAsync()
+{
+    _badge = await BadgeStorage.GetOrDefaultAsync();
+
+    await base.OnInitializedAsync();
+}
+
+private string GetImageUrl()
+    => $"{AppSettings.Server}inspectors/{Inspector}/avatar?access_token={_badge}";
+
+protected override async Task OnParametersSetAsync()
+{
+    await GenerateAvatarAsync();
+    await base.OnParametersSetAsync();
+}
+
+private async Task GenerateAvatarAsync()
+{
+    using var avatarStream = GetFromSrc();
+
+    if (avatarStream == null)
     {
-        _badge = await BadgeStorage.GetOrDefaultAsync();
-
-        await base.OnInitializedAsync();
+        return;
     }
 
-    private string GetImageUrl()
-        => $"{AppSettings.Server}inspectors/{Inspector}/avatar?access_token={_badge}";
+    using var memoryStream = new MemoryStream();
 
-    protected override async Task OnParametersSetAsync()
+    await avatarStream.CopyToAsync(memoryStream);
+
+    var imageBytes = memoryStream.ToArray();
+    var imageSrc = Convert.ToBase64String(imageBytes);
+    _avatar = string.Format("data:image/jpg;base64,{0}", imageSrc);
+}
+
+private Stream? GetFromSrc()
+{
+    if (Src != null)
     {
-        await GenerateAvatarAsync();
-        await base.OnParametersSetAsync();
+        return Src.OpenReadStream();
     }
 
-    private async Task GenerateAvatarAsync()
-    {
-        using var avatarStream = GetFromSrc();
-
-        if (avatarStream == null)
-        {
-            return;
-        }
-
-        using var memoryStream = new MemoryStream();
-
-        await avatarStream.CopyToAsync(memoryStream);
-
-        var imageBytes = memoryStream.ToArray();
-        var imageSrc = Convert.ToBase64String(imageBytes);
-        _avatar = string.Format("data:image/jpg;base64,{0}", imageSrc);
-    }
-
-    private Stream? GetFromSrc()
-    {
-        if (Src != null)
-        {
-            return Src.OpenReadStream();
-        }
-
-        return null;
-    }
+    return null;
+}
 
 }

@@ -1,16 +1,15 @@
 ﻿using System.Text.Json;
-using Super.Paula.Shared.JsonConversion;
+using ChristianSchulz.ObjectInspection.Shared.JsonConversion;
 
-namespace Super.Paula.Shared.Security
+namespace ChristianSchulz.ObjectInspection.Shared.Security;
+
+public static class ClaimsJsonSerializerOptions
 {
-    public static class ClaimsJsonSerializerOptions
-    {
-        public static readonly JsonSerializerOptions Options;
+    public static readonly JsonSerializerOptions Options;
 
-        static ClaimsJsonSerializerOptions()
-        {
-            Options = new JsonSerializerOptions(CustomJsonSerializerOptions.Default);
-            Options.Converters.Add(new ClaimsJsonConverter());
-        }
+    static ClaimsJsonSerializerOptions()
+    {
+        Options = new JsonSerializerOptions(CustomJsonSerializerOptions.Default);
+        Options.Converters.Add(new ClaimsJsonConverter());
     }
 }

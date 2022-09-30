@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 
-namespace Super.Paula.Application.Administration;
+namespace ChristianSchulz.ObjectInspection.Application.Administration;
 
 public class OrganizationQueries : IOrganizationQueries
 {

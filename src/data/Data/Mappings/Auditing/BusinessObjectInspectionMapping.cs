@@ -1,16 +1,16 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Super.Paula.Application.Auditing;
+using ChristianSchulz.ObjectInspection.Application.Auditing;
 
-namespace Super.Paula.Data.Mappings.Auditing;
+namespace ChristianSchulz.ObjectInspection.Data.Mappings.Auditing;
 
 public class BusinessObjectInspectionMapping : IEntityTypeConfiguration<BusinessObjectInspection>
 {
     public string PartitionKey = nameof(PartitionKey);
 
-    private readonly PaulaContextState _state;
+    private readonly ObjectInspectionContextState _state;
 
-    public BusinessObjectInspectionMapping(PaulaContextState state)
+    public BusinessObjectInspectionMapping(ObjectInspectionContextState state)
     {
         _state = state;
     }

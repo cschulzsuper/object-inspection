@@ -1,7 +1,7 @@
-﻿using Super.Paula.Application.Localization;
+﻿using ChristianSchulz.ObjectInspection.Application.Localization;
 using System.Globalization;
 
-namespace Super.Paula.Client.Localization;
+namespace ChristianSchulz.ObjectInspection.Client.Localization;
 
 public class TranslationRequestHandlerFactory
 {

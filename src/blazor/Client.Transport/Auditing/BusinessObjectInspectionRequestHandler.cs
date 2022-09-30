@@ -1,8 +1,8 @@
-﻿using Super.Paula.Application.Auditing;
-using Super.Paula.Application.Auditing.Requests;
-using Super.Paula.Application.Auditing.Responses;
-using Super.Paula.Shared.Environment;
-using Super.Paula.Shared.ErrorHandling;
+﻿using ChristianSchulz.ObjectInspection.Application.Auditing;
+using ChristianSchulz.ObjectInspection.Application.Auditing.Requests;
+using ChristianSchulz.ObjectInspection.Application.Auditing.Responses;
+using ChristianSchulz.ObjectInspection.Shared.Environment;
+using ChristianSchulz.ObjectInspection.Shared.ErrorHandling;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -10,7 +10,7 @@ using System.Net.Http.Json;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace Super.Paula.Client.Auditing;
+namespace ChristianSchulz.ObjectInspection.Client.Auditing;
 
 public class BusinessObjectInspectionRequestHandler : IBusinessObjectInspectionRequestHandler
 {
@@ -124,14 +124,14 @@ public class BusinessObjectInspectionRequestHandler : IBusinessObjectInspectionR
         return (await responseMessage.Content.ReadFromJsonAsync<BusinessObjectInspectionAuditResponse>())!;
     }
 
-    public async ValueTask<BusinessObjectInspectionAuditScheduleResponse> ReplaceAuditScheduleAsync(string businessObject, string inspection, BusinessObjectInspectionAuditScheduleRequest request)
+    public async ValueTask<ReplaceBusinessObjectInspectionAuditScheduleResponse> ReplaceAuditScheduleAsync(string businessObject, string inspection, BusinessObjectInspectionAuditScheduleRequest request)
     {
         var responseMessage = await _httpClient.PostAsJsonAsync($"business-objects/{businessObject}/inspections/{inspection}/replace-audit-schedule", request);
 
         responseMessage.RuleOutProblems();
         responseMessage.EnsureSuccessStatusCode();
 
-        return (await responseMessage.Content.ReadFromJsonAsync<BusinessObjectInspectionAuditScheduleResponse>())!;
+        return (await responseMessage.Content.ReadFromJsonAsync<ReplaceBusinessObjectInspectionAuditScheduleResponse>())!;
     }
 
 

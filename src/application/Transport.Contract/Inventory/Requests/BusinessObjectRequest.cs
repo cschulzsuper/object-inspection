@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
-using Super.Paula.Shared.Validation;
+using ChristianSchulz.ObjectInspection.Shared.Validation;
 
-namespace Super.Paula.Application.Inventory.Requests;
+namespace ChristianSchulz.ObjectInspection.Application.Inventory.Requests;
 
 [JsonConverter(typeof(BusinessObjectRequestJsonConverter))]
 public class BusinessObjectRequest

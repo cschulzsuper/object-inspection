@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Super.Paula.Application.Operation.Exceptions;
+namespace ChristianSchulz.ObjectInspection.Application.Operation.Exceptions;
 
 public class ExtensionNotFoundException : Exception
 {

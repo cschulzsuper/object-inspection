@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.SignalR.Client;
-using Super.Paula.Shared.Environment;
+using ChristianSchulz.ObjectInspection.Shared.Environment;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Super.Paula.Client;
+namespace ChristianSchulz.ObjectInspection.Client;
 
 internal sealed class Receiver : IAsyncDisposable
 {

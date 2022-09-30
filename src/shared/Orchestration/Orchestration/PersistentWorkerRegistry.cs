@@ -1,13 +1,13 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Super.Paula.Application.Orchestration;
+using ChristianSchulz.ObjectInspection.Application.Orchestration;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Super.Paula.Shared.Orchestration;
+namespace ChristianSchulz.ObjectInspection.Shared.Orchestration;
 
 public class PersistentWorkerRegistry : IWorkerRegistry
 {

@@ -1,20 +1,20 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Super.Paula.Shared.Environment;
+using ChristianSchulz.ObjectInspection.Shared.Environment;
 
-namespace Super.Paula.Data;
+namespace ChristianSchulz.ObjectInspection.Data;
 
 public class RepositoryCreator : IRepositoryCreator
 {
-    private readonly PaulaContexts _paulaContexts;
+    private readonly ObjectInspectionContexts _objectInspectionContexts;
 
     private readonly AppSettings _appSettings;
 
     public RepositoryCreator(
-        PaulaContexts paulaContexts,
+        ObjectInspectionContexts objectInspectionContexts,
         AppSettings appSettings)
     {
-        _paulaContexts = paulaContexts;
+        _objectInspectionContexts = objectInspectionContexts;
         _appSettings = appSettings;
     }
 
@@ -22,9 +22,9 @@ public class RepositoryCreator : IRepositoryCreator
     {
         // Only Operation needs to be created as Application uses the same container
 
-        var paulaOperationContext = _paulaContexts.Operation;
+        var operationContext = _objectInspectionContexts.Operation;
 
-        var cosmosClient = paulaOperationContext.Database.GetCosmosClient();
+        var cosmosClient = operationContext.Database.GetCosmosClient();
         var cosmosDatabase = cosmosClient.GetDatabase(_appSettings.CosmosDatabase);
 
         await cosmosDatabase.CreateContainerIfNotExistsAsync(organization, "/partitionKey");
@@ -34,9 +34,9 @@ public class RepositoryCreator : IRepositoryCreator
     {
         // Only Operation needs to be destroyed as Application uses the same container
 
-        var paulaOperationContext = _paulaContexts.Operation;
+        var operationContext = _objectInspectionContexts.Operation;
 
-        var cosmosClient = paulaOperationContext.Database.GetCosmosClient();
+        var cosmosClient = operationContext.Database.GetCosmosClient();
         var cosmosDatabase = cosmosClient.GetDatabase(_appSettings.CosmosDatabase);
 
         var cosmosContainer = cosmosDatabase.GetContainer(organization);

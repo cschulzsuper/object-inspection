@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace Super.Paula.Client.Components.Forms;
+namespace ChristianSchulz.ObjectInspection.Client.Components.Forms;
 
 public class AuthorizedButton : ComponentBase
 {

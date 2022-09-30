@@ -3,12 +3,12 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.JSInterop;
-using Super.Paula.Client.Configuration;
-using Super.Paula.Client.Storage;
+using ChristianSchulz.ObjectInspection.Client.Configuration;
+using ChristianSchulz.ObjectInspection.Client.Storage;
 using System.Globalization;
 using System.Threading.Tasks;
 
-namespace Super.Paula.Client;
+namespace ChristianSchulz.ObjectInspection.Client;
 
 public static class Program
 {

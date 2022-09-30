@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Super.Paula.Data.Mappings;
+using ChristianSchulz.ObjectInspection.Data.Mappings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,16 +7,16 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Super.Paula.Data;
+namespace ChristianSchulz.ObjectInspection.Data;
 
 public class Repository<TEntity> : IRepository<TEntity>
     where TEntity : class
 {
-    private readonly PaulaContext _repositoryContext;
-    private readonly PaulaContextState _appState;
+    private readonly ObjectInspectionContext _repositoryContext;
+    private readonly ObjectInspectionContextState _appState;
     private readonly IPartitionKeyValueGenerator<TEntity> _partitionKeyValueGenerator;
 
-    public Repository(PaulaContext repositoryContext, PaulaContextState appState, IPartitionKeyValueGenerator<TEntity> partitionKeyValueGenerator)
+    public Repository(ObjectInspectionContext repositoryContext, ObjectInspectionContextState appState, IPartitionKeyValueGenerator<TEntity> partitionKeyValueGenerator)
     {
         _repositoryContext = repositoryContext;
         _appState = appState;

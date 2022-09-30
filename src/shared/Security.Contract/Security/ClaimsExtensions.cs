@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Security.Claims;
 
-namespace Super.Paula.Shared.Security;
+namespace ChristianSchulz.ObjectInspection.Shared.Security;
 
 public static class ClaimsExtensions
 {

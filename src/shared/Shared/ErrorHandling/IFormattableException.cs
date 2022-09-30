@@ -1,4 +1,4 @@
-﻿namespace Super.Paula.Shared.ErrorHandling;
+﻿namespace ChristianSchulz.ObjectInspection.Shared.ErrorHandling;
 
 public interface IFormattableException
 {

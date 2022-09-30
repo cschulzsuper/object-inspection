@@ -1,13 +1,13 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.Playwright;
-using Super.Paula.Shared.Environment;
-using Super.Paula.Templates.Playwright.AdventureTours.Environment;
-using Super.Paula.Templates.Playwright.Auth;
-using Super.Paula.Templates.Playwright.Administration;
+using ChristianSchulz.ObjectInspection.Shared.Environment;
+using ChristianSchulz.ObjectInspection.Templates.Playwright.AdventureTours.Environment;
+using ChristianSchulz.ObjectInspection.Templates.Playwright.Auth;
+using ChristianSchulz.ObjectInspection.Templates.Playwright.Administration;
 
 using Playwright = Microsoft.Playwright;
 
-namespace Super.Paula.Templates.Playwright.AdventureTours.Steps;
+namespace ChristianSchulz.ObjectInspection.Templates.Playwright.AdventureTours.Steps;
 
 public sealed class InitializationAdministration : IStep
 {

@@ -1,4 +1,4 @@
-﻿namespace Super.Paula.Application.Guidelines;
+﻿namespace ChristianSchulz.ObjectInspection.Application.Guidelines;
 
 public class Inspection
 {

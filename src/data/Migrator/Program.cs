@@ -1,12 +1,12 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Super.Paula.Data;
-using Super.Paula.Migrator.Steps;
-using Super.Paula.Shared;
+using ChristianSchulz.ObjectInspection.Data;
+using ChristianSchulz.ObjectInspection.Migrator.Steps;
+using ChristianSchulz.ObjectInspection.Shared;
 using System.Threading.Tasks;
 
-namespace Super.Paula.Migrator;
+namespace ChristianSchulz.ObjectInspection.Migrator;
 
 public class Program
 {

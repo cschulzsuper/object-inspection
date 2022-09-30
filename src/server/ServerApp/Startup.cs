@@ -7,21 +7,20 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Super.Paula.Application.Operation;
-using Super.Paula.Shared.ErrorHandling;
-using Super.Paula.Shared.Validation;
+using ChristianSchulz.ObjectInspection.Application.Operation;
+using ChristianSchulz.ObjectInspection.Shared.ErrorHandling;
+using ChristianSchulz.ObjectInspection.Shared.Validation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
-using System.Text.Json.Serialization.Metadata;
 using System.Threading.Tasks;
-using Super.Paula.Server.Swagger;
-using Super.Paula.Shared.JsonConversion;
-using Super.Paula.Server.SwaggerGen;
-using Super.Paula.Server.SwaggerUI;
+using ChristianSchulz.ObjectInspection.Server.Swagger;
+using ChristianSchulz.ObjectInspection.Shared.JsonConversion;
+using ChristianSchulz.ObjectInspection.Server.SwaggerGen;
+using ChristianSchulz.ObjectInspection.Server.SwaggerUI;
 
-namespace Super.Paula.Server;
+namespace ChristianSchulz.ObjectInspection.Server;
 
 public class Startup
 {
@@ -54,7 +53,7 @@ public class Startup
         services.AddCors(options =>
             options.AddDefaultPolicy(policy =>
             {
-                var client = _configuration["Paula:Client"];
+                var client = _configuration["ObjectInspection:Client"];
 
                 if (client != null)
                 {
@@ -83,7 +82,7 @@ public class Startup
         {
             app.UseSwaggerUI(options =>
             {
-                options.SwaggerEndpoint("/swagger/v1/swagger.json", "Super.Paula.Server V1");
+                options.SwaggerEndpoint("/swagger/v1/swagger.json", "ChristianSchulz.ObjectInspection.Server V1");
                 options.UseAccessTokenRequestInterceptor();
             });
         }

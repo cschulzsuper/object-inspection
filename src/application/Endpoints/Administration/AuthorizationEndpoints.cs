@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Routing;
-using Super.Paula.Application.Administration.Requests;
+using ChristianSchulz.ObjectInspection.Application.Administration.Requests;
 using System;
 
-namespace Super.Paula.Application.Administration;
+namespace ChristianSchulz.ObjectInspection.Application.Administration;
 
 public static class AuthorizationEndpoints
 {

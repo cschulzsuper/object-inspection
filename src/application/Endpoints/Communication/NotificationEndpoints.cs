@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
-using Super.Paula.Application.Communication.Requests;
+using ChristianSchulz.ObjectInspection.Application.Communication.Requests;
 using System;
 
-namespace Super.Paula.Application.Communication;
+namespace ChristianSchulz.ObjectInspection.Application.Communication;
 
 public static class NotificationEndpoints
 {

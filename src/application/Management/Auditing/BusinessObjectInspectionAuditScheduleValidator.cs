@@ -1,9 +1,9 @@
-﻿using Super.Paula.Shared.Validation;
+﻿using ChristianSchulz.ObjectInspection.Shared.Validation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Super.Paula.Application.Auditing;
+namespace ChristianSchulz.ObjectInspection.Application.Auditing;
 
 public static class BusinessObjectInspectionAuditScheduleValidator
 {

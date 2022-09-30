@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
-using Super.Paula.Application.Administration;
-using Super.Paula.BadgeSecurity;
-using Super.Paula.Shared.Environment;
-using Super.Paula.Shared.Security;
+using ChristianSchulz.ObjectInspection.Application.Administration;
+using ChristianSchulz.ObjectInspection.BadgeSecurity;
+using ChristianSchulz.ObjectInspection.Shared.Environment;
+using ChristianSchulz.ObjectInspection.Shared.Security;
 
-namespace Super.Paula.Server.Security;
+namespace ChristianSchulz.ObjectInspection.Server.Security;
 
 public class BadgeClaimsFilter : IBadgeClaimsFilter
 {

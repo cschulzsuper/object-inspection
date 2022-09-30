@@ -1,10 +1,10 @@
 ﻿using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Super.Paula.BadgeSecurity;
-using Super.Paula.Shared.Security;
+using ChristianSchulz.ObjectInspection.BadgeSecurity;
+using ChristianSchulz.ObjectInspection.Shared.Security;
 
-namespace Super.Paula.Application.Administration;
+namespace ChristianSchulz.ObjectInspection.Application.Administration;
 
 public class AuthorizationRequestHandler : IAuthorizationRequestHandler
 {

@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 
-namespace Super.Paula.Client
-{
-    public delegate Task<string?> ReceiverAccessTokenProvider();
-}
+namespace ChristianSchulz.ObjectInspection.Client;
+
+public delegate Task<string?> ReceiverAccessTokenProvider();

@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Super.Paula.Shared.Validation;
+using ChristianSchulz.ObjectInspection.Shared.Validation;
 
-namespace Super.Paula.Application.Authentication.Requests;
+namespace ChristianSchulz.ObjectInspection.Application.Authentication.Requests;
 
 public class RegisterIdentityRequest
 {

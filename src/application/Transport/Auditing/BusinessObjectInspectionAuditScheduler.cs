@@ -1,10 +1,10 @@
 ﻿using Cronos;
-using Super.Paula.Shared;
+using ChristianSchulz.ObjectInspection.Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Super.Paula.Application.Auditing;
+namespace ChristianSchulz.ObjectInspection.Application.Auditing;
 
 internal class BusinessObjectInspectionAuditScheduler : IBusinessObjectInspectionAuditScheduler
 {

@@ -2,12 +2,12 @@
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Microsoft.Extensions.Azure;
-using Super.Paula.BlobStorage.Exceptions;
+using ChristianSchulz.ObjectInspection.BlobStorage.Exceptions;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Super.Paula.BlobStorage;
+namespace ChristianSchulz.ObjectInspection.BlobStorage;
 
 public class BlobStorage : IBlobStorage
 {
@@ -15,7 +15,7 @@ public class BlobStorage : IBlobStorage
 
     public BlobStorage(IAzureClientFactory<BlobServiceClient> blobClientFactory)
     {
-        _blobServiceClient = blobClientFactory.CreateClient("PaulaBlobStorage");
+        _blobServiceClient = blobClientFactory.CreateClient("ObjectInspectionBlobStorage");
     }
 
     public async ValueTask<Stream> ReadAsync(string path)

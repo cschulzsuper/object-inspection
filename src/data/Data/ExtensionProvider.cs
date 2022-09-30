@@ -1,10 +1,9 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Super.Paula.Application.Operation;
+using ChristianSchulz.ObjectInspection.Application.Operation;
 using System;
 using System.Linq;
-using System.Runtime.CompilerServices;
 
-namespace Super.Paula.Data;
+namespace ChristianSchulz.ObjectInspection.Data;
 
 public class ExtensionProvider
 {
@@ -32,7 +31,7 @@ public class ExtensionProvider
         };
 
         var extension = _services
-                .GetRequiredService<PaulaContexts>().Operation
+                .GetRequiredService<ObjectInspectionContexts>().Operation
                 .Set<Extension>()
                 .SingleOrDefault(x => x.AggregateType == aggregateType);
 

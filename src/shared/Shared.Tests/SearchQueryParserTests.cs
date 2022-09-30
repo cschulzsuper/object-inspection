@@ -2,7 +2,7 @@
 using System.Linq;
 using Xunit;
 
-namespace Super.Paula.Shared.Tests;
+namespace ChristianSchulz.ObjectInspection.Shared.Tests;
 
 public class SearchQueryParserTests
 {

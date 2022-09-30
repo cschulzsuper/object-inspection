@@ -1,11 +1,11 @@
-﻿using Super.Paula.Application.Administration;
-using Super.Paula.Shared.Environment;
-using Super.Paula.Shared.ErrorHandling;
+﻿using ChristianSchulz.ObjectInspection.Application.Administration;
+using ChristianSchulz.ObjectInspection.Shared.Environment;
+using ChristianSchulz.ObjectInspection.Shared.ErrorHandling;
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace Super.Paula.Client.Administration;
+namespace ChristianSchulz.ObjectInspection.Client.Administration;
 
 public class AuthorizationRequestHandler : IAuthorizationRequestHandler
 {

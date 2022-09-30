@@ -1,7 +1,7 @@
-﻿using Super.Paula.Shared.Validation;
+﻿using ChristianSchulz.ObjectInspection.Shared.Validation;
 using System;
 
-namespace Super.Paula.Application.Operation;
+namespace ChristianSchulz.ObjectInspection.Application.Operation;
 
 public static class ExtensionFieldValidator
 {

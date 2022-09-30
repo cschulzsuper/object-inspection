@@ -1,7 +1,7 @@
-﻿using Super.Paula.Shared.Validation;
+﻿using ChristianSchulz.ObjectInspection.Shared.Validation;
 using System;
 
-namespace Super.Paula.Application.Communication;
+namespace ChristianSchulz.ObjectInspection.Application.Communication;
 
 public static class NotificationValidator
 {

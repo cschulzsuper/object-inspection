@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace Super.Paula.Application.Inventory.Responses;
+namespace ChristianSchulz.ObjectInspection.Application.Inventory.Responses;
 
 [JsonConverter(typeof(BusinessObjectResponseJsonConverter))]
 public class BusinessObjectResponse

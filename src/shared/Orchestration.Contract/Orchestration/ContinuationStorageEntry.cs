@@ -1,5 +1,5 @@
 ﻿using System.Security.Claims;
 
-namespace Super.Paula.Shared.Orchestration;
+namespace ChristianSchulz.ObjectInspection.Shared.Orchestration;
 
 public record ContinuationStorageEntry(ContinuationBase Continuation, ClaimsPrincipal User);

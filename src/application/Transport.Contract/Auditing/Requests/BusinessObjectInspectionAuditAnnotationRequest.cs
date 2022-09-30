@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Super.Paula.Application.Auditing.Requests;
+namespace ChristianSchulz.ObjectInspection.Application.Auditing.Requests;
 
 public class BusinessObjectInspectionAuditAnnotationRequest
 {

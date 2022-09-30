@@ -5,7 +5,7 @@
 {
     <div class="alert alert-info d-none d-md-block text-wrap rounded-0">
         <p>
-            <strong>@Translator.Markdown($"You are accessing *{"Paula"}* in a restricted demo mode. ")</strong>
+            <strong>@Translator.Markdown($"You are accessing the *{"Object Inspection"}* in a restricted demo mode. ")</strong>
         </p>
         <span>
             @ChildContent
@@ -16,21 +16,21 @@
 @code {
 
 
-    [Parameter]
-    public RenderFragment ChildContent { get; set; } = null!;
+[Parameter]
+public RenderFragment ChildContent { get; set; } = null!;
 
-    [CascadingParameter]
-    private Task<AuthenticationState> AuthenticationState { get; set; } = null!;
+[CascadingParameter]
+private Task<AuthenticationState> AuthenticationState { get; set; } = null!;
 
-    public bool _showDemo = false;
+public bool _showDemo = false;
 
-    protected override async Task OnParametersSetAsync()
+protected override async Task OnParametersSetAsync()
+{
+    var user = (await AuthenticationState).User;
+    if (user.Claims.HasIdentity())
     {
-        var user = (await AuthenticationState).User;
-        if (user.Claims.HasIdentity())
-        {
-            _showDemo = user.Claims.GetIdentity() == AppSettings.DemoIdentity;
-        }
+        _showDemo = user.Claims.GetIdentity() == AppSettings.DemoIdentity;
     }
+}
 
 }

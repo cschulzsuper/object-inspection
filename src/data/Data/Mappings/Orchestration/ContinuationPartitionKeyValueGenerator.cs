@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.ValueGeneration;
-using Super.Paula.Application.Orchestration;
+using ChristianSchulz.ObjectInspection.Application.Orchestration;
 using System.Collections.Generic;
 
-namespace Super.Paula.Data.Mappings.Orchestration;
+namespace ChristianSchulz.ObjectInspection.Data.Mappings.Orchestration;
 
 public class ContinuationPartitionKeyValueGenerator : ValueGenerator<string>, IPartitionKeyValueGenerator<Continuation>
 {
@@ -11,12 +11,12 @@ public class ContinuationPartitionKeyValueGenerator : ValueGenerator<string>, IP
 
     public override string Next(EntityEntry entry)
         => Value(
-            (entry.Context as PaulaContext)!.State,
+            (entry.Context as ObjectInspectionContext)!.State,
             (entry.Entity as Continuation)!);
 
-    public string Value(PaulaContextState state, Continuation entity)
+    public string Value(ObjectInspectionContextState state, Continuation entity)
         => $"continuation";
 
-    public string Value(PaulaContextState state, Queue<object> partitionKeyComponents)
+    public string Value(ObjectInspectionContextState state, Queue<object> partitionKeyComponents)
         => $"continuation";
 }

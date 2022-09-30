@@ -1,11 +1,11 @@
-﻿using Super.Paula.Shared.ErrorHandling;
+﻿using ChristianSchulz.ObjectInspection.Shared.ErrorHandling;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Super.Paula.Data;
+namespace ChristianSchulz.ObjectInspection.Data;
 
 public interface IRepository<TEntity>
     where TEntity : class

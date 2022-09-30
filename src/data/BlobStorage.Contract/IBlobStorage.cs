@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
 
-namespace Super.Paula.BlobStorage;
+namespace ChristianSchulz.ObjectInspection.BlobStorage;
 
 public interface IBlobStorage
 {

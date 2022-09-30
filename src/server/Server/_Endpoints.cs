@@ -1,16 +1,16 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
-using Super.Paula.Application.Administration;
-using Super.Paula.Application.Auditing;
-using Super.Paula.Application.Communication;
-using Super.Paula.Application.Guidelines;
-using Super.Paula.Application.Inventory;
-using Super.Paula.Application.Operation;
-using Super.Paula.Application.SignalR;
+using ChristianSchulz.ObjectInspection.Application.Administration;
+using ChristianSchulz.ObjectInspection.Application.Auditing;
+using ChristianSchulz.ObjectInspection.Application.Communication;
+using ChristianSchulz.ObjectInspection.Application.Guidelines;
+using ChristianSchulz.ObjectInspection.Application.Inventory;
+using ChristianSchulz.ObjectInspection.Application.Operation;
+using ChristianSchulz.ObjectInspection.Application.SignalR;
 using System.Diagnostics.CodeAnalysis;
-using Super.Paula.Application.Authentication;
+using ChristianSchulz.ObjectInspection.Application.Authentication;
 
-namespace Super.Paula.Server;
+namespace ChristianSchulz.ObjectInspection.Server;
 
 [SuppressMessage("Style", "IDE1006")]
 public static class _Endpoints

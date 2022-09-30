@@ -1,7 +1,7 @@
-﻿using Super.Paula.Shared.Validation;
+﻿using ChristianSchulz.ObjectInspection.Shared.Validation;
 using System;
 
-namespace Super.Paula.Application.Administration;
+namespace ChristianSchulz.ObjectInspection.Application.Administration;
 
 public static class OrganizationValidator
 {

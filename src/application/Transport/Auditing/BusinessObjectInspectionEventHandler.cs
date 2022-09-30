@@ -1,10 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Super.Paula.Application.Guidelines.Events;
-using Super.Paula.Shared.Orchestration;
+using ChristianSchulz.ObjectInspection.Application.Guidelines.Events;
+using ChristianSchulz.ObjectInspection.Shared.Orchestration;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Super.Paula.Application.Auditing;
+namespace ChristianSchulz.ObjectInspection.Application.Auditing;
 
 public class BusinessObjectInspectionEventHandler : IBusinessObjectInspectionEventHandler
 {

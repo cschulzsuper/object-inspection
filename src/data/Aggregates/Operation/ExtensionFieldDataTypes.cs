@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Super.Paula.Application.Operation;
+namespace ChristianSchulz.ObjectInspection.Application.Operation;
 
 public static class ExtensionFieldDataTypes
 {

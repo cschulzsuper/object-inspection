@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Immutable;
 
-namespace Super.Paula.Application.Administration.Responses;
+namespace ChristianSchulz.ObjectInspection.Application.Administration.Responses;
 
 public class InspectorResponse
 {

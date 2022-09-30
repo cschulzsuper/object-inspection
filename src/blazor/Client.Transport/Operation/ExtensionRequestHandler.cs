@@ -1,9 +1,9 @@
-﻿using Super.Paula.Application.Operation;
-using Super.Paula.Application.Operation.Requests;
-using Super.Paula.Application.Operation.Responses;
-using Super.Paula.Shared.Environment;
-using Super.Paula.Shared.ErrorHandling;
-using Super.Paula.Shared.JsonConversion;
+﻿using ChristianSchulz.ObjectInspection.Application.Operation;
+using ChristianSchulz.ObjectInspection.Application.Operation.Requests;
+using ChristianSchulz.ObjectInspection.Application.Operation.Responses;
+using ChristianSchulz.ObjectInspection.Shared.Environment;
+using ChristianSchulz.ObjectInspection.Shared.ErrorHandling;
+using ChristianSchulz.ObjectInspection.Shared.JsonConversion;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -11,9 +11,9 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Super.Paula.Application.Operation.Exceptions;
+using ChristianSchulz.ObjectInspection.Application.Operation.Exceptions;
 
-namespace Super.Paula.Client.Operation;
+namespace ChristianSchulz.ObjectInspection.Client.Operation;
 
 public class ExtensionRequestHandler : IExtensionRequestHandler
 {

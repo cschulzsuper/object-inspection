@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.OpenApi.Models;
-using Super.Paula.Shared.Security;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace Super.Paula.Server.SwaggerGen;
+namespace ChristianSchulz.ObjectInspection.Server.SwaggerGen;
 
 public class TokenAuthorizationOperationFilter : IOperationFilter
 {

@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace Super.Paula.Server.SwaggerGen
+namespace ChristianSchulz.ObjectInspection.Server.SwaggerGen;
+
+public class PreSerializeDocumentFilterContext
 {
-    public class PreSerializeDocumentFilterContext
-    {
-        public required HttpContext HttpContext { get; init; }
-    }
+    public required HttpContext HttpContext { get; init; }
 }

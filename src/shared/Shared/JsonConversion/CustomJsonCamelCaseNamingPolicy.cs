@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 
-namespace Super.Paula.Shared.JsonConversion;
+namespace ChristianSchulz.ObjectInspection.Shared.JsonConversion;
 
 public class CustomJsonCamelCaseNamingPolicy : JsonNamingPolicy
 {

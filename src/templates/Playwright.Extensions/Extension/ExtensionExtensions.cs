@@ -1,7 +1,7 @@
 ﻿using Microsoft.Playwright;
 using System.Threading.Tasks;
 
-namespace Super.Paula.Templates.Playwright.Extension;
+namespace ChristianSchulz.ObjectInspection.Templates.Playwright.Extension;
 
 public static class ExtensionExtensions
 {

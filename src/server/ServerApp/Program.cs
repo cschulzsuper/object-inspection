@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
-namespace Super.Paula.Server;
+namespace ChristianSchulz.ObjectInspection.Server;
 
 public class Program
 {

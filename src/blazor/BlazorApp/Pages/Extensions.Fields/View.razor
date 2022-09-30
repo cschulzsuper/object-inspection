@@ -24,12 +24,12 @@
 <div class="table-responsive">
 
     @if (_extension == null)
-    {
-        <p><em>Loading...</em></p>
-    }
-    else
-    {
-        <table class="table table-striped table-sm">
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table table-striped table-sm">
             <thead>
             <tr>
                 <th scope="col" class="col-4 col-sm-3">@Translator[$"Unique name"]</th>
@@ -41,8 +41,8 @@
             </thead>
             <tbody>
             @foreach (var extensionField in _extension.Fields)
-            {
-                <tr>
+        {
+            <tr>
                     <td>@extensionField.UniqueName</td>
                     <td>@extensionField.DisplayName</td>
                     <td>@extensionField.DataType</td>
@@ -53,40 +53,40 @@
                     </td>
 
                 </tr>
-            }
+        }
             </tbody>
         </table>
-    }
+}
 
 </div>
 
 @code {
 
-    [Parameter]
-    public string AggregateType { get; set; } = string.Empty;
+[Parameter]
+public string AggregateType { get; set; } = string.Empty;
 
-    private ExtensionResponse? _extension;
+private ExtensionResponse? _extension;
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+protected override async Task OnAfterRenderAsync(bool firstRender)
+{
+    if (firstRender)
     {
-        if (firstRender)
-        {
-            _extension = await ExtensionRequestHandler.GetAsync(AggregateType);
+        _extension = await ExtensionRequestHandler.GetAsync(AggregateType);
 
-            StateHasChanged();
-        }
+        StateHasChanged();
     }
+}
 
-    public void Create()
-        => NavigationManager.NavigateTo("/extensions/{type}/fields/create");
+public void Create()
+    => NavigationManager.NavigateTo("/extensions/{type}/fields/create");
 
-    public async Task DeleteAsync(ExtensionFieldResponse field)
-    {
-        var response = await ExtensionRequestHandler.DeleteFieldAsync(_extension!.AggregateType, field.UniqueName, _extension!.ETag);
+public async Task DeleteAsync(ExtensionFieldResponse field)
+{
+    var response = await ExtensionRequestHandler.DeleteFieldAsync(_extension!.AggregateType, field.UniqueName, _extension!.ETag);
 
-        _extension.ETag = response.ETag;
+    _extension.ETag = response.ETag;
 
-        _extension!.Fields.Remove(field);
-    }
+    _extension!.Fields.Remove(field);
+}
 
 }

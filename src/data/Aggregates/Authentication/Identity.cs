@@ -1,4 +1,4 @@
-﻿namespace Super.Paula.Application.Authentication;
+﻿namespace ChristianSchulz.ObjectInspection.Application.Authentication;
 
 public class Identity
 {

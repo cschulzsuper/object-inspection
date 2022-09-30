@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Super.Paula.Shared;
+namespace ChristianSchulz.ObjectInspection.Shared;
 
 public static class SearchTermDictionaryExtensions
 {

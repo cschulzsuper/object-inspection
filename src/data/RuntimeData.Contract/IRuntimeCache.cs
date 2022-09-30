@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Super.Paula.RuntimeData;
+namespace ChristianSchulz.ObjectInspection.RuntimeData;
 
 public interface IRuntimeCache<TEntity>
     where TEntity : class, IRuntimeData

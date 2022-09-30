@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 
-namespace Super.Paula.RuntimeData;
+namespace ChristianSchulz.ObjectInspection.RuntimeData;
 
 public class RuntimeCache<TEntity> : IRuntimeCache<TEntity>
     where TEntity : class, IRuntimeData

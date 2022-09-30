@@ -1,8 +1,8 @@
-﻿using Super.Paula.Shared.ErrorHandling;
+﻿using ChristianSchulz.ObjectInspection.Shared.ErrorHandling;
 using System;
 using System.Collections.Generic;
 
-namespace Super.Paula.Shared.Validation;
+namespace ChristianSchulz.ObjectInspection.Shared.Validation;
 
 public class ValidationException : Exception, IFormattableException
 {

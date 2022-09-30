@@ -1,11 +1,11 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Super.Paula.Application.Administration.Events;
-using Super.Paula.Shared.Environment;
-using Super.Paula.Shared.Orchestration;
+using ChristianSchulz.ObjectInspection.Application.Administration.Events;
+using ChristianSchulz.ObjectInspection.Shared.Environment;
+using ChristianSchulz.ObjectInspection.Shared.Orchestration;
 using System.Threading.Tasks;
-using Super.Paula.Shared.Security;
+using ChristianSchulz.ObjectInspection.Shared.Security;
 
-namespace Super.Paula.Application.Operation;
+namespace ChristianSchulz.ObjectInspection.Application.Operation;
 
 public class ApplicationEventHandler : IApplicationEventHandler
 {

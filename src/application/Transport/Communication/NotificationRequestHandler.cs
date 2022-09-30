@@ -1,10 +1,10 @@
-﻿using Super.Paula.Application.Communication.Requests;
-using Super.Paula.Application.Communication.Responses;
+﻿using ChristianSchulz.ObjectInspection.Application.Communication.Requests;
+using ChristianSchulz.ObjectInspection.Application.Communication.Responses;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Super.Paula.Application.Communication;
+namespace ChristianSchulz.ObjectInspection.Application.Communication;
 
 public class NotificationRequestHandler : INotificationRequestHandler
 {

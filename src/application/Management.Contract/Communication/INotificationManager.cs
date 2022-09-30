@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Super.Paula.Application.Communication;
+namespace ChristianSchulz.ObjectInspection.Application.Communication;
 
 public interface INotificationManager
 {

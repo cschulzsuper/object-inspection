@@ -1,4 +1,4 @@
-﻿namespace Super.Paula.Client.Localization;
+﻿namespace ChristianSchulz.ObjectInspection.Client.Localization;
 
 public record TranslationInfo(string Value, bool Placeholder)
 {

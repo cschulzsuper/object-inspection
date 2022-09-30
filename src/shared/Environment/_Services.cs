@@ -2,9 +2,9 @@
 using Microsoft.Extensions.DependencyInjection;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
-using Super.Paula.Shared.Environment;
+using ChristianSchulz.ObjectInspection.Shared.Environment;
 
-namespace Super.Paula.Shared;
+namespace ChristianSchulz.ObjectInspection.Shared;
 
 [SuppressMessage("Style", "IDE1006")]
 public static class _Services
@@ -23,14 +23,14 @@ public static class _Services
 
                 return new AppSettings
                 {
-                    CosmosEndpoint = configuration["Paula:CosmosEndpoint"] ?? string.Empty,
-                    CosmosKey = configuration["Paula:CosmosKey"] ?? string.Empty,
-                    CosmosDatabase = configuration["Paula:CosmosDatabase"] ?? string.Empty,
-                    MaintainerIdentity = configuration["Paula:MaintainerIdentity"] ?? string.Empty,
-                    DemoIdentity = configuration["Paula:DemoIdentity"] ?? string.Empty,
-                    DemoPassword = configuration["Paula:DemoPassword"] ?? string.Empty,
-                    Server = configuration["Paula:Server"] ?? string.Empty,
-                    Client = configuration["Paula:Client"] ?? string.Empty
+                    CosmosEndpoint = configuration["ObjectInspection:CosmosEndpoint"] ?? string.Empty,
+                    CosmosKey = configuration["ObjectInspection:CosmosKey"] ?? string.Empty,
+                    CosmosDatabase = configuration["ObjectInspection:CosmosDatabase"] ?? string.Empty,
+                    MaintainerIdentity = configuration["ObjectInspection:MaintainerIdentity"] ?? string.Empty,
+                    DemoIdentity = configuration["ObjectInspection:DemoIdentity"] ?? string.Empty,
+                    DemoPassword = configuration["ObjectInspection:DemoPassword"] ?? string.Empty,
+                    Server = configuration["ObjectInspection:Server"] ?? string.Empty,
+                    Client = configuration["ObjectInspection:Client"] ?? string.Empty
                 };
             });
 

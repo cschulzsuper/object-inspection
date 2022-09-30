@@ -1,4 +1,4 @@
-﻿namespace Super.Paula.Application.Communication.Responses;
+﻿namespace ChristianSchulz.ObjectInspection.Application.Communication.Responses;
 
 public class NotificationResponse
 {

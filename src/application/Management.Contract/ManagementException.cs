@@ -1,7 +1,7 @@
-﻿using Super.Paula.Shared.ErrorHandling;
+﻿using ChristianSchulz.ObjectInspection.Shared.ErrorHandling;
 using System;
 
-namespace Super.Paula.Application;
+namespace ChristianSchulz.ObjectInspection.Application;
 
 public class ManagementException : Exception, IFormattableException
 {

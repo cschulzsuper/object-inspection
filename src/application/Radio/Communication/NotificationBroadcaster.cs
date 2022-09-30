@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.SignalR;
-using Super.Paula.Application.Communication.Responses;
-using Super.Paula.Shared.SignalR;
+using ChristianSchulz.ObjectInspection.Application.Communication.Responses;
+using ChristianSchulz.ObjectInspection.Shared.SignalR;
 using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Super.Paula.Shared.Security;
+using ChristianSchulz.ObjectInspection.Shared.Security;
 
-namespace Super.Paula.Application.Communication;
+namespace ChristianSchulz.ObjectInspection.Application.Communication;
 
 public sealed class NotificationBroadcaster : INotificationBroadcaster, IDisposable
 {

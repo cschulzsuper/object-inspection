@@ -2,7 +2,7 @@
 using System.Net;
 using System.Net.Http;
 
-namespace Super.Paula.Shared.ErrorHandling;
+namespace ChristianSchulz.ObjectInspection.Shared.ErrorHandling;
 
 public class ProblemDetailsException : HttpRequestException
 {

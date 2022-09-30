@@ -17,17 +17,17 @@
 
 @code {
 
-    private ErrorBoundary? errorBoundary = null!;
+private ErrorBoundary? errorBoundary = null!;
 
-    private void RecoverAndGoHome()
-    {
-        errorBoundary?.Recover();
-        NavigationManager.NavigateTo("/", true);
-    }
+private void RecoverAndGoHome()
+{
+    errorBoundary?.Recover();
+    NavigationManager.NavigateTo("/", true);
+}
 
-    RenderFragment RouterWithLayout(Type layoutType) => __builder =>
-    {
-        <Router AppAssembly="@typeof(Program).Assembly">
+RenderFragment RouterWithLayout(Type layoutType) => __builder =>
+{
+    <Router AppAssembly="@typeof(Program).Assembly">
             <Found Context="routeData">
                 <ErrorBoundary @ref="errorBoundary">
                     <ChildContent>
@@ -56,5 +56,5 @@
                 </LayoutView>
             </NotFound>
         </Router>
-    };
+};
 }

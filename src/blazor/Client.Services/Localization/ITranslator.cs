@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using System;
 
-namespace Super.Paula.Client.Localization;
+namespace ChristianSchulz.ObjectInspection.Client.Localization;
 
 public interface ITranslator<T>
 {

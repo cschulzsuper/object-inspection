@@ -2,7 +2,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace Super.Paula.Migrator.Steps;
+namespace ChristianSchulz.ObjectInspection.Migrator.Steps;
 
 public interface IStep
 {

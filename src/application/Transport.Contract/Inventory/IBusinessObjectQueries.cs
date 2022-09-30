@@ -1,4 +1,4 @@
-﻿namespace Super.Paula.Application.Inventory;
+﻿namespace ChristianSchulz.ObjectInspection.Application.Inventory;
 
 public interface IBusinessObjectQueries
 {

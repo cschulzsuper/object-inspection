@@ -1,6 +1,6 @@
 ﻿@page "/identities"
-@using Super.Paula.Application.Authentication
-@using Super.Paula.Application.Authentication.Responses
+@using ChristianSchulz.ObjectInspection.Application.Authentication
+@using ChristianSchulz.ObjectInspection.Application.Authentication.Responses
 
 @inject ITranslator<View> Translator
 @inject NavigationManager NavigationManager
@@ -23,12 +23,12 @@
 <div class="table-responsive">
 
     @if (_identities == null)
-    {
-        <p><em>Loading...</em></p>
-    }
-    else
-    {
-        <table class="table table-striped table-sm">
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table table-striped table-sm">
 
             <thead>
             <tr>
@@ -42,8 +42,8 @@
 
             <tbody>
                 @foreach (var identity in _identities.Values)
-                {
-                    <tr>
+            {
+                <tr>
                         <td>@identity.UniqueName</td>
                         <td>@identity.MailAddress</td>
                         <td>
@@ -60,10 +60,10 @@
                         </td>
 
                     </tr>
-                }
+            }
             </tbody>
         </table>
-    }
+}
 </div>
 
 @code {
@@ -76,20 +76,20 @@ protected override async Task OnAfterRenderAsync(bool firstRender)
 {
 if (firstRender)
 {
-    _identities = new Dictionary<string, IdentityResponse>();
+_identities = new Dictionary<string, IdentityResponse>();
 
-    var response = IdentityHandler.GetAll();
+var response = IdentityHandler.GetAll();
 
-    await foreach (var identity in response)
-    {
-        _identities.Add(identity.UniqueName, identity);
-        StateHasChanged();
-    }
-
-    _identitiesTextVisibile = _identities.Keys
-        .ToDictionary(key => key, _ => false);
-
+await foreach (var identity in response)
+{
+    _identities.Add(identity.UniqueName, identity);
     StateHasChanged();
+}
+
+_identitiesTextVisibile = _identities.Keys
+    .ToDictionary(key => key, _ => false);
+
+StateHasChanged();
 }
 }
 

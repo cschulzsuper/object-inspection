@@ -1,6 +1,6 @@
-﻿using Super.Paula.RuntimeData;
+﻿using ChristianSchulz.ObjectInspection.RuntimeData;
 
-namespace Super.Paula.Application.Orchestration;
+namespace ChristianSchulz.ObjectInspection.Application.Orchestration;
 
 public class WorkerRuntime : IRuntimeData
 {

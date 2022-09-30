@@ -5,7 +5,7 @@
 		<Nullable>enable</Nullable>
 		<LangVersion>Preview</LangVersion>
 		<UserSecretsId>b60582a0-a9df-4614-a837-b9ab58e3463d</UserSecretsId>
-		<RootNamespace>Super.Paula.Client</RootNamespace>
+		<RootNamespace>ChristianSchulz.ObjectInspection.Client</RootNamespace>
 	</PropertyGroup>
 
 	<ItemGroup>

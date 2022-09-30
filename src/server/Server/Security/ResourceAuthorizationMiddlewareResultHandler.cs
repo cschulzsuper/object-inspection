@@ -5,9 +5,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Policy;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
-using Super.Paula.Shared.Security;
+using ChristianSchulz.ObjectInspection.Shared.Security;
 
-namespace Super.Paula.Server.Security;
+namespace ChristianSchulz.ObjectInspection.Server.Security;
 
 public class ResourceAuthorizationMiddlewareResultHandler : IAuthorizationMiddlewareResultHandler
 {

@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 
-namespace Super.Paula.Shared.JsonConversion;
+namespace ChristianSchulz.ObjectInspection.Shared.JsonConversion;
 
 public static class Utf8JsonReaderExtensions
 {

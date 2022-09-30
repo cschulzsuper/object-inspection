@@ -4,13 +4,13 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Super.Paula.Application.Authentication;
-using Super.Paula.Application.Authentication.Requests;
-using Super.Paula.Application.Authentication.Responses;
-using Super.Paula.Shared.Environment;
-using Super.Paula.Shared.ErrorHandling;
+using ChristianSchulz.ObjectInspection.Application.Authentication;
+using ChristianSchulz.ObjectInspection.Application.Authentication.Requests;
+using ChristianSchulz.ObjectInspection.Application.Authentication.Responses;
+using ChristianSchulz.ObjectInspection.Shared.Environment;
+using ChristianSchulz.ObjectInspection.Shared.ErrorHandling;
 
-namespace Super.Paula.Client.Authentication;
+namespace ChristianSchulz.ObjectInspection.Client.Authentication;
 
 public class IdentityRequestHandler : IIdentityRequestHandler
 {

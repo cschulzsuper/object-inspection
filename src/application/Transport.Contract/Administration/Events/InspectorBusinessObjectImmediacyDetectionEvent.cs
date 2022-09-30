@@ -1,8 +1,8 @@
-﻿using Super.Paula.Shared.Orchestration;
+﻿using ChristianSchulz.ObjectInspection.Shared.Orchestration;
 using System.ComponentModel.DataAnnotations;
-using Super.Paula.Shared.Validation;
+using ChristianSchulz.ObjectInspection.Shared.Validation;
 
-namespace Super.Paula.Application.Administration.Events;
+namespace ChristianSchulz.ObjectInspection.Application.Administration.Events;
 
 [AllowedSubscriber(AllowedSubscribers.Notification)]
 public record InspectorBusinessObjectImmediacyDetectionEvent

@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace Super.Paula.Shared.Validation;
+namespace ChristianSchulz.ObjectInspection.Shared.Validation;
 
 public static partial class LowerCaseValidator
 {

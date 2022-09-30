@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Super.Paula.Shared.Orchestration;
+namespace ChristianSchulz.ObjectInspection.Shared.Orchestration;
 
 public sealed class LocalWorkerHost : IWorkerHost
 {

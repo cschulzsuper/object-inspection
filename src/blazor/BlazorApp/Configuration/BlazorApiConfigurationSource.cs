@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 
-namespace Super.Paula.Client.Configuration;
+namespace ChristianSchulz.ObjectInspection.Client.Configuration;
 
 public class BlazorApiConfigurationSource : IConfigurationSource
 {

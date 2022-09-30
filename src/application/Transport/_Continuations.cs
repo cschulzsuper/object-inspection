@@ -1,11 +1,11 @@
-﻿using Super.Paula.Application.Administration;
-using Super.Paula.Application.Administration.Continuation;
-using Super.Paula.Application.Auditing;
-using Super.Paula.Application.Auditing.Continuations;
-using Super.Paula.Shared.Orchestration;
+﻿using ChristianSchulz.ObjectInspection.Application.Administration;
+using ChristianSchulz.ObjectInspection.Application.Administration.Continuation;
+using ChristianSchulz.ObjectInspection.Application.Auditing;
+using ChristianSchulz.ObjectInspection.Application.Auditing.Continuations;
+using ChristianSchulz.ObjectInspection.Shared.Orchestration;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Super.Paula.Application;
+namespace ChristianSchulz.ObjectInspection.Application;
 
 [SuppressMessage("Style", "IDE1006")]
 public static class _Continuations

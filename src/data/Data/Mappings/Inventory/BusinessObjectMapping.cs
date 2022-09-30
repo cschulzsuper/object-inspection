@@ -1,19 +1,19 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Super.Paula.Application.Inventory;
-using Super.Paula.Application.Operation;
+using ChristianSchulz.ObjectInspection.Application.Inventory;
+using ChristianSchulz.ObjectInspection.Application.Operation;
 using System.Linq;
 
-namespace Super.Paula.Data.Mappings.Inventory;
+namespace ChristianSchulz.ObjectInspection.Data.Mappings.Inventory;
 
 public class BusinessObjectMapping : IEntityTypeConfiguration<BusinessObject>
 {
     public string PartitionKey = nameof(PartitionKey);
 
-    private readonly PaulaContextState _state;
+    private readonly ObjectInspectionContextState _state;
     private readonly ExtensionProvider _extensions;
 
-    public BusinessObjectMapping(PaulaContextState state, ExtensionProvider extensions)
+    public BusinessObjectMapping(ObjectInspectionContextState state, ExtensionProvider extensions)
     {
         _state = state;
         _extensions = extensions;

@@ -1,9 +1,9 @@
-﻿using Super.Paula.Application.Auditing.Requests;
-using Super.Paula.Application.Auditing.Responses;
+﻿using ChristianSchulz.ObjectInspection.Application.Auditing.Requests;
+using ChristianSchulz.ObjectInspection.Application.Auditing.Responses;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Super.Paula.Application.Auditing;
+namespace ChristianSchulz.ObjectInspection.Application.Auditing;
 
 public interface IBusinessObjectInspectionRequestHandler
 {
@@ -14,7 +14,7 @@ public interface IBusinessObjectInspectionRequestHandler
     ValueTask ReplaceAsync(string businessObject, string inspection, BusinessObjectInspectionRequest request);
     ValueTask DeleteAsync(string businessObject, string inspection, string etag);
 
-    ValueTask<BusinessObjectInspectionAuditScheduleResponse> ReplaceAuditScheduleAsync(string businessObject, string inspection, BusinessObjectInspectionAuditScheduleRequest request);
+    ValueTask<ReplaceBusinessObjectInspectionAuditScheduleResponse> ReplaceAuditScheduleAsync(string businessObject, string inspection, BusinessObjectInspectionAuditScheduleRequest request);
     ValueTask RecalculateInspectionAuditAppointmentsAsync(string businessObject);
 
     ValueTask<BusinessObjectInspectionAuditOmissionResponse> CreateAuditOmissionAsync(string businessObject, string inspection, BusinessObjectInspectionAuditOmissionRequest request);

@@ -1,7 +1,7 @@
-﻿using Super.Paula.Application.Communication.Responses;
+﻿using ChristianSchulz.ObjectInspection.Application.Communication.Responses;
 using System.Threading.Tasks;
 
-namespace Super.Paula.Application.Communication;
+namespace ChristianSchulz.ObjectInspection.Application.Communication;
 
 public interface INotificationBroadcaster
 {

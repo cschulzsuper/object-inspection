@@ -2,13 +2,13 @@
 // Modified verison of the original .NET ProblemDetailsJsonConverter,
 // with custome changes and changes from .NET ValidationProblemDetailsJsonConverter.
 
-using Super.Paula.Shared.JsonConversion;
+using ChristianSchulz.ObjectInspection.Shared.JsonConversion;
 using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Super.Paula.Shared.ErrorHandling;
+namespace ChristianSchulz.ObjectInspection.Shared.ErrorHandling;
 
 public class ClientProblemDetailsJsonConverter : JsonConverter<ClientProblemDetails>
 {

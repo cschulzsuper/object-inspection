@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Super.Paula.Shared.Validation;
+using ChristianSchulz.ObjectInspection.Shared.Validation;
 
-namespace Super.Paula.Application.Auditing.Requests;
+namespace ChristianSchulz.ObjectInspection.Application.Auditing.Requests;
 
 public class BusinessObjectInspectionAuditRecordRequest
 {

@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components.Rendering;
-using Super.Paula.Shared;
+using ChristianSchulz.ObjectInspection.Shared;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 
-namespace Super.Paula.Client.Components.Forms;
+namespace ChristianSchulz.ObjectInspection.Client.Components.Forms;
 
 public class InputWeek : InputBase<CalenderWeek>
 {

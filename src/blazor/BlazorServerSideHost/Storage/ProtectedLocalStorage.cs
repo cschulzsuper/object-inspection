@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft = Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 
-namespace Super.Paula.Client.Storage;
+namespace ChristianSchulz.ObjectInspection.Client.Storage;
 
 public class ProtectedLocalStorage : ILocalStorage
 {

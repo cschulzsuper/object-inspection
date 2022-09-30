@@ -1,9 +1,9 @@
-﻿using Super.Paula.Application.Administration;
-using Super.Paula.Application.Administration.Requests;
-using Super.Paula.Application.Administration.Responses;
-using Super.Paula.Shared.Environment;
-using Super.Paula.Shared.ErrorHandling;
-using Super.Paula.Shared.JsonConversion;
+﻿using ChristianSchulz.ObjectInspection.Application.Administration;
+using ChristianSchulz.ObjectInspection.Application.Administration.Requests;
+using ChristianSchulz.ObjectInspection.Application.Administration.Responses;
+using ChristianSchulz.ObjectInspection.Shared.Environment;
+using ChristianSchulz.ObjectInspection.Shared.ErrorHandling;
+using ChristianSchulz.ObjectInspection.Shared.JsonConversion;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -11,7 +11,7 @@ using System.Net.Http.Json;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace Super.Paula.Client.Administration;
+namespace ChristianSchulz.ObjectInspection.Client.Administration;
 
 public class InspectorRequestHandler : IInspectorRequestHandler
 {

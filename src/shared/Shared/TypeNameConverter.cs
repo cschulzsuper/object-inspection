@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 
-namespace Super.Paula.Shared;
+namespace ChristianSchulz.ObjectInspection.Shared;
 
 public static class TypeNameConverter
 {

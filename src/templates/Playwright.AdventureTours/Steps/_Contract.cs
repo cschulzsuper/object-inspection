@@ -2,7 +2,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace Super.Paula.Templates.Playwright.AdventureTours.Steps;
+namespace ChristianSchulz.ObjectInspection.Templates.Playwright.AdventureTours.Steps;
 
 public interface IStep
 {

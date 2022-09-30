@@ -1,12 +1,12 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Super.Paula.Application.Administration.Events;
-using Super.Paula.Application.Auditing.Events;
-using Super.Paula.Application.Communication.Responses;
-using Super.Paula.Shared;
-using Super.Paula.Shared.Orchestration;
+using ChristianSchulz.ObjectInspection.Application.Administration.Events;
+using ChristianSchulz.ObjectInspection.Application.Auditing.Events;
+using ChristianSchulz.ObjectInspection.Application.Communication.Responses;
+using ChristianSchulz.ObjectInspection.Shared;
+using ChristianSchulz.ObjectInspection.Shared.Orchestration;
 using System.Threading.Tasks;
 
-namespace Super.Paula.Application.Communication;
+namespace ChristianSchulz.ObjectInspection.Application.Communication;
 
 public class NotificationEventHandler : INotificationEventHandler
 {

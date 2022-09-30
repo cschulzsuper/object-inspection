@@ -1,4 +1,4 @@
-﻿namespace Super.Paula.RuntimeData;
+﻿namespace ChristianSchulz.ObjectInspection.RuntimeData;
 
 public interface IRuntimeData
 {

@@ -2,13 +2,13 @@
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
-using Super.Paula.Application.Authentication.Exceptions;
-using Super.Paula.Application.Authentication.Requests;
-using Super.Paula.Application.Authentication.Responses;
-using Super.Paula.BadgeSecurity;
-using Super.Paula.Shared.Security;
+using ChristianSchulz.ObjectInspection.Application.Authentication.Exceptions;
+using ChristianSchulz.ObjectInspection.Application.Authentication.Requests;
+using ChristianSchulz.ObjectInspection.Application.Authentication.Responses;
+using ChristianSchulz.ObjectInspection.BadgeSecurity;
+using ChristianSchulz.ObjectInspection.Shared.Security;
 
-namespace Super.Paula.Application.Authentication;
+namespace ChristianSchulz.ObjectInspection.Application.Authentication;
 
 public class AuthenticationRequestHandler : IAuthenticationRequestHandler
 {

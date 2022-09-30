@@ -1,7 +1,7 @@
-﻿using Super.Paula.Application.Administration.Events;
-using Super.Paula.Shared.Orchestration;
+﻿using ChristianSchulz.ObjectInspection.Application.Administration.Events;
+using ChristianSchulz.ObjectInspection.Shared.Orchestration;
 
-namespace Super.Paula.Application.Operation;
+namespace ChristianSchulz.ObjectInspection.Application.Operation;
 
 public interface IApplicationEventHandler :
     IEventHandler<OrganizationCreationEvent>,

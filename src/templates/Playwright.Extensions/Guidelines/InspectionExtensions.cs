@@ -1,7 +1,7 @@
 ﻿using Microsoft.Playwright;
 using System.Threading.Tasks;
 
-namespace Super.Paula.Templates.Playwright.Guidelines;
+namespace ChristianSchulz.ObjectInspection.Templates.Playwright.Guidelines;
 
 public static class InspectionExtensions
 {

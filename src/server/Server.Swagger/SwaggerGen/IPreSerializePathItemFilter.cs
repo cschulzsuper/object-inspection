@@ -1,9 +1,8 @@
 ﻿using Microsoft.OpenApi.Models;
 
-namespace Super.Paula.Server.SwaggerGen
+namespace ChristianSchulz.ObjectInspection.Server.SwaggerGen;
+
+public interface IPreSerializePathItemFilter
 {
-    public interface IPreSerializePathItemFilter
-    {
-        void Apply(OpenApiPathItem pathItem, PreSerializePathItemFilterContext pathItemContext);
-    }
+    void Apply(OpenApiPathItem pathItem, PreSerializePathItemFilterContext pathItemContext);
 }

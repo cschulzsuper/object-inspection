@@ -1,7 +1,7 @@
 ﻿using Microsoft.Playwright;
 using System.Threading.Tasks;
 
-namespace Super.Paula.Templates.Playwright.Auth;
+namespace ChristianSchulz.ObjectInspection.Templates.Playwright.Auth;
 
 public static class AuthenticationExtensions
 {

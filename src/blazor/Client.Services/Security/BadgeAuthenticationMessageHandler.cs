@@ -3,11 +3,8 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
-using Super.Paula.BadgeUsage;
-using Super.Paula.Client.Storage;
-using Super.Paula.Shared.Security;
 
-namespace Super.Paula.Client.Security;
+namespace ChristianSchulz.ObjectInspection.Client.Security;
 
 public class BadgeAuthenticationMessageHandler : DelegatingHandler
 {

@@ -1,11 +1,11 @@
-﻿using Super.Paula.RuntimeData;
-using Super.Paula.Shared;
-using Super.Paula.Shared.Validation;
+﻿using ChristianSchulz.ObjectInspection.RuntimeData;
+using ChristianSchulz.ObjectInspection.Shared;
+using ChristianSchulz.ObjectInspection.Shared.Validation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Super.Paula.Application.Orchestration;
+namespace ChristianSchulz.ObjectInspection.Application.Orchestration;
 
 public class WorkerRuntimeManager : IWorkerRuntimeManager
 {
