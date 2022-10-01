@@ -25,10 +25,10 @@ public static class ExtensionValidator
 
     public static (bool, Func<(string, FormattableString)>) FieldUniqueNamesAreUnique(ICollection<ExtensionField> fields)
         => (!fields.GroupBy(x => x.UniqueName).Any(x => x.Count() > 1),
-            () => (nameof(fields), $"Field with unique name duplicates are not allowed in extension"));
+            () => (nameof(fields), $"Fields with unique name duplicates are not allowed in extension"));
 
     public static (bool, Func<(string, FormattableString)>) FieldDataNamesAreUnique(ICollection<ExtensionField> fields)
         => (!fields.GroupBy(x => x.DataName).Any(x => x.Count() > 1),
-            () => (nameof(fields), $"Field with data name duplicates are not allowed in extension"));
+            () => (nameof(fields), $"Fields with data name duplicates are not allowed in extension"));
 
 }

@@ -95,6 +95,10 @@ public class BusinessObjectManager : IBusinessObjectManager
             yield return BusinessObjectValidator.UniqueNameHasKebabCase(businessObject.UniqueName);
             yield return BusinessObjectValidator.UniqueNameIsNotTooLong(businessObject.UniqueName);
             yield return BusinessObjectValidator.UniqueNameHasValidValue(businessObject.UniqueName);
+            yield return BusinessObjectValidator.DistinctionTypeIsNotNull(businessObject.DistinctionType);
+            yield return BusinessObjectValidator.DistinctionTypeHasKebabCase(businessObject.DistinctionType);
+            yield return BusinessObjectValidator.DistinctionTypeIsNotTooLong(businessObject.DistinctionType);
+            yield return BusinessObjectValidator.DistinctionTypeHasValidValue(businessObject.DistinctionType);
             yield return BusinessObjectValidator.DisplayNameIsNotEmpty(businessObject.DisplayName);
             yield return BusinessObjectValidator.DisplayNameIsNotTooLong(businessObject.DisplayName);
         }
@@ -110,6 +114,10 @@ public class BusinessObjectManager : IBusinessObjectManager
             yield return BusinessObjectValidator.UniqueNameHasKebabCase(businessObject.UniqueName);
             yield return BusinessObjectValidator.UniqueNameIsNotTooLong(businessObject.UniqueName);
             yield return BusinessObjectValidator.UniqueNameHasValidValue(businessObject.UniqueName);
+            yield return BusinessObjectValidator.DistinctionTypeIsNotNull(businessObject.DistinctionType);
+            yield return BusinessObjectValidator.DistinctionTypeHasKebabCase(businessObject.DistinctionType);
+            yield return BusinessObjectValidator.DistinctionTypeIsNotTooLong(businessObject.DistinctionType);
+            yield return BusinessObjectValidator.DistinctionTypeHasValidValue(businessObject.DistinctionType);
             yield return BusinessObjectValidator.DisplayNameIsNotEmpty(businessObject.DisplayName);
             yield return BusinessObjectValidator.DisplayNameIsNotTooLong(businessObject.DisplayName);
         }

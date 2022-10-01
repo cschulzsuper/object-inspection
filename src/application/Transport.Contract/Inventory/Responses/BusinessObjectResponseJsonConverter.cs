@@ -9,6 +9,7 @@ public class BusinessObjectResponseJsonConverter : JsonConverter<BusinessObjectR
 {
     private static readonly JsonEncodedText UniqueName = JsonEncodedText.Encode("uniqueName");
     private static readonly JsonEncodedText DisplayName = JsonEncodedText.Encode("displayName");
+    private static readonly JsonEncodedText DistinctionType = JsonEncodedText.Encode("distinctionType");
     private static readonly JsonEncodedText ETag = JsonEncodedText.Encode("etag");
 
     public override BusinessObjectResponse Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
@@ -40,14 +41,22 @@ public class BusinessObjectResponseJsonConverter : JsonConverter<BusinessObjectR
             value.DisplayName = stringValue;
             return;
         }
+
         if (reader.TryReadStringProperty(ETag, out stringValue))
         {
             value.ETag = stringValue;
             return;
         }
+
         if (reader.TryReadStringProperty(UniqueName, out stringValue))
         {
             value.UniqueName = stringValue;
+            return;
+        }
+
+        if (reader.TryReadStringProperty(DistinctionType, out stringValue))
+        {
+            value.DistinctionType = stringValue;
             return;
         }
 
@@ -64,6 +73,7 @@ public class BusinessObjectResponseJsonConverter : JsonConverter<BusinessObjectR
 
         writer.WriteStringIfNotNull(UniqueName, value.UniqueName);
         writer.WriteStringIfNotNull(DisplayName, value.DisplayName);
+        writer.WriteStringIfNotNull(DistinctionType, value.DistinctionType);
         writer.WriteStringIfNotNull(ETag, value.ETag);
 
         foreach (var extension in value)

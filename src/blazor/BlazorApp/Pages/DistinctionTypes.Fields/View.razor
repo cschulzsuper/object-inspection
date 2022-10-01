@@ -1,0 +1,85 @@
+﻿@page "/distinction-types/{uniqueName}/fields"
+
+@inject ITranslator<View> Translator
+@inject NavigationManager NavigationManager
+@inject IDistinctionTypeRequestHandler DistinctionTypeRequestHandler
+
+@attribute [Authorize("OnlyChiefOrObserver")]
+
+<PageTitle>@Translator[$"Distinction type fields"]</PageTitle>
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">@Translator[$"Distinction type fields"]</h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <div class="btn-group me-2">
+            <button type="button" class="btn btn-sm btn-outline-secondary" title="@Translator[$"Create"]" @onclick="@Create"><span class="oi oi-plus" /></button>
+        </div>
+    </div>
+</div>
+
+<DemoNote>
+    @Translator.Markdown($"An distinction type field represents an extension field assigment to a distinction type.")
+</DemoNote>
+
+<div class="table-responsive">
+
+    @if (_extension == null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else
+    {
+        <table class="table table-striped table-sm">
+            <thead>
+                <tr>
+                    <th scope="col" class="col-12">@Translator[$"Extension field"]</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var extensionField in _extension.Fields)
+            {
+                <tr>
+                    <td>@extensionField.ExtensionField</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-danger btn-block" title="@Translator[$"Delete"]"
+                                @onclick="() => DeleteAsync(extensionField)"><span class="oi oi-trash"/></button>
+                    </td>
+
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+
+</div>
+
+@code {
+
+    [Parameter]
+    public string UniqueName { get; set; } = string.Empty;
+
+    private DistinctionTypeResponse? _extension;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _extension = await DistinctionTypeRequestHandler.GetAsync(UniqueName);
+
+            StateHasChanged();
+        }
+    }
+
+    public void Create()
+        => NavigationManager.NavigateTo($"/distinction-types/{UniqueName}/fields/create");
+
+    public async Task DeleteAsync(DistinctionTypeFieldResponse field)
+    {
+        var response = await DistinctionTypeRequestHandler.DeleteFieldAsync(_extension!.UniqueName, field.ExtensionField, _extension!.ETag);
+
+        _extension.ETag = response.ETag;
+
+        _extension!.Fields.Remove(field);
+    }
+
+}

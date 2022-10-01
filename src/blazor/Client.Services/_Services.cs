@@ -275,6 +275,10 @@ public static class _Services
         if (isWebAssembly)
         {
             services
+                .AddHttpClient<IDistinctionTypeRequestHandler, DistinctionTypeRequestHandler>()
+                .AddHttpMessageHandler<BadgeAuthenticationMessageHandler>();
+
+            services
                 .AddHttpClient<IExtensionRequestHandler, ExtensionRequestHandler>()
                 .AddHttpMessageHandler<BadgeAuthenticationMessageHandler>();
 
@@ -288,6 +292,7 @@ public static class _Services
         }
         else
         {
+            services.AddHttpClientHandler<IDistinctionTypeRequestHandler, DistinctionTypeRequestHandler>();
             services.AddHttpClientHandler<IExtensionRequestHandler, ExtensionRequestHandler>();
             services.AddHttpClientHandler<IExtensionAggregateTypeRequestHandler, ExtensionAggregateTypeRequestHandler>();
             services.AddHttpClientHandler<IExtensionFieldTypeRequestHandler, ExtensionFieldTypeRequestHandler>();

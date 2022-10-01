@@ -52,12 +52,15 @@ public class InitializationAdventureTours : IStep
         await page.CreateExtensionAsync("business-object");
         await page.CreateExtensionFieldAsync("business-object", "color", "Color", "color");
 
-        await page.CreateBusinessObjectAsync("Radio #1234", "radio-1234", "Color");
-        await page.CreateBusinessObjectAsync("Radio #1424", "radio-1424", "Color");
-        await page.CreateBusinessObjectAsync("GPS Tracker #2234", "gps-tracker-2234", "Color");
-        await page.CreateBusinessObjectAsync("GPS Tracker #2424", "gps-tracker-2424", "Color");
-        await page.CreateBusinessObjectAsync("Flashlight #134", "flashlight-134", "Color");
-        await page.CreateBusinessObjectAsync("Flashlight #142", "flashlight-142", "Color");
+        await page.CreateDistinctionTypeAsync("colorful");
+        await page.CreateDistinctionTypeFieldAsync("colorful", "color");
+
+        await page.CreateBusinessObjectAsync("Radio #1234", "radio-1234", "color", "Color");
+        await page.CreateBusinessObjectAsync("Radio #1424", "radio-1424", "color", "Color");
+        await page.CreateBusinessObjectAsync("GPS Tracker #2234", "gps-tracker-2234", "color", "Color");
+        await page.CreateBusinessObjectAsync("GPS Tracker #2424", "gps-tracker-2424", "color", "Color");
+        await page.CreateBusinessObjectAsync("Flashlight #134", "flashlight-134", "color", "Color");
+        await page.CreateBusinessObjectAsync("Flashlight #142", "flashlight-142", "color", "Color");
 
         await page.CreateBusinessObjectInspectorAsync("radio-1234", adventureToursDemoInspector);
         await page.CreateBusinessObjectInspectorAsync("radio-1424", adventureToursDemoInspector);

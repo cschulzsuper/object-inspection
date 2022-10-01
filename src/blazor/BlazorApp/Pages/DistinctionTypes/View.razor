@@ -1,0 +1,97 @@
+﻿@page "/distinction-types"
+
+@inject ITranslator<View> Translator
+@inject NavigationManager NavigationManager
+@inject IDistinctionTypeRequestHandler DistinctionTypeRequestHandler
+
+@attribute [Authorize("OnlyChiefOrObserver")]
+
+<PageTitle>@Translator[$"Distinction types"]</PageTitle>
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">@Translator[$"Distinction types"]</h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <div class="btn-group me-2">
+            <button type="button" class="btn btn-sm btn-outline-secondary" title="@Translator[$"Create"]" @onclick="@Create"><span class="oi oi-plus" /></button>
+        </div>
+    </div>
+</div>
+
+<DemoNote>
+    @Translator.Markdown($"A distinction type assigns extension fields to a type. The properties of the fields are defined in the extension.")
+</DemoNote>
+
+<div class="table-responsive">
+
+    @if (_distinctionTypes == null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else
+    {
+        <table class="table table-striped table-sm">
+            <thead>
+            <tr>
+                <th scope="col" class="col-12">@Translator[$"Unique name"]</th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var distinctionType in _distinctionTypes.Values)
+            {
+                <tr>
+                    <td>@distinctionType.UniqueName</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-info btn-block" title="@Translator[$"Fields"]"
+                            @onclick="() => NavigateToFields(distinctionType.UniqueName)">
+                            <span class="oi oi-list"/>
+                        </button>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-danger btn-block" title="@Translator[$"Delete"]"
+                                @onclick="() => DeleteAsync(distinctionType)"><span class="oi oi-trash"/></button>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+
+</div>
+
+@code {
+
+    private IDictionary<string, DistinctionTypeResponse>? _distinctionTypes;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+                _distinctionTypes = new Dictionary<string, DistinctionTypeResponse>();
+
+            var response = DistinctionTypeRequestHandler.GetAll();
+
+            await foreach (var identity in response)
+            {
+                _distinctionTypes.Add(identity.UniqueName, identity);
+                StateHasChanged();
+            }
+
+            StateHasChanged();
+        }
+    }
+
+    public void Create()
+        => NavigationManager.NavigateTo("/distinction-types/create");
+
+    public async Task DeleteAsync(DistinctionTypeResponse identity)
+    {
+        await DistinctionTypeRequestHandler.DeleteAsync(identity.UniqueName, identity.ETag);
+            _distinctionTypes!.Remove(identity.UniqueName);
+    }
+
+    public void NavigateToFields(string uniqueName)
+        => NavigationManager.NavigateTo($"/distinction-types/{uniqueName}/fields");
+
+}

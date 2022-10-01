@@ -1,11 +1,10 @@
 ﻿@page "/business-objects/create"
-@using ChristianSchulz.ObjectInspection.Application.Localization.Exceptions
-@using ChristianSchulz.ObjectInspection.Application.Operation.Exceptions
 
 @inject ITranslator<Create> Translator
 @inject NavigationManager NavigationManager
 @inject IBusinessObjectRequestHandler BusinessObjectRequestHandler
 @inject IExtensionRequestHandler ExtensionRequestHandler
+@inject IDistinctionTypeRequestHandler DistinctionTypeRequestHandler
 
 @attribute [Authorize("OnlyChiefOrObserver")]
 
@@ -20,24 +19,36 @@
 
     <div class="container-fluid pb-3 mb-3 border-bottom">
         <div class="form-floating mt-3">
-            <InputText class="form-control"
-                       id="businessObjectUniqueName" @bind-Value="_request.UniqueName" />
+            <InputText  
+                class="form-control"
+                id="businessObjectUniqueName" 
+                @bind-Value="_request.UniqueName" />
             <label for="businessObjectUniqueName">@Translator[$"Unique name"]</label>
         </div>
         <div class="form-floating mt-3">
             <InputText
                 class="form-control"
-                id="businessObjectDisplayName" @bind-Value="_request.DisplayName"/>
+                id="businessObjectDisplayName" 
+                @bind-Value="_request.DisplayName"/>
             <label for="businessObjectDisplayName">@Translator[$"Display name"]</label>
+        </div>
+
+        <div class="form-floating mt-3">
+            <InputText  
+                class="form-control"
+                id="businessObjectDistinctionType"
+                @bind-Value="_request.DistinctionType"
+                @bind-Value:after="RequestDistinctionTypeAsync" />
+            <label for="businessObjectDistinctionType">@Translator[$"Distinction type"]</label>
         </div>
     </div>
 
-    @if (_extension != null)
-{
-    <div class="container-fluid pb-3 mb-3 border-bottom">
-            @foreach (var extensionField in _extension.Fields)
-        {
-            <div class="form-floating mt-3">
+    @if (ExtensionFields != null)
+    {
+        <div class="container-fluid pb-3 mb-3 border-bottom">
+            @foreach (var extensionField in ExtensionFields)
+            {
+                <div class="form-floating mt-3">
                     <input
                         class="form-control"
                         id="@GetExtensionFieldInputId(extensionField)"
@@ -45,51 +56,81 @@
                         @onchange="@(e => _request[extensionField.DataName] = e.Value)"/>
                     <label for="@GetExtensionFieldInputId(extensionField)">@Translator[extensionField.DisplayName]</label>
                 </div>
-        }
+            }
         </div>
-}
+    }
 
     @if (context.GetValidationMessages().Any())
-{
-    <div class="container-fluid pb-4 mb-5">
-            <div class="card card-body tex-wrap">
-                <ValidationSummary/>
+    {
+        <div class="container-fluid pb-4 mb-5">
+                <div class="card card-body tex-wrap">
+                    <ValidationSummary/>
+                </div>
             </div>
-        </div>
-}
-else
-{
-    <div class="container-fluid pb-4 mb-5">
-            <AuthorizedButton Policy="OnlyChief"
-                              id="submit"
-                              type="submit"
-                              class="btn btn-sm btn-primary">@Translator[$"Submit"]</AuthorizedButton>
-        </div>
-}
+    }
+    else
+    {
+        <div class="container-fluid pb-4 mb-5">
+                <AuthorizedButton Policy="OnlyChief"
+                                  id="submit"
+                                  type="submit"
+                                  class="btn btn-sm btn-primary">@Translator[$"Submit"]</AuthorizedButton>
+            </div>
+    }
 
 </EditForm>
 
 @code {
-private ExtensionResponse? _extension;
 
-private BusinessObjectRequest _request = new BusinessObjectRequest();
+    private ExtensionResponse? _extension;
 
-protected override async Task OnInitializedAsync()
-{
-    try
+    private DistinctionTypeResponse? _distinctionType;
+
+    private IEnumerable<ExtensionFieldResponse>? ExtensionFields =>
+        _extension?.Fields.Where(x => 
+            _distinctionType?.Fields.Any(y => y.ExtensionField == x.UniqueName) == true);
+
+    private BusinessObjectRequest _request = new BusinessObjectRequest();
+
+    protected override async Task OnInitializedAsync()
     {
-        _extension = await ExtensionRequestHandler.GetAsync(ExtensionAggregateTypes.BusinessObject);
+        await RequestExtensionAsync();
+        await RequestDistinctionTypeAsync();
     }
-    catch (ExtensionNotFoundException) { }
-}
 
-private async Task OnValidSubmitAsync()
-{
-    await BusinessObjectRequestHandler.CreateAsync(_request);
-    NavigationManager.NavigateTo("/business-objects");
-}
+    private async Task OnValidSubmitAsync()
+    {
+        await BusinessObjectRequestHandler.CreateAsync(_request);
+        NavigationManager.NavigateTo("/business-objects");
+    }
 
-private string GetExtensionFieldInputId(ExtensionFieldResponse extensionField)
-    => $"businessObject{char.ToUpperInvariant(extensionField.DataName[0])}{extensionField.DataName[1..]}";
+    private string GetExtensionFieldInputId(ExtensionFieldResponse extensionField)
+        => $"businessObject{char.ToUpperInvariant(extensionField.DataName[0])}{extensionField.DataName[1..]}";
 
+
+    private async Task RequestExtensionAsync()
+    {
+        try
+        {
+            _extension = await ExtensionRequestHandler.GetAsync(ExtensionAggregateTypes.BusinessObject);
+        }
+        catch (ExtensionNotFoundException)
+        {
+            _extension = null;
+        }
+        StateHasChanged();
+    }
+
+    private async Task RequestDistinctionTypeAsync()
+    {
+        try
+        {
+            _distinctionType = await DistinctionTypeRequestHandler.GetAsync(_request.DistinctionType);
+        }
+        catch (DistinctionTypeNotFoundException)
+        {
+            _distinctionType = null;
+        }
+        StateHasChanged();
+    }
 }

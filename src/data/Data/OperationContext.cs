@@ -20,6 +20,7 @@ public class OperationContext : ObjectInspectionContext
             modelBuilder.HasManualThroughput(1000);
 
             modelBuilder.ApplyConfiguration(new ExtensionMapping(State));
+            modelBuilder.ApplyConfiguration(new DistinctionTypeMapping(State));
 
             ApplyCamelCaseJsonPropertyNames(modelBuilder);
         }
