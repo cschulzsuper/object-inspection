@@ -39,7 +39,7 @@ public class Startup
         {
             options.SerializerOptions.PropertyNameCaseInsensitive = true;
             options.SerializerOptions.PropertyNamingPolicy = new CustomJsonCamelCaseNamingPolicy();
-            // options.SerializerOptions.Converters.Add(new ObjectJsonConverter());
+            //options.SerializerOptions.Converters.Add(new ObjectJsonConverter());
         });
         
         services.AddServer(_environment, _configuration);

@@ -27,7 +27,7 @@ public class OrganizationRequestHandler : IOrganizationRequestHandler
     public async ValueTask<ActivateOrganizationResponse> ActivateAsync(string organization, string etag)
     {
         var request = new HttpRequestMessage(HttpMethod.Post, $"organizations/{organization}/activate");
-        request.Headers.Add("If-Match", etag);
+        request.Headers.TryAddWithoutValidation("If-Match", etag);
 
         var responseMessage = await _httpClient.SendAsync(request);
 
@@ -50,7 +50,7 @@ public class OrganizationRequestHandler : IOrganizationRequestHandler
     public async ValueTask<DeactivateOrganizationResponse> DeactivateAsync(string organization, string etag)
     {
         var request = new HttpRequestMessage(HttpMethod.Post, $"organizations/{organization}/deactivate");
-        request.Headers.Add("If-Match", etag);
+        request.Headers.TryAddWithoutValidation("If-Match", etag);
 
         var responseMessage = await _httpClient.SendAsync(request);
 
@@ -63,7 +63,7 @@ public class OrganizationRequestHandler : IOrganizationRequestHandler
     public async ValueTask DeleteAsync(string organization, string etag)
     {
         var request = new HttpRequestMessage(HttpMethod.Delete, $"organizations/{organization}");
-        request.Headers.Add("If-Match", etag);
+        request.Headers.TryAddWithoutValidation("If-Match", etag);
 
         var responseMessage = await _httpClient.SendAsync(request);
 

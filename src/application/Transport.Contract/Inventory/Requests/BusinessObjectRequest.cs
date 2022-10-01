@@ -16,11 +16,17 @@ public class BusinessObjectRequest
     [UniqueName]
     public string UniqueName { get; set; } = string.Empty;
 
+    [Required(AllowEmptyStrings = true)]
+    [KebabCase]
+    [StringLength(140)]
+    [UniqueName]
+    public string DistinctionType { get; set; } = string.Empty;
+
     [Required]
     [StringLength(140)]
     public string DisplayName { get; set; } = string.Empty;
 
-    private IDictionary<string, object> _data = new Dictionary<string, object>();
+    private readonly IDictionary<string, object> _data = new Dictionary<string, object>();
 
     public object? this[string key]
     {

@@ -21,6 +21,22 @@ public static class BusinessObjectValidator
         => (string.IsNullOrWhiteSpace(uniqueName) || UniqueNameValidator.IsValid(uniqueName),
             () => (nameof(uniqueName), $"Unique name '{uniqueName}' has an invalid value"));
 
+    public static (bool, Func<(string, FormattableString)>) DistinctionTypeIsNotNull(string distinctionType)
+    => (distinctionType != null,
+        () => (nameof(distinctionType), $"Distinction type can not be null"));
+
+    public static (bool, Func<(string, FormattableString)>) DistinctionTypeHasKebabCase(string distinctionType)
+        => (string.IsNullOrWhiteSpace(distinctionType) || KebabCaseValidator.IsValid(distinctionType),
+            () => (nameof(distinctionType), $"Distinction type '{distinctionType}' must have kebab case"));
+
+    public static (bool, Func<(string, FormattableString)>) DistinctionTypeIsNotTooLong(string distinctionType)
+        => (string.IsNullOrWhiteSpace(distinctionType) || distinctionType.Length <= 140,
+            () => (nameof(distinctionType), $"Distinction type '{distinctionType}' can not have more than 140 characters"));
+
+    public static (bool, Func<(string, FormattableString)>) DistinctionTypeHasValidValue(string distinctionType)
+        => (string.IsNullOrWhiteSpace(distinctionType) || UniqueNameValidator.IsValid(distinctionType),
+            () => (nameof(distinctionType), $"Distinction type '{distinctionType}' has an invalid value"));
+
     public static (bool, Func<(string, FormattableString)>) DisplayNameIsNotEmpty(string displayName)
         => (!string.IsNullOrWhiteSpace(displayName),
             () => (nameof(displayName), $"Display name can not be empty"));

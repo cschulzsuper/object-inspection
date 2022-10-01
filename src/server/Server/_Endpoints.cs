@@ -24,6 +24,7 @@ public static class _Endpoints
             .MapBusinessObjectInspector()
             .MapBusinessObjectInspection()
             .MapBusinessObjectInspectionAuditRecord()
+            .MapDistinctionType()
             .MapExtension()
             .MapExtensionAggrgateType()
             .MapExtensionFieldType()

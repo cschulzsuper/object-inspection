@@ -75,7 +75,7 @@ public class AuthenticationRequestHandler : IAuthenticationRequestHandler
     public async ValueTask<ResetIdentityResponse> ResetAsync(string identity, string etag)
     {
         var request = new HttpRequestMessage(HttpMethod.Post, $"identities/{identity}/reset");
-        request.Headers.Add("If-Match", etag);
+        request.Headers.TryAddWithoutValidation("If-Match", etag);
 
         var responseMessage = await _httpClient.SendAsync(request);
 

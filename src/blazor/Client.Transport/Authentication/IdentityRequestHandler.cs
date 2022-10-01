@@ -37,7 +37,7 @@ public class IdentityRequestHandler : IIdentityRequestHandler
     public async ValueTask DeleteAsync(string identity, string etag)
     {
         var request = new HttpRequestMessage(HttpMethod.Delete, $"identities/{identity}");
-        request.Headers.Add("If-Match", etag);
+        request.Headers.TryAddWithoutValidation("If-Match", etag);
 
         var responseMessage = await _httpClient.SendAsync(request);
 

@@ -50,7 +50,7 @@ public class ExtensionRequestHandler : IExtensionRequestHandler
     public async ValueTask DeleteAsync(string aggregateType, string etag)
     {
         var request = new HttpRequestMessage(HttpMethod.Delete, $"extensions/{aggregateType}");
-        request.Headers.Add("If-Match", etag);
+        request.Headers.TryAddWithoutValidation("If-Match", etag);
 
         var responseMessage = await _httpClient.SendAsync(request);
 
@@ -61,7 +61,7 @@ public class ExtensionRequestHandler : IExtensionRequestHandler
     public async ValueTask<ExtensionFieldDeleteResponse> DeleteFieldAsync(string aggregateType, string field, string etag)
     {
         var request = new HttpRequestMessage(HttpMethod.Delete, $"extensions/{aggregateType}/fields/{field}");
-        request.Headers.Add("If-Match", etag);
+        request.Headers.TryAddWithoutValidation("If-Match", etag);
 
         var responseMessage = await _httpClient.SendAsync(request);
 

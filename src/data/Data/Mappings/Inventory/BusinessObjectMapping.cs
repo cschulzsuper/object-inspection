@@ -46,6 +46,11 @@ public class BusinessObjectMapping : IEntityTypeConfiguration<BusinessObject>
             .IsRequired();
 
         builder
+            .Property(x => x.DistinctionType)
+            .HasMaxLength(140)
+            .IsRequired();
+
+        builder
             .Property(x => x.DisplayName)
             .HasMaxLength(140)
             .IsRequired();

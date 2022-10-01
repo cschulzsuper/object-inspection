@@ -72,7 +72,6 @@ public class Repository<TEntity> : IRepository<TEntity>
 
     public IQueryable<TEntity> GetQueryable()
     {
-        var x = _repositoryContext.Model.ToDebugString();
         return _repositoryContext.Set<TEntity>().AsNoTracking();
     }
 

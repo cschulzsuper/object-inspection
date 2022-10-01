@@ -1,8 +1,10 @@
-﻿using ChristianSchulz.ObjectInspection.Application.Inventory.Requests;
+﻿using ChristianSchulz.ObjectInspection.Application.Authentication;
+using ChristianSchulz.ObjectInspection.Application.Inventory.Requests;
 using ChristianSchulz.ObjectInspection.Application.Inventory.Responses;
 using ChristianSchulz.ObjectInspection.Shared;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -28,25 +30,50 @@ public class BusinessObjectRequestHandler : IBusinessObjectRequestHandler
     {
         var entity = await _businessObjectManager.GetAsync(businessObject);
 
-        return new BusinessObjectResponse
+        var response = new BusinessObjectResponse
         {
             DisplayName = entity.DisplayName,
+            DistinctionType = entity.DistinctionType,
             UniqueName = entity.UniqueName,
             ETag = entity.ETag
+            
         };
+
+        foreach(var field in entity)
+        {
+            response[field.Key] = field.Value;
+        }
+
+        return response;
     }
 
-    public IAsyncEnumerable<BusinessObjectResponse> GetAll(string query, int skip, int take, CancellationToken cancellationToken = default)
-        => _businessObjectManager
-            .GetAsyncEnumerable(queryable => WhereSearchQuery(queryable, query)
-                .Skip(skip)
-                .Take(take)
-                .Select(entity => new BusinessObjectResponse
-                {
-                    DisplayName = entity.DisplayName,
-                    UniqueName = entity.UniqueName,
-                    ETag = entity.ETag
-                }));
+    public async IAsyncEnumerable<BusinessObjectResponse> GetAll(string query, int skip, int take, 
+        [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    {
+        var businessObjects = _businessObjectManager
+                .GetAsyncEnumerable(queryable => WhereSearchQuery(queryable, query)
+                    .Skip(skip)
+                    .Take(take));
+
+        await foreach(var businessObject in businessObjects
+            .WithCancellation(cancellationToken))
+        {
+            var response = new BusinessObjectResponse
+            {
+                DisplayName = businessObject.DisplayName,
+                DistinctionType = businessObject.DistinctionType,
+                UniqueName = businessObject.UniqueName,
+                ETag = businessObject.ETag
+            };
+
+            foreach (var field in businessObject)
+            {
+                response[field.Key] = field.Value;
+            }
+
+            yield return response;
+        }
+    }
 
     public async ValueTask<SearchBusinessObjectResponse> SearchAsync(string query)
     {
@@ -56,11 +83,23 @@ public class BusinessObjectRequestHandler : IBusinessObjectRequestHandler
         queryable = WhereSearchQuery(queryable, query);
 
         var topResult = queryable.Take(50)
-            .Select(entity => new BusinessObjectResponse
+            .AsEnumerable()
+            .Select(entity =>
             {
-                DisplayName = entity.DisplayName,
-                UniqueName = entity.UniqueName,
-                ETag = entity.ETag
+                var response = new BusinessObjectResponse
+                {
+                    DisplayName = entity.DisplayName,
+                    DistinctionType = entity.DistinctionType,
+                    UniqueName = entity.UniqueName,
+                    ETag = entity.ETag
+                };
+
+                foreach (var field in entity)
+                {
+                    response[field.Key] = field.Value;
+                }
+
+                return response;
             })
             .ToHashSet();
 
@@ -76,17 +115,31 @@ public class BusinessObjectRequestHandler : IBusinessObjectRequestHandler
         var entity = new BusinessObject
         {
             DisplayName = request.DisplayName,
+            DistinctionType = request.DistinctionType,
             UniqueName = request.UniqueName,
         };
 
+        foreach (var field in request)
+        {
+            entity[field.Key] = field.Value;
+        }
+
         await _businessObjectManager.InsertAsync(entity);
 
-        return new BusinessObjectResponse
+        var response = new BusinessObjectResponse
         {
             DisplayName = entity.DisplayName,
+            DistinctionType = entity.DistinctionType,
             UniqueName = entity.UniqueName,
             ETag = entity.ETag
         };
+
+        foreach (var field in entity)
+        {
+            response[field.Key] = field.Value;
+        }
+
+        return response;
     }
 
     public async ValueTask ReplaceAsync(string businessObject, BusinessObjectRequest request)
@@ -94,8 +147,14 @@ public class BusinessObjectRequestHandler : IBusinessObjectRequestHandler
         var entity = await _businessObjectManager.GetAsync(businessObject);
 
         entity.DisplayName = request.DisplayName;
+        entity.DistinctionType = request.DistinctionType;
         entity.UniqueName = request.UniqueName;
         entity.ETag = request.ETag;
+
+        foreach (var field in request)
+        {
+            entity[field.Key] = field.Value;
+        }
 
         await _businessObjectManager.UpdateAsync(entity);
         await _businessObjectEventService.CreateBusinessObjectUpdateEventAsync(entity);

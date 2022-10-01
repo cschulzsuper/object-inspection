@@ -38,7 +38,7 @@ public sealed class NotificationRequestHandler : INotificationRequestHandler
     public async ValueTask DeleteAsync(string inspector, int date, int time, string etag)
     {
         var request = new HttpRequestMessage(HttpMethod.Delete, $"inspectors/{inspector}/notifications/{date}/{time}");
-        request.Headers.Add("If-Match", etag);
+        request.Headers.TryAddWithoutValidation("If-Match", etag);
 
         var responseMessage = await _httpClient.SendAsync(request);
 
