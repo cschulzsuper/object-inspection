@@ -24,4 +24,8 @@
     <ProjectReference Include="..\..\shared\Shared\Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Reporting\Requests\" />
+  </ItemGroup>
+
 </Project>

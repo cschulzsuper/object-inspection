@@ -1,6 +1,7 @@
 ﻿using ChristianSchulz.ObjectInspection.Application.Auditing.Requests;
 using ChristianSchulz.ObjectInspection.Application.Auditing.Responses;
 using ChristianSchulz.ObjectInspection.Shared;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -184,7 +185,7 @@ public class BusinessObjectInspectionAuditRecordRequestHandler : IBusinessObject
         var fromDate = searchTerms.GetValidSearchTermValues<int>(SearchTermKeyFromDate).DefaultIfEmpty(default).Max();
         var fromTime = searchTerms.GetValidSearchTermValues<int>(SearchTermKeyFromTime).DefaultIfEmpty(default).Max();
         var toDate = searchTerms.GetValidSearchTermValues<int>(SearchTermKeyToDate).DefaultIfEmpty(default).Max();
-        var toTime = searchTerms.GetValidSearchTermValues<int>(SearchTermKeyToTime).DefaultIfEmpty(default).Max();
+        var toTime = searchTerms.GetValidSearchTermValues<int>(SearchTermKeyToTime).DefaultIfEmpty(TimeOnly.MaxValue.ToTimeSpan().Milliseconds).Max();
         var freeTexts = searchTerms.GetValidSearchTermValues<string>(SearchTermKeyFreeText).Where(x => x.Length > 3).ToArray();
 
         query = query

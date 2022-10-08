@@ -49,17 +49,17 @@ public static class BusinessObjectInspectionAuditRecordEndpoints
 
     private static Delegate GetAll =>
         [Authorize("OnlyInspectorOrObserver")]
-    (IBusinessObjectInspectionAuditRecordRequestHandler requestHandler,
-            [FromQuery(Name = "q")] string query,
-            [FromQuery(Name = "s")] int? skip,
-            [FromQuery(Name = "t")] int take,
-            CancellationToken cancellationToken)
+        (IBusinessObjectInspectionAuditRecordRequestHandler requestHandler,
+                [FromQuery(Name = "q")] string query,
+                [FromQuery(Name = "s")] int? skip,
+                [FromQuery(Name = "t")] int take,
+                CancellationToken cancellationToken)
 
             => requestHandler.GetAll(query, skip ?? 0, take, cancellationToken);
 
     private static Delegate GetAllForBusinessObject =>
         [Authorize("OnlyInspectorOrObserver")]
-    (IBusinessObjectInspectionAuditRecordRequestHandler requestHandler,
+        (IBusinessObjectInspectionAuditRecordRequestHandler requestHandler,
             string businessObject,
             [FromQuery(Name = "s")] int? skip,
             [FromQuery(Name = "t")] int take)
@@ -68,7 +68,7 @@ public static class BusinessObjectInspectionAuditRecordEndpoints
 
     private static Delegate Create =>
         [Authorize("OnlyInspectorOrObserver")]
-    (IBusinessObjectInspectionAuditRecordRequestHandler requestHandler,
+        (IBusinessObjectInspectionAuditRecordRequestHandler requestHandler,
             string businessObject,
             BusinessObjectInspectionAuditRecordRequest request)
 
@@ -76,7 +76,7 @@ public static class BusinessObjectInspectionAuditRecordEndpoints
 
     private static Delegate Replace =>
         [Authorize("OnlyInspectorOrObserver")]
-    (IBusinessObjectInspectionAuditRecordRequestHandler requestHandler,
+        (IBusinessObjectInspectionAuditRecordRequestHandler requestHandler,
             string businessObject,
             string inspection,
             int date,
@@ -87,7 +87,7 @@ public static class BusinessObjectInspectionAuditRecordEndpoints
 
     private static Delegate Delete =>
         [Authorize("OnlyInspectorOrObserver")]
-    (IBusinessObjectInspectionAuditRecordRequestHandler requestHandler,
+        (IBusinessObjectInspectionAuditRecordRequestHandler requestHandler,
             string businessObject,
             string inspection,
             int date,
@@ -98,7 +98,7 @@ public static class BusinessObjectInspectionAuditRecordEndpoints
 
     private static Delegate Search =>
         [Authorize("OnlyInspectorOrObserver")]
-    (IBusinessObjectInspectionAuditRecordRequestHandler requestHandler,
+        (IBusinessObjectInspectionAuditRecordRequestHandler requestHandler,
             [FromQuery(Name = "q")] string query)
 
             => requestHandler.SearchAsync(query);
