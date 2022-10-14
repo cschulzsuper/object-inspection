@@ -2,6 +2,8 @@
 
 public class Continuation
 {
+    public long Id { get; set; }
+
     public string ETag { get; set; } = string.Empty;
 
     public string ContinuationId { get; set; } = string.Empty;

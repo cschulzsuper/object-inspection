@@ -4,6 +4,8 @@ namespace ChristianSchulz.ObjectInspection.Application.Operation;
 
 public class Extension
 {
+    public long Id { get; set; }
+
     public string ETag { get; set; } = string.Empty;
 
     public string AggregateType { get; set; } = string.Empty;

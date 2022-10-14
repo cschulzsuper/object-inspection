@@ -50,7 +50,7 @@ public class DistinctionTypeRequestHandler : IDistinctionTypeRequestHandler
     public async ValueTask DeleteAsync(string uniqueName, string etag)
     {
         var request = new HttpRequestMessage(HttpMethod.Delete, $"distinction-types/{uniqueName}");
-        request.Headers.Add("If-Match", etag);
+        request.Headers.TryAddWithoutValidation("If-Match", etag);
 
         var responseMessage = await _httpClient.SendAsync(request);
 
@@ -61,7 +61,7 @@ public class DistinctionTypeRequestHandler : IDistinctionTypeRequestHandler
     public async ValueTask<DistinctionTypeFieldDeleteResponse> DeleteFieldAsync(string uniqueName, string field, string etag)
     {
         var request = new HttpRequestMessage(HttpMethod.Delete, $"distinction-types/{uniqueName}/fields/{field}");
-        request.Headers.Add("If-Match", etag);
+        request.Headers.TryAddWithoutValidation("If-Match", etag);
 
         var responseMessage = await _httpClient.SendAsync(request);
 

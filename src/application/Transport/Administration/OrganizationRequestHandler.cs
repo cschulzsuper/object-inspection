@@ -1,7 +1,9 @@
 ﻿using ChristianSchulz.ObjectInspection.Application.Administration.Requests;
 using ChristianSchulz.ObjectInspection.Application.Administration.Responses;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace ChristianSchulz.ObjectInspection.Application.Administration;
@@ -187,7 +189,6 @@ public class OrganizationRequestHandler : IOrganizationRequestHandler
         var entity = await _organizationManager.GetAsync(organization);
 
         entity.ChiefInspector =  request.Inspector;
-        entity.ETag =  request.ETag;
         entity.Activated = true;
 
         await _organizationManager.UpdateAsync(entity);

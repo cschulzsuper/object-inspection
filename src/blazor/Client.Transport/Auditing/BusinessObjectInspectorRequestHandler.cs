@@ -37,7 +37,7 @@ public class BusinessObjectInspectorRequestHandler : IBusinessObjectInspectorReq
     public async ValueTask DeleteAsync(string businessObject, string inspector, string etag)
     {
         var request = new HttpRequestMessage(HttpMethod.Delete, $"business-objects/{businessObject}/inspectors/{inspector}");
-        request.Headers.Add("If-Match", etag);
+        request.Headers.TryAddWithoutValidation("If-Match", etag);
 
         var responseMessage = await _httpClient.SendAsync(request);
 

@@ -71,10 +71,10 @@ public class PersistentEventStorage : IEventStorage
             .OrderBy(x => x.CreationDate)
             .ThenBy(x => x.CreationTime);
 
+        await Task.CompletedTask;
+
         foreach (var @event in events)
         {
-            await Task.CompletedTask;
-
             var eventType = _eventRegistry.GetEventType(@event.Name);
 
             if (eventType == null)

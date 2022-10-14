@@ -50,6 +50,15 @@
 
     private DistinctionTypeFieldRequest _request = new DistinctionTypeFieldRequest();
 
+    protected override async Task OnParametersSetAsync()
+    {
+        var response = await DistinctionTypeRequestHandler.GetAsync(UniqueName);
+
+        _request.ETag = response.ETag;
+
+        await base.OnParametersSetAsync();
+    }
+
     private async Task OnValidSubmitAsync()
     {
         await DistinctionTypeRequestHandler.CreateFieldAsync(UniqueName, _request);

@@ -2,6 +2,7 @@
 
 public class BusinessObjectInspector
 {
+    public long Id { get; set; }
     public string ETag { get; set; } = string.Empty;
 
     public string Inspector { get; set; } = string.Empty;

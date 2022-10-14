@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net7.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<LangVersion>Preview</LangVersion>
+		<RootNamespace>ChristianSchulz.ObjectInspection.Data.SqlServer</RootNamespace>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="IdGen.DependencyInjection" Version="3.0.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.0-rc.2.22472.11" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\shared\Environment\Environment.csproj" />
+		<ProjectReference Include="..\..\shared\Security.Contract\Security.Contract.csproj" />
+		<ProjectReference Include="..\Aggregates\Aggregates.csproj" />
+		<ProjectReference Include="..\Data.Contract\Data.Contract.csproj" />
+	</ItemGroup>
+
+</Project>

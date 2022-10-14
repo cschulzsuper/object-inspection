@@ -142,6 +142,11 @@ else
 
     private async Task RequestDistinctionTypeAsync()
     {
+        if (string.IsNullOrWhiteSpace(_request?.DistinctionType))
+        {
+            return;
+        }
+
         try
         {
             if (_request != null)

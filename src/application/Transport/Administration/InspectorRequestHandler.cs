@@ -5,6 +5,8 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using ChristianSchulz.ObjectInspection.Shared.Security;
+using System.Text;
+using System;
 
 namespace ChristianSchulz.ObjectInspection.Application.Administration;
 
@@ -53,7 +55,7 @@ public class InspectorRequestHandler : IInspectorRequestHandler
             UniqueName = entity.UniqueName,
             Activated = entity.Activated,
             BusinessObjects = entity.BusinessObjects.ToResponse(),
-            ETag = entity.ETag
+            ETag = entity.ETag 
         };
     }
 

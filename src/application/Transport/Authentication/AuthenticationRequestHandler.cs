@@ -7,6 +7,7 @@ using ChristianSchulz.ObjectInspection.Application.Authentication.Requests;
 using ChristianSchulz.ObjectInspection.Application.Authentication.Responses;
 using ChristianSchulz.ObjectInspection.BadgeSecurity;
 using ChristianSchulz.ObjectInspection.Shared.Security;
+using System.Text;
 
 namespace ChristianSchulz.ObjectInspection.Application.Authentication;
 
@@ -107,7 +108,7 @@ public class AuthenticationRequestHandler : IAuthenticationRequestHandler
         var entity = await _identityManager.GetAsync(identity);
 
         entity.Secret = _passwordHasher.HashPassword(entity, "default");
-        entity.ETag = etag;
+        entity.ETag =   etag;
 
         await _identityManager.UpdateAsync(entity);
 

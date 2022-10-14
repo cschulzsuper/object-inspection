@@ -52,7 +52,7 @@ public interface IRepository<TEntity>
     IAsyncEnumerable<TResult> GetPartitionAsyncEnumerable<TResult>(Func<IQueryable<TEntity>, IQueryable<TResult>> query, params object[] partitionKeyComponents);
 
     [ErrorMessage("Could not insert entity")]
-    ValueTask InsertAsync(TEntity entity);
+    ValueTask InsertAsync(TEntity entity, bool detach = true);
 
     [ErrorMessage("Could not update entity")]
     ValueTask UpdateAsync(TEntity entity);

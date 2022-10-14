@@ -2,9 +2,11 @@
 using ChristianSchulz.ObjectInspection.Application.Inventory.Requests;
 using ChristianSchulz.ObjectInspection.Application.Inventory.Responses;
 using ChristianSchulz.ObjectInspection.Shared;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -39,7 +41,7 @@ public class BusinessObjectRequestHandler : IBusinessObjectRequestHandler
             
         };
 
-        foreach(var field in entity)
+        foreach(var field in entity.ExtensionFields)
         {
             response[field.Key] = field.Value;
         }
@@ -50,23 +52,23 @@ public class BusinessObjectRequestHandler : IBusinessObjectRequestHandler
     public async IAsyncEnumerable<BusinessObjectResponse> GetAll(string query, int skip, int take, 
         [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        var businessObjects = _businessObjectManager
+        var entities = _businessObjectManager
                 .GetAsyncEnumerable(queryable => WhereSearchQuery(queryable, query)
                     .Skip(skip)
                     .Take(take));
 
-        await foreach(var businessObject in businessObjects
+        await foreach(var entity in entities
             .WithCancellation(cancellationToken))
         {
             var response = new BusinessObjectResponse
             {
-                DisplayName = businessObject.DisplayName,
-                DistinctionType = businessObject.DistinctionType,
-                UniqueName = businessObject.UniqueName,
-                ETag = businessObject.ETag
+                DisplayName = entity.DisplayName,
+                DistinctionType = entity.DistinctionType,
+                UniqueName = entity.UniqueName,
+                ETag = entity.ETag
             };
 
-            foreach (var field in businessObject)
+            foreach (var field in entity.ExtensionFields)
             {
                 response[field.Key] = field.Value;
             }
@@ -94,7 +96,7 @@ public class BusinessObjectRequestHandler : IBusinessObjectRequestHandler
                     ETag = entity.ETag
                 };
 
-                foreach (var field in entity)
+                foreach (var field in entity.ExtensionFields)
                 {
                     response[field.Key] = field.Value;
                 }
@@ -121,7 +123,7 @@ public class BusinessObjectRequestHandler : IBusinessObjectRequestHandler
 
         foreach (var field in request)
         {
-            entity[field.Key] = field.Value;
+            entity.ExtensionFields[field.Key] = field.Value;
         }
 
         await _businessObjectManager.InsertAsync(entity);
@@ -134,7 +136,7 @@ public class BusinessObjectRequestHandler : IBusinessObjectRequestHandler
             ETag = entity.ETag
         };
 
-        foreach (var field in entity)
+        foreach (var field in entity.ExtensionFields)
         {
             response[field.Key] = field.Value;
         }
@@ -153,7 +155,7 @@ public class BusinessObjectRequestHandler : IBusinessObjectRequestHandler
 
         foreach (var field in request)
         {
-            entity[field.Key] = field.Value;
+            entity.ExtensionFields[field.Key] = field.Value;
         }
 
         await _businessObjectManager.UpdateAsync(entity);

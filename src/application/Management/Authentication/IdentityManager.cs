@@ -30,7 +30,7 @@ public class IdentityManager : IIdentityManager
     }
 
     public IQueryable<Identity> GetQueryable()
-        => _identityRepository.GetQueryable();
+        => _identityRepository.GetPartitionQueryable();
 
     public IAsyncEnumerable<Identity> GetAsyncEnumerable()
         => _identityRepository.GetPartitionAsyncEnumerable();

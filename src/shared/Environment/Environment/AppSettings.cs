@@ -2,11 +2,7 @@
 
 public class AppSettings
 {
-    public string CosmosEndpoint { get; set; } = string.Empty;
-
-    public string CosmosKey { get; set; } = string.Empty;
-
-    public string CosmosDatabase { get; set; } = string.Empty;
+    public string SqlServer { get; set; } = string.Empty;
 
     public string MaintainerIdentity { get; set; } = string.Empty;
 

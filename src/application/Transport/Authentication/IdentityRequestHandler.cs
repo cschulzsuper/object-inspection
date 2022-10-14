@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using ChristianSchulz.ObjectInspection.Application.Authentication.Requests;
 using ChristianSchulz.ObjectInspection.Application.Authentication.Responses;
+using System.Text;
+using System;
 
 namespace ChristianSchulz.ObjectInspection.Application.Authentication;
 

@@ -2,6 +2,7 @@
 
 public class IdentityInspector
 {
+    public long Id { get; set; }
     public string ETag { get; set; } = string.Empty;
     public string UniqueName { get; set; } = string.Empty;
     public string Organization { get; set; } = string.Empty;

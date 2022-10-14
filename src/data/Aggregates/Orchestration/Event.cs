@@ -2,6 +2,8 @@
 
 public class Event
 {
+    public long Id { get; set; }
+
     public string ETag { get; set; } = string.Empty;
 
     public string EventId { get; set; } = string.Empty;

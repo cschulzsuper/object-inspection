@@ -39,7 +39,7 @@ public class BusinessObjectInspectionAuditRecordRequestHandler : IBusinessObject
     public async ValueTask DeleteAsync(string businessObject, string inspection, int date, int time, string etag)
     {
         var request = new HttpRequestMessage(HttpMethod.Delete, $"business-objects/{businessObject}/inspections/{inspection}/audit-records/{date}/{time}");
-        request.Headers.Add("If-Match", etag);
+        request.Headers.TryAddWithoutValidation("If-Match", etag);
 
         var responseMessage = await _httpClient.SendAsync(request);
 

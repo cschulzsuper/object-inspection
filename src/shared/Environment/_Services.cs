@@ -23,9 +23,7 @@ public static class _Services
 
                 return new AppSettings
                 {
-                    CosmosEndpoint = configuration["ObjectInspection:CosmosEndpoint"] ?? string.Empty,
-                    CosmosKey = configuration["ObjectInspection:CosmosKey"] ?? string.Empty,
-                    CosmosDatabase = configuration["ObjectInspection:CosmosDatabase"] ?? string.Empty,
+                    SqlServer = configuration["ObjectInspection:SqlServer"] ?? string.Empty,
                     MaintainerIdentity = configuration["ObjectInspection:MaintainerIdentity"] ?? string.Empty,
                     DemoIdentity = configuration["ObjectInspection:DemoIdentity"] ?? string.Empty,
                     DemoPassword = configuration["ObjectInspection:DemoPassword"] ?? string.Empty,

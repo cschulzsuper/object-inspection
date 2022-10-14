@@ -120,15 +120,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server.Swagger", "src\serve
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "packages", "packages", "{7872BBFC-441D-4A12-AE1C-775A957141E3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BadgeSecurity", "src\packages\BadgeSecurity\BadgeSecurity.csproj", "{77DF8A54-948F-4F68-8D3B-0C0263FDE582}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BadgeSecurity", "src\packages\BadgeSecurity\BadgeSecurity.csproj", "{77DF8A54-948F-4F68-8D3B-0C0263FDE582}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BadgeSecurity.Contract", "src\packages\BadgeSecurity.Contract\BadgeSecurity.Contract.csproj", "{AF45DD6A-F018-4CDB-A271-5ED9525E5315}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BadgeSecurity.Contract", "src\packages\BadgeSecurity.Contract\BadgeSecurity.Contract.csproj", "{AF45DD6A-F018-4CDB-A271-5ED9525E5315}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BadgeSecurity.AspNetCore", "src\packages\BadgeSecurity.AspNetCore\BadgeSecurity.AspNetCore.csproj", "{854C1188-960D-4BFE-95D8-835AF9292A60}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BadgeUsage", "src\packages\BadgeUsage\BadgeUsage.csproj", "{4EBAC710-4EA1-4F8F-8432-1340C63A0D80}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BadgeUsage.Contract", "src\packages\BadgeUsage.Contract\BadgeUsage.Contract.csproj", "{DC9A59C6-0CF4-4BE3-9D2B-B7A521313D5A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BadgeUsage.Contract", "src\packages\BadgeUsage.Contract\BadgeUsage.Contract.csproj", "{DC9A59C6-0CF4-4BE3-9D2B-B7A521313D5A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.SqlServer", "src\data\Data.SqlServer\Data.SqlServer.csproj", "{7FA3ABDD-4E04-4689-901F-9D16AB2F7D57}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -308,6 +310,10 @@ Global
 		{DC9A59C6-0CF4-4BE3-9D2B-B7A521313D5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DC9A59C6-0CF4-4BE3-9D2B-B7A521313D5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DC9A59C6-0CF4-4BE3-9D2B-B7A521313D5A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7FA3ABDD-4E04-4689-901F-9D16AB2F7D57}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7FA3ABDD-4E04-4689-901F-9D16AB2F7D57}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7FA3ABDD-4E04-4689-901F-9D16AB2F7D57}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7FA3ABDD-4E04-4689-901F-9D16AB2F7D57}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -358,6 +364,7 @@ Global
 		{854C1188-960D-4BFE-95D8-835AF9292A60} = {7872BBFC-441D-4A12-AE1C-775A957141E3}
 		{4EBAC710-4EA1-4F8F-8432-1340C63A0D80} = {7872BBFC-441D-4A12-AE1C-775A957141E3}
 		{DC9A59C6-0CF4-4BE3-9D2B-B7A521313D5A} = {7872BBFC-441D-4A12-AE1C-775A957141E3}
+		{7FA3ABDD-4E04-4689-901F-9D16AB2F7D57} = {A96EC778-2B46-4FF6-A71D-AC0E7714A31E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {167D4B81-B91A-4D40-AEEF-6CC3C49F9CD1}

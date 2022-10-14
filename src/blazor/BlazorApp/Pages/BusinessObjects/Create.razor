@@ -123,6 +123,11 @@
 
     private async Task RequestDistinctionTypeAsync()
     {
+        if (string.IsNullOrWhiteSpace(_request.DistinctionType))
+        {
+            return;
+        }
+
         try
         {
             _distinctionType = await DistinctionTypeRequestHandler.GetAsync(_request.DistinctionType);

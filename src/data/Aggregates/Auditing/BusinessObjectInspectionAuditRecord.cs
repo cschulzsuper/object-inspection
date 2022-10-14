@@ -2,6 +2,7 @@
 
 public class BusinessObjectInspectionAuditRecord
 {
+    public long Id { get; set; }
     public string ETag { get; set; } = string.Empty;
     public string BusinessObject { get; set; } = string.Empty;
     public string BusinessObjectDisplayName { get; set; } = string.Empty;

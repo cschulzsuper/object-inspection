@@ -28,7 +28,7 @@ public class InspectorRequestHandler : IInspectorRequestHandler
     public async ValueTask<ActivateInspectorResponse> ActivateAsync(string inspector, string etag)
     {
         var request = new HttpRequestMessage(HttpMethod.Post, $"inspectors/{inspector}/activate");
-        request.Headers.Add("If-Match", etag);
+        request.Headers.TryAddWithoutValidation("If-Match", etag);
 
         var responseMessage = await _httpClient.SendAsync(request);
 
@@ -51,7 +51,7 @@ public class InspectorRequestHandler : IInspectorRequestHandler
     public async ValueTask<DeactivateInspectorResponse> DeactivateAsync(string inspector, string etag)
     {
         var request = new HttpRequestMessage(HttpMethod.Post, $"inspectors/{inspector}/deactivate");
-        request.Headers.Add("If-Match", etag);
+        request.Headers.TryAddWithoutValidation("If-Match", etag);
 
         var responseMessage = await _httpClient.SendAsync(request);
 
@@ -64,7 +64,7 @@ public class InspectorRequestHandler : IInspectorRequestHandler
     public async ValueTask DeleteAsync(string inspector, string etag)
     {
         var request = new HttpRequestMessage(HttpMethod.Delete, $"inspectors/{inspector}");
-        request.Headers.Add("If-Match", etag);
+        request.Headers.TryAddWithoutValidation("If-Match", etag);
 
         var responseMessage = await _httpClient.SendAsync(request);
 

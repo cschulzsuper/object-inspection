@@ -60,14 +60,23 @@ else
 
 @code {
 
-[Parameter]
-public string AggregateType { get; set; } = string.Empty;
+    [Parameter]
+    public string AggregateType { get; set; } = string.Empty;
 
-private ExtensionFieldRequest _request = new ExtensionFieldRequest();
+    private ExtensionFieldRequest _request = new ExtensionFieldRequest();
 
-private async Task OnValidSubmitAsync()
-{
-    await ExtensionRequestHandler.CreateFieldAsync(AggregateType, _request);
-    NavigationManager.NavigateTo("/extensions");
-}
+    protected override async Task OnParametersSetAsync()
+    {
+        var response = await ExtensionRequestHandler.GetAsync(AggregateType);
+
+        _request.ETag = response.ETag;
+
+        await base.OnParametersSetAsync();
+    }
+
+    private async Task OnValidSubmitAsync()
+    {
+        await ExtensionRequestHandler.CreateFieldAsync(AggregateType, _request);
+        NavigationManager.NavigateTo("/extensions");
+    }
 }

@@ -48,7 +48,17 @@ public class DistinctionTypeManager : IDistinctionTypeManager
 
         try
         {
-            await _distinctionTypeRepository.InsertAsync(distinctionType);
+            if (distinctionType.Fields.Any())
+            {
+                await _distinctionTypeRepository.InsertAsync(distinctionType);
+            }
+            else
+            {
+                distinctionType.Fields.Add(new DistinctionTypeField());
+                await _distinctionTypeRepository.InsertAsync(distinctionType, false);
+                distinctionType.Fields.Clear();
+                await _distinctionTypeRepository.UpdateAsync(distinctionType);
+            }
         }
         catch (Exception exception)
         {

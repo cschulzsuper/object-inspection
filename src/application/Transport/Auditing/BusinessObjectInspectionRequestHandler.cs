@@ -7,6 +7,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using ChristianSchulz.ObjectInspection.Shared.Security;
+using System.Text;
 
 namespace ChristianSchulz.ObjectInspection.Application.Auditing;
 

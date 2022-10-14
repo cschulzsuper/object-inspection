@@ -48,7 +48,17 @@ public class ExtensionManager : IExtensionManager
 
         try
         {
-            await _extensionRepository.InsertAsync(extension);
+            if (extension.Fields.Any())
+            {
+                await _extensionRepository.InsertAsync(extension);
+            }
+            else
+            {
+                extension.Fields.Add(new ExtensionField());
+                await _extensionRepository.InsertAsync(extension, false);
+                extension.Fields.Clear();
+                await _extensionRepository.UpdateAsync(extension);
+            }
         }
         catch (Exception exception)
         {

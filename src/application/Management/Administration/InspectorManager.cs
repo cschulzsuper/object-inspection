@@ -33,8 +33,11 @@ public class InspectorManager : IInspectorManager
         => _inspectorRepository.GetPartitionQueryable();
 
     public IQueryable<Inspector> GetQueryableWhereBusinessObject(string businessObject)
-        => _inspectorRepository.GetPartitionQueryable(
-            $"SELECT * FROM c WHERE ARRAY_CONTAINS(c.businessObjects, {{\"uniqueName\": {businessObject}}}, true)");
+        => _inspectorRepository.GetPartitionQueryable()
+            .AsEnumerable()
+            .Where(x => x.BusinessObjects.Any(z => z.UniqueName == businessObject))
+            .AsQueryable();
+            //$"SELECT * FROM c WHERE {businessObject} IN (SELECT JSON_VALUE(v.value,'$.UniqueName') FROM OPENJSON(c.[BusinessObjects],'$') v)");
 
     public IAsyncEnumerable<Inspector> GetAsyncEnumerable()
         => _inspectorRepository.GetPartitionAsyncEnumerable();
@@ -48,7 +51,17 @@ public class InspectorManager : IInspectorManager
 
         try
         {
-            await _inspectorRepository.InsertAsync(inspector);
+            if (inspector.BusinessObjects.Any())
+            {
+                await _inspectorRepository.InsertAsync(inspector);
+            }
+            else
+            {
+                inspector.BusinessObjects.Add(new InspectorBusinessObject());
+                await _inspectorRepository.InsertAsync(inspector, false);
+                inspector.BusinessObjects.Clear();
+                await _inspectorRepository.UpdateAsync(inspector);
+            }
         }
         catch (Exception exception)
         {

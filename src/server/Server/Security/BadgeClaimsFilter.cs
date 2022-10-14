@@ -58,7 +58,7 @@ public class BadgeClaimsFilter : IBadgeClaimsFilter
 
             var organization = _organizationManager.Get(claims.GetOrganization());
 
-            if (organization.ChiefInspector == claims.GetIdentity())
+            if (organization.ChiefInspector == claims.GetInspector())
             {
                 authorizations.Add("Chief");
             }
