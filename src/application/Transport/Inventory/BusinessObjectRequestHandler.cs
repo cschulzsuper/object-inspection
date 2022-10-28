@@ -85,7 +85,7 @@ public class BusinessObjectRequestHandler : IBusinessObjectRequestHandler
         queryable = WhereSearchQuery(queryable, query);
 
         var topResult = queryable.Take(50)
-            .AsEnumerable()
+            .ToList()
             .Select(entity =>
             {
                 var response = new BusinessObjectResponse

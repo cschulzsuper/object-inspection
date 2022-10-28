@@ -67,7 +67,7 @@ public class PersistentEventStorage : IEventStorage
         var events = _eventManager
             .GetQueryable()
             .Where(x => x.State == string.Empty)
-            .AsEnumerable()
+            .ToList()
             .OrderBy(x => x.CreationDate)
             .ThenBy(x => x.CreationTime);
 

@@ -64,7 +64,7 @@ public class PersistentContinuationStorage : IContinuationStorage
         var continuations = _continuationManager
             .GetQueryable()
             .Where(x => x.State == string.Empty)
-            .AsEnumerable()
+            .ToList()
             .OrderBy(x => x.CreationDate)
             .ThenBy(x => x.CreationTime);
 

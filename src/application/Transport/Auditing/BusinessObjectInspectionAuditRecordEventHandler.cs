@@ -16,7 +16,7 @@ public class BusinessObjectInspectionAuditRecordEventHandler : IBusinessObjectIn
         var businessObjectInspectionAuditRecords = businessObjectInspectionAuditRecordManager
             .GetQueryable()
             .Where(entity => entity.BusinessObject == @event.UniqueName)
-            .AsEnumerable();
+            .ToList();
 
         foreach (var businessObjectInspectionAuditRecord in businessObjectInspectionAuditRecords)
         {
@@ -33,7 +33,7 @@ public class BusinessObjectInspectionAuditRecordEventHandler : IBusinessObjectIn
         var businessObjectInspectionAuditRecords = businessObjectInspectionAuditRecordManager
             .GetQueryable()
             .Where(entity => entity.BusinessObject == @event.UniqueName)
-            .AsEnumerable();
+            .ToList();
 
         foreach (var businessObjectInspectionAuditRecord in businessObjectInspectionAuditRecords)
         {
@@ -48,7 +48,7 @@ public class BusinessObjectInspectionAuditRecordEventHandler : IBusinessObjectIn
         var businessObjectInspectionAuditRecords = businessObjectInspectionAuditRecordManager
             .GetQueryable()
             .Where(entity => entity.Inspection == updateEvent.UniqueName)
-            .AsEnumerable();
+            .ToList();
 
         foreach (var businessObjectInspectionAuditRecord in businessObjectInspectionAuditRecords)
         {
@@ -65,7 +65,7 @@ public class BusinessObjectInspectionAuditRecordEventHandler : IBusinessObjectIn
         var businessObjectInspectionAuditRecords = businessObjectInspectionAuditRecordManager
             .GetQueryable()
             .Where(entity => entity.Inspection == @event.UniqueName)
-            .AsEnumerable();
+            .ToList();
 
         foreach (var businessObjectInspectionAuditRecord in businessObjectInspectionAuditRecords)
         {

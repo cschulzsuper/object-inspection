@@ -14,7 +14,7 @@ public class BusinessObjectInspectionEventHandler : IBusinessObjectInspectionEve
 
         var businessObjectInspections = businessObjectInspectionManager.GetQueryable()
             .Where(x => x.Inspection == updateEvent.UniqueName)
-            .AsEnumerable();
+            .ToList();
 
         foreach (var businessObjectInspection in businessObjectInspections)
         {
@@ -32,7 +32,7 @@ public class BusinessObjectInspectionEventHandler : IBusinessObjectInspectionEve
 
         var businessObjects = businessObjectInspectionManager.GetQueryable()
             .Where(x => x.Inspection == @event.UniqueName)
-            .AsEnumerable()
+            .ToList()
             .GroupBy(x => x.BusinessObject);
 
         foreach (var businessObject in businessObjects)

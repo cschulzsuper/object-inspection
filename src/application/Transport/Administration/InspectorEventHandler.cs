@@ -95,7 +95,7 @@ public class InspectorEventHandler : IInspectorEventHandler
 
         var inspectors = inspectorManager
             .GetQueryableWhereBusinessObject(@event.BusinessObject)
-            .AsEnumerable();
+            .ToList();
 
         foreach (var inspector in inspectors)
         {
