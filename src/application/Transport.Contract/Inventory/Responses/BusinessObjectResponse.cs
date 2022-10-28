@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using ChristianSchulz.ObjectInspection.Application.Authentication;
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 namespace ChristianSchulz.ObjectInspection.Application.Inventory.Responses;
@@ -7,10 +8,11 @@ namespace ChristianSchulz.ObjectInspection.Application.Inventory.Responses;
 public class BusinessObjectResponse
 {
     public string UniqueName { get; set; } = string.Empty;
+    public string DistinctionType { get; set; } = string.Empty;
     public string DisplayName { get; set; } = string.Empty;
     public string ETag { get; set; } = string.Empty;
 
-    private IDictionary<string, object> _data = new Dictionary<string, object>();
+    private readonly IDictionary<string, object> _data = new Dictionary<string, object>();
 
     public object? this[string key]
     {

@@ -1,0 +1,57 @@
+﻿@page "/distinction-types/create"
+
+@inject ITranslator<Create> Translator
+@inject NavigationManager NavigationManager
+@inject IDistinctionTypeRequestHandler DistinctionTypeRequestHandler
+
+@attribute [Authorize("OnlyChiefOrObserver")]
+
+<PageTitle>@Translator[$"Create distinction type"]</PageTitle>
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">@Translator[$"Create distinction type"]</h1>
+</div>
+
+<EditForm Model="@_request" OnValidSubmit="@OnValidSubmitAsync">
+    <DataAnnotationsValidator />
+
+    <div class="container-fluid pb-3 mb-3 border-bottom">
+        <div class="form-floating mt-3">
+            <InputText 
+                class="form-control"
+                id="distinctionTypeUniqueName" @bind-Value="_request.UniqueName" />
+            <label for="distinctionTypeUniqueName">@Translator[$"Unique name"]</label>
+        </div>
+    </div>
+
+    @if (context.GetValidationMessages().Any())
+    {
+        <div class="container-fluid pb-4 mb-5">
+            <div class="card card-body tex-wrap">
+                <ValidationSummary/>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="container-fluid pb-4 mb-5">
+            <AuthorizedButton Policy="OnlyChief"
+                                id="submit"
+                                type="submit"
+                                class="btn btn-sm btn-primary">@Translator[$"Submit"]</AuthorizedButton>
+        </div>
+    }
+
+</EditForm>
+
+@code {
+
+    private DistinctionTypeRequest _request = new DistinctionTypeRequest();
+
+    private async Task OnValidSubmitAsync()
+    {
+        await DistinctionTypeRequestHandler.CreateAsync(_request);
+            NavigationManager.NavigateTo("/distinction-types");
+    }
+
+}

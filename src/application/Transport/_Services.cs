@@ -98,6 +98,8 @@ public static class _Services
         services.AddScoped<IExtensionFieldTypeRequestHandler, ExtensionFieldTypeRequestHandler>();
         services.AddScoped<IExtensionRequestHandler, ExtensionRequestHandler>();
 
+        services.AddScoped<IDistinctionTypeRequestHandler, DistinctionTypeRequestHandler>();
+
         return services;
     }
 }

@@ -62,31 +62,31 @@ else
 
 @code {
 
-[Parameter]
-public string AggregateType { get; set; } = string.Empty;
+    [Parameter]
+    public string AggregateType { get; set; } = string.Empty;
 
-private ExtensionResponse? _extension;
+    private ExtensionResponse? _extension;
 
-protected override async Task OnAfterRenderAsync(bool firstRender)
-{
-    if (firstRender)
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        _extension = await ExtensionRequestHandler.GetAsync(AggregateType);
+        if (firstRender)
+        {
+            _extension = await ExtensionRequestHandler.GetAsync(AggregateType);
 
-        StateHasChanged();
+            StateHasChanged();
+        }
     }
-}
 
-public void Create()
-    => NavigationManager.NavigateTo("/extensions/{type}/fields/create");
+    public void Create()
+        => NavigationManager.NavigateTo($"/extensions/{AggregateType}/fields/create");
 
-public async Task DeleteAsync(ExtensionFieldResponse field)
-{
-    var response = await ExtensionRequestHandler.DeleteFieldAsync(_extension!.AggregateType, field.UniqueName, _extension!.ETag);
+    public async Task DeleteAsync(ExtensionFieldResponse field)
+    {
+        var response = await ExtensionRequestHandler.DeleteFieldAsync(_extension!.AggregateType, field.UniqueName, _extension!.ETag);
 
-    _extension.ETag = response.ETag;
+        _extension.ETag = response.ETag;
 
-    _extension!.Fields.Remove(field);
-}
+        _extension!.Fields.Remove(field);
+    }
 
 }

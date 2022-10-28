@@ -151,6 +151,7 @@ public static class _Services
         services.AddScoped(RepositoryFactory<IdentityInspector, AdministrationContext>());
         services.AddScoped(RepositoryFactory<Organization, AdministrationContext>());
 
+        services.AddScoped(RepositoryFactory<DistinctionType, OperationContext>());
         services.AddScoped<IRepository<Extension>, ExtensionRepository>();
 
         services.AddScoped(RepositoryFactory<Continuation, AdministrationContext>());
@@ -183,6 +184,7 @@ public static class _Services
         services.AddScoped<IPartitionKeyValueGenerator<Worker>, WorkerPartitionKeyValueGenerator>();
 
         services.AddScoped<IPartitionKeyValueGenerator<Extension>, ExtensionPartitionKeyValueGenerator>();
+        services.AddScoped<IPartitionKeyValueGenerator<DistinctionType>, DistinctionTypePartitionKeyValueGenerator>();
 
         return services;
     }

@@ -82,6 +82,11 @@ public static class _Services
         services.AddScoped<IConnectionManager, ConnectionManager>();
         services.AddScoped<IConnectionViolationManager, ConnectionViolationManager>();
 
+        services.AddScoped<IDistinctionTypeManager, DistinctionTypeManager>();
+        services.AddScoped<IExtensionManager, ExtensionManager>();
+        services.AddScoped<IExtensionAggregateTypeManager, ExtensionAggregateTypeManager>();
+        services.AddScoped<IExtensionFieldTypeManager, ExtensionFieldTypeManager>();
+
         return services;
     }
 
@@ -92,10 +97,6 @@ public static class _Services
         services.AddScoped<IEventProcessingManager, EventProcessingManager>();
         services.AddScoped<IWorkerManager, WorkerManager>();
         services.AddScoped<IWorkerRuntimeManager, WorkerRuntimeManager>();
-
-        services.AddScoped<IExtensionManager, ExtensionManager>();
-        services.AddScoped<IExtensionAggregateTypeManager, ExtensionAggregateTypeManager>();
-        services.AddScoped<IExtensionFieldTypeManager, ExtensionFieldTypeManager>();
 
         return services;
     }
