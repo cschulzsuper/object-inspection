@@ -50,8 +50,8 @@ public class DistinctionTypeManager : IDistinctionTypeManager
         {
             if (distinctionType.Fields.Any())
             {
-                await _distinctionTypeRepository.InsertAsync(distinctionType);
-            }
+            await _distinctionTypeRepository.InsertAsync(distinctionType);
+        }
             else
             {
                 distinctionType.Fields.Add(new DistinctionTypeField());
